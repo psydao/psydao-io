@@ -1,24 +1,29 @@
+import { GridItem, GridProps } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import type { MotionProps } from "framer-motion";
 
-interface WindowProps extends MotionProps {
-  area?: string;
-  children: React.ReactNode;
-}
+type ReducedMotionProps = Omit<
+  MotionProps,
+  | "onAnimationStart"
+  | "onDrag"
+  | "onDragEnd"
+  | "onDragStart"
+  | "style"
+  | "transition"
+>;
 
-// .window {
-//   border: 2px solid pink;
-//   background-color: white;
-// }
+interface WindowProps extends GridProps, ReducedMotionProps {}
 
 export function Window(props: WindowProps) {
   return (
-    <motion.div
-      drag
+    <GridItem
+      as={motion.div}
       dragElastic={0}
       dragMomentum={false}
-      style={{ gridArea: props.area }}
+      border="2px solid pink"
+      background="#fffafa"
+      overflow="auto"
       {...props}
-    />
+    ></GridItem>
   );
 }

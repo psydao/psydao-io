@@ -9,6 +9,8 @@ import type { GridProps } from "../components/grid";
 import { Marquee } from "../components/marquee";
 import { YoutubeEmbed } from "../components/youtube-embed";
 import { Window } from "../components/window";
+import { Manifesto } from "../components/manifesto";
+import { Lissajous } from "../components/lissajous";
 
 const DynamicLazyComponent = dynamic<GridProps>(
   () => import("../components/grid").then((mod) => mod.Grid),
@@ -40,6 +42,7 @@ const DynamicLazyComponent = dynamic<GridProps>(
 
 const Home: NextPage = () => {
   const dragConstraints = React.useRef(null);
+  const [showManifesto, setShowManifesto] = React.useState(false);
 
   return (
     <>
@@ -108,6 +111,12 @@ const Home: NextPage = () => {
         >
           <YoutubeEmbed embedId="dQw4w9WgXcQ" />
         </GridItem>
+        <Window gridArea="1 / 7 / -2 / -7" p="5">
+          <Manifesto />
+        </Window>
+        <Window gridArea="1 / -3 / 2 / -2" drag>
+          <Lissajous />
+        </Window>
         <GridItem
           gridArea={{ base: "-3 / 1 / -1 / -1", xl: "-2 / 1 / -1 / -1" }}
           bg="#fffafa"
