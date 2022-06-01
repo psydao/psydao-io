@@ -29,7 +29,7 @@ export const YoutubeEmbed = ({ embedId, ...rest }: YoutubeEmbed) => (
       left="0"
       width="100%"
       height="100%"
-      src={`https://www.youtube.com/embed/${embedId}`}
+      src={`https://www.youtube-nocookie.com/embed/${embedId}?modestbranding=1&rel=0`}
       frameBorder="0"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
       allowFullScreen
