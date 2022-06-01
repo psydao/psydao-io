@@ -1,5 +1,13 @@
-import { Center, GridItem, Image, Spinner } from "@chakra-ui/react";
-import { motion } from "framer-motion";
+import {
+  Box,
+  Button,
+  Center,
+  GridItem,
+  Image,
+  Spinner,
+  useBreakpointValue,
+} from "@chakra-ui/react";
+import { AnimatePresence } from "framer-motion";
 import type { NextPage } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
@@ -43,6 +51,13 @@ const DynamicLazyComponent = dynamic<GridProps>(
 const Home: NextPage = () => {
   const dragConstraints = React.useRef(null);
   const [showManifesto, setShowManifesto] = React.useState(false);
+  const breakpointValue = useBreakpointValue({
+    base: "base",
+    sm: "sm",
+    md: "md",
+    lg: "lg",
+    xl: "xl",
+  });
 
   return (
     <>
@@ -89,6 +104,11 @@ const Home: NextPage = () => {
           </>
         }
       >
+        {/* Hint */}
+        <Box position="fixed" top="5px" right="5px">
+          {breakpointValue}
+        </Box>
+
         {/* Foreground */}
         <GridItem gridArea="1 / 1 / 3 / 3" bg="#fffafa">
           <Image src="/psydao-deep-logo.svg" alt="" h="100%" w="100%" />
@@ -111,10 +131,21 @@ const Home: NextPage = () => {
         >
           <YoutubeEmbed embedId="dQw4w9WgXcQ" />
         </GridItem>
-        <Window gridArea="1 / 7 / -2 / -7" p="5">
-          <Manifesto />
-        </Window>
-        <Window gridArea="1 / -3 / 2 / -2" drag>
+        <AnimatePresence>
+          {showManifesto && (
+            <Window
+              gridArea={{
+                base: "1 / 2 / -3 / -2",
+                sm: "1 / 3 / -3 / -3",
+                lg: "1 / 4 / -3 / -3",
+                xl: "1 / 5 / -2 / -5",
+              }}
+            >
+              <Manifesto />
+            </Window>
+          )}
+        </AnimatePresence>
+        <Window gridArea="1 / -3 / 2 / -2" drag showTitleBar={false}>
           <Lissajous />
         </Window>
         <GridItem
@@ -124,6 +155,15 @@ const Home: NextPage = () => {
         >
           <Marquee label="12.06.2022 ... A SYMPOSIUM on Psychedelics" />
         </GridItem>
+        <Center gridArea="-4 / -3 / -3 / -1">
+          <Button
+            onClick={() => setShowManifesto((prev) => !prev)}
+            colorScheme="red"
+            rounded="full"
+          >
+            Manifesto
+          </Button>
+        </Center>
       </DynamicLazyComponent>
     </>
   );
