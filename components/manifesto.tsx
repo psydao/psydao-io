@@ -74,9 +74,9 @@ export const Manifesto = () => {
         ancient, and perhaps even precedes the origin of our species.
       </Text>
       <Text>
-        Some posit that as apes prospered throughout the paleolithic, some apes'
-        brains developed in an accelerated fashion due to consumption of
-        psilocybin-containing mushrooms, giving birth to the mind of Homo
+        Some posit that as apes prospered throughout the paleolithic, some
+        apes&#39; brains developed in an accelerated fashion due to consumption
+        of psilocybin-containing mushrooms, giving birth to the mind of Homo
         sapiens, tool-using wordcels and shape rotators. For thousands of years,
         nature controlled our access to these plants.
       </Text>
@@ -98,7 +98,7 @@ export const Manifesto = () => {
         For apes and scientists, Greeks and Romans, Egyptians and Mayans, Hindus
         and Hopis, Maori and Matsigenga, Sami and Shipibo, Chinese, Europeans,
         Americans, and more, psychedelics have played an extensive role in
-        history. But that role is limited compared to what's to come with
+        history. But that role is limited compared to what&#39;s to come with
         democratized access to psychedelics.
       </Text>
       <Heading as="h2">Sage</Heading>
@@ -129,11 +129,12 @@ export const Manifesto = () => {
       </Text>
       <Text>
         To the new psychedelic adventurers, Shulgin is a post modern Prometheus
-        bearing the gift of chemical enlightenment. This is why Shulgin's work
-        is mostly in the public domain, free for the people to use, published in
-        TiHKAL (Tryptamines I Have Known and Loved) and PiHKAL (Phenethylamine I
-        Have Known and Loved) in the 1990s. His legacy is an open-source wealth
-        of information that allows people to access life-changing chemicals.
+        bearing the gift of chemical enlightenment. This is why Shulgin&#39;s
+        work is mostly in the public domain, free for the people to use,
+        published in TiHKAL (Tryptamines I Have Known and Loved) and PiHKAL
+        (Phenethylamine I Have Known and Loved) in the 1990s. His legacy is an
+        open-source wealth of information that allows people to access
+        life-changing chemicals.
       </Text>
 
       <Text>
@@ -148,19 +149,20 @@ export const Manifesto = () => {
       </Text>
 
       <Text>
-        Online communities formed around the work of Shulgin' prompting intense
-        curiosity. These communities self-organized to procure these substances
-        and then spread them across our globe. Today, a curious researcher will
-        find millions of anecdotal blog posts in forums from savvy users - fully
-        open-source, anonymous and uncontrolled.
+        Online communities formed around the work of Shulgin&#39; prompting
+        intense curiosity. These communities self-organized to procure these
+        substances and then spread them across our globe. Today, a curious
+        researcher will find millions of anecdotal blog posts in forums from
+        savvy users - fully open-source, anonymous and uncontrolled.
       </Text>
 
       <Heading as="h2">Substance</Heading>
 
       <Text>
-        PsyDAO will revolutionize R&D and ownership of psychedelics IP using the
-        permissionless, trustless, decentralized, and censorship-resistant web,
-        web3. And, in a nod to Shulgin, we're starting with TiHKAL and PiHKAL.
+        PsyDAO will revolutionize R&#38;D and ownership of psychedelics IP using
+        the permissionless, trustless, decentralized, and censorship-resistant
+        web, web3. And, in a nod to Shulgin, we&#39;re starting with TiHKAL and
+        PiHKAL.
       </Text>
 
       <Text>
