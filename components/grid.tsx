@@ -77,7 +77,7 @@ export const Grid = ({ backgroundChildren, children, ...rest }: GridProps) => {
   const { cols, rows } = useGridTracks({ border, padding, track });
 
   return (
-    <Center w="100vw" h="100vh" bg="#fffafa" {...rest}>
+    <Center w="100vw" h="100vh" {...rest}>
       <Box pos="relative">
         {/* Background grid */}
         {backgroundChildren && (

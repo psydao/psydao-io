@@ -2,6 +2,10 @@ import { Box, chakra, Flex } from "@chakra-ui/react";
 import type { BoxProps } from "@chakra-ui/react";
 import { isValidMotionProp, motion } from "framer-motion";
 import type { MotionProps } from "framer-motion";
+import * as React from "react";
+
+// import { GlobalContext } from "../components/global-context";
+import { CloseIcon, DragIcon, ResizeIcon } from "./icons";
 
 const ChakraBox = chakra(motion.div, {
   shouldForwardProp: (prop) => isValidMotionProp(prop) || prop === "children",
@@ -17,17 +21,13 @@ type ReducedBoxProps = Omit<
   | "transition"
 >;
 
-interface WindowProps extends MotionProps, ReducedBoxProps {
-  showTitleBar?: boolean;
-}
+interface WindowProps extends BoxProps {}
 
-export function Window({
-  children,
-  showTitleBar = true,
-  ...rest
-}: WindowProps) {
+export function Window({ children, ...rest }: WindowProps) {
+  // const { dynamicBackgroundProps } = React.useContext(GlobalContext);
   return (
     <ChakraBox
+      drag
       dragElastic={0}
       dragMomentum={false}
       position="relative"
@@ -37,64 +37,28 @@ export function Window({
       borderStyle="solid"
       borderColor="#f2bebe"
       margin={{ base: "-1px", md: "-2px" }}
-      background="#fffafa"
-      overflow="auto"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       //@ts-ignore see https://chakra-ui.com/guides/integrations/with-framer
       transition={{ duration: 0.1 }}
+      // {...dynamicBackgroundProps}
+      background="#fffafa"
       {...rest}
     >
-      {showTitleBar && (
-        <Flex
-          bg="#fffafa"
-          position="sticky"
-          top="0"
-          justify="space-between"
-          p="5"
-        >
-          <svg
-            viewBox="-3 -3 60 24"
-            height="100%"
-            fill="#f2bebe"
-            style={{ maxWidth: "2rem" }}
-          >
-            <circle cx="0" cy="0" r="3" />
-            <circle cx="18" cy="0" r="3" />
-            <circle cx="36" cy="0" r="3" />
-            <circle cx="54" cy="0" r="3" />
-            <circle cx="0" cy="18" r="3" />
-            <circle cx="18" cy="18" r="3" />
-            <circle cx="36" cy="18" r="3" />
-            <circle cx="54" cy="18" r="3" />
-          </svg>
-          <svg
-            viewBox="-20 -20 40 40"
-            height="100%"
-            stroke="#f2bebe"
-            style={{ maxWidth: "1.5rem", filter: "blur(3px)" }}
-          >
-            <line
-              x1="-18"
-              y1="-18"
-              x2="18"
-              y2="18"
-              strokeWidth="10"
-              strokeLinecap="round"
-            />
-            <line
-              x1="-18"
-              y1="18"
-              x2="18"
-              y2="-18"
-              strokeWidth="10"
-              strokeLinecap="round"
-            />
-          </svg>
-        </Flex>
-      )}
-      <Box p="5">{children}</Box>
+      <Flex
+        // {...dynamicBackgroundProps}
+        background="#fffafa"
+        p="2"
+        justify="space-between"
+      >
+        <DragIcon />
+        <CloseIcon />
+      </Flex>
+      <Box p="2" pt="0" overflow="auto" {...rest}>
+        {children}
+      </Box>
+      <ResizeIcon position="absolute" right="2" bottom="2" />
     </ChakraBox>
   );
 }

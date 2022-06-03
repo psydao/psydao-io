@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Center,
-  GridItem,
   Image,
   Spinner,
   useBreakpointValue,
@@ -13,12 +12,14 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import * as React from "react";
 
+import { GlobalContext } from "../components/global-context";
 import type { GridProps } from "../components/grid";
 import { Marquee } from "../components/marquee";
 import { YoutubeEmbed } from "../components/youtube-embed";
 import { Window } from "../components/window";
 import { Manifesto } from "../components/manifesto";
 import { Lissajous } from "../components/lissajous";
+import { joyAndSorrow } from "../lib/constants";
 
 const DynamicLazyComponent = dynamic<GridProps>(
   () => import("../components/grid").then((mod) => mod.Grid),
@@ -49,6 +50,7 @@ const DynamicLazyComponent = dynamic<GridProps>(
 // resolve to some line coordinates responsively.
 
 const Home: NextPage = () => {
+  const { dynamicBackgroundProps } = React.useContext(GlobalContext);
   const dragConstraints = React.useRef(null);
   const [showManifesto, setShowManifesto] = React.useState(false);
   const breakpointValue = useBreakpointValue({
@@ -84,21 +86,32 @@ const Home: NextPage = () => {
       <DynamicLazyComponent
         // TODO Improve background position. Possibly we want this to be
         // generative art clouds or something
-        background="no-repeat url(/clouds.png)"
+        backgroundImage="url(/clouds.png)"
+        backgroundRepeat="no-repeat"
         backgroundPosition="top -70px right -180px"
+        {...dynamicBackgroundProps}
         backgroundChildren={
           <>
             {/* Background */}
-            <GridItem
+            <Box
               gridArea="2 / -5 / 7 / -1"
-              backgroundImage="linear-gradient(0deg, #FFDFDF, #FFDFDF), url(/stan-grof.jpg)"
+              // TODO we need to spec/improve the background generation. Among
+              // other things, right now it doesn't follow the apparent intent
+              // from the design spec. It'll also only update on mount/refresh
+              // because the background keyframe animation is not applied to the
+              // values used for the gradient
+              backgroundImage={`linear-gradient(0deg, ${dynamicBackgroundProps.background}, ${dynamicBackgroundProps.background}), url(/stan-grof.jpg)`}
               backgroundBlendMode="screen, normal"
               backgroundSize="cover"
             />
-            <GridItem
+            <Box
               gridArea={{ base: "-3 / 1 / -7 / 6", xl: "-2 / 1 / -6 / 7" }}
-              backgroundImage="linear-gradient(0deg, #FFDFDF, #FFDFDF), url(/shrooms.jpg)"
-              backgroundBlendMode="screen, normal"
+              // TODO also this instance (see previous comment). Probably we
+              // need to come up with a component that takes images and filters
+              // them like we want, possibly taking color and animation values
+              // from context.
+              backgroundImage={`linear-gradient(0deg, ${dynamicBackgroundProps.background}, ${dynamicBackgroundProps.background}), url(/shrooms.jpg)`}
+              backgroundBlendMode="screen, multiply"
               backgroundSize="cover"
             />
           </>
@@ -110,27 +123,30 @@ const Home: NextPage = () => {
         </Box>
 
         {/* Foreground */}
-        <GridItem gridArea="1 / 1 / 3 / 3" bg="#fffafa">
+        <Box gridArea="1 / 1 / 3 / 3" {...dynamicBackgroundProps}>
           <Image src="/psydao-deep-logo.svg" alt="" h="100%" w="100%" />
-        </GridItem>
-        <GridItem
+        </Box>
+        <Box
           gridArea="1 / -1 / 2 / -2"
-          bg="rgba(255, 250, 250, 0.6)"
           p="15%"
+          cursor="pointer"
+          onClick={() => alert("Menu coming soon!")}
         >
           <Image src="/lissajous-hamburger.svg" alt="" h="100%" w="100%" />
-        </GridItem>
-        <GridItem
+        </Box>
+        <Window
           gridArea={{
-            base: "4 / 2 / -1 / -2",
-            sm: "4 / 3 / -1 / -3",
-            md: "3 / 3 / -1 / -3",
-            lg: "2 / 5 / -1 / -5",
-            xl: "2 / 5 / -1 / -5",
+            base: "4 / 2 / span 8 / -2",
+            sm: "4 / 3 / span 8 / -3",
+            md: "3 / 3 / span 5 / -3",
+            lg: "2 / 5 / span 4 / span 5",
+            xl: "2 / 5 / span 4 / span 5",
           }}
+          overflow="hidden"
+          p="0"
         >
           <YoutubeEmbed embedId="dQw4w9WgXcQ" />
-        </GridItem>
+        </Window>
         <AnimatePresence>
           {showManifesto && (
             <Window
@@ -145,16 +161,15 @@ const Home: NextPage = () => {
             </Window>
           )}
         </AnimatePresence>
-        <Window gridArea="1 / -3 / 2 / -2" drag showTitleBar={false}>
+        <Box gridArea="4 / 1 / 5 / 2" p="2">
           <Lissajous />
-        </Window>
-        <GridItem
+        </Box>
+        <Box
           gridArea={{ base: "-3 / 1 / -1 / -1", xl: "-2 / 1 / -1 / -1" }}
-          bg="#fffafa"
-          overflow="hidden"
+          {...dynamicBackgroundProps}
         >
-          <Marquee label="12.06.2022 ... A SYMPOSIUM on Psychedelics" />
-        </GridItem>
+          <Marquee label={joyAndSorrow} />
+        </Box>
         <Center gridArea="-4 / -3 / -3 / -1">
           <Button
             onClick={() => setShowManifesto((prev) => !prev)}
