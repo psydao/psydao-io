@@ -5,7 +5,7 @@ import type { MotionProps } from "framer-motion";
 import * as React from "react";
 
 // import { GlobalContext } from "../components/global-context";
-import { CloseIcon, DragIcon, ResizeIcon } from "./icons";
+import { CloseIcon, DragIcon, ResizeIcon } from "components/icons";
 
 const ChakraBox = chakra(motion.div, {
   shouldForwardProp: (prop) => isValidMotionProp(prop) || prop === "children",

@@ -12,14 +12,14 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import * as React from "react";
 
-import { GlobalContext } from "../components/global-context";
-import type { GridProps } from "../components/grid";
-import { Marquee } from "../components/marquee";
-import { YoutubeEmbed } from "../components/youtube-embed";
-import { Window } from "../components/window";
-import { Manifesto } from "../components/manifesto";
-import { Lissajous } from "../components/lissajous";
-import { joyAndSorrow } from "../lib/constants";
+import { GlobalContext } from "components/global-context";
+import type { GridProps } from "components/grid";
+import { Marquee } from "components/marquee";
+import { YoutubeEmbed } from "components/youtube-embed";
+import { Window } from "components/window";
+import { Manifesto } from "components/manifesto";
+import { Lissajous } from "components/lissajous";
+import { joyAndSorrow } from "lib/constants";
 
 const DynamicLazyComponent = dynamic<GridProps>(
   () => import("../components/grid").then((mod) => mod.Grid),

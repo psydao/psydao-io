@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { getDynamicBackgroundProps } from "../lib/dynamic-background";
+import { getDynamicBackgroundProps } from "lib/dynamic-background";
 
 const dynamicBackgroundProps = getDynamicBackgroundProps();
 
