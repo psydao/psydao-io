@@ -1,80 +1,20 @@
-import {
-  Box,
-  Center,
-  Grid as ChakraGrid,
-  useBreakpointValue,
-} from "@chakra-ui/react";
+import { Box, Center, Grid as ChakraGrid } from "@chakra-ui/react";
 import type { CenterProps } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
+import * as React from "react";
 
-interface GridSpec {
-  border: number;
-  padding: number;
-  track: number;
-}
-
-interface Tracks {
-  cols: number | undefined;
-  rows: number | undefined;
-}
-
-const getGridTracks = ({ border, padding, track }: GridSpec): Tracks => {
-  let cols, rows;
-
-  if (typeof window !== "undefined") {
-    cols = Math.trunc(
-      (window.innerWidth - 2 * padding - border) / (track + border)
-    );
-    rows = Math.trunc(
-      (window.innerHeight - 2 * padding - border) / (track + border)
-    );
-  }
-
-  return {
-    cols,
-    rows,
-  };
-};
-
-// TODO I'm not sure this is optimal. I get to re-renders when cols/rows change.
-// Possibly rely on reducer? Possibly not the most important performance issue.
-const useGridTracks = ({ border, padding, track }: GridSpec) => {
-  const [{ cols, rows }, setGridTracks] = useState<Tracks>(
-    getGridTracks({ border, padding, track })
-  );
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const handleResize = () => {
-        const newTracks = getGridTracks({ border, padding, track });
-        if (cols !== newTracks.cols || rows !== newTracks.rows) {
-          setGridTracks({ ...newTracks });
-        }
-      };
-
-      window.addEventListener("resize", handleResize);
-      return () => window.removeEventListener("resize", handleResize);
-    }
-  }, [border, cols, padding, rows, track]);
-
-  return { cols, rows };
-};
-
-const gridSpec: { [breakpoint: string]: GridSpec } = {
-  base: { border: 1, padding: 5, track: 40 },
-  md: { border: 2, padding: 10, track: 60 },
-  xl: { border: 2, padding: 20, track: 85 },
-};
+import { GlobalContext } from "components/global-context";
 
 export interface GridProps extends CenterProps {
   backgroundChildren?: React.ReactNode;
 }
 
 export const Grid = ({ backgroundChildren, children, ...rest }: GridProps) => {
-  const { border, padding, track } = useBreakpointValue(gridSpec) ?? {
-    ...gridSpec.base,
-  };
-  const { cols, rows } = useGridTracks({ border, padding, track });
+  const {
+    borderWidth: border,
+    cols,
+    rows,
+    trackSize: track,
+  } = React.useContext(GlobalContext);
 
   return (
     <Center w="100vw" h="100vh" {...rest}>
