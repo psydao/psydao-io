@@ -11,7 +11,7 @@ const rgbTupleToHex = ([r, g, b]: RgbTuple) => {
     .padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
 };
 
-const hourToHex = (hour: number) => {
+export const hourToHex = (hour: number) => {
   if (hour === 0) {
     return rgbTupleToHex(midnight);
   } else if (hour === 12) {
