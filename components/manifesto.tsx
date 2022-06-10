@@ -1,16 +1,19 @@
-import { Divider, Heading, Text } from "@chakra-ui/react";
+import { Box, Divider, Text } from "@chakra-ui/react";
 
 export const Manifesto = () => {
   return (
-    <>
-      <Heading as="h1">PsyDAO - An Industrial Ego Death</Heading>
+    <Box p="6" layerStyle="window">
+      <Text color="#269200" fontSize="24px" mt="10">
+        The PsyDAO Manifesto
+      </Text>
+      <Text as="h1">An Industrial Ego Death</Text>
 
-      <Text>
+      <Text mt="4">
         PsyDAO is a collective working to democratize and decentralize
         psychedelics.
       </Text>
 
-      <Heading as="h2">Set</Heading>
+      <Text as="h2">Set</Text>
 
       <Text>
         Our species faces unprecedented challenges from pandemics, climate
@@ -68,7 +71,7 @@ export const Manifesto = () => {
         psychonauts overlap.
       </Text>
 
-      <Heading as="h2">Setting</Heading>
+      <Text as="h2">Setting</Text>
       <Text>
         The narrative thread tying together humanity and psychedelics is
         ancient, and perhaps even precedes the origin of our species.
@@ -101,7 +104,7 @@ export const Manifesto = () => {
         history. But that role is limited compared to what&#39;s to come with
         democratized access to psychedelics.
       </Text>
-      <Heading as="h2">Sage</Heading>
+      <Text as="h2">Sage</Text>
       <Text>
         After the whole wide world banned psychedelics in the fallout of the
         revolution of the 1960s, research and usage were driven underground,
@@ -156,7 +159,7 @@ export const Manifesto = () => {
         savvy users - fully open-source, anonymous and uncontrolled.
       </Text>
 
-      <Heading as="h2">Substance</Heading>
+      <Text as="h2">Substance</Text>
 
       <Text>
         PsyDAO will revolutionize R&#38;D and ownership of psychedelics IP using
@@ -222,7 +225,7 @@ export const Manifesto = () => {
         distributing rights and benefits to partners and contributors.
       </Text>
 
-      <Heading as="h2">Summary</Heading>
+      <Text as="h2">Summary</Text>
 
       <Text>
         We are on the precipice of either ruin and revolution. Our species needs
@@ -235,25 +238,27 @@ export const Manifesto = () => {
         world is available to anyone.
       </Text>
 
-      <Divider />
+      <Divider borderColor="#9835ba" mt="20" mb="5" />
 
       {/* Footnotes */}
-      <Text>
-        [1] Jeremy Narby,{" "}
-        <Text as="span" fontStyle="italic">
-          The Cosmic Serpent: DNA and the Origins of Knowledge
+      <Box as="ul" listStyleType="none">
+        <Text as="li" m="0">
+          [1] Jeremy Narby,{" "}
+          <Text as="span" fontStyle="italic">
+            The Cosmic Serpent: DNA and the Origins of Knowledge
+          </Text>
+          , 2006
         </Text>
-        , 2006
-      </Text>
-      <Text>
-        [2] Brian Muraresku,{" "}
-        <Text as="span" fontStyle="italic">
-          The Immortality Key: The Secret History of the Religion With No Name
+        <Text as="li" m="0">
+          [2] Brian Muraresku,{" "}
+          <Text as="span" fontStyle="italic">
+            The Immortality Key: The Secret History of the Religion With No Name
+          </Text>
+          , 2020
         </Text>
-        , 2020
-      </Text>
-      <Text>[3] Id.</Text>
-      <Text>[4] Hakim Bey</Text>
-    </>
+        <Text as="li">[3] Id.</Text>
+        <Text as="li">[4] Hakim Bey</Text>
+      </Box>
+    </Box>
   );
 };

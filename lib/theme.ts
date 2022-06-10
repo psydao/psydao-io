@@ -1,6 +1,10 @@
 import { extendTheme } from "@chakra-ui/react";
 
 export const theme = extendTheme({
+  fonts: {
+    heading: `'Cardo', sans-serif`,
+    body: `'Cardo', serif`,
+  },
   colors: {
     background: {
       1: "#fffafa",
@@ -53,11 +57,39 @@ export const theme = extendTheme({
       23: "#f2bebe",
     },
   },
+  layerStyles: {
+    window: {
+      h1: {
+        color: "#269200",
+        fontSize: "48px",
+        fontStyle: "italic",
+        letterSpacing: "-2%",
+        lineHeight: "110%",
+      },
+      h2: {
+        fontSize: "24px",
+        fontWeight: "bold",
+        letterSpacing: "-1%",
+        lineHeight: "110%",
+        mt: 10,
+        mb: 5,
+        textDecoration: "underline",
+        textUnderlineOffset: "2px",
+        textTransform: "uppercase",
+      },
+      p: {
+        fontSize: "17px",
+      },
+      "p + p": {
+        mt: 5,
+      },
+    },
+  },
   styles: {
     global: {
       body: {
         bg: "background.12",
-        color: "foreground.12",
+        color: "#9835BA",
       },
     },
   },
