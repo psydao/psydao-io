@@ -80,8 +80,11 @@ export const theme = extendTheme({
       p: {
         fontSize: "17px",
       },
-      "p + p": {
+      "p + p, div + p": {
         mt: 5,
+      },
+      "li + li": {
+        mt: 2,
       },
     },
   },

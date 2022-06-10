@@ -55,7 +55,7 @@ export function Window({ children, ...rest }: WindowProps) {
         <DragIcon />
         <CloseIcon />
       </Flex>
-      <Box p="2" pt="0" overflow="auto" {...rest}>
+      <Box overflow="auto" {...rest}>
         {children}
       </Box>
       <ResizeIcon position="absolute" right="2" bottom="2" />
