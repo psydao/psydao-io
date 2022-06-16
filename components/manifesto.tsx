@@ -9,10 +9,8 @@ export const Manifesto = () => {
         <Text color="#269200" fontSize="24px" mt="10">
           The PsyDAO Manifesto
         </Text>
-        <Text as="h1">An Industrial Ego Death</Text>
-        <Text mt="4">
-          PsyDAO is a collective working to democratize and decentralize
-          psychedelics.
+        <Text as="h1" mb="28">
+          An Industrial Ego Death
         </Text>
         <Text as="h2">Set</Text>
         <Text>
@@ -245,13 +243,7 @@ export const Manifesto = () => {
       </Box>
 
       {/* Footnotes */}
-      <Box
-        layerStyle="window"
-        as="ul"
-        listStyleType="none"
-        p="6"
-        backgroundColor="gray.100"
-      >
+      <Box layerStyle="window" as="ul" listStyleType="none" p="6">
         <Text as="li">
           [1] Jeremy Narby,{" "}
           <Text as="span" fontStyle="italic">
