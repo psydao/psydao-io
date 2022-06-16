@@ -87,6 +87,7 @@ export const Window = ({
       overflow="hidden"
       userSelect="none"
       pb="2"
+      boxShadow="0 25px 50px -12px rgb(0 0 0 / 0.25)"
       {...rest}
     >
       <Box
