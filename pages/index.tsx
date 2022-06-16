@@ -114,7 +114,7 @@ const Home: NextPage = () => {
         <Box gridArea="1 / 1 / 3 / 3" {...dynamicBackgroundProps}>
           <Image src="/psydao-deep-logo.svg" alt="" h="100%" w="100%" />
         </Box>
-        <Box gridArea="1 / -1 / 2 / -2" p="2">
+        <Box gridArea="1 / -1 / 2 / -2" p={{ base: "1", md: "2" }}>
           <Lissajous />
         </Box>
         <Window

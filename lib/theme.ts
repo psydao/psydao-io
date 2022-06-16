@@ -90,9 +90,10 @@ export const theme = extendTheme({
   },
   styles: {
     global: {
-      body: {
+      "html, body": {
         bg: "background.12",
         color: "#9835BA",
+        overscrollBehavior: "none",
       },
     },
   },
