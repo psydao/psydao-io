@@ -91,7 +91,7 @@ export const Window = ({
     >
       <Box
         display="flex"
-        alignItems="center"
+        alignItems="start"
         justifyContent="space-between"
         p="2"
         gap="2"
