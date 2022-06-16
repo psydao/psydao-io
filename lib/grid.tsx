@@ -40,8 +40,8 @@ const getTracks = ({
 // md, etc.
 export const gridSpecs: { [breakpoint: string]: GridParameters } = {
   base: { borderWidth: 1, minPadding: 5, trackSize: 40 },
-  md: { borderWidth: 2, minPadding: 10, trackSize: 60 },
-  xl: { borderWidth: 2, minPadding: 20, trackSize: 85 },
+  md: { borderWidth: 1, minPadding: 10, trackSize: 60 },
+  xl: { borderWidth: 1, minPadding: 20, trackSize: 85 },
 };
 
 export interface GridSpec extends GridParameters, Tracks {}

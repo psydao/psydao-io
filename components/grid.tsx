@@ -26,6 +26,7 @@ export const Grid = ({ backgroundChildren, children, ...rest }: GridProps) => {
             templateRows={`repeat(${rows}, ${trackSize}px)`}
             gap={`${borderWidth}px`}
             placeContent="center"
+            border="1px solid transparent"
           >
             {backgroundChildren}
           </ChakraGrid>

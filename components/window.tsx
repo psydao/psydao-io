@@ -78,7 +78,7 @@ export const Window = ({
       zIndex="0"
       display="flex"
       flexDirection="column"
-      border={{ base: "1px solid #f2bebe", md: "2px solid #f2bebe" }}
+      border="1px solid #f2bebe"
       backgroundColor="#faffff"
       onTapStart={() => {
         focus && focus();
