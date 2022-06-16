@@ -20,6 +20,7 @@ import { Marquee } from "components/marquee";
 import { Window } from "components/window";
 import { YoutubeEmbed } from "components/youtube-embed";
 import { joyAndSorrow } from "lib/constants";
+import { ColorizedImage } from "components/colorized-image";
 
 const DynamicLazyComponent = dynamic<GridProps>(
   () => import("../components/grid").then((mod) => mod.Grid),
@@ -86,26 +87,21 @@ const Home: NextPage = () => {
         backgroundChildren={
           <>
             {/* Background */}
-            <Box
+            <ColorizedImage
+              tone={dynamicBackgroundProps.background ?? ""}
+              src="/stan-grof.jpg"
               gridArea="2 / -5 / 7 / -1"
-              // TODO we need to spec/improve the background generation. Among
-              // other things, right now it doesn't follow the apparent intent
-              // from the design spec. It'll also only update on mount/refresh
-              // because the background keyframe animation is not applied to the
-              // values used for the gradient
-              backgroundImage={`linear-gradient(0deg, ${dynamicBackgroundProps.background}, ${dynamicBackgroundProps.background}), url(/stan-grof.jpg)`}
-              backgroundBlendMode="screen, normal"
-              backgroundSize="cover"
+              imageProps={{ height: "100%", width: "100%", objectFit: "cover" }}
             />
-            <Box
-              gridArea={{ base: "-3 / 1 / -7 / 6", xl: "-2 / 1 / -6 / 7" }}
-              // TODO also this instance (see previous comment). Probably we
-              // need to come up with a component that takes images and filters
-              // them like we want, possibly taking color and animation values
-              // from context.
-              backgroundImage={`linear-gradient(0deg, ${dynamicBackgroundProps.background}, ${dynamicBackgroundProps.background}), url(/shrooms.jpg)`}
-              backgroundBlendMode="screen, multiply"
-              backgroundSize="cover"
+            <ColorizedImage
+              tone={dynamicBackgroundProps.background ?? ""}
+              src="/shrooms.jpg"
+              gridArea="-2 / 1 / -7 / 7"
+              imageProps={{
+                height: "100%",
+                width: "100%",
+                objectFit: "cover",
+              }}
             />
           </>
         }
