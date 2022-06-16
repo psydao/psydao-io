@@ -26,7 +26,7 @@ const period = Math.PI * 2;
 
 const getPathData = (
   phi: number,
-  { a = 3, b = 1, rx = 100, ry = 100, theta = 0 }: CurveConfig = {}
+  { a = 3, b = 1, rx = 60, ry = 100, theta = 0 }: CurveConfig = {}
 ) => {
   const commonFactor = gcd(a, b);
 
@@ -85,14 +85,14 @@ export const Lissajous = ({
   const phiRef = React.useRef(0);
 
   useAnimationFrame(() => {
-    phiRef.current = (phiRef.current + 0.01) % 2;
+    phiRef.current = (phiRef.current + 0.004) % 2;
     setPathData(getPathData(phiRef.current));
   });
 
   return (
     <Box {...rest}>
       <svg viewBox="-115 -115 230 230" width="100%">
-        <path fill="none" stroke="#f2bebe" strokeWidth="6" d={pathData}></path>
+        <path fill="none" stroke="#f2bebe" strokeWidth="8" d={pathData}></path>
       </svg>
     </Box>
   );
