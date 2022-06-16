@@ -11,6 +11,7 @@ export const CloseIcon = (props: Omit<BoxProps, "children">) => {
       strokeWidth="6"
       strokeLinecap="round"
       style={{ maxWidth: "1.5rem", filter: "blur(2px)" }}
+      cursor="pointer"
       {...props}
     >
       <line x1="-18" y1="-18" x2="18" y2="18" />

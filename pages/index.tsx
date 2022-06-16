@@ -14,11 +14,11 @@ import * as React from "react";
 
 import { GlobalContext } from "components/global-context";
 import type { GridProps } from "components/grid";
-import { Marquee } from "components/marquee";
-import { YoutubeEmbed } from "components/youtube-embed";
-import { Window } from "components/window";
-import { Manifesto } from "components/manifesto";
 import { Lissajous } from "components/lissajous";
+import { Manifesto } from "components/manifesto";
+import { Marquee } from "components/marquee";
+import { Window } from "components/window";
+import { YoutubeEmbed } from "components/youtube-embed";
 import { joyAndSorrow } from "lib/constants";
 
 const DynamicLazyComponent = dynamic<GridProps>(
@@ -53,13 +53,6 @@ const Home: NextPage = () => {
   const { dynamicBackgroundProps } = React.useContext(GlobalContext);
   const dragConstraints = React.useRef(null);
   const [showManifesto, setShowManifesto] = React.useState(false);
-  const breakpointValue = useBreakpointValue({
-    base: "base",
-    sm: "sm",
-    md: "md",
-    lg: "lg",
-    xl: "xl",
-  });
 
   return (
     <>
@@ -117,53 +110,38 @@ const Home: NextPage = () => {
           </>
         }
       >
-        {/* Hint */}
-        <Box position="fixed" top="5px" right="5px">
-          {breakpointValue}
-        </Box>
-
         {/* Foreground */}
         <Box gridArea="1 / 1 / 3 / 3" {...dynamicBackgroundProps}>
           <Image src="/psydao-deep-logo.svg" alt="" h="100%" w="100%" />
         </Box>
-        <Box
-          gridArea="1 / -1 / 2 / -2"
-          p="15%"
-          cursor="pointer"
-          onClick={() => alert("Menu coming soon!")}
-        >
-          <Image src="/lissajous-hamburger.svg" alt="" h="100%" w="100%" />
+        <Box gridArea="1 / -1 / 2 / -2" p="2">
+          <Lissajous />
         </Box>
         <Window
-          gridArea={{
-            base: "4 / 2 / span 8 / -2",
-            sm: "4 / 3 / span 8 / -3",
-            md: "3 / 3 / span 5 / -3",
-            lg: "2 / 5 / span 4 / span 5",
-            xl: "2 / 5 / span 4 / span 5",
-          }}
-          overflow="hidden"
           p="0"
+          contentBoxProps={{ p: 0, overflow: "hidden" }}
+          bg="black"
+          position="absolute"
+          top="calc(20%)"
+          left="calc(50% - 151px)"
+          initial={{ height: 170 + 40, width: 302 }}
         >
           <YoutubeEmbed embedId="dQw4w9WgXcQ" />
         </Window>
         <AnimatePresence>
           {showManifesto && (
             <Window
-              gridArea={{
-                base: "1 / 2 / -3 / -2",
-                sm: "1 / 3 / -3 / -3",
-                lg: "1 / 4 / -3 / -3",
-                xl: "1 / 5 / -2 / -5",
-              }}
+              p={0}
+              contentBoxProps={{ p: 0 }}
+              position="absolute"
+              top="calc(50% - 250px)"
+              left="calc(50% - 175px)"
+              initial={{ height: 500, width: 350 }}
             >
               <Manifesto />
             </Window>
           )}
         </AnimatePresence>
-        <Box gridArea="4 / 1 / 5 / 2" p="2">
-          <Lissajous />
-        </Box>
         <Box
           gridArea={{ base: "-3 / 1 / -1 / -1", xl: "-2 / 1 / -1 / -1" }}
           {...dynamicBackgroundProps}

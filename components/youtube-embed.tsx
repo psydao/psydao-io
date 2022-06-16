@@ -5,23 +5,9 @@ interface YoutubeEmbed extends Omit<BoxProps, "children"> {
   embedId: string;
 }
 
-// .video-responsive {
-//   overflow: hidden;
-//   padding-bottom: 56.25%;
-//   position: relative;
-//   height: 0;
-// }
-
-// .video-responsive iframe {
-//   left: 0;
-//   top: 0;
-//   height: 100%;
-//   width: 100%;
-//   position: absolute;
-// }
-
 export const YoutubeEmbed = ({ embedId, ...rest }: YoutubeEmbed) => (
-  <Box overflow="hidden" pb="56.25%" pos="relative" h="0" {...rest}>
+  // <Box overflow="hidden" pb="56.25%" pos="relative" h="0" {...rest}>
+  <Box overflow="hidden" h="100%" w="100%" position="relative" {...rest}>
     <Box
       as="iframe"
       pos="absolute"

@@ -3,21 +3,18 @@ import type { CenterProps } from "@chakra-ui/react";
 import * as React from "react";
 
 import { GlobalContext } from "components/global-context";
+import { getGridBackgroundPattern } from "lib/grid";
 
 export interface GridProps extends CenterProps {
   backgroundChildren?: React.ReactNode;
 }
 
 export const Grid = ({ backgroundChildren, children, ...rest }: GridProps) => {
-  const {
-    borderWidth: border,
-    cols,
-    rows,
-    trackSize: track,
-  } = React.useContext(GlobalContext);
+  const { borderWidth, cols, rows, trackSize } =
+    React.useContext(GlobalContext);
 
   return (
-    <Center w="100vw" h="100vh" {...rest}>
+    <Center w="100vw" h="100vh" overflow="hidden" {...rest}>
       <Box pos="relative">
         {/* Background grid */}
         {backgroundChildren && (
@@ -25,10 +22,9 @@ export const Grid = ({ backgroundChildren, children, ...rest }: GridProps) => {
             pos="absolute"
             top="0"
             left="0"
-            templateColumns={`repeat(${cols}, ${track}px)`}
-            templateRows={`repeat(${rows}, ${track}px)`}
-            gap={`${border}px`}
-            border={`${border}px solid tomato`}
+            templateColumns={`repeat(${cols}, ${trackSize}px)`}
+            templateRows={`repeat(${rows}, ${trackSize}px)`}
+            gap={`${borderWidth}px`}
             placeContent="center"
           >
             {backgroundChildren}
@@ -39,16 +35,14 @@ export const Grid = ({ backgroundChildren, children, ...rest }: GridProps) => {
         <ChakraGrid
           pos="relative"
           m="0 auto"
-          templateColumns={`repeat(${cols}, ${track}px)`}
-          templateRows={`repeat(${rows}, ${track}px)`}
-          gap={`${border}px`}
-          border={`${border}px solid #f2bebe`}
+          templateColumns={`repeat(${cols}, ${trackSize}px)`}
+          templateRows={`repeat(${rows}, ${trackSize}px)`}
+          gap={`${borderWidth}px`}
           placeContent="center"
-          backgroundImage={`linear-gradient(#f2bebe ${border}px, transparent ${border}px), linear-gradient(90deg, #f2bebe ${border}px, transparent ${border}px)`}
-          backgroundSize={`${track + border}px ${track + border}px, ${
-            track + border
-          }px ${track + border}px`}
-          backgroundPosition={`-${border}px -${border}px`}
+          {...getGridBackgroundPattern({
+            borderWidth,
+            trackSize,
+          })}
         >
           {children}
         </ChakraGrid>

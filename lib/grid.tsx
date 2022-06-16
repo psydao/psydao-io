@@ -75,3 +75,29 @@ export const useGridTracks = (): GridSpec => {
 
   return { borderWidth, cols, minPadding, rows, trackSize };
 };
+
+interface GetGridBackgroundPatternParameters {
+  borderWidth: number;
+  strokeColor?: string;
+  trackSize: number;
+}
+
+export const getGridBackgroundPattern = ({
+  borderWidth,
+  strokeColor = "#f2bebe",
+  trackSize,
+}: GetGridBackgroundPatternParameters) => {
+  const backgroundImage = `linear-gradient(${strokeColor} ${borderWidth}px, transparent ${borderWidth}px), linear-gradient(90deg, ${strokeColor} ${borderWidth}px, transparent ${borderWidth}px)`;
+  const backgroundPosition = `-${borderWidth}px -${borderWidth}px`;
+  const backgroundSize = `${trackSize + borderWidth}px ${
+    trackSize + borderWidth
+  }px, ${trackSize + borderWidth}px ${trackSize + borderWidth}px`;
+  const border = `${borderWidth}px solid ${strokeColor}`;
+
+  return {
+    backgroundImage,
+    backgroundPosition,
+    backgroundSize,
+    border,
+  };
+};
