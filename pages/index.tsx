@@ -142,10 +142,7 @@ const Home: NextPage = () => {
             </Window>
           )}
         </AnimatePresence>
-        <Box
-          gridArea={{ base: "-3 / 1 / -1 / -1", xl: "-2 / 1 / -1 / -1" }}
-          {...dynamicBackgroundProps}
-        >
+        <Box gridArea="-2 / 1 / -1 / -1" {...dynamicBackgroundProps}>
           <Marquee label={joyAndSorrow} />
         </Box>
         <Center gridArea="-4 / -3 / -3 / -1">

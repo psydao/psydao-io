@@ -35,10 +35,14 @@ export const Marquee = ({ label, ...rest }: MarqueeProps) => {
       ref={parentRef}
       h="100%"
       w="100%"
+      fontFamily="'GrandSlang Roman'"
+      textTransform="uppercase"
       fontSize={height}
       lineHeight={height}
       alignItems="center"
       overflow="hidden"
+      sx={{ wordSpacing: "0.2em" }}
+      color="#f2bebe"
       {...rest}
     >
       <Text
