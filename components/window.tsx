@@ -1,23 +1,13 @@
-import { Box, chakra, Flex } from "@chakra-ui/react";
+import { Box, chakra } from "@chakra-ui/react";
 import type { BoxProps } from "@chakra-ui/react";
 import { isValidMotionProp, motion, useMotionValue } from "framer-motion";
 import * as React from "react";
+import * as ReactDOM from "react-dom";
 
 // import { GlobalContext } from "../components/global-context";
-import { useWindowContext } from "components/desktop";
+import { useItemContext } from "components/item";
+import { useDesktopContext } from "components/desktop";
 import { CloseIcon, DragIcon, ResizeIcon } from "components/icons";
-
-interface SlotProps {
-  children: React.ReactNode;
-}
-
-const Minimized = ({ children }: SlotProps) => {
-  return <>{children}</>;
-};
-
-const Maximized = ({ children }: SlotProps) => {
-  return <>{children}</>;
-};
 
 const MotionDiv = chakra(motion.div, {
   shouldForwardProp: (prop) => isValidMotionProp(prop) || prop === "children",
@@ -57,13 +47,12 @@ export const Window = ({
   } = {},
   contentBoxProps,
   children,
-  focus,
   initial = {},
-  onClose,
   title,
   ...rest
 }: WindowProps) => {
-  const { windowLayerRef } = useWindowContext();
+  const { id, isOpen, onClose } = useItemContext();
+  const { windowLayerRef, focus, windowStack } = useDesktopContext();
 
   // Motion props
   const x = useMotionValue(initial.x ?? 0);
@@ -72,69 +61,72 @@ export const Window = ({
     clamp(initial.height ?? 0, minHeight, maxHeight)
   );
   const width = useMotionValue(clamp(initial.width ?? 0, minWidth, maxWidth));
-  return (
-    <MotionDiv
-      position="relative"
-      zIndex="0"
-      display="flex"
-      flexDirection="column"
-      border="1px solid #f2bebe"
-      backgroundColor="#faffff"
-      onTapStart={() => {
-        focus && focus();
-      }}
-      style={{ height, x, y, width }}
-      overflow="hidden"
-      userSelect="none"
-      pb="2"
-      boxShadow="0 25px 50px -12px rgb(0 0 0 / 0.25)"
-      {...rest}
-    >
-      <Box
+
+  if (windowLayerRef && windowLayerRef.current && isOpen) {
+    return ReactDOM.createPortal(
+      <MotionDiv
+        position="absolute"
+        zIndex={windowStack && id && windowStack[id]}
         display="flex"
-        alignItems="start"
-        justifyContent="space-between"
-        p="2"
-        gap="2"
+        flexDirection="column"
+        border="1px solid #f2bebe"
+        backgroundColor="#faffff"
+        onTapStart={() => {
+          focus && id && focus(id);
+        }}
+        style={{ height, x, y, width }}
+        overflow="hidden"
+        userSelect="none"
+        pb="2"
+        boxShadow="2xl"
+        {...rest}
       >
+        <Box
+          display="flex"
+          alignItems="start"
+          justifyContent="space-between"
+          p="2"
+          gap="2"
+        >
+          <motion.div
+            onPan={(e, info) => {
+              x.set(info.delta.x + x.get());
+              y.set(info.delta.y + y.get());
+            }}
+            style={{ width: "2em" }}
+          >
+            <DragIcon />
+          </motion.div>
+          {title}
+          <CloseIcon flex="0 0 auto" onClick={onClose} />
+        </Box>
+        <Box
+          overflow="auto"
+          userSelect="text"
+          px="2"
+          flex="1 1 auto"
+          {...contentBoxProps}
+        >
+          {children}
+        </Box>
         <motion.div
           onPan={(e, info) => {
-            x.set(info.delta.x + x.get());
-            y.set(info.delta.y + y.get());
+            const newHeight = info.delta.y + height.get();
+            const newWidth = info.delta.x + width.get();
+            if (newHeight >= minHeight && newHeight <= maxHeight) {
+              height.set(newHeight);
+            }
+            if (newWidth >= minWidth && newWidth <= maxWidth) {
+              width.set(newWidth);
+            }
           }}
-          style={{ width: "2em" }}
         >
-          <DragIcon />
+          <ResizeIcon position="absolute" right="2" bottom="2" />
         </motion.div>
-        {title}
-        <CloseIcon flex="0 0 auto" onClick={onClose} />
-      </Box>
-      <Box
-        overflow="auto"
-        userSelect="text"
-        px="2"
-        flex="1 1 auto"
-        {...contentBoxProps}
-      >
-        {children}
-      </Box>
-      <motion.div
-        onPan={(e, info) => {
-          const newHeight = info.delta.y + height.get();
-          const newWidth = info.delta.x + width.get();
-          if (newHeight >= minHeight && newHeight <= maxHeight) {
-            height.set(newHeight);
-          }
-          if (newWidth >= minWidth && newWidth <= maxWidth) {
-            width.set(newWidth);
-          }
-        }}
-      >
-        <ResizeIcon position="absolute" right="2" bottom="2" />
-      </motion.div>
-    </MotionDiv>
-  );
-};
+      </MotionDiv>,
+      windowLayerRef.current
+    );
+  }
 
-Window.Minimized = Minimized;
-Window.Maximized = Maximized;
+  return null;
+};

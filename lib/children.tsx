@@ -1,6 +1,9 @@
 import * as React from "react";
 
-export const pick = (children: React.ReactNode, names: string[]) => {
+export const pick = (
+  children: React.ReactNode,
+  names: string[]
+): React.ReactNode[] => {
   const picked = Array(names.length).fill(null);
   React.Children.forEach(children, (child) => {
     if (React.isValidElement(child) && typeof child.type !== "string") {
