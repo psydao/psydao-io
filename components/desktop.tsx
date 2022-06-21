@@ -28,7 +28,15 @@ export const Desktop = ({ children }: FlexProps) => {
       <WindowContext.Provider value={{ windowLayerRef, windowStack, focus }}>
         {children}
       </WindowContext.Provider>
-      <Box ref={windowLayerRef} position="absolute" top="0" left="0" />
+      <Box
+        ref={windowLayerRef}
+        position="absolute"
+        top="0"
+        right="0"
+        bottom="0"
+        left="0"
+        pointerEvents="none"
+      />
     </>
   );
 };

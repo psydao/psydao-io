@@ -11,7 +11,7 @@ interface ItemContextProps extends UseDisclosureReturn {
 const ItemContext = React.createContext<Partial<ItemContextProps>>({});
 export const useItemContext = () => React.useContext(ItemContext);
 
-export const Icon = (props: BoxProps) => {
+const Icon = (props: BoxProps) => {
   const { id, onOpen } = useItemContext();
   const { focus } = useDesktopContext();
   return (

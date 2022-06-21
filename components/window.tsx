@@ -79,6 +79,7 @@ export const Window = ({
         userSelect="none"
         pb="2"
         boxShadow="2xl"
+        pointerEvents="auto"
         {...rest}
       >
         <Box
@@ -93,7 +94,7 @@ export const Window = ({
               x.set(info.delta.x + x.get());
               y.set(info.delta.y + y.get());
             }}
-            style={{ width: "2em" }}
+            style={{ width: "2em", touchAction: "none" }}
           >
             <DragIcon />
           </motion.div>
@@ -120,6 +121,7 @@ export const Window = ({
               width.set(newWidth);
             }
           }}
+          style={{ touchAction: "none" }}
         >
           <ResizeIcon position="absolute" right="2" bottom="2" />
         </motion.div>
