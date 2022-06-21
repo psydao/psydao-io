@@ -1,10 +1,10 @@
-import { Flex, keyframes, Text } from "@chakra-ui/react";
+import { Box, Flex, keyframes, Text } from "@chakra-ui/react";
 import type { FlexProps } from "@chakra-ui/react";
 import * as React from "react";
 
 const scroll = keyframes`
   0% {transform: translateX(0%);}
-  100% {transform: translateX(-100%)}
+  100% {transform: translateX(-50%)}
 `;
 
 const useHeight = (target: React.RefObject<HTMLElement | null>) => {
@@ -45,24 +45,19 @@ export const Marquee = ({ label, ...rest }: MarqueeProps) => {
       color="#f2bebe"
       {...rest}
     >
-      <Text
-        as="span"
-        pl="0.3em"
-        pr="3em"
+      <Box
         flex="0 0 auto"
+        whiteSpace="nowrap"
         animation={`${time}s linear infinite ${scroll}`}
+        _hover={{ animationPlayState: "paused" }}
       >
-        {label}
-      </Text>
-      <Text
-        as="span"
-        pl="0.3em"
-        pr="3em"
-        flex="0 0 auto"
-        animation={`${time}s linear infinite ${scroll}`}
-      >
-        {label}
-      </Text>
+        <Text as="span" pl="0.3em" pr="3em">
+          {label}
+        </Text>
+        <Text as="span" pl="0.3em" pr="3em">
+          {label}
+        </Text>
+      </Box>
     </Flex>
   );
 };
