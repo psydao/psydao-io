@@ -1,53 +1,42 @@
-import { Box, Center, Grid as ChakraGrid } from "@chakra-ui/react";
-import type { CenterProps } from "@chakra-ui/react";
+import { Box, Grid as ChakraGrid, Spinner } from "@chakra-ui/react";
+import type { GridProps as ChakraGridProps } from "@chakra-ui/react";
 import * as React from "react";
 
 import { GlobalContext } from "components/global-context";
-import { getGridBackgroundPattern } from "lib/grid";
 
-export interface GridProps extends CenterProps {
-  backgroundChildren?: React.ReactNode;
+interface GridProps extends ChakraGridProps {
+  getNumberOfFillers?: (cols: number, rows: number) => number;
 }
 
-export const Grid = ({ backgroundChildren, children, ...rest }: GridProps) => {
-  const { borderWidth, cols, rows, trackSize } =
-    React.useContext(GlobalContext);
+export const Grid = ({ children, getNumberOfFillers, ...rest }: GridProps) => {
+  const { cols, rows, trackSize } = React.useContext(GlobalContext);
+  if (cols && rows) {
+    const gutterStylingProps = getNumberOfFillers && {
+      borderTop: "1px solid #f2bebe",
+      borderLeft: "1px solid #f2bebe",
+      sx: {
+        "& > *": {
+          borderRight: "1px solid #f2bebe",
+          borderBottom: "1px solid #f2bebe",
+        },
+      },
+    };
+    return (
+      <ChakraGrid
+        templateColumns={`repeat(${cols}, ${trackSize}px)`}
+        templateRows={`repeat(${rows}, ${trackSize}px)`}
+        placeContent="center"
+        {...gutterStylingProps}
+        {...rest}
+      >
+        {children}
+        {getNumberOfFillers &&
+          new Array(getNumberOfFillers(cols, rows))
+            .fill(null)
+            .map((_, idx) => <Box key={idx} />)}
+      </ChakraGrid>
+    );
+  }
 
-  return (
-    <Center w="100vw" h="100vh" overflow="hidden" {...rest}>
-      <Box pos="relative">
-        {/* Background grid */}
-        {backgroundChildren && (
-          <ChakraGrid
-            pos="absolute"
-            top="0"
-            left="0"
-            templateColumns={`repeat(${cols}, ${trackSize}px)`}
-            templateRows={`repeat(${rows}, ${trackSize}px)`}
-            gap={`${borderWidth}px`}
-            placeContent="center"
-            border="1px solid transparent"
-          >
-            {backgroundChildren}
-          </ChakraGrid>
-        )}
-
-        {/* Foreground grid */}
-        <ChakraGrid
-          pos="relative"
-          m="0 auto"
-          templateColumns={`repeat(${cols}, ${trackSize}px)`}
-          templateRows={`repeat(${rows}, ${trackSize}px)`}
-          gap={`${borderWidth}px`}
-          placeContent="center"
-          {...getGridBackgroundPattern({
-            borderWidth,
-            trackSize,
-          })}
-        >
-          {children}
-        </ChakraGrid>
-      </Box>
-    </Center>
-  );
+  return <Spinner />;
 };

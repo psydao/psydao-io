@@ -1,19 +1,11 @@
-import {
-  Box,
-  Center,
-  Grid as ChakraGrid,
-  Image,
-  Link,
-  Spinner,
-  Text,
-} from "@chakra-ui/react";
-import type { GridProps as ChakraGridProps } from "@chakra-ui/react";
+import { Box, Center, Image, Link } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import NextLink from "next/link";
 import * as React from "react";
 
+import { BackgroundGrid } from "components/background-grid";
 import { Desktop } from "components/desktop";
-import { GlobalContext } from "components/global-context";
+import { Grid } from "components/grid";
 import { Head } from "components/head";
 import { Item } from "components/item";
 import { Lissajous } from "components/lissajous";
@@ -23,44 +15,7 @@ import { Newsletter } from "components/newsletter";
 import { Video } from "components/video";
 import { joyAndSorrow } from "lib/constants";
 
-interface GridProps extends ChakraGridProps {
-  getNumberOfFillers?: (cols: number, rows: number) => number;
-}
-
-const Grid = ({ children, getNumberOfFillers, ...rest }: GridProps) => {
-  const { cols, rows, trackSize } = React.useContext(GlobalContext);
-  if (cols && rows) {
-    const gutterStylingProps = getNumberOfFillers && {
-      borderTop: "1px solid #f2bebe",
-      borderLeft: "1px solid #f2bebe",
-      sx: {
-        "& > *": {
-          borderRight: "1px solid #f2bebe",
-          borderBottom: "1px solid #f2bebe",
-        },
-      },
-    };
-    return (
-      <ChakraGrid
-        templateColumns={`repeat(${cols}, ${trackSize}px)`}
-        templateRows={`repeat(${rows}, ${trackSize}px)`}
-        placeContent="center"
-        {...gutterStylingProps}
-        {...rest}
-      >
-        {children}
-        {getNumberOfFillers &&
-          new Array(getNumberOfFillers(cols, rows))
-            .fill(null)
-            .map((_, idx) => <Box key={idx} />)}
-      </ChakraGrid>
-    );
-  }
-
-  return <Spinner />;
-};
-
-const GridNouveauPage: NextPage = () => {
+const Homepage: NextPage = () => {
   const [isBrowser, setIsBrowser] = React.useState(false);
 
   React.useLayoutEffect(() => {
@@ -79,17 +34,7 @@ const GridNouveauPage: NextPage = () => {
           overflow="hidden"
           background="no-repeat top right url(/clouds.png), linear-gradient(60deg, #fffafa, #fff9ef)"
         >
-          <Grid position="absolute" top={0} right={0} bottom={0} left={0}>
-            <Box
-              background="linear-gradient(0deg, #ffdfdf, #ffdfdf), center/cover url(/stan-grof.jpg)"
-              backgroundBlendMode="screen, normal"
-              gridArea="2 / -5 / 7 / -1"
-            />
-            <Box
-              background="center/cover url(/shrooms.png)"
-              gridArea="-2 / 1 / -7 / 7"
-            />
-          </Grid>
+          <BackgroundGrid />
           <Grid
             position="relative"
             zIndex="0"
@@ -152,4 +97,4 @@ const GridNouveauPage: NextPage = () => {
   return null;
 };
 
-export default GridNouveauPage;
+export default Homepage;
