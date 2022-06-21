@@ -56,9 +56,15 @@ export const Newsletter = () => {
               type="email"
               name="member[email]"
               id="email"
+              borderRadius="0px"
             />
           </FormControl>
-          <Button type="submit" value="Subscribe" name="member[subscribe]">
+          <Button
+            type="submit"
+            value="Subscribe"
+            name="member[subscribe]"
+            borderRadius="0px"
+          >
             Subscribe
           </Button>
         </Flex>
