@@ -28,7 +28,7 @@ interface MarqueeProps extends Omit<FlexProps, "children"> {
 
 export const Marquee = ({ label, ...rest }: MarqueeProps) => {
   const parentRef = React.useRef<HTMLDivElement>(null);
-  const height = `${Math.trunc(useHeight(parentRef) * 0.8)}px`;
+  const height = Math.trunc(useHeight(parentRef));
   const time = label.length / 3;
   return (
     <Flex
@@ -37,8 +37,8 @@ export const Marquee = ({ label, ...rest }: MarqueeProps) => {
       w="100%"
       fontFamily="'GrandSlang Roman'"
       textTransform="uppercase"
-      fontSize={height}
-      lineHeight={height}
+      fontSize={`${height}px`}
+      lineHeight={`${height}px`}
       alignItems="center"
       overflow="hidden"
       sx={{ wordSpacing: "0.2em" }}
@@ -46,6 +46,8 @@ export const Marquee = ({ label, ...rest }: MarqueeProps) => {
       {...rest}
     >
       <Box
+        position="relative"
+        top={`${height * 0.04}px`}
         flex="0 0 auto"
         whiteSpace="nowrap"
         animation={`${time}s linear infinite ${scroll}`}
