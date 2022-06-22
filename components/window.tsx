@@ -56,6 +56,18 @@ export const Window = ({
   );
   const width = useMotionValue(clamp(initial.width ?? 0, minWidth, maxWidth));
 
+  // TODO find a less ugly way to refresh component. The problem solved by the
+  // following segment is that windowLayerRef will be null at first and the
+  // defaultIsOpen from useDisclosure won't be honored. This state/effect
+  // produces a rerender that picks up the correct values. But it's ugly and you
+  // know it.
+  const [mounted, setMounted] = React.useState(false);
+  React.useLayoutEffect(() => {
+    if (!mounted) {
+      setMounted(true);
+    }
+  }, []);
+
   if (windowLayerRef && windowLayerRef.current && isOpen) {
     return ReactDOM.createPortal(
       <MotionDiv
