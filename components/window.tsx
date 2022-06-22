@@ -5,56 +5,38 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 
 import { useItemContext } from "components/item";
-import { useDesktopContext } from "components/desktop";
 import { CloseIcon, DragIcon, ResizeIcon } from "components/icons";
+import { useWindowManager } from "components/window-manager";
 
 const MotionDiv = chakra(motion.div, {
   shouldForwardProp: (prop) => isValidMotionProp(prop) || prop === "children",
 });
 
-const clamp = (value: number, min: number, max: number) =>
-  Math.max(min, Math.min(value, max));
-
 interface WindowProps extends React.ComponentPropsWithoutRef<typeof MotionDiv> {
-  constraints?: {
-    maxHeight?: number;
-    maxWidth?: number;
-    minHeight?: number;
-    minWidth?: number;
-  };
   contentBoxProps?: BoxProps;
-  initial?: {
-    height?: number;
-    width?: number;
-    x?: number;
-    y?: number;
+  initial: {
+    height: number;
+    width: number;
   };
   title?: string;
 }
 
 export const Window = ({
-  constraints: {
-    maxHeight = Infinity,
-    maxWidth = Infinity,
-    minHeight = 200,
-    minWidth = 300,
-  } = {},
   contentBoxProps,
   children,
-  initial = {},
+  initial,
   title,
   ...rest
 }: WindowProps) => {
   const { id, isOpen, onClose } = useItemContext();
-  const { windowLayerRef, focus, windowStack } = useDesktopContext();
+  const { windowLayerRef, focus, windowStack } = useWindowManager();
 
   // Motion props
-  const x = useMotionValue(initial.x ?? 0);
-  const y = useMotionValue(initial.y ?? 0);
-  const height = useMotionValue(
-    clamp(initial.height ?? 0, minHeight, maxHeight)
-  );
-  const width = useMotionValue(clamp(initial.width ?? 0, minWidth, maxWidth));
+  const [drag, setDrag] = React.useState(false);
+  const height = useMotionValue(initial.height);
+  const width = useMotionValue(initial.width);
+  const heightBeforeResize = React.useRef(height.get());
+  const widthBeforeResize = React.useRef(width.get());
 
   // TODO find a less ugly way to refresh component. The problem solved by the
   // following segment is that windowLayerRef will be null at first and the
@@ -68,15 +50,18 @@ export const Window = ({
     }
   }, []);
 
-  if (windowLayerRef && windowLayerRef.current && isOpen) {
+  if (windowLayerRef.current && isOpen) {
     return ReactDOM.createPortal(
       <MotionDiv
+        drag={drag}
+        dragConstraints={windowLayerRef}
+        dragElastic={false}
+        dragMomentum={false}
+        onDragEnd={() => setDrag(false)}
         position="absolute"
         zIndex={windowStack && id && windowStack[id]}
-        onTapStart={() => {
-          focus && id && focus(id);
-        }}
-        style={{ height, x, y, width }}
+        onTapStart={() => focus(id)}
+        style={{ height, width }}
         display="flex"
         flexDirection="column"
         border="1px solid #f2bebe"
@@ -86,6 +71,8 @@ export const Window = ({
         boxShadow="2xl"
         userSelect="none"
         pointerEvents="auto"
+        minH="150px"
+        minW="200px"
         {...rest}
       >
         <Box
@@ -98,10 +85,7 @@ export const Window = ({
           <MotionDiv
             width="2em"
             sx={{ touchAction: "none" }}
-            onPan={(e, info) => {
-              x.set(info.delta.x + x.get());
-              y.set(info.delta.y + y.get());
-            }}
+            onTapStart={() => setDrag(true)}
           >
             <DragIcon />
           </MotionDiv>
@@ -119,15 +103,13 @@ export const Window = ({
         </Box>
         <MotionDiv
           sx={{ touchAction: "none" }}
-          onPan={(e, info) => {
-            const newHeight = info.delta.y + height.get();
-            const newWidth = info.delta.x + width.get();
-            if (newHeight >= minHeight && newHeight <= maxHeight) {
-              height.set(newHeight);
-            }
-            if (newWidth >= minWidth && newWidth <= maxWidth) {
-              width.set(newWidth);
-            }
+          onPanStart={() => {
+            heightBeforeResize.current = height.get();
+            widthBeforeResize.current = width.get();
+          }}
+          onPan={(_, { offset }) => {
+            height.set(heightBeforeResize.current + offset.y);
+            width.set(widthBeforeResize.current + offset.x);
           }}
         >
           <ResizeIcon position="absolute" right="2" bottom="2" />

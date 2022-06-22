@@ -4,7 +4,6 @@ import NextLink from "next/link";
 import * as React from "react";
 
 import { BackgroundGrid } from "components/background-grid";
-import { Desktop } from "components/desktop";
 import { Grid } from "components/grid";
 import { Head } from "components/head";
 import { Item } from "components/item";
@@ -13,6 +12,7 @@ import { Manifesto } from "components/manifesto";
 import { Marquee } from "components/marquee";
 import { Newsletter } from "components/newsletter";
 import { Video } from "components/video";
+import { WindowManager } from "components/window-manager";
 import { joyAndSorrow } from "lib/constants";
 
 const Homepage: NextPage = () => {
@@ -49,7 +49,7 @@ const Homepage: NextPage = () => {
             <Box gridArea="-2 / 1 / -1 / -1">
               <Marquee label={joyAndSorrow} />
             </Box>
-            <Desktop>
+            <WindowManager>
               <Box
                 gridArea="2 / -5 / 7 / -1"
                 textAlign="right"
@@ -87,7 +87,7 @@ const Homepage: NextPage = () => {
                   </Item.Icon>
                 </Item>
               </Box>
-            </Desktop>
+            </WindowManager>
           </Grid>
         </Center>
       </>

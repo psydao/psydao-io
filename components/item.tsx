@@ -1,24 +1,24 @@
 import { Box, useDisclosure } from "@chakra-ui/react";
 import type { BoxProps, UseDisclosureReturn } from "@chakra-ui/react";
-import * as React from "react";
 
-import { useDesktopContext } from "components/desktop";
 import { Window } from "components/window";
+import { useWindowManager } from "components/window-manager";
+import { createCtx } from "lib/context";
 
-interface ItemContextProps extends UseDisclosureReturn {
+interface ItemContext extends UseDisclosureReturn {
   id: string;
 }
-const ItemContext = React.createContext<Partial<ItemContextProps>>({});
-export const useItemContext = () => React.useContext(ItemContext);
+
+export const [useItemContext, ItemContextProvider] = createCtx<ItemContext>();
 
 const Icon = (props: BoxProps) => {
   const { id, onOpen } = useItemContext();
-  const { focus } = useDesktopContext();
+  const { focus } = useWindowManager();
   return (
     <Box
       onClick={() => {
-        focus && id && focus(id);
-        onOpen && onOpen();
+        focus(id);
+        onOpen();
       }}
       cursor="pointer"
       {...props}
@@ -36,9 +36,9 @@ export const Item = ({ children, defaultIsOpen = false, id }: ItemProps) => {
   const disclosure = useDisclosure({ defaultIsOpen });
 
   return (
-    <ItemContext.Provider value={{ id, ...disclosure }}>
+    <ItemContextProvider value={{ id, ...disclosure }}>
       {children}
-    </ItemContext.Provider>
+    </ItemContextProvider>
   );
 };
 

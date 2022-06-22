@@ -11,7 +11,7 @@ export const Video = () => {
           Video
         </Text>
       </Item.Icon>
-      <Item.Window bg="black">
+      <Item.Window bg="black" initial={{ height: 100, width: 100 }}>
         <YoutubeEmbed embedId="jIQ6UV2onyI" />
       </Item.Window>
     </Item>
