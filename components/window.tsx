@@ -98,6 +98,7 @@ export const Window = ({
           px="2"
           flex="1 1 auto"
           {...contentBoxProps}
+          pointerEvents={drag ? "none" : "auto"}
         >
           {children}
         </Box>
