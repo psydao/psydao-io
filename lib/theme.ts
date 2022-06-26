@@ -94,6 +94,7 @@ export const theme = extendTheme({
         bg: "background.12",
         color: "#9835BA",
         overscrollBehavior: "none",
+        userSelect: "none",
       },
     },
   },
