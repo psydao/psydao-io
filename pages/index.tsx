@@ -32,7 +32,7 @@ const Homepage: NextPage = () => {
           h="var(--app-height)"
           w="100vw"
           overflow="hidden"
-          background="no-repeat top right url(/clouds.png), linear-gradient(60deg, #fffafa, #fff9ef)"
+          background="linear-gradient(60deg, #fffafa, #fff9ef)"
         >
           <BackgroundGrid />
           <Grid
