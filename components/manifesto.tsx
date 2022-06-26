@@ -11,7 +11,14 @@ export const Manifesto = () => {
           Manifesto
         </Text>
       </Item.Icon>
-      <Item.Window initial={{ height: 400, width: 300 }}>
+      <Item.Window
+        height={{ base: "90%", md: "70%" }}
+        width="95%"
+        maxWidth="850px"
+        top="50%"
+        left="50%"
+        transform="translate(-50%, -50%)"
+      >
         <Box layerStyle="window" p="6" position="relative" zIndex="0">
           <Text color="#269200" fontSize="24px" mt="10">
             The PsyDAO Manifesto

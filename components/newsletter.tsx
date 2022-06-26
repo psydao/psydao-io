@@ -21,13 +21,11 @@ export const Newsletter = () => {
       </Item.Icon>
       <Item.Window
         layerStyle="window"
-        initial={{ height: 350, width: 300 }}
-        constraints={{
-          maxHeight: 350,
-          maxWidth: 300,
-          minHeight: 350,
-          minWidth: 300,
-        }}
+        height="390px"
+        width="90%"
+        maxWidth="300px"
+        top="5%"
+        right="10%"
       >
         <Text
           color="#269200"
