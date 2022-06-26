@@ -3,6 +3,7 @@ import type { NextPage } from "next";
 import NextLink from "next/link";
 import * as React from "react";
 
+import { BackgroundClouds } from "components/background-clouds";
 import { BackgroundGrid } from "components/background-grid";
 import { Grid } from "components/grid";
 import { Head } from "components/head";
@@ -34,6 +35,7 @@ const Homepage: NextPage = () => {
           overflow="hidden"
           background="linear-gradient(60deg, #fffafa, #fff9ef)"
         >
+          <BackgroundClouds />
           <BackgroundGrid />
           <Grid
             position="relative"
