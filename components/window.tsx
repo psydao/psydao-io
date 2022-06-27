@@ -1,7 +1,7 @@
 import { Box, chakra } from "@chakra-ui/react";
 import type { BoxProps } from "@chakra-ui/react";
 import { isValidMotionProp, motion, useMotionValue } from "framer-motion";
-import * as React from "react";
+import { useEffect, useRef, useState } from "react";
 import * as ReactDOM from "react-dom";
 
 import { useItemContext } from "components/item";
@@ -32,13 +32,14 @@ export const Window = ({
   const { windowLayerRef, focus, windowStack } = useWindowManager();
 
   // Motion props
-  const [drag, setDrag] = React.useState(false);
-  const windowContainerRef = React.useRef(null);
+  const [drag, setDrag] = useState(false);
+  const [resize, setResize] = useState(false);
+  const windowContainerRef = useRef(null);
   const size = useSize(windowContainerRef);
   const height = useMotionValue(size.height);
   const width = useMotionValue(size.width);
-  const heightBeforeResize = React.useRef(size.height);
-  const widthBeforeResize = React.useRef(size.width);
+  const heightBeforeResize = useRef(size.height);
+  const widthBeforeResize = useRef(size.width);
 
   if (windowContainerRef.current && height.get() === 0 && width.get() === 0) {
     height.set(size.height);
@@ -50,11 +51,9 @@ export const Window = ({
   // defaultIsOpen from useDisclosure won't be honored. This state/effect
   // produces a rerender that picks up the correct values. But it's ugly and you
   // know it.
-  const [mounted, setMounted] = React.useState(false);
-  React.useLayoutEffect(() => {
-    if (!mounted) {
-      setMounted(true);
-    }
+  const [, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
   }, []);
 
   if (windowLayerRef.current && isOpen) {
@@ -102,6 +101,7 @@ export const Window = ({
               width="2em"
               sx={{ touchAction: "none" }}
               onTapStart={() => setDrag(true)}
+              onTap={() => setDrag(false)}
             >
               <DragIcon />
             </MotionBox>
@@ -114,13 +114,14 @@ export const Window = ({
             px="2"
             flex="1 1 auto"
             {...contentBoxProps}
-            pointerEvents={drag ? "none" : "auto"}
+            pointerEvents={drag || resize ? "none" : "auto"}
           >
             {children}
           </Box>
           <MotionBox
             sx={{ touchAction: "none" }}
             onPanStart={() => {
+              setResize(true);
               if (firstResize) {
                 firstResize = false;
                 heightBeforeResize.current = size.height;
@@ -134,6 +135,7 @@ export const Window = ({
               height.set(heightBeforeResize.current + offset.y);
               width.set(widthBeforeResize.current + offset.x);
             }}
+            onPanEnd={() => setResize(false)}
           >
             <ResizeIcon position="absolute" right="2" bottom="2" />
           </MotionBox>
