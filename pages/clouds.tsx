@@ -31,6 +31,8 @@ const CloudPage = () => {
           transform="translate(-50%, -50%)"
           height="40vw"
           width="80vw"
+          maxHeight="400px"
+          maxWidth="800px"
           opacity="0.6"
           fadeInDuration="0.3s"
           layers={3}
@@ -42,6 +44,8 @@ const CloudPage = () => {
           transform="translate(-50%, -50%)"
           height="40vw"
           width="80vw"
+          maxHeight="400px"
+          maxWidth="800px"
           opacity="0.6"
           fadeInDuration="0.3s"
           layers={3}
