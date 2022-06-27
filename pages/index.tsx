@@ -1,7 +1,7 @@
 import { Box, Center, Image, Link } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import NextLink from "next/link";
-import * as React from "react";
+import { useEffect, useState } from "react";
 
 import { BackgroundClouds } from "components/background-clouds";
 import { BackgroundGrid } from "components/background-grid";
@@ -17,12 +17,21 @@ import { WindowManager } from "components/window-manager";
 import { joyAndSorrow } from "lib/constants";
 
 const Homepage: NextPage = () => {
-  const [isBrowser, setIsBrowser] = React.useState(false);
+  const [isBrowser, setIsBrowser] = useState(false);
 
-  React.useLayoutEffect(() => {
-    if (typeof window !== "undefined") {
-      setIsBrowser(true);
-    }
+  useEffect(() => {
+    setIsBrowser(true);
+
+    const updateHeight = () => {
+      document.documentElement.style.setProperty(
+        "--app-height",
+        window.innerHeight + "px"
+      );
+    };
+
+    updateHeight();
+    window.addEventListener("resize", updateHeight);
+    return () => window.removeEventListener("resize", updateHeight);
   }, []);
 
   if (isBrowser) {
