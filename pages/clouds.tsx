@@ -23,27 +23,14 @@ const CloudPage = () => {
         overflow="hidden"
         onClick={() => setKey(Math.random())}
       >
-        <Text textAlign="center">Tap to generate new ones</Text>
+        <Text textAlign="center">Tap to generate a new one</Text>
         <Cloud
           key={key}
-          top="30%"
+          top="50%"
           left="50%"
           transform="translate(-50%, -50%)"
-          height="40vw"
-          width="80vw"
-          maxHeight="400px"
-          maxWidth="800px"
-          opacity="0.6"
-          fadeInDuration="0.3s"
-          layers={3}
-        />
-        <Cloud
-          key={key + 1}
-          top="70%"
-          left="50%"
-          transform="translate(-50%, -50%)"
-          height="40vw"
-          width="80vw"
+          height="60vw"
+          width="95vw"
           maxHeight="400px"
           maxWidth="800px"
           opacity="0.6"
