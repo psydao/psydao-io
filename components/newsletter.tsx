@@ -26,6 +26,7 @@ export const Newsletter = () => {
         maxWidth="300px"
         top="5%"
         right="10%"
+        resizable={false}
       >
         <Text
           color="#269200"

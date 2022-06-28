@@ -18,6 +18,7 @@ interface WindowProps extends BoxProps {
   motionBoxProps?: React.ComponentPropsWithoutRef<typeof MotionBox>;
   contentBoxProps?: BoxProps;
   title?: string;
+  resizable?: boolean;
 }
 
 let firstResize = true;
@@ -27,6 +28,7 @@ export const Window = ({
   contentBoxProps,
   children,
   title,
+  resizable = true,
   ...rest
 }: WindowProps) => {
   const { id, isOpen, onClose } = useItemContext();
@@ -120,27 +122,29 @@ export const Window = ({
           >
             {children}
           </ScrollableBox>
-          <MotionBox
-            sx={{ touchAction: "none" }}
-            onPanStart={() => {
-              setResize(true);
-              if (firstResize) {
-                firstResize = false;
-                heightBeforeResize.current = size.height;
-                widthBeforeResize.current = size.width;
-              } else {
-                heightBeforeResize.current = height.get();
-                widthBeforeResize.current = width.get();
-              }
-            }}
-            onPan={(_, { offset }) => {
-              height.set(heightBeforeResize.current + offset.y);
-              width.set(widthBeforeResize.current + offset.x);
-            }}
-            onPanEnd={() => setResize(false)}
-          >
-            <ResizeIcon position="absolute" right="2" bottom="2" />
-          </MotionBox>
+          {resizable && (
+            <MotionBox
+              sx={{ touchAction: "none" }}
+              onPanStart={() => {
+                setResize(true);
+                if (firstResize) {
+                  firstResize = false;
+                  heightBeforeResize.current = size.height;
+                  widthBeforeResize.current = size.width;
+                } else {
+                  heightBeforeResize.current = height.get();
+                  widthBeforeResize.current = width.get();
+                }
+              }}
+              onPan={(_, { offset }) => {
+                height.set(heightBeforeResize.current + offset.y);
+                width.set(widthBeforeResize.current + offset.x);
+              }}
+              onPanEnd={() => setResize(false)}
+            >
+              <ResizeIcon position="absolute" right="2" bottom="2" />
+            </MotionBox>
+          )}
         </MotionBox>
       </Box>,
       windowLayerRef.current
