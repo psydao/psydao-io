@@ -1,13 +1,14 @@
-import { Box, chakra } from "@chakra-ui/react";
 import type { BoxProps } from "@chakra-ui/react";
+import { Box, chakra } from "@chakra-ui/react";
 import { isValidMotionProp, motion, useMotionValue } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import * as ReactDOM from "react-dom";
 
-import { useItemContext } from "components/item";
 import { CloseIcon, DragIcon, ResizeIcon } from "components/icons";
-import { useSize } from "lib/hooks";
+import { useItemContext } from "components/item";
+import { ScrollableBox } from "components/scrollable-box";
 import { useWindowManager } from "components/window-manager";
+import { useSize } from "lib/hooks";
 
 const MotionBox = chakra(motion.div, {
   shouldForwardProp: (prop) => isValidMotionProp(prop) || prop === "children",
@@ -108,16 +109,17 @@ export const Window = ({
             {title}
             <CloseIcon flex="0 0 auto" onClick={onClose} />
           </Box>
-          <Box
+          <ScrollableBox
             overflow="auto"
             userSelect="text"
             px="2"
+            gap="2"
             flex="1 1 auto"
             {...contentBoxProps}
             pointerEvents={drag || resize ? "none" : "auto"}
           >
             {children}
-          </Box>
+          </ScrollableBox>
           <MotionBox
             sx={{ touchAction: "none" }}
             onPanStart={() => {
