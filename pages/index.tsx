@@ -3,12 +3,10 @@ import type { NextPage } from "next";
 import NextLink from "next/link";
 import { useEffect, useState } from "react";
 
-import { BackgroundClouds } from "components/background-clouds";
 import { BackgroundGrid } from "components/background-grid";
 import { Grid } from "components/grid";
 import { Head } from "components/head";
 import { Item } from "components/item";
-import { Lissajous } from "components/lissajous";
 import { Manifesto } from "components/manifesto";
 import { Marquee } from "components/marquee";
 import { Newsletter } from "components/newsletter";
@@ -42,9 +40,8 @@ const Homepage: NextPage = () => {
           h="var(--app-height)"
           w="100vw"
           overflow="hidden"
-          background="linear-gradient(60deg, #fffafa, #fff9ef)"
+          background="no-repeat top right url(/clouds.png), linear-gradient(60deg, #fffafa, #fff9ef)"
         >
-          <BackgroundClouds />
           <BackgroundGrid />
           <Grid
             position="relative"
@@ -55,7 +52,7 @@ const Homepage: NextPage = () => {
               <Image src="/psydao-deep-logo.svg" alt="" h="100%" w="100%" />
             </Box>
             <Box gridArea="1 / -1 / 2 / -2" p={{ base: "1", md: "2" }}>
-              <Lissajous />
+              <Image src="/lissajous-hamburger.svg" alt="" h="100%" w="100%" />
             </Box>
             <Box gridArea="-2 / 1 / -1 / -1">
               <Marquee label={joyAndSorrow} />
