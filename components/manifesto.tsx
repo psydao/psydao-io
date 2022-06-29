@@ -19,7 +19,7 @@ export const Manifesto = () => {
         left="50%"
         transform="translate(-50%, -50%)"
       >
-        <Box layerStyle="window" p="6" position="relative" zIndex="0">
+        <Box layerStyle="window" position="relative" zIndex="0">
           <Text color="#269200" fontSize="24px" mt="10">
             The PsyDAO Manifesto
           </Text>
@@ -260,7 +260,7 @@ export const Manifesto = () => {
         </Box>
 
         {/* Footnotes */}
-        <Box layerStyle="window" as="ul" listStyleType="none" p="6">
+        <Box layerStyle="window" as="ul" listStyleType="none" mt="16">
           <Text as="li">
             [1] Jeremy Narby,{" "}
             <Text as="span" fontStyle="italic">

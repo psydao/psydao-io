@@ -21,7 +21,7 @@ export const Newsletter = () => {
       </Item.Icon>
       <Item.Window
         layerStyle="window"
-        height="390px"
+        height={{ base: "380px", md: "410px" }}
         width="90%"
         maxWidth="300px"
         top="5%"
@@ -31,7 +31,7 @@ export const Newsletter = () => {
         <Text
           color="#269200"
           fontSize="24px"
-          mt="5"
+          mt="3"
           as="span"
           display="inline-block"
         >
@@ -46,7 +46,7 @@ export const Newsletter = () => {
           target="_blank"
           direction="column"
           gap="3"
-          my="5"
+          my="3"
         >
           <FormControl>
             <FormLabel htmlFor="email">Email address</FormLabel>

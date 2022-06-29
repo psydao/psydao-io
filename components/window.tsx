@@ -85,7 +85,7 @@ export const Window = ({
           border="1px solid #f2bebe"
           backgroundColor="#faffff"
           overflow="hidden"
-          pb="2"
+          pb={{ base: "3", md: "6" }}
           boxShadow="2xl"
           userSelect="none"
           pointerEvents="auto"
@@ -97,8 +97,8 @@ export const Window = ({
             display="flex"
             alignItems="start"
             justifyContent="space-between"
-            p="2"
-            gap="2"
+            p={{ base: "3", md: "6" }}
+            gap={{ base: "3", md: "6" }}
           >
             <MotionBox
               width="2em"
@@ -114,8 +114,8 @@ export const Window = ({
           <ScrollableBox
             overflow="auto"
             userSelect="text"
-            px="2"
-            gap="2"
+            px={{ base: "3", md: "6" }}
+            gap={{ base: "3", md: "6" }}
             flex="1 1 auto"
             {...contentBoxProps}
             pointerEvents={drag || resize ? "none" : "auto"}
@@ -142,7 +142,11 @@ export const Window = ({
               }}
               onPanEnd={() => setResize(false)}
             >
-              <ResizeIcon position="absolute" right="2" bottom="2" />
+              <ResizeIcon
+                position="absolute"
+                right={{ base: "3", md: "6" }}
+                bottom={{ base: "3", md: "6" }}
+              />
             </MotionBox>
           )}
         </MotionBox>
