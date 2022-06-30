@@ -4,7 +4,7 @@ import { isValidMotionProp, motion, useMotionValue } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import * as ReactDOM from "react-dom";
 
-import { CloseIcon, DragIcon, ResizeIcon } from "components/icons";
+import { Close, Drag, Resize } from "components/icons";
 import { useItemContext } from "components/item";
 import { ScrollableBox } from "components/scrollable-box";
 import { useWindowManager } from "components/window-manager";
@@ -106,10 +106,10 @@ export const Window = ({
               onTapStart={() => setDrag(true)}
               onTap={() => setDrag(false)}
             >
-              <DragIcon />
+              <Drag />
             </MotionBox>
             {title}
-            <CloseIcon flex="0 0 auto" onClick={onClose} />
+            <Close flex="0 0 auto" onClick={onClose} />
           </Box>
           <ScrollableBox
             overflow="auto"
@@ -142,7 +142,7 @@ export const Window = ({
               }}
               onPanEnd={() => setResize(false)}
             >
-              <ResizeIcon
+              <Resize
                 position="absolute"
                 right={{ base: "3", md: "6" }}
                 bottom={{ base: "3", md: "6" }}

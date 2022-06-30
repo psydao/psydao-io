@@ -1,5 +1,5 @@
-import { Box } from "@chakra-ui/react";
 import type { BoxProps } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 interface YoutubeEmbed extends Omit<BoxProps, "children"> {
   embedId: string;
@@ -19,7 +19,7 @@ export const YoutubeEmbed = ({ embedId, ...rest }: YoutubeEmbed) => (
       frameBorder="0"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
       allowFullScreen
-      title="Embedded youtube"
+      title="Embedded YouTube"
     />
   </Box>
 );

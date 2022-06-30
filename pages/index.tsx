@@ -10,7 +10,7 @@ import { Item } from "components/item";
 import { Manifesto } from "components/manifesto";
 import { Marquee } from "components/marquee";
 import { Newsletter } from "components/newsletter";
-import { Video } from "components/video";
+import { Vimeo, Youtube } from "components/video";
 import { WindowManager } from "components/window-manager";
 import { joyAndSorrow } from "lib/constants";
 
@@ -67,7 +67,8 @@ const Homepage: NextPage = () => {
                 lineHeight="1.3em"
                 textShadow="2xl"
               >
-                <Video />
+                <Youtube />
+                <Vimeo />
                 <Manifesto />
                 <Newsletter />
                 <Item id="discord">
