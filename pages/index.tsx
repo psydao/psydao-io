@@ -7,6 +7,7 @@ import { BackgroundGrid } from "components/background-grid";
 import { Grid } from "components/grid";
 import { Head } from "components/head";
 import { Item } from "components/item";
+import { Logo } from "components/logo";
 import { Manifesto } from "components/manifesto";
 import { Marquee } from "components/marquee";
 import { Newsletter } from "components/newsletter";
@@ -49,7 +50,8 @@ const Homepage: NextPage = () => {
             getNumberOfFillers={(cols, rows) => cols * (rows - 1) - 25}
           >
             <Box gridArea="1 / 1 / 3 / 3">
-              <Image src="/psydao-deep-logo.svg" alt="" h="100%" w="100%" />
+              {/* <Image src="/psydao-deep-logo.svg" alt="" h="100%" w="100%" /> */}
+              <Logo />
             </Box>
             <Box gridArea="1 / -1 / 2 / -2" p={{ base: "1", md: "2" }}>
               <Image src="/lissajous-hamburger.svg" alt="" h="100%" w="100%" />

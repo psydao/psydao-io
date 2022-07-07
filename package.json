@@ -13,16 +13,20 @@
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@fontsource/cardo": "^4.5.7",
+    "@react-three/drei": "^9.16.0",
+    "@react-three/fiber": "^8.0.27",
     "@vimeo/player": "^2.17.1",
     "framer-motion": "^6.3.3",
     "next": "12.1.6",
     "react": "18.1.0",
-    "react-dom": "18.1.0"
+    "react-dom": "18.1.0",
+    "three": "^0.142.0"
   },
   "devDependencies": {
     "@types/node": "17.0.35",
     "@types/react": "18.0.9",
     "@types/react-dom": "18.0.4",
+    "@types/three": "^0.141.0",
     "@types/vimeo__player": "^2.16.3",
     "eslint": "8.15.0",
     "eslint-config-next": "12.1.6",
