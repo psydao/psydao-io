@@ -1,5 +1,5 @@
-import { Box, Grid as ChakraGrid, Spinner } from "@chakra-ui/react";
 import type { GridProps as ChakraGridProps } from "@chakra-ui/react";
+import { Box, Grid as ChakraGrid, Spinner } from "@chakra-ui/react";
 import * as React from "react";
 
 import { GlobalContext } from "components/global-context";
@@ -23,6 +23,7 @@ export const Grid = ({ children, getNumberOfFillers, ...rest }: GridProps) => {
     };
     return (
       <ChakraGrid
+        // @ts-expect-error
         templateColumns={`repeat(${cols}, ${trackSize}px)`}
         templateRows={`repeat(${rows}, ${trackSize}px)`}
         placeContent="center"
