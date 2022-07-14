@@ -7,10 +7,18 @@ import { VimeoEmbed } from "./vimeo-embed";
 export const Youtube = () => {
   return (
     <Item id="youtube" defaultIsOpen={true}>
-      <Item.Icon>
-        <Text as="span" _hover={{ color: "#f00" }}>
-          YouTube
-        </Text>
+      <Item.Icon
+        px="8"
+        border="1px solid #f2bebe"
+        borderRadius="full"
+        boxShadow="4px 4px 13px 0px #F2BEBEA1"
+        background="#fffafa"
+        color="#f2bebe"
+        fontSize="24px"
+        fontStyle="italic"
+        textAlign="center"
+      >
+        <Text as="span">Video</Text>
       </Item.Icon>
       <Item.Window
         height={{ base: "135px", sm: "180px", md: "315px" }}

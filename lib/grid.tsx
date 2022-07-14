@@ -39,7 +39,7 @@ const getTracks = ({
 // TODO narrow breakpoint type down from string to union of literals base, sm,
 // md, etc.
 export const gridSpecs: { [breakpoint: string]: GridParameters } = {
-  base: { borderWidth: 1, minPadding: 5, trackSize: 40 },
+  base: { borderWidth: 1, minPadding: 5, trackSize: 60 },
   md: { borderWidth: 1, minPadding: 10, trackSize: 60 },
   xl: { borderWidth: 1, minPadding: 20, trackSize: 85 },
 };

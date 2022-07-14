@@ -14,10 +14,18 @@ import { Item } from "components/item";
 export const Newsletter = () => {
   return (
     <Item id="newsletter">
-      <Item.Icon>
-        <Text as="span" _hover={{ color: "#f00" }}>
-          Newsletter
-        </Text>
+      <Item.Icon
+        px="8"
+        border="1px solid #f2bebe"
+        borderRadius="full"
+        boxShadow="4px 4px 13px 0px #F2BEBEA1"
+        background="#fffafa"
+        color="#f2bebe"
+        fontSize="24px"
+        fontStyle="italic"
+        textAlign="center"
+      >
+        <Text as="span">News</Text>
       </Item.Icon>
       <Item.Window
         layerStyle="window"

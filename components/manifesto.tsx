@@ -6,10 +6,18 @@ import { Item } from "components/item";
 export const Manifesto = () => {
   return (
     <Item id="manifesto">
-      <Item.Icon>
-        <Text as="span" _hover={{ color: "#f00" }}>
-          Manifesto
-        </Text>
+      <Item.Icon
+        px="8"
+        border="1px solid #f2bebe"
+        borderRadius="full"
+        boxShadow="4px 4px 13px 0px #F2BEBEA1"
+        background="#fffafa"
+        color="#f2bebe"
+        fontSize="24px"
+        fontStyle="italic"
+        textAlign="center"
+      >
+        <Text as="span">Manifesto</Text>
       </Item.Icon>
       <Item.Window
         height={{ base: "90%", md: "70%" }}
