@@ -55,9 +55,10 @@ export const useGridTracks = (): GridSpec => {
   ) ?? {
     ...gridSpecs.base,
   };
-  const [{ cols, rows }, setGridTracks] = React.useState<Tracks>(
-    getTracks({ borderWidth, minPadding, trackSize })
-  );
+  const [{ cols, rows }, setGridTracks] = React.useState<Tracks>({
+    cols: undefined,
+    rows: undefined,
+  });
 
   React.useEffect(() => {
     if (typeof window !== "undefined") {
@@ -68,6 +69,7 @@ export const useGridTracks = (): GridSpec => {
         }
       };
 
+      handleResize();
       window.addEventListener("resize", handleResize);
       return () => window.removeEventListener("resize", handleResize);
     }
