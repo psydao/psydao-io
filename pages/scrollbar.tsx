@@ -14,7 +14,7 @@ const ScrollbarPage = () => {
         left="50%"
         transform="translate(-50%, -50%)"
         overflow="auto"
-        border="1px solid #f2bebe"
+        border="2px solid #f2bebe"
         boxShadow="lg"
         pt="0.5rem"
         pb="0.5rem"

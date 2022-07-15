@@ -14,6 +14,12 @@ import { Youtube } from "components/video";
 import { WindowManager } from "components/window-manager";
 import { joyAndSorrow } from "lib/constants";
 
+// TODO Extract Pill component since it seems it will become a basic primitive
+// in our design
+
+// TODO Improve theming. All these 1px to 2px border transformations should
+// probably a theme prop
+
 const Homepage: NextPage = () => {
   const [isBrowser, setIsBrowser] = useState(false);
 
@@ -83,7 +89,15 @@ const Homepage: NextPage = () => {
                     color="#E69CFF"
                     fontSize="24px"
                     fontStyle="italic"
+                    fontWeight="700"
                     textAlign="center"
+                    // TODO transition this 200ms with gradient transition hack
+                    // https://css-tricks.com/transitioning-gradients/
+                    _hover={{
+                      color: "#FFFFFF",
+                      background:
+                        "linear-gradient(to bottom, #FAC5FF 0%, #E69CFF 100%)",
+                    }}
                   >
                     <Link
                       href="https://discord.gg/hUH4MWxVFx"

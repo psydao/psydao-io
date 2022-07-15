@@ -9,15 +9,16 @@ interface GridProps extends ChakraGridProps {
 }
 
 export const Grid = ({ children, getNumberOfFillers, ...rest }: GridProps) => {
-  const { cols, rows, trackSize } = React.useContext(GlobalContext);
+  const { cols, rows, trackSize, borderWidth } =
+    React.useContext(GlobalContext);
   if (cols && rows) {
     const gutterStylingProps = getNumberOfFillers && {
-      borderTop: "1px solid #f2bebe",
-      borderLeft: "1px solid #f2bebe",
+      borderTop: `${borderWidth}px solid #f2bebe`,
+      borderLeft: `${borderWidth}px solid #f2bebe`,
       sx: {
         "& > *": {
-          borderRight: "1px solid #f2bebe",
-          borderBottom: "1px solid #f2bebe",
+          borderRight: `${borderWidth}px solid #f2bebe`,
+          borderBottom: `${borderWidth}px solid #f2bebe`,
         },
       },
     };

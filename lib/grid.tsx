@@ -39,9 +39,9 @@ const getTracks = ({
 // TODO narrow breakpoint type down from string to union of literals base, sm,
 // md, etc.
 export const gridSpecs: { [breakpoint: string]: GridParameters } = {
-  base: { borderWidth: 1, minPadding: 5, trackSize: 60 },
-  md: { borderWidth: 1, minPadding: 10, trackSize: 60 },
-  xl: { borderWidth: 1, minPadding: 20, trackSize: 85 },
+  base: { borderWidth: 2, minPadding: 5, trackSize: 55 },
+  md: { borderWidth: 2, minPadding: 10, trackSize: 60 },
+  xl: { borderWidth: 2, minPadding: 20, trackSize: 85 },
 };
 
 export interface GridSpec extends GridParameters, Tracks {}
@@ -76,30 +76,4 @@ export const useGridTracks = (): GridSpec => {
   }, [borderWidth, cols, minPadding, rows, trackSize]);
 
   return { borderWidth, cols, minPadding, rows, trackSize };
-};
-
-interface GetGridBackgroundPatternParameters {
-  borderWidth: number;
-  strokeColor?: string;
-  trackSize: number;
-}
-
-export const getGridBackgroundPattern = ({
-  borderWidth,
-  strokeColor = "#f2bebe",
-  trackSize,
-}: GetGridBackgroundPatternParameters) => {
-  const backgroundImage = `linear-gradient(${strokeColor} ${borderWidth}px, transparent ${borderWidth}px), linear-gradient(90deg, ${strokeColor} ${borderWidth}px, transparent ${borderWidth}px)`;
-  const backgroundPosition = `-${borderWidth}px -${borderWidth}px`;
-  const backgroundSize = `${trackSize + borderWidth}px ${
-    trackSize + borderWidth
-  }px, ${trackSize + borderWidth}px ${trackSize + borderWidth}px`;
-  const border = `${borderWidth}px solid ${strokeColor}`;
-
-  return {
-    backgroundImage,
-    backgroundPosition,
-    backgroundSize,
-    border,
-  };
 };

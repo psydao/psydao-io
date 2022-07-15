@@ -12,6 +12,7 @@
     "@chakra-ui/react": "^2.2.4",
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
+    "@fontsource/amiri": "^4.5.7",
     "@fontsource/cardo": "^4.5.7",
     "@react-three/drei": "^9.17.1",
     "@react-three/fiber": "^8.2.0",

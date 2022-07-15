@@ -1,5 +1,9 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { Global } from "@emotion/react";
+import "@fontsource/amiri/400-italic.css";
+import "@fontsource/amiri/400.css";
+import "@fontsource/amiri/700-italic.css";
+import "@fontsource/amiri/700.css";
 import "@fontsource/cardo/400-italic.css";
 import "@fontsource/cardo/400.css";
 import "@fontsource/cardo/700.css";
