@@ -85,8 +85,7 @@ export const Window = ({
           border="2px solid #f2bebe"
           backgroundColor="#faffff"
           overflow="hidden"
-          pb={{ base: "3", md: "6" }}
-          boxShadow="2xl"
+          boxShadow="0px 12px 33px rgba(152, 53, 186, 0.22)"
           userSelect="none"
           pointerEvents="auto"
           minH="150px"
@@ -95,18 +94,18 @@ export const Window = ({
         >
           <Box
             display="flex"
-            alignItems="start"
+            alignItems="center"
             justifyContent="space-between"
-            p={{ base: "3", md: "6" }}
-            gap={{ base: "3", md: "6" }}
+            p={{ base: "2", md: "3" }}
+            gap={{ base: "2", md: "3" }}
+            borderBottom="2px solid #f2bebe"
           >
             <MotionBox
-              width="2em"
               sx={{ touchAction: "none" }}
               onTapStart={() => setDrag(true)}
               onTap={() => setDrag(false)}
             >
-              <Drag />
+              <Drag display="block" />
             </MotionBox>
             {title}
             <Close flex="0 0 auto" onClick={onClose} />
@@ -114,8 +113,6 @@ export const Window = ({
           <ScrollableBox
             overflow="auto"
             userSelect="text"
-            px={{ base: "3", md: "6" }}
-            gap={{ base: "3", md: "6" }}
             flex="1 1 auto"
             {...contentBoxProps}
             pointerEvents={drag || resize ? "none" : "auto"}
@@ -144,8 +141,8 @@ export const Window = ({
             >
               <Resize
                 position="absolute"
-                right={{ base: "3", md: "6" }}
-                bottom={{ base: "3", md: "6" }}
+                right={{ base: "2", md: "3" }}
+                bottom={{ base: "2", md: "3" }}
               />
             </MotionBox>
           )}

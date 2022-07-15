@@ -1,7 +1,7 @@
 import type { IconProps } from "@chakra-ui/react";
 import { Icon } from "@chakra-ui/react";
 
-export const Close = (props: IconProps) => {
+export const Cross = (props: IconProps) => {
   return (
     <Icon
       viewBox="-21 -21 42 42"
@@ -21,25 +21,43 @@ export const Close = (props: IconProps) => {
   );
 };
 
+export const Close = (props: IconProps) => {
+  return (
+    <Icon
+      viewBox="-2 -2 22 22"
+      height="1rem"
+      width="auto"
+      fill="#f2bebe"
+      cursor="pointer"
+      {...props}
+    >
+      <circle cx="0" cy="0" r="1.5" />
+      <circle cx="18" cy="0" r="1.5" />
+      <circle cx="0" cy="18" r="1.5" />
+      <circle cx="18" cy="18" r="1.5" />
+    </Icon>
+  );
+};
+
 export const Drag = (props: IconProps) => {
   return (
     <Icon
       viewBox="-2 -2 58 22"
-      height="100%"
+      height="1rem"
+      width="auto"
       fill="#f2bebe"
-      width="1.8rem"
       cursor="grab"
       _active={{ cursor: "grabbing" }}
       {...props}
     >
-      <circle cx="0" cy="0" r="2" />
-      <circle cx="18" cy="0" r="2" />
-      <circle cx="36" cy="0" r="2" />
-      <circle cx="54" cy="0" r="2" />
-      <circle cx="0" cy="18" r="2" />
-      <circle cx="18" cy="18" r="2" />
-      <circle cx="36" cy="18" r="2" />
-      <circle cx="54" cy="18" r="2" />
+      <circle cx="0" cy="0" r="1.5" />
+      <circle cx="18" cy="0" r="1.5" />
+      <circle cx="36" cy="0" r="1.5" />
+      <circle cx="54" cy="0" r="1.5" />
+      <circle cx="0" cy="18" r="1.5" />
+      <circle cx="18" cy="18" r="1.5" />
+      <circle cx="36" cy="18" r="1.5" />
+      <circle cx="54" cy="18" r="1.5" />
     </Icon>
   );
 };
