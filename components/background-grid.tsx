@@ -13,11 +13,11 @@ export const BackgroundGrid = () => {
       overflow="hidden"
     >
       <Box
-        background="center/cover url(/stan-grof-colorized.jpg)"
+        background="center/cover url(/colorized-stan-grof.jpg)"
         gridArea="2 / -5 / 7 / -1"
       />
       <Box
-        background="center/cover url(/shrooms-colorized.jpg)"
+        background="center/cover url(/colorized-shrooms.jpg)"
         gridArea="-2 / 1 / -7 / 7"
       />
     </Grid>

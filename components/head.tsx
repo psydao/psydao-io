@@ -20,7 +20,7 @@ export const Head = () => {
         rel="shortcut icon"
         type="image/x-icon"
       />
-      <link href="/psydao-webclip.png" rel="apple-touch-icon" />
+      <link href="/psydao-apple-touch.png" rel="apple-touch-icon" />
     </NextHead>
   );
 };
