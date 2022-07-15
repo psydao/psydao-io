@@ -62,20 +62,22 @@ const Homepage: NextPage = () => {
             </Box>
             <WindowManager>
               <Box
+                height="calc(100% - 2px)"
+                width="100%"
                 gridArea={{
-                  base: "1 / 1 / -1 / -1",
+                  base: "1 / 1 / span 4 / -1",
                   lg: "1 / 1 / span 1 / -1",
                 }}
                 pos="absolute"
-                top={{ base: "2", md: "4", lg: "50%" }}
-                right={{ base: "2", md: "4" }}
                 border="none !important"
-                transform={{ base: "none", lg: "translateY(-50%)" }}
-                display="flex"
-                flexDirection={{ base: "column", lg: "row" }}
-                alignItems={{ base: "flex-end", lg: "center" }}
-                justifyContent="flex-end"
-                gap={{ base: "2", md: "4" }}
+                display="grid"
+                gridTemplateColumns={{ base: "1fr", lg: "repeat(4, auto)" }}
+                gridTemplateRows={{ base: "repeat(4, 1fr)", lg: "1fr" }}
+                alignItems="center"
+                justifyItems="end"
+                justifyContent="end"
+                gap={{ base: "2px", lg: "4" }}
+                pr={{ base: "2", md: "4" }}
               >
                 <Youtube />
                 <Manifesto />
