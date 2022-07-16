@@ -335,7 +335,7 @@ export const Manifesto = () => {
           </Box>
           <Text mt="8" color="#269200">
             {
-              "Some images used in the design of this manifesto were created by OpenAi's"
+              "Some images used in the design of this manifesto were created by OpenAI's"
             }{" "}
             <Link
               href="https://openai.com/dall-e-2"
