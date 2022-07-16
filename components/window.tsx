@@ -6,7 +6,6 @@ import * as ReactDOM from "react-dom";
 
 import { Close, Drag, Resize } from "components/icons";
 import { useItemContext } from "components/item";
-import { ScrollableBox } from "components/scrollable-box";
 import { useWindowManager } from "components/window-manager";
 import { useSize } from "lib/hooks";
 
@@ -17,8 +16,8 @@ const MotionBox = chakra(motion.div, {
 interface WindowProps extends BoxProps {
   motionBoxProps?: React.ComponentPropsWithoutRef<typeof MotionBox>;
   contentBoxProps?: BoxProps;
-  title?: string;
   resizable?: boolean;
+  titleBarBorder?: boolean;
 }
 
 let firstResize = true;
@@ -27,8 +26,8 @@ export const Window = ({
   motionBoxProps,
   contentBoxProps,
   children,
-  title,
   resizable = true,
+  titleBarBorder = false,
   ...rest
 }: WindowProps) => {
   const { id, isOpen, onClose } = useItemContext();
@@ -96,9 +95,8 @@ export const Window = ({
             display="flex"
             alignItems="center"
             justifyContent="space-between"
-            p={{ base: "2", md: "3" }}
-            gap={{ base: "2", md: "3" }}
-            borderBottom="2px solid #f2bebe"
+            p={{ base: "2", sm: "3", md: "4" }}
+            borderBottom={titleBarBorder ? "2px solid #f2bebe" : "none"}
           >
             <MotionBox
               sx={{ touchAction: "none" }}
@@ -107,20 +105,22 @@ export const Window = ({
             >
               <Drag display="block" />
             </MotionBox>
-            {title}
             <Close flex="0 0 auto" onClick={onClose} />
           </Box>
-          <ScrollableBox
+          <Box
             overflow="auto"
             userSelect="text"
             flex="1 1 auto"
-            {...contentBoxProps}
             pointerEvents={drag || resize ? "none" : "auto"}
+            {...contentBoxProps}
           >
             {children}
-          </ScrollableBox>
+          </Box>
           {resizable && (
             <MotionBox
+              position="absolute"
+              right={{ base: "2", md: "3" }}
+              bottom={{ base: "2", md: "3" }}
               sx={{ touchAction: "none" }}
               onPanStart={() => {
                 setResize(true);
@@ -139,11 +139,7 @@ export const Window = ({
               }}
               onPanEnd={() => setResize(false)}
             >
-              <Resize
-                position="absolute"
-                right={{ base: "2", md: "3" }}
-                bottom={{ base: "2", md: "3" }}
-              />
+              <Resize />
             </MotionBox>
           )}
         </MotionBox>

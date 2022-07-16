@@ -32,6 +32,7 @@ export const Youtube = () => {
         top={{ base: "10%", sm: "10%" }}
         left={{ base: "50%", sm: "10%" }}
         transform={{ base: "translate(-50%, 0)", sm: "none" }}
+        titleBarBorder={true}
       >
         <YoutubeEmbed embedId="LKNtAlreG3I" />
       </Item.Window>

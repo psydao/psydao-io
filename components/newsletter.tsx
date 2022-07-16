@@ -1,13 +1,4 @@
-import {
-  Box,
-  Button,
-  Flex,
-  FormControl,
-  FormLabel,
-  Input,
-  Link,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Input, Link, Text } from "@chakra-ui/react";
 
 import { Item } from "components/item";
 
@@ -34,24 +25,21 @@ export const Newsletter = () => {
         <Text as="span">News</Text>
       </Item.Icon>
       <Item.Window
-        layerStyle="window"
         height={{ base: "380px", md: "410px" }}
         width="90%"
         maxWidth="300px"
         top="5%"
         right="10%"
         resizable={false}
+        contentBoxProps={{
+          px: { base: "2", sm: "3", md: "4" },
+          background: "no-repeat bottom url(colorized-forest.jpg)",
+        }}
       >
-        <Text
-          color="#269200"
-          fontSize="24px"
-          mt="3"
-          as="span"
-          display="inline-block"
-        >
+        <Text fontSize="32px" lineHeight="32" fontStyle="italic" mt="3">
           Stay in the loop
         </Text>
-        <Text>Subscribe to our newsletter</Text>
+        <Text fontSize="16px">Subscribe to the PsyDAO newsletter.</Text>
         <Flex
           as="form"
           action="https://www.getrevue.co/profile/psydao/add_subscriber"
@@ -60,23 +48,28 @@ export const Newsletter = () => {
           target="_blank"
           direction="column"
           gap="3"
-          my="3"
+          my="6"
         >
-          <FormControl>
-            <FormLabel htmlFor="email">Email address</FormLabel>
-            <Input
-              placeholder="Your email address..."
-              type="email"
-              name="member[email]"
-              id="email"
-              borderRadius="0px"
-            />
-          </FormControl>
+          <Input
+            placeholder="Your email address..."
+            type="email"
+            name="member[email]"
+            id="email"
+            borderRadius="0px"
+            borderBottom="1px solid #f2bebe"
+            fontSize="18px"
+            fontWeight="700"
+            variant="unstyled"
+            _placeholder={{ color: "#9835BA", opacity: 1 }}
+          />
           <Button
             type="submit"
             value="Subscribe"
             name="member[subscribe]"
             borderRadius="0px"
+            fontSize="18px"
+            variant="outline"
+            colorScheme="#9835BA"
           >
             Subscribe
           </Button>

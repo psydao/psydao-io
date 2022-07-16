@@ -1,6 +1,5 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Image, Link, Text } from "@chakra-ui/react";
 
-import { ColorizedImage } from "components/colorized-image";
 import { Item } from "components/item";
 
 export const Manifesto = () => {
@@ -33,7 +32,14 @@ export const Manifesto = () => {
         left="50%"
         transform="translate(-50%, -50%)"
       >
-        <Box layerStyle="window" position="relative" zIndex="0">
+        <Box
+          layerStyle="window"
+          position="relative"
+          zIndex="0"
+          px={{ base: "4", md: "8" }}
+          pb="32"
+          background="no-repeat bottom -100px left 0px / 100% 369px linear-gradient(to top, #f2bebe 100px, transparent)"
+        >
           <Text color="#269200" fontSize="24px" mt="10">
             The PsyDAO Manifesto
           </Text>
@@ -54,14 +60,13 @@ export const Manifesto = () => {
             spiritual, medicinal, and recreational value to the human race, with
             the lines between those domains often blurred.
           </Text>
-          <ColorizedImage
-            src="/amanita-muscaria.jpg"
-            tone="#f2bebe"
+          <Image
+            src="/colorized-dalle-shroom.jpg"
+            alt=""
             position="absolute"
             right="0"
-            transform="translateY(-50%)"
+            transform="translateY(-20%)"
             zIndex="-1"
-            opacity="0.5"
           />
           <Text>
             Scientific understanding of psychedelics, while growing, is lacking.
@@ -92,6 +97,14 @@ export const Manifesto = () => {
             Satoshi Nakamoto all the way back to the first ape to ever pick and
             eat a psychedelic mushroom, it has made all the difference.
           </Text>
+          <Image
+            src="/colorized-mind-cave.jpg"
+            alt=""
+            position="absolute"
+            left="0"
+            transform="translateY(20%)"
+            zIndex="-1"
+          />
           <Text>
             We aim to frontrun industry, fund and build the public domain, and
             use the magic of tokenization to ensure that psychedelic
@@ -128,6 +141,14 @@ export const Manifesto = () => {
             our temporary autonomous zones [4], pausing psychedelic research for
             decades. For decades, the state has controlled our access.
           </Text>
+          <Image
+            src="/colorized-stamp-border.jpg"
+            alt=""
+            position="absolute"
+            right="20%"
+            transform="translateY(-30%)"
+            zIndex="-1"
+          />
           <Text>
             For apes and scientists, Greeks and Romans, Egyptians and Mayans,
             Hindus and Hopis, Maori and Matsigenga, Sami and Shipibo, Chinese,
@@ -154,15 +175,13 @@ export const Manifesto = () => {
             1954, and contained within hikuri (peyote), and other psychedelic
             cacti like San Pedro) for the first time.
           </Text>
-          <ColorizedImage
-            src="/borg-dali.jpg"
-            tone="#f2bebe"
+          <Image
+            src="/colorized-pipe-man.jpg"
+            alt=""
             position="absolute"
             left="0"
-            transform="translateY(-50%)"
+            transform="translateY(-30%)"
             zIndex="-1"
-            maxW="300px"
-            opacity="0.5"
           />
           <Text>
             Shulgin found the experience so astonishing that he devoted the rest
@@ -192,6 +211,14 @@ export const Manifesto = () => {
             when they saw the light of day, through the world wide web beginning
             in the late 90s, with public domain sites such as Erowid.
           </Text>
+          <Image
+            src="/colorized-computer.jpg"
+            alt=""
+            position="absolute"
+            right="0"
+            transform="translateY(-30%)"
+            zIndex="-1"
+          />
           <Text>
             Online communities formed around the work of Shulgin&#39; prompting
             intense curiosity. These communities self-organized to procure these
@@ -216,6 +243,14 @@ export const Manifesto = () => {
             data is shared, and govern how the output of these studies will come
             to market.
           </Text>
+          <Image
+            src="/colorized-human-network.jpg"
+            alt=""
+            position="absolute"
+            right="20%"
+            transform="translateY(-30%)"
+            zIndex="-1"
+          />
           <Text>
             Membership in PsyDAO is open to anons, pseudonymous participation is
             encouraged, and privacy protection is paramount. Knowledge and
@@ -246,6 +281,14 @@ export const Manifesto = () => {
             appropriate in fair ways, using fractional ERC20s called FRENS and
             FAM.
           </Text>
+          <Image
+            src="/colorized-molecule.jpg"
+            alt=""
+            position="absolute"
+            left="0"
+            transform="translateY(-30%)"
+            zIndex="-1"
+          />
           <Text>
             For naturally-occurring compounds such as psilocybin, PsyDAO aims to
             create powerful, open-source data repositories that will be governed
@@ -271,27 +314,66 @@ export const Manifesto = () => {
             of human experience that should be available to everyone who wants
             it. We must ensure that this world is available to anyone.
           </Text>
-        </Box>
-
-        {/* Footnotes */}
-        <Box layerStyle="window" as="ul" listStyleType="none" mt="16">
-          <Text as="li">
-            [1] Jeremy Narby,{" "}
-            <Text as="span" fontStyle="italic">
-              The Cosmic Serpent: DNA and the Origins of Knowledge
+          <Box as="ul" listStyleType="none" mt="16" color="#269200">
+            <Text as="li">
+              [1] Jeremy Narby,{" "}
+              <Text as="span" fontStyle="italic">
+                The Cosmic Serpent: DNA and the Origins of Knowledge
+              </Text>
+              , 2006
             </Text>
-            , 2006
-          </Text>
-          <Text as="li">
-            [2] Brian Muraresku,{" "}
-            <Text as="span" fontStyle="italic">
-              The Immortality Key: The Secret History of the Religion With No
-              Name
+            <Text as="li">
+              [2] Brian Muraresku,{" "}
+              <Text as="span" fontStyle="italic">
+                The Immortality Key: The Secret History of the Religion With No
+                Name
+              </Text>
+              , 2020
             </Text>
-            , 2020
+            <Text as="li">[3] Id.</Text>
+            <Text as="li">[4] Hakim Bey</Text>
+          </Box>
+          <Text mt="8" color="#269200">
+            {
+              "Some images used in the design of this manifesto were created by OpenAi's"
+            }{" "}
+            <Link
+              href="https://openai.com/dall-e-2"
+              target="_blank"
+              textDecoration="underline"
+            >
+              DALL-E 2
+            </Link>
+            .
           </Text>
-          <Text as="li">[3] Id.</Text>
-          <Text as="li">[4] Hakim Bey</Text>
+          <Link
+            border="1px solid #9835BA"
+            borderRadius="full"
+            display="block"
+            margin="0 auto"
+            maxWidth="max-content"
+            textAlign="center"
+            px="10"
+            py="4"
+            fontStyle="italic"
+            fontSize="25px"
+            mt="32"
+            transition="all 200ms ease"
+            _hover={{
+              background: "#9835BA",
+              color: "#fffafa",
+              textDecor: "none",
+            }}
+            href="https://discord.gg/hUH4MWxVFx"
+            target="_blank"
+          >
+            <Text as="span" display="inline-block">
+              Contribute to
+            </Text>{" "}
+            <Text as="span" display="inline-block">
+              PsyDAO on Discord
+            </Text>
+          </Link>
         </Box>
       </Item.Window>
     </Item>
