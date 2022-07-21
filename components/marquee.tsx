@@ -1,5 +1,5 @@
-import { Box, Flex, keyframes, Text } from "@chakra-ui/react";
 import type { FlexProps } from "@chakra-ui/react";
+import { Box, Flex, keyframes, Text } from "@chakra-ui/react";
 import * as React from "react";
 
 const scroll = keyframes`
@@ -51,7 +51,6 @@ export const Marquee = ({ label, ...rest }: MarqueeProps) => {
         flex="0 0 auto"
         whiteSpace="nowrap"
         animation={`${time}s linear infinite ${scroll}`}
-        _hover={{ animationPlayState: "paused" }}
       >
         <Text as="span" pl="0.3em" pr="3em">
           {label}
