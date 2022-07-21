@@ -1,6 +1,7 @@
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 
-export const useSize = (target: React.RefObject<HTMLElement | null>) => {
+export const useSize = <T extends HTMLElement>() => {
+  const target = useRef<T>(null);
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
 
@@ -17,5 +18,5 @@ export const useSize = (target: React.RefObject<HTMLElement | null>) => {
     return () => observer.disconnect();
   });
 
-  return { height, width };
+  return { height, width, target };
 };

@@ -1,5 +1,5 @@
 import { Box, BoxProps, keyframes } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useSize } from "lib/hooks";
 
@@ -25,8 +25,7 @@ export const Cloud = ({
   const midFilterId = `mid-filter-${seed}`;
   const frontFilterId = `front-filter-${seed}`;
 
-  const containerRef = useRef(null);
-  const { height, width } = useSize(containerRef);
+  const { height, width, target: containerRef } = useSize<HTMLDivElement>();
 
   useEffect(() => {
     setSeed(Math.trunc(Math.random() * 10_000));

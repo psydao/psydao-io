@@ -12,7 +12,7 @@ export const ScrollableBox = ({ children, ...rest }: BoxProps) => {
   const [thumbHeight, setThumbHeight] = useState(50);
 
   // This is just triggering re-render on resize for now
-  useSize(contentRef);
+  useSize();
 
   useEffect(() => {
     const content = contentRef.current;
