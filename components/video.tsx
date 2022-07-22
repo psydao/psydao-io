@@ -6,11 +6,12 @@ import { VimeoEmbed } from "components/vimeo-embed";
 import { YoutubeEmbed } from "components/youtube-embed";
 
 export const Youtube = () => {
-  const height = useBreakpointValue({ base: 180, sm: 250, md: 360 });
+  const borderWidth = 2;
+  const windowHeight = useBreakpointValue({ base: 180, sm: 250, md: 360 });
   const titleHeight = useBreakpointValue({ base: 34, sm: 42, md: 50 });
 
-  if (height && titleHeight) {
-    const width = ((height - titleHeight) * 16) / 9;
+  if (windowHeight && titleHeight) {
+    const width = ((windowHeight - titleHeight - 2 * borderWidth) * 16) / 9;
 
     return (
       <Item id="youtube" defaultIsOpen={true}>
@@ -20,13 +21,16 @@ export const Youtube = () => {
         <Item.Window
           // height={{ base: "135px", sm: "180px", md: "315px" }}
           // width={{ base: "179px", sm: "245px", md: "471px" }}
-          height={height}
+          height={windowHeight}
+          minHeight="180px"
           width={width}
+          minWidth="180px"
           maxWidth="600px"
           top="8%"
           left={{ base: "50%", sm: "10%" }}
           transform={{ base: "translateX(-50%)", sm: "none" }}
-          lockAspectRatio={true}
+          lockAspectRatio={16 / 9}
+          lockAspectRatioExtraHeight={titleHeight + 2 * borderWidth}
         >
           <Item.Window.TitleBar hasBorder />
           <Item.Window.Content p="0">

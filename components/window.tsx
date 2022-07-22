@@ -73,6 +73,7 @@ const validRndProps = {
   style: true,
   default: true,
   lockAspectRatio: true,
+  lockAspectRatioExtraHeight: true,
   onMouseDown: true,
   onTouchStart: true,
   enableResizing: true,
@@ -99,6 +100,7 @@ export const Window = ({
   padding = { base: "2", sm: "3", md: "4" },
   resizable,
   lockAspectRatio,
+  lockAspectRatioExtraHeight,
   ...rest
 }: WindowProps) => {
   const { id, isOpen, onClose } = useItemContext();
@@ -157,7 +159,7 @@ export const Window = ({
                 default={{ x: 0, y: 0, height: "100%", width: "100%" }}
                 dragHandleClassName="drag-handle"
                 lockAspectRatio={lockAspectRatio}
-                lockAspectRatioExtraHeight={50}
+                lockAspectRatioExtraHeight={lockAspectRatioExtraHeight}
                 pointerEvents="auto"
                 background="#fffafa"
                 minHeight="200px"
