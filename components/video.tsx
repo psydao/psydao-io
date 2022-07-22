@@ -1,8 +1,9 @@
 import { Text, useBreakpointValue } from "@chakra-ui/react";
 
 import { Item } from "components/item";
+import { Pill } from "components/pill";
+import { VimeoEmbed } from "components/vimeo-embed";
 import { YoutubeEmbed } from "components/youtube-embed";
-import { VimeoEmbed } from "./vimeo-embed";
 
 export const Youtube = () => {
   const height = useBreakpointValue({ base: 180, sm: 250, md: 360 });
@@ -13,24 +14,8 @@ export const Youtube = () => {
 
     return (
       <Item id="youtube" defaultIsOpen={true}>
-        <Item.Icon
-          px="8"
-          border="2px solid #f2bebe"
-          borderRadius="full"
-          boxShadow="4px 4px 13px 0px #F2BEBEA1"
-          background="#fffafa"
-          color="#f2bebe"
-          fontSize="24px"
-          fontStyle="italic"
-          fontWeight="700"
-          textAlign="center"
-          transition="all 200ms ease"
-          _hover={{
-            color: "#9835BA",
-            border: "2px solid #9835BA",
-          }}
-        >
-          <Text as="span">Video</Text>
+        <Item.Icon>
+          <Pill>Video</Pill>
         </Item.Icon>
         <Item.Window
           // height={{ base: "135px", sm: "180px", md: "315px" }}

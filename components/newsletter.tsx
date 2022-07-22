@@ -1,28 +1,13 @@
 import { Box, Button, Flex, Input, Link, Text } from "@chakra-ui/react";
 
 import { Item } from "components/item";
+import { Pill } from "components/pill";
 
 export const Newsletter = () => {
   return (
     <Item id="newsletter">
-      <Item.Icon
-        px="8"
-        border="2px solid #f2bebe"
-        borderRadius="full"
-        boxShadow="4px 4px 13px 0px #F2BEBEA1"
-        background="#fffafa"
-        color="#f2bebe"
-        fontSize="24px"
-        fontStyle="italic"
-        fontWeight="700"
-        textAlign="center"
-        transition="all 200ms ease"
-        _hover={{
-          color: "#9835BA",
-          border: "2px solid #9835BA",
-        }}
-      >
-        <Text as="span">News</Text>
+      <Item.Icon>
+        <Pill>News</Pill>
       </Item.Icon>
       <Item.Window
         height={{ base: "380px", md: "410px" }}

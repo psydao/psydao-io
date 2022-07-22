@@ -1,28 +1,13 @@
 import { Box, Image, Link, Text } from "@chakra-ui/react";
 
 import { Item } from "components/item";
+import { Pill } from "components/pill";
 
 export const Manifesto = () => {
   return (
     <Item id="manifesto">
-      <Item.Icon
-        px="8"
-        border="2px solid #f2bebe"
-        borderRadius="full"
-        boxShadow="4px 4px 13px 0px #F2BEBEA1"
-        background="#fffafa"
-        color="#f2bebe"
-        fontSize="24px"
-        fontStyle="italic"
-        fontWeight="700"
-        textAlign="center"
-        transition="all 200ms ease"
-        _hover={{
-          color: "#9835BA",
-          border: "2px solid #9835BA",
-        }}
-      >
-        <Text as="span">Manifesto</Text>
+      <Item.Icon>
+        <Pill>Manifesto</Pill>
       </Item.Icon>
       <Item.Window
         height={{ base: "90%", md: "70%" }}
