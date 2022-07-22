@@ -1,5 +1,5 @@
 import type { IconProps } from "@chakra-ui/react";
-import { Icon } from "@chakra-ui/react";
+import { Box, Icon } from "@chakra-ui/react";
 
 export const Cross = (props: IconProps) => {
   return (
@@ -27,14 +27,29 @@ export const Close = (props: IconProps) => {
       viewBox="-2 -2 22 22"
       height="1rem"
       width="auto"
-      fill="#f2bebe"
       cursor="pointer"
       {...props}
     >
-      <circle cx="0" cy="0" r="1.5" />
-      <circle cx="18" cy="0" r="1.5" />
-      <circle cx="0" cy="18" r="1.5" />
-      <circle cx="18" cy="18" r="1.5" />
+      <Box
+        as="g"
+        stroke="#f2bebe"
+        strokeWidth="3"
+        strokeLinecap="round"
+        opacity={0}
+        transition="opacity 300ms ease"
+        _hover={{ opacity: 1 }}
+        pointerEvents="all"
+      >
+        <line x1="0" y1="0" x2="18" y2="18" />
+        <line x1="0" y1="18" x2="18" y2="0" />
+        <rect x="-2" y="-2" width="22" height="22" stroke="none" fill="none" />
+      </Box>
+      <g fill="#f2bebe">
+        <circle cx="0" cy="0" r="1.5" />
+        <circle cx="18" cy="0" r="1.5" />
+        <circle cx="0" cy="18" r="1.5" />
+        <circle cx="18" cy="18" r="1.5" />
+      </g>
     </Icon>
   );
 };
