@@ -1,4 +1,4 @@
-import { Box, FlexProps } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 
 import { createCtx } from "lib/context";
@@ -10,12 +10,18 @@ interface WindowManagerContext {
   focus(id: React.Key): void;
   windowLayerRef: React.RefObject<HTMLDivElement>;
   windowStack: Record<string, number>;
+  pointerDragging: boolean;
+  setPointerDragging: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const [useWindowManager, WindowManagerProvider] =
   createCtx<WindowManagerContext>();
 
-export const WindowManager = ({ children }: FlexProps) => {
+interface WindowManagerProps {
+  children: React.ReactNode;
+}
+
+export const WindowManager = ({ children }: WindowManagerProps) => {
   const windowLayerRef = useRef(null);
   const [stack, setStack] = useState<React.Key[]>([]);
   const windowStack = stack.reduce(
@@ -24,9 +30,19 @@ export const WindowManager = ({ children }: FlexProps) => {
   );
   const focus = (id: React.Key) => setStack((prev) => foreground(id, prev));
 
+  const [pointerDragging, setPointerDragging] = useState(false);
+
   return (
     <>
-      <WindowManagerProvider value={{ windowLayerRef, windowStack, focus }}>
+      <WindowManagerProvider
+        value={{
+          windowLayerRef,
+          windowStack,
+          focus,
+          pointerDragging,
+          setPointerDragging,
+        }}
+      >
         {children}
       </WindowManagerProvider>
       <Box

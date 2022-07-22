@@ -1,52 +1,111 @@
 import type { BoxProps } from "@chakra-ui/react";
 import { Box, chakra } from "@chakra-ui/react";
-import { isValidMotionProp, motion, useMotionValue } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
-import * as ReactDOM from "react-dom";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+import { Rnd } from "react-rnd";
 
-import { Close, Drag, Resize } from "components/icons";
+import { Close, Drag } from "components/icons";
 import { useItemContext } from "components/item";
 import { useWindowManager } from "components/window-manager";
-import { useSize } from "lib/hooks";
+import { createCtx } from "lib/context";
 
-const MotionBox = chakra(motion.div, {
-  shouldForwardProp: (prop) => isValidMotionProp(prop) || prop === "children",
-});
-
-interface WindowProps extends BoxProps {
-  motionBoxProps?: React.ComponentPropsWithoutRef<typeof MotionBox>;
-  contentBoxProps?: BoxProps;
-  resizable?: boolean;
-  titleBarBorder?: boolean;
+// TODO fix types
+interface WindowContext {
+  onClose: () => void;
+  border: BoxProps["border"];
+  padding: BoxProps["padding"];
+  pointerDragging: boolean;
 }
 
-let firstResize = true;
+const [useWindowContext, WindowContextProvider] = createCtx<WindowContext>();
 
+interface TitleBarProps extends BoxProps {
+  hasBorder?: boolean;
+}
+
+const TitleBar = ({ hasBorder = false, ...rest }: TitleBarProps) => {
+  const { onClose, border, padding } = useWindowContext();
+
+  return (
+    <Box
+      display="flex"
+      alignItems="start"
+      justifyContent="space-between"
+      borderBottom={hasBorder ? border : "none"}
+      p={padding}
+      {...rest}
+    >
+      <Drag className="drag-handle" />
+      <Close flex="0 0 auto" onClick={onClose} />
+    </Box>
+  );
+};
+
+interface ContentProps extends BoxProps {}
+
+const Content = (props: ContentProps) => {
+  const { padding, pointerDragging } = useWindowContext();
+
+  return (
+    <Box
+      flex="1 1 auto"
+      overflow="auto"
+      userSelect={pointerDragging ? "none" : "text"}
+      pointerEvents={pointerDragging ? "none" : "auto"}
+      p={padding}
+      sx={
+        pointerDragging ? { "&::-webkit-scrollbar": { display: "none" } } : {}
+      }
+      {...props}
+    />
+  );
+};
+
+const validRndProps = {
+  dragHandleClassName: true,
+  children: true,
+  minHeight: true,
+  minWidth: true,
+  maxHeight: true,
+  maxWidth: true,
+  style: true,
+  default: true,
+  lockAspectRatio: true,
+  onMouseDown: true,
+  onTouchStart: true,
+  enableResizing: true,
+  onDragStart: true,
+  onResizeStart: true,
+  onDragStop: true,
+  onResizeStop: true,
+};
+
+const Resizable = chakra(Rnd, {
+  shouldForwardProp: (prop) => prop in validRndProps,
+});
+
+interface WindowProps
+  extends React.ComponentPropsWithoutRef<typeof Resizable> {}
+
+// TODO the current approach to picking up border and padding is a bit limited
+// because I think unexpected things might happen when supplying partial props
+// for those (px, py, pt, borderTop, borderRight, etc.)
 export const Window = ({
-  motionBoxProps,
-  contentBoxProps,
   children,
-  resizable = true,
-  titleBarBorder = false,
+  border = "2px solid #f2bebe",
+  padding = { base: "2", sm: "3", md: "4" },
+  resizable,
+  lockAspectRatio,
   ...rest
 }: WindowProps) => {
   const { id, isOpen, onClose } = useItemContext();
-  const { windowLayerRef, focus, windowStack } = useWindowManager();
-
-  // Motion props
-  const [drag, setDrag] = useState(false);
-  const [resize, setResize] = useState(false);
-  const windowContainerRef = useRef(null);
-  const size = useSize(windowContainerRef);
-  const height = useMotionValue(size.height);
-  const width = useMotionValue(size.width);
-  const heightBeforeResize = useRef(size.height);
-  const widthBeforeResize = useRef(size.width);
-
-  if (windowContainerRef.current && height.get() === 0 && width.get() === 0) {
-    height.set(size.height);
-    width.set(size.width);
-  }
+  const {
+    windowLayerRef,
+    focus,
+    windowStack,
+    setPointerDragging,
+    pointerDragging,
+  } = useWindowManager();
 
   // TODO find a less ugly way to refresh component. The problem solved by the
   // following segment is that windowLayerRef will be null at first and the
@@ -58,95 +117,63 @@ export const Window = ({
     setMounted(true);
   }, []);
 
+  const handleStart = () => {
+    focus(id);
+    setPointerDragging(true);
+  };
+
+  const handleEnd = () => {
+    setPointerDragging(false);
+  };
+
   if (windowLayerRef.current && isOpen) {
-    return ReactDOM.createPortal(
-      <Box
-        ref={windowContainerRef}
-        position="absolute"
-        zIndex={windowStack[id]}
-        minH="150px"
-        minW="200px"
-        {...rest}
+    return createPortal(
+      <WindowContextProvider
+        value={{
+          onClose: onClose,
+          border,
+          padding,
+          pointerDragging,
+        }}
       >
-        <MotionBox
-          drag={drag}
-          dragConstraints={windowLayerRef}
-          dragElastic={false}
-          dragMomentum={false}
-          onDragEnd={() => setDrag(false)}
-          onTapStart={() => focus(id)}
-          style={{ height, width }}
+        <Box
           position="absolute"
-          top="0"
-          left="0"
-          display="flex"
-          flexDirection="column"
-          border="2px solid #f2bebe"
-          backgroundColor="#faffff"
-          overflow="hidden"
-          boxShadow="0px 12px 33px rgba(152, 53, 186, 0.22)"
-          userSelect="none"
-          pointerEvents="auto"
-          minH="150px"
-          minW="200px"
-          {...motionBoxProps}
+          zIndex={windowStack[id]}
+          onMouseDown={() => focus(id)}
+          onTouchStart={() => focus(id)}
+          onMouseUp={handleEnd}
+          onTouchEnd={handleEnd}
+          {...rest}
         >
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-            p={{ base: "2", sm: "3", md: "4" }}
-            borderBottom={titleBarBorder ? "2px solid #f2bebe" : "none"}
+          <Resizable
+            default={{ x: 0, y: 0, height: "100%", width: "100%" }}
+            dragHandleClassName="drag-handle"
+            lockAspectRatio={lockAspectRatio}
+            lockAspectRatioExtraHeight={50}
+            pointerEvents="auto"
+            background="#fffafa"
+            minHeight="200px"
+            minWidth="200px"
+            border={border}
+            enableResizing={resizable}
+            onDragStart={handleStart}
+            onResizeStart={handleStart}
+            onDragStop={handleEnd}
+            onResizeStop={handleEnd}
+            {...rest}
           >
-            <MotionBox
-              sx={{ touchAction: "none" }}
-              onTapStart={() => setDrag(true)}
-              onTap={() => setDrag(false)}
-            >
-              <Drag display="block" />
-            </MotionBox>
-            <Close flex="0 0 auto" onClick={onClose} />
-          </Box>
-          <Box
-            overflow="auto"
-            userSelect="text"
-            flex="1 1 auto"
-            pointerEvents={drag || resize ? "none" : "auto"}
-            {...contentBoxProps}
-          >
-            {children}
-          </Box>
-          {resizable && (
-            <MotionBox
-              position="absolute"
-              right={{ base: "2", md: "3" }}
-              bottom={{ base: "2", md: "3" }}
-              sx={{ touchAction: "none" }}
-              onPanStart={() => {
-                setResize(true);
-                if (firstResize) {
-                  firstResize = false;
-                  heightBeforeResize.current = size.height;
-                  widthBeforeResize.current = size.width;
-                } else {
-                  heightBeforeResize.current = height.get();
-                  widthBeforeResize.current = width.get();
-                }
-              }}
-              onPan={(_, { offset }) => {
-                height.set(heightBeforeResize.current + offset.y);
-                width.set(widthBeforeResize.current + offset.x);
-              }}
-              onPanEnd={() => setResize(false)}
-            >
-              <Resize />
-            </MotionBox>
-          )}
-        </MotionBox>
-      </Box>,
+            <Box h="100%" display="flex" flexDir="column" overflow="hidden">
+              {children}
+            </Box>
+          </Resizable>
+        </Box>
+      </WindowContextProvider>,
       windowLayerRef.current
     );
   }
 
   return null;
 };
+
+Window.TitleBar = TitleBar;
+Window.Content = Content;
