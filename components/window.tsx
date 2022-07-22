@@ -146,10 +146,6 @@ export const Window = ({
             <MotionBox
               position="absolute"
               zIndex={windowStack[id]}
-              onMouseDown={() => focus(id)}
-              onTouchStart={() => focus(id)}
-              onMouseUp={handleEnd}
-              onTouchEnd={handleEnd}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -166,6 +162,8 @@ export const Window = ({
                 minWidth="200px"
                 border={border}
                 enableResizing={resizable}
+                onMouseDown={() => focus(id)}
+                onTouchStart={() => focus(id)}
                 onDragStart={handleStart}
                 onResizeStart={handleStart}
                 onDragStop={handleEnd}
