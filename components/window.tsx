@@ -6,7 +6,9 @@ import { Rnd } from "react-rnd";
 
 import { Close, Drag } from "components/icons";
 import { useItemContext } from "components/item";
+import { MotionBox } from "components/motion-box";
 import { useWindowManager } from "components/window-manager";
+import { AnimatePresence } from "framer-motion";
 import { createCtx } from "lib/context";
 
 // TODO fix types
@@ -126,7 +128,7 @@ export const Window = ({
     setPointerDragging(false);
   };
 
-  if (windowLayerRef.current && isOpen) {
+  if (windowLayerRef.current) {
     return createPortal(
       <WindowContextProvider
         value={{
@@ -136,37 +138,44 @@ export const Window = ({
           pointerDragging,
         }}
       >
-        <Box
-          position="absolute"
-          zIndex={windowStack[id]}
-          onMouseDown={() => focus(id)}
-          onTouchStart={() => focus(id)}
-          onMouseUp={handleEnd}
-          onTouchEnd={handleEnd}
-          {...rest}
-        >
-          <Resizable
-            default={{ x: 0, y: 0, height: "100%", width: "100%" }}
-            dragHandleClassName="drag-handle"
-            lockAspectRatio={lockAspectRatio}
-            lockAspectRatioExtraHeight={50}
-            pointerEvents="auto"
-            background="#fffafa"
-            minHeight="200px"
-            minWidth="200px"
-            border={border}
-            enableResizing={resizable}
-            onDragStart={handleStart}
-            onResizeStart={handleStart}
-            onDragStop={handleEnd}
-            onResizeStop={handleEnd}
-            {...rest}
-          >
-            <Box h="100%" display="flex" flexDir="column" overflow="hidden">
-              {children}
-            </Box>
-          </Resizable>
-        </Box>
+        <AnimatePresence>
+          {isOpen && (
+            <MotionBox
+              position="absolute"
+              zIndex={windowStack[id]}
+              onMouseDown={() => focus(id)}
+              onTouchStart={() => focus(id)}
+              onMouseUp={handleEnd}
+              onTouchEnd={handleEnd}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              {...rest}
+            >
+              <Resizable
+                default={{ x: 0, y: 0, height: "100%", width: "100%" }}
+                dragHandleClassName="drag-handle"
+                lockAspectRatio={lockAspectRatio}
+                lockAspectRatioExtraHeight={50}
+                pointerEvents="auto"
+                background="#fffafa"
+                minHeight="200px"
+                minWidth="200px"
+                border={border}
+                enableResizing={resizable}
+                onDragStart={handleStart}
+                onResizeStart={handleStart}
+                onDragStop={handleEnd}
+                onResizeStop={handleEnd}
+                {...rest}
+              >
+                <Box h="100%" display="flex" flexDir="column" overflow="hidden">
+                  {children}
+                </Box>
+              </Resizable>
+            </MotionBox>
+          )}
+        </AnimatePresence>
       </WindowContextProvider>,
       windowLayerRef.current
     );

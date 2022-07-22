@@ -1,10 +1,4 @@
-import { chakra } from "@chakra-ui/react";
-import { isValidMotionProp, motion } from "framer-motion";
-import React from "react";
-
-const MotionBox = chakra(motion.div, {
-  shouldForwardProp: (prop) => isValidMotionProp(prop) || prop === "children",
-});
+import { MotionBox } from "components/motion-box";
 
 export const Pill = (
   props: React.ComponentPropsWithoutRef<typeof MotionBox>
