@@ -46,6 +46,7 @@ export const WindowManager = ({ children }: WindowManagerProps) => {
         {children}
       </WindowManagerProvider>
       <Box
+        id="window-layer"
         ref={windowLayerRef}
         position="absolute"
         top="0"

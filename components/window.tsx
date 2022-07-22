@@ -80,6 +80,7 @@ const validRndProps = {
   onResizeStart: true,
   onDragStop: true,
   onResizeStop: true,
+  bounds: true,
 };
 
 const Resizable = chakra(Rnd, {
@@ -167,6 +168,7 @@ export const Window = ({
                 onResizeStart={handleStart}
                 onDragStop={handleEnd}
                 onResizeStop={handleEnd}
+                bounds="#window-layer"
                 {...rest}
               >
                 <Box h="100%" display="flex" flexDir="column" overflow="hidden">
