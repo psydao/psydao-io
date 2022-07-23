@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { FaDiscord, FaTwitter, FaYoutube } from "react-icons/fa";
 
 import { BackgroundGrid } from "components/background-grid";
+import { Blobs } from "components/blobs";
 import { Grid } from "components/grid";
 import { Head } from "components/head";
 import { Item } from "components/item";
@@ -48,6 +49,7 @@ const Homepage: NextPage = () => {
           overflow="hidden"
           background="no-repeat top right url(/clouds.png), linear-gradient(60deg, #fffafa, #fff9ef)"
         >
+          <Blobs />
           <BackgroundGrid />
           <Grid
             position="relative"
