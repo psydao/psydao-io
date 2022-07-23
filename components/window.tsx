@@ -158,6 +158,7 @@ export const Window = ({
                 lockAspectRatioExtraHeight={lockAspectRatioExtraHeight}
                 pointerEvents="auto"
                 background="#fffafa"
+                boxShadow="0px 12px 33px rgba(152, 53, 186, 0.22)"
                 minHeight="200px"
                 minWidth="200px"
                 border={border}
