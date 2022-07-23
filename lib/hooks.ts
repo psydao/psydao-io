@@ -1,22 +1,40 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 
-export const useSize = <T extends HTMLElement>() => {
-  const target = useRef<T>(null);
-  const [height, setHeight] = useState(0);
-  const [width, setWidth] = useState(0);
+interface Dimensions {
+  contentBox: {
+    height: number;
+    width: number;
+  };
+  borderBox: {
+    height: number;
+    width: number;
+  };
+}
 
-  useLayoutEffect(() => {
+export const useDimensions = () => {
+  const [dimensions, setDimensions] = useState<Dimensions>();
+
+  const ref = useCallback((ref: HTMLElement | null) => {
     const observer = new ResizeObserver((entries) => {
-      setHeight(entries[0].contentBoxSize[0].blockSize);
-      setWidth(entries[0].contentBoxSize[0].inlineSize);
+      setDimensions({
+        contentBox: {
+          height: entries[0].contentBoxSize[0].blockSize,
+          width: entries[0].contentBoxSize[0].inlineSize,
+        },
+        borderBox: {
+          height: entries[0].borderBoxSize[0].blockSize,
+          width: entries[0].borderBoxSize[0].inlineSize,
+        },
+      });
     });
 
-    if (target.current !== null) {
-      observer.observe(target.current);
+    if (ref) {
+      observer.observe(ref);
     }
 
-    return () => observer.disconnect();
-  });
+    // TODO R&D whether not being able to disconnect will create a memory leak
+    // return () => observer.disconnect();
+  }, []);
 
-  return { height, width, target };
+  return { ...dimensions, ref };
 };

@@ -1,7 +1,7 @@
 import { Box, BoxProps } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 
-import { useSize } from "lib/hooks";
+import { useDimensions } from "lib/hooks";
 
 export const ScrollableBox = ({ children, ...rest }: BoxProps) => {
   const contentRef = useRef<HTMLDivElement>(null);
@@ -12,7 +12,7 @@ export const ScrollableBox = ({ children, ...rest }: BoxProps) => {
   const [thumbHeight, setThumbHeight] = useState(50);
 
   // This is just triggering re-render on resize for now
-  useSize();
+  useDimensions();
 
   useEffect(() => {
     const content = contentRef.current;
