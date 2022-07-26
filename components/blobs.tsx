@@ -8,15 +8,7 @@ interface BlobsProps extends BoxProps {
   palette?: string[];
 }
 
-const defaultPalette = [
-  "#fffafa",
-  "#fff9ef",
-  "#ffeff9",
-  "#f2bebe",
-  "#f2bebe",
-  "#9835ba",
-  "#a6dff2",
-];
+const defaultPalette = ["#f0adad", "#f2bebe", "#f2bebe"];
 
 export const Blobs = ({ palette = defaultPalette, ...rest }: BlobsProps) => {
   const ref = useCallback((canvas: HTMLCanvasElement | null) => {
