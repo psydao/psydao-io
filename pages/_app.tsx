@@ -10,7 +10,7 @@ import "@fontsource/cardo/700.css";
 import type { AppProps } from "next/app";
 
 import { Csr } from "components/csr";
-import { GlobalContextProvider } from "components/global-context";
+import { GridProvider } from "components/grid-context";
 import { theme } from "lib/theme";
 
 const App = ({ Component, pageProps }: AppProps) => {
@@ -27,11 +27,11 @@ const App = ({ Component, pageProps }: AppProps) => {
       }
       `}
       />
-      <GlobalContextProvider>
-        <Csr>
+      <Csr>
+        <GridProvider>
           <Component {...pageProps} />
-        </Csr>
-      </GlobalContextProvider>
+        </GridProvider>
+      </Csr>
     </ChakraProvider>
   );
 };
