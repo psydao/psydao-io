@@ -25,7 +25,7 @@ export const Youtube = () => {
           minHeight="180px"
           width={width}
           minWidth="180px"
-          maxWidth="600px"
+          maxWidth="1000px"
           top="8%"
           left={{ base: "50%", sm: "10%" }}
           transform={{ base: "translateX(-50%)", sm: "none" }}
@@ -34,7 +34,7 @@ export const Youtube = () => {
         >
           <Item.Window.TitleBar hasBorder />
           <Item.Window.Content p="0">
-            <YoutubeEmbed embedId="LKNtAlreG3I" />
+            <YoutubeEmbed embedId="OFIO5LJ8sP8" />
           </Item.Window.Content>
         </Item.Window>
       </Item>
