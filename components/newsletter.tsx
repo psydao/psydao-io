@@ -24,7 +24,7 @@ export const Newsletter = () => {
           px={{ base: "2", sm: "3", md: "4" }}
           background="no-repeat bottom url(colorized-forest.jpg)"
         >
-          <Text fontSize="32px" lineHeight="32px" fontStyle="italic" mt="3">
+          <Text fontSize="32px" lineHeight="32px" fontStyle="italic" mt="9">
             Stay in the loop
           </Text>
           <Text fontSize="16px">Subscribe to the PsyDAO newsletter.</Text>
@@ -36,7 +36,7 @@ export const Newsletter = () => {
             target="_blank"
             direction="column"
             gap="3"
-            my="6"
+            my="10"
           >
             <Input
               placeholder="Your email address..."

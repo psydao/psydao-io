@@ -7,8 +7,13 @@ import { YoutubeEmbed } from "components/youtube-embed";
 
 export const Youtube = () => {
   const borderWidth = 2;
-  const windowHeight = useBreakpointValue({ base: 180, sm: 250, md: 360 });
-  const titleHeight = useBreakpointValue({ base: 34, sm: 42, md: 50 });
+  const windowHeight = useBreakpointValue({
+    base: 180,
+    sm: 250,
+    md: 360,
+    lg: 500,
+  });
+  const titleHeight = 30;
 
   if (windowHeight && titleHeight) {
     const width = ((windowHeight - titleHeight - 2 * borderWidth) * 16) / 9;
@@ -19,16 +24,14 @@ export const Youtube = () => {
           <Pill>Video</Pill>
         </Item.Icon>
         <Item.Window
-          // height={{ base: "135px", sm: "180px", md: "315px" }}
-          // width={{ base: "179px", sm: "245px", md: "471px" }}
           height={windowHeight}
           minHeight="180px"
           width={width}
           minWidth="180px"
           maxWidth="1000px"
-          top="8%"
-          left={{ base: "50%", sm: "10%" }}
-          transform={{ base: "translateX(-50%)", sm: "none" }}
+          top="45%"
+          left="50%"
+          transform="translate(-50%, -50%)"
           lockAspectRatio={16 / 9}
           lockAspectRatioExtraHeight={titleHeight + 2 * borderWidth}
         >

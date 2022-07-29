@@ -32,10 +32,10 @@ export const Manifesto = () => {
             pb="32"
             background="no-repeat bottom -100px left 0px / 100% 369px linear-gradient(to top, #f2bebe 100px, transparent)"
           >
-            <Text color="#269200" fontSize="24px" mt="10">
+            <Text color="#269200" fontSize="24px" mt="20">
               The PsyDAO Manifesto
             </Text>
-            <Text as="h1" mb="28">
+            <Text as="h1" mb="20">
               An Industrial Ego Death
             </Text>
             <Text as="h2">Set</Text>

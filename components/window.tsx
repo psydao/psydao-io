@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Rnd } from "react-rnd";
 
-import { Close, Drag } from "components/icons";
+import { Cross, Drag } from "components/icons";
 import { useItemContext } from "components/item";
 import { MotionBox } from "components/motion-box";
 import { useWindowManager } from "components/window-manager";
@@ -25,7 +25,7 @@ interface TitleBarProps extends BoxProps {
   hasBorder?: boolean;
 }
 
-const TitleBar = ({ hasBorder = false, ...rest }: TitleBarProps) => {
+const TitleBar = ({ hasBorder = true, ...rest }: TitleBarProps) => {
   const { onClose, border, padding } = useWindowContext();
 
   return (
@@ -34,11 +34,27 @@ const TitleBar = ({ hasBorder = false, ...rest }: TitleBarProps) => {
       alignItems="start"
       justifyContent="space-between"
       borderBottom={hasBorder ? border : "none"}
-      p={padding}
+      background="#FFF5F5"
       {...rest}
     >
-      <Drag className="drag-handle" />
-      <Close flex="0 0 auto" onClick={onClose} />
+      <Box
+        className="drag-handle"
+        p={padding}
+        flex="1 0"
+        cursor="grab"
+        _active={{ cursor: "grabbing" }}
+      >
+        <Drag display="block" />
+      </Box>
+      <Box
+        p={padding}
+        flex="0 0 auto"
+        onClick={onClose}
+        cursor="pointer"
+        pointerEvents="all"
+      >
+        <Cross display="block" />
+      </Box>
     </Box>
   );
 };
@@ -97,7 +113,7 @@ interface WindowProps
 export const Window = ({
   children,
   border = "2px solid #f2bebe",
-  padding = { base: "2", sm: "3", md: "4" },
+  padding = "2",
   resizable,
   lockAspectRatio,
   lockAspectRatioExtraHeight,

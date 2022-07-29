@@ -4,19 +4,17 @@ import { Box, Icon } from "@chakra-ui/react";
 export const Cross = (props: IconProps) => {
   return (
     <Icon
-      viewBox="-21 -21 42 42"
-      height="100%"
+      viewBox="0 0 12 12"
+      height="12px"
+      width="auto"
       stroke="#f2bebe"
-      strokeWidth="6"
+      strokeWidth="2"
       strokeLinecap="round"
-      maxWidth="1rem"
-      filter="blur(2px)"
-      _hover={{ filter: "none", strokeWidth: "2" }}
-      cursor="pointer"
       {...props}
     >
-      <line x1="-18" y1="-18" x2="18" y2="18" />
-      <line x1="-18" y1="18" x2="18" y2="-18" />
+      <line x1="1.5" y1="1.5" x2="10.5" y2="10.5" />
+      <line x1="1.5" y1="10.5" x2="10.5" y2="1.5" />
+      <rect x="0" y="0" width="12" height="12" stroke="none" fill="none" />
     </Icon>
   );
 };
@@ -24,8 +22,8 @@ export const Cross = (props: IconProps) => {
 export const Close = (props: IconProps) => {
   return (
     <Icon
-      viewBox="-2 -2 22 22"
-      height="1rem"
+      viewBox="0 0 12 12"
+      height="12px"
       width="auto"
       cursor="pointer"
       {...props}
@@ -40,15 +38,15 @@ export const Close = (props: IconProps) => {
         _hover={{ opacity: 1 }}
         pointerEvents="all"
       >
-        <line x1="0" y1="0" x2="18" y2="18" />
-        <line x1="0" y1="18" x2="18" y2="0" />
-        <rect x="-2" y="-2" width="22" height="22" stroke="none" fill="none" />
+        <line x1="1.5" y1="1.5" x2="10.5" y2="10.5" />
+        <line x1="1.5" y1="10.5" x2="10.5" y2="1.5" />
+        <rect x="0" y="0" width="12" height="12" stroke="none" fill="none" />
       </Box>
       <g fill="#f2bebe">
-        <circle cx="0" cy="0" r="1.5" />
-        <circle cx="18" cy="0" r="1.5" />
-        <circle cx="0" cy="18" r="1.5" />
-        <circle cx="18" cy="18" r="1.5" />
+        <circle cx="1.5" cy="1.5" r="1.5" />
+        <circle cx="10.5" cy="1.5" r="1.5" />
+        <circle cx="1.5" cy="10.5" r="1.5" />
+        <circle cx="10.5" cy="10.5" r="1.5" />
       </g>
     </Icon>
   );
@@ -57,22 +55,22 @@ export const Close = (props: IconProps) => {
 export const Drag = (props: IconProps) => {
   return (
     <Icon
-      viewBox="-2 -2 58 22"
-      height="1rem"
+      viewBox="0 0 39 12"
+      height="12px"
       width="auto"
       fill="#f2bebe"
-      cursor="grab"
-      _active={{ cursor: "grabbing" }}
       {...props}
     >
-      <circle cx="0" cy="0" r="1.5" />
-      <circle cx="18" cy="0" r="1.5" />
-      <circle cx="36" cy="0" r="1.5" />
-      <circle cx="54" cy="0" r="1.5" />
-      <circle cx="0" cy="18" r="1.5" />
-      <circle cx="18" cy="18" r="1.5" />
-      <circle cx="36" cy="18" r="1.5" />
-      <circle cx="54" cy="18" r="1.5" />
+      <circle cx="1.5" cy="1.5" r="1.5" />
+      <circle cx="10.5" cy="1.5" r="1.5" />
+      <circle cx="19.5" cy="1.5" r="1.5" />
+      <circle cx="28.5" cy="1.5" r="1.5" />
+      <circle cx="37.5" cy="1.5" r="1.5" />
+      <circle cx="1.5" cy="10.5" r="1.5" />
+      <circle cx="10.5" cy="10.5" r="1.5" />
+      <circle cx="19.5" cy="10.5" r="1.5" />
+      <circle cx="28.5" cy="10.5" r="1.5" />
+      <circle cx="37.5" cy="10.5" r="1.5" />
     </Icon>
   );
 };
