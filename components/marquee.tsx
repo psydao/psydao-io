@@ -33,7 +33,7 @@ export const Marquee = ({ label, ...rest }: MarqueeProps) => {
           whiteSpace="nowrap"
           fontFamily="'GrandSlang Roman'"
           textTransform="uppercase"
-          sx={{ wordSpacing: "0.2em" }}
+          sx={{ wordSpacing: "0.2em", letterSpacing: "3px" }}
           color="#f2bebe"
           animation={`${time}s linear infinite ${scroll}`}
           fontSize={`${contentBox.height}px`}
