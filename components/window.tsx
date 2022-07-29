@@ -185,7 +185,7 @@ export const Window = ({
                 onResizeStart={handleStart}
                 onDragStop={handleEnd}
                 onResizeStop={handleEnd}
-                bounds="#window-layer"
+                bounds="#window-bounds"
                 {...rest}
               >
                 <Box h="100%" display="flex" flexDir="column" overflow="hidden">
