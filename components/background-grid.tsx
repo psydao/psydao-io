@@ -11,6 +11,15 @@ const randomIntInRange = (min: number, max: number) =>
 const randomPick = <T extends unknown>(arr: T[]): T =>
   arr[randomIntInRange(0, arr.length)];
 
+const randomPickN = <T extends unknown>(arr: T[], n: number): T[] => {
+  const available = [...arr];
+  const result = [];
+  for (let i = 0; i < n; i += 1) {
+    result.push(available.splice(randomIntInRange(0, available.length), 1)[0]);
+  }
+  return result;
+};
+
 interface GridDimensions {
   cols: number;
   rows: number;
@@ -23,15 +32,15 @@ const randomGridArea = ({ cols, rows }: GridDimensions): string => {
   return `${row} / ${col} / span ${size} / span ${size}`;
 };
 
-const srcs = [
-  "colorized-mind-expansion.jpg",
-  "colorized-shrooms.jpg",
-  "colorized-stan-grof.jpg",
-  "colorized-sasha-shulgin.jpg",
-  "colorized-maria-sabina.jpg",
-  "colorized-fractal.jpg",
-  "colorized-suit-man.jpg",
-  "colorized-stamp-borderless.jpg",
+const paths = [
+  "/colorized-mind-expansion.jpg",
+  "/colorized-shrooms.jpg",
+  "/colorized-stan-grof.jpg",
+  "/colorized-sasha-shulgin.jpg",
+  "/colorized-maria-sabina.jpg",
+  "/colorized-fractal.jpg",
+  "/colorized-suit-man.jpg",
+  "/colorized-stamp-borderless.jpg",
 ];
 
 interface Image {
@@ -47,24 +56,28 @@ export const BackgroundGrid = () => {
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
+
     if (cols && rows) {
-      const getImages = (prev: Image[]) => {
-        // We remove the first image if it exists
-        const prevImages = prev.slice(1);
-        // and pad with new images
-        const newImages = new Array(numberOfImages - prevImages.length)
-          .fill(null)
-          .map(() => ({
-            src: randomPick(srcs),
+      // (Re-)Initialize images array now that grid is known
+      setImages(
+        randomPickN(paths, 4).map((src) => ({
+          src,
+          gridArea: randomGridArea({ cols, rows }),
+        }))
+      );
+
+      const switchImage = () => {
+        setImages((prev) =>
+          prev.slice(1).concat({
+            src: randomPick(
+              paths.filter((path) => prev.every(({ src }) => src !== path))
+            ),
             gridArea: randomGridArea({ cols, rows }),
-          }));
-        return [...prevImages, ...newImages];
+          })
+        );
       };
-      const addImages = () => {
-        setImages(getImages);
-      };
-      addImages();
-      interval = setInterval(addImages, 10000);
+
+      interval = setInterval(switchImage, 10000);
     }
 
     return () => clearInterval(interval);
