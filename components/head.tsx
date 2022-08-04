@@ -8,7 +8,7 @@ interface HeadProps {
 
 export const Head = ({
   title = "PsyDAO - A Psychedelics Research DAO",
-  image = "/psydao-seo-image.jpg",
+  image = "/psydao-seo-image.png",
   children = null,
 }: HeadProps) => {
   return (
@@ -24,9 +24,16 @@ export const Head = ({
       <meta content={image} property="twitter:image" />
       <meta content="width=device-width, initial-scale=1" name="viewport" />
       <link
-        href="/psydao-favicon-black.png"
+        href="/psydao-favicon-light-mode.png"
         rel="shortcut icon"
         type="image/x-icon"
+        media="(prefers-color-scheme: light)"
+      />
+      <link
+        href="/psydao-favicon-dark-mode.png"
+        rel="shortcut icon"
+        type="image/x-icon"
+        media="(prefers-color-scheme: dark)"
       />
       <link href="/psydao-apple-touch.png" rel="apple-touch-icon" />
       {children}
