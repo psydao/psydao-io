@@ -36,6 +36,30 @@ export const Head = ({
         media="(prefers-color-scheme: dark)"
       />
       <link href="/psydao-apple-touch.png" rel="apple-touch-icon" />
+      <link
+        rel="preload"
+        href="/fonts/amiri-latin-400-italic.woff2"
+        as="font"
+        type="font/woff2"
+      />
+      <link
+        rel="preload"
+        href="/fonts/amiri-latin-400.woff2"
+        as="font"
+        type="font/woff2"
+      />
+      <link
+        rel="preload"
+        href="/fonts/amiri-latin-700-italic.woff2"
+        as="font"
+        type="font/woff2"
+      />
+      <link
+        rel="preload"
+        href="/fonts/amiri-latin-700.woff2"
+        as="font"
+        type="font/woff2"
+      />
       {children}
     </NextHead>
   );
