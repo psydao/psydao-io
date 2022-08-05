@@ -33,14 +33,20 @@ const randomGridArea = ({ cols, rows }: GridDimensions): string => {
 };
 
 const paths = [
-  "/colorized-mind-expansion.jpg",
-  "/colorized-shrooms.jpg",
-  "/colorized-stan-grof.jpg",
-  "/colorized-sasha-shulgin.jpg",
-  "/colorized-maria-sabina.jpg",
-  "/colorized-fractal.jpg",
-  "/colorized-suit-man.jpg",
-  "/colorized-stamp-borderless.jpg",
+  "/background/alice.jpg",
+  "/background/couple.jpg",
+  "/background/dna-dark.jpg",
+  "/background/dna-light.jpg",
+  "/background/flower.jpg",
+  "/background/fractal.jpg",
+  "/background/maria-sabina.jpg",
+  "/background/mind-expansion.jpg",
+  "/background/more-shrooms.jpg",
+  "/background/sasha-shulgin.jpg",
+  "/background/shrooms.jpg",
+  "/background/stamp-borderless.jpg",
+  "/background/stan-grof.jpg",
+  "/background/suit-man.jpg",
 ];
 
 interface Image {
