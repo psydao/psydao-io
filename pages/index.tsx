@@ -13,7 +13,7 @@ import { Marquee } from "components/marquee";
 import { Newsletter } from "components/newsletter";
 import { Youtube } from "components/video";
 import { WindowManager } from "components/window-manager";
-import { joyAndSorrow } from "lib/constants";
+import { psydaoDescription } from "lib/constants";
 
 // TODO Extract Pill component since it seems it will become a basic primitive
 // in our design
@@ -61,7 +61,7 @@ const Homepage: NextPage = () => {
                 <Image src="/psydao-deep-logo.svg" alt="" h="100%" w="100%" />
               </Box>
               <Box gridArea="-2 / 1 / -1 / -1">
-                <Marquee label={joyAndSorrow} />
+                <Marquee label={psydaoDescription} />
               </Box>
               <WindowManager>
                 <Box

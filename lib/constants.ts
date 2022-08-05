@@ -6,3 +6,6 @@ Is not the cup that holds your wine the very cup that was burned in the potter's
 And is not the lute that soothes your spirit, the very wood that was hollowed with knives?
 When you are joyous, look deep into your heart and you shall find it is only that which has given you sorrow that is giving you joy.
 When you are sorrowful look again in your heart, and you shall see that in truth you are weeping for that which has been your delight.`;
+
+export const psydaoDescription =
+  "PsyDAO is forming a decentralised organisation with the goal of funding research at the intersection of psychedelics and mental health.";
