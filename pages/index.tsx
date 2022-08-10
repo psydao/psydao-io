@@ -135,7 +135,7 @@ const Homepage: NextPage = () => {
                 <Icon as={FaTwitter} boxSize="full" />
               </Link>
               <Link
-                href="https://youtube.com"
+                href="https://www.youtube.com/channel/UC8bjrtWOPuHdvMfZ3ScAI-Q"
                 target="_blank"
                 gridArea="-3 / -2 / span 1 / span 1"
                 p="30%"
