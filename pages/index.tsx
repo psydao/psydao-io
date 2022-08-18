@@ -11,6 +11,7 @@ import { Item } from "components/item";
 import { Manifesto } from "components/manifesto";
 import { Marquee } from "components/marquee";
 import { Newsletter } from "components/newsletter";
+import { Pill } from "components/pill";
 import { Youtube } from "components/video";
 import { WindowManager } from "components/window-manager";
 import { psydaoDescription } from "lib/constants";
@@ -68,14 +69,14 @@ const Homepage: NextPage = () => {
                   height="calc(100% - 2px)"
                   width="100%"
                   gridArea={{
-                    base: "1 / 1 / span 4 / -1",
+                    base: "1 / 1 / span 5 / -1",
                     lg: "1 / 1 / span 1 / -1",
                   }}
                   pos="absolute"
                   border="none !important"
                   display="grid"
-                  gridTemplateColumns={{ base: "1fr", lg: "repeat(4, auto)" }}
-                  gridTemplateRows={{ base: "repeat(4, 1fr)", lg: "1fr" }}
+                  gridTemplateColumns={{ base: "1fr", lg: "repeat(5, auto)" }}
+                  gridTemplateRows={{ base: "repeat(5, 1fr)", lg: "1fr" }}
                   alignItems="center"
                   justifyItems="end"
                   justifyContent="end"
@@ -114,6 +115,17 @@ const Homepage: NextPage = () => {
                       >
                         <Icon as={FaDiscord} />
                         Join Us
+                      </Link>
+                    </Item.Icon>
+                  </Item>
+                  <Item id="get-involved">
+                    <Item.Icon>
+                      <Link
+                        href="https://airtable.com/shrCaOD9DaD57J3Mu"
+                        target="_blank"
+                        _hover={{ textDecor: "none" }}
+                      >
+                        <Pill>Get Involved</Pill>
                       </Link>
                     </Item.Icon>
                   </Item>
