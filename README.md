@@ -1,5 +1,5 @@
-<img src="readme-logo.svg" alt="psydao">
-<br />
+![PsyDAO-Logo-White](readme-logo-white.svg#gh-dark-mode-only)![PsyDAO-Logo-Purple](readme-logo-purple.svg#gh-light-mode-only)
+
 <br />
 
 > This repository contains the code for [PsyDAO's homepage](https://psydao.io/)
