@@ -1,0 +1,34 @@
+{
+  "subtitle": "Democratizing & Decentralizing Psychedelic Research",
+  "groups": [
+    {
+      "heading": "PsyDAO",
+      "links": [
+        {
+          "label": "Donate to our Gitcoint Grant",
+          "href": "https://gitcoin.co/grants/7298/psydao-democratizing-decentralizing-psychedelic-r"
+        },
+        {
+          "label": "Watch our Manifesto Video",
+          "href": "https://www.youtube.com/watch?v=OFIO5LJ8sP8"
+        },
+        {
+          "label": "Sign Up for our Newsletter",
+          "href": "https://www.getrevue.co/profile/psydao"
+        },
+        {
+          "label": "Dework",
+          "href": "https://app.dework.xyz/psydao"
+        }
+      ]
+    },
+    {
+      "heading": "Projects",
+      "links": [
+        { "label": "Open Ketamine Research", "href": "#" },
+        { "label": "Entheome Research Project", "href": "#" },
+        { "label": "Qualia Research Institute", "href": "#" }
+      ]
+    }
+  ]
+}
