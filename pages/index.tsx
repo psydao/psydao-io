@@ -14,6 +14,7 @@ import { Item } from "components/item";
 import { Manifesto } from "components/manifesto";
 import { Marquee } from "components/marquee";
 import { Newsletter } from "components/newsletter";
+import { PsydaoRadio } from "components/psydao-radio";
 import { Youtube } from "components/video";
 import { WindowManager } from "components/window-manager";
 import { psydaoDescription } from "lib/constants";
@@ -70,7 +71,7 @@ const Homepage: NextPage = () => {
               <Grid
                 position="relative"
                 zIndex="0"
-                getNumberOfFillers={(cols, rows) => cols * (rows - 1) - 7}
+                getNumberOfFillers={(cols, rows) => cols * (rows - 1) - 8}
               >
                 <Box gridArea="1 / 1 / 3 / 3">
                   <Image src="/psydao-deep-logo.svg" alt="" h="100%" w="100%" />
@@ -133,6 +134,7 @@ const Homepage: NextPage = () => {
                       </Item.Icon>
                     </Item>
                   </Box>
+                  <PsydaoRadio />
                 </WindowManager>
                 <Link
                   href="https://discord.gg/hUH4MWxVFx"
