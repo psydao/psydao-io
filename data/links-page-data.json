@@ -1,10 +1,10 @@
 {
-  "subtitle": "Democratizing & Decentralizing Psychedelic Research",
+  "subtitle": "Democratizing & decentralizing psychedelic research",
   "groups": [
     {
-      "heading": "PsyDAO",
       "links": [
         {
+          "variant": "special-fill",
           "label": "Donate to our Gitcoint Grant",
           "href": "https://gitcoin.co/grants/7298/psydao-democratizing-decentralizing-psychedelic-r"
         },
@@ -24,10 +24,20 @@
     },
     {
       "heading": "Projects",
+      "color": "#C95BAA",
       "links": [
-        { "label": "Open Ketamine Research", "href": "#" },
-        { "label": "Entheome Research Project", "href": "#" },
-        { "label": "Qualia Research Institute", "href": "#" }
+        {
+          "label": "Open Ketamine Research",
+          "href": "#"
+        },
+        {
+          "label": "Entheome Research Project",
+          "href": "#"
+        },
+        {
+          "label": "Qualia Research Institute",
+          "href": "#"
+        }
       ]
     }
   ]
