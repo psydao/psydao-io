@@ -1,11 +1,13 @@
-import { Box, Center, Icon, Image, Link } from "@chakra-ui/react";
+import { Box, Center, Icon, Image, Link, Text } from "@chakra-ui/react";
 import type { NextPage } from "next";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { FaDiscord, FaTwitter, FaYoutube } from "react-icons/fa";
 
 import { BackgroundGrid } from "components/background-grid";
 import { Blobs } from "components/blobs";
+import { Csr } from "components/csr";
 import { Grid } from "components/grid";
+import { GridProvider } from "components/grid-context";
 import { Head } from "components/head";
 import { Logo } from "components/icons";
 import { Item } from "components/item";
@@ -23,11 +25,7 @@ import { psydaoDescription } from "lib/constants";
 // probably a theme prop
 
 const Homepage: NextPage = () => {
-  const [isBrowser, setIsBrowser] = useState(false);
-
   useEffect(() => {
-    setIsBrowser(true);
-
     const updateHeight = () => {
       document.documentElement.style.setProperty(
         "--app-height",
@@ -40,139 +38,154 @@ const Homepage: NextPage = () => {
     return () => window.removeEventListener("resize", updateHeight);
   }, []);
 
-  if (isBrowser) {
-    return (
-      <>
-        <Head />
-        <Center
-          h="var(--app-height)"
-          w="100vw"
-          overflow="hidden"
-          background="no-repeat top right url(/clouds.png), linear-gradient(60deg, #fffafa, #fff9ef)"
-        >
-          <Blobs />
-          <BackgroundGrid />
-          <Box id="window-bounds">
-            <Grid
-              position="relative"
-              zIndex="0"
-              getNumberOfFillers={(cols, rows) => cols * (rows - 1) - 7}
-            >
-              <Box gridArea="1 / 1 / 3 / 3">
-                <Image src="/psydao-deep-logo.svg" alt="" h="100%" w="100%" />
-              </Box>
-              <Box gridArea="-2 / 1 / -1 / -1">
-                <Marquee label={psydaoDescription} />
-              </Box>
-              <WindowManager>
-                <Box
-                  height="calc(100% - 2px)"
-                  width="100%"
-                  gridArea={{
-                    base: "1 / 1 / span 4 / -1",
-                    lg: "1 / 1 / span 1 / -1",
-                  }}
-                  pos="absolute"
-                  border="none !important"
-                  display="grid"
-                  gridTemplateColumns={{ base: "1fr", lg: "repeat(4, auto)" }}
-                  gridTemplateRows={{ base: "repeat(4, 1fr)", lg: "1fr" }}
-                  alignItems="center"
-                  justifyItems="end"
-                  justifyContent="end"
-                  gap={{ base: "2px", lg: "4" }}
-                  pr={{ base: "2", md: "4" }}
-                >
-                  <Youtube />
-                  <Manifesto />
-                  <Newsletter />
-                  <Item id="get-involved">
-                    <Item.Icon
-                      px="8"
-                      borderRadius="full"
-                      boxShadow="4px 4px 13px 0px #F2BEBEA1"
-                      background="linear-gradient(to bottom, #FFFFFF 0%, #F3FFE9 50.52%, #E7FEFF 100%)"
-                      color="#E69CFF"
-                      fontSize="24px"
-                      fontStyle="italic"
-                      fontWeight="700"
-                      textAlign="center"
-                      // TODO transition this 200ms with gradient transition hack
-                      // https://css-tricks.com/transitioning-gradients/
-                      _hover={{
-                        color: "#FFFFFF",
-                        background:
-                          "linear-gradient(to bottom, #FAC5FF 0%, #E69CFF 100%)",
-                      }}
-                    >
-                      <Link
-                        href="https://airtable.com/shrCaOD9DaD57J3Mu"
-                        target="_blank"
-                        display="flex"
-                        alignItems="center"
-                        gap="2"
-                        _hover={{ textDecor: "none" }}
-                      >
-                        <Logo />
-                        Get Involved
-                      </Link>
-                    </Item.Icon>
-                  </Item>
+  return (
+    <>
+      <Head />
+      <Csr
+        fallback={
+          <noscript>
+            <Box fontSize="2xl" p="6">
+              <Text>This page requires JavaScript.</Text>
+              <Text>
+                Check out our{" "}
+                <Link href="/links" textDecor="underline">
+                  links
+                </Link>{" "}
+                page, which doesn&apos;t.
+              </Text>
+            </Box>
+          </noscript>
+        }
+      >
+        <GridProvider>
+          <Center
+            h="var(--app-height)"
+            w="100vw"
+            overflow="hidden"
+            background="no-repeat top right url(/clouds.png), linear-gradient(60deg, #fffafa, #fff9ef)"
+          >
+            <Blobs />
+            <BackgroundGrid />
+            <Box id="window-bounds">
+              <Grid
+                position="relative"
+                zIndex="0"
+                getNumberOfFillers={(cols, rows) => cols * (rows - 1) - 7}
+              >
+                <Box gridArea="1 / 1 / 3 / 3">
+                  <Image src="/psydao-deep-logo.svg" alt="" h="100%" w="100%" />
                 </Box>
-              </WindowManager>
-              <Link
-                href="https://discord.gg/hUH4MWxVFx"
-                target="_blank"
-                gridArea="-3 / -4 / span 1 / span 1"
-                p="30%"
-                color="#f2bebe"
-                _hover={{
-                  color: "#E69CFF",
-                  backgroundImage:
-                    "linear-gradient(to bottom, #ffffff 0%, #f3ffe9 50.52%, #e7feff 100%)",
-                }}
-                transition="all 200ms ease"
-              >
-                <Icon as={FaDiscord} boxSize="full" />
-              </Link>
-              <Link
-                href="https://twitter.com/psy_dao"
-                target="_blank"
-                gridArea="-3 / -3 / span 1 / span 1"
-                p="30%"
-                color="#f2bebe"
-                _hover={{
-                  color: "#a4ffff",
-                  backgroundImage:
-                    "linear-gradient(to bottom, #ffffff 0%, #f3ffe9 50.52%, #e7feff 100%)",
-                }}
-                transition="all 200ms ease"
-              >
-                <Icon as={FaTwitter} boxSize="full" />
-              </Link>
-              <Link
-                href="https://www.youtube.com/channel/UC8bjrtWOPuHdvMfZ3ScAI-Q"
-                target="_blank"
-                gridArea="-3 / -2 / span 1 / span 1"
-                p="30%"
-                color="#f2bebe"
-                _hover={{
-                  color: "#dc4e4e",
-                  backgroundImage:
-                    "linear-gradient(to bottom, #ffffff 0%, #f3ffe9 50.52%, #e7feff 100%)",
-                }}
-                transition="all 200ms ease"
-              >
-                <Icon as={FaYoutube} boxSize="full" />
-              </Link>
-            </Grid>
-          </Box>
-        </Center>
-      </>
-    );
-  }
-
-  return null;
+                <Box gridArea="-2 / 1 / -1 / -1">
+                  <Marquee label={psydaoDescription} />
+                </Box>
+                <WindowManager>
+                  <Box
+                    height="calc(100% - 2px)"
+                    width="100%"
+                    gridArea={{
+                      base: "1 / 1 / span 4 / -1",
+                      lg: "1 / 1 / span 1 / -1",
+                    }}
+                    pos="absolute"
+                    border="none !important"
+                    display="grid"
+                    gridTemplateColumns={{ base: "1fr", lg: "repeat(4, auto)" }}
+                    gridTemplateRows={{ base: "repeat(4, 1fr)", lg: "1fr" }}
+                    alignItems="center"
+                    justifyItems="end"
+                    justifyContent="end"
+                    gap={{ base: "2px", lg: "4" }}
+                    pr={{ base: "2", md: "4" }}
+                  >
+                    <Youtube />
+                    <Manifesto />
+                    <Newsletter />
+                    <Item id="get-involved">
+                      <Item.Icon
+                        px="8"
+                        borderRadius="full"
+                        boxShadow="4px 4px 13px 0px #F2BEBEA1"
+                        background="linear-gradient(to bottom, #FFFFFF 0%, #F3FFE9 50.52%, #E7FEFF 100%)"
+                        color="#E69CFF"
+                        fontSize="24px"
+                        fontStyle="italic"
+                        fontWeight="700"
+                        textAlign="center"
+                        // TODO transition this 200ms with gradient transition hack
+                        // https://css-tricks.com/transitioning-gradients/
+                        _hover={{
+                          color: "#FFFFFF",
+                          background:
+                            "linear-gradient(to bottom, #FAC5FF 0%, #E69CFF 100%)",
+                        }}
+                      >
+                        <Link
+                          href="https://airtable.com/shrCaOD9DaD57J3Mu"
+                          target="_blank"
+                          display="flex"
+                          alignItems="center"
+                          gap="2"
+                          _hover={{ textDecor: "none" }}
+                        >
+                          <Logo />
+                          Get Involved
+                        </Link>
+                      </Item.Icon>
+                    </Item>
+                  </Box>
+                </WindowManager>
+                <Link
+                  href="https://discord.gg/hUH4MWxVFx"
+                  target="_blank"
+                  gridArea="-3 / -4 / span 1 / span 1"
+                  p="30%"
+                  color="#f2bebe"
+                  _hover={{
+                    color: "#E69CFF",
+                    backgroundImage:
+                      "linear-gradient(to bottom, #ffffff 0%, #f3ffe9 50.52%, #e7feff 100%)",
+                  }}
+                  transition="all 200ms ease"
+                >
+                  <Icon as={FaDiscord} boxSize="full" />
+                </Link>
+                <Link
+                  href="https://twitter.com/psy_dao"
+                  target="_blank"
+                  gridArea="-3 / -3 / span 1 / span 1"
+                  p="30%"
+                  color="#f2bebe"
+                  _hover={{
+                    color: "#a4ffff",
+                    backgroundImage:
+                      "linear-gradient(to bottom, #ffffff 0%, #f3ffe9 50.52%, #e7feff 100%)",
+                  }}
+                  transition="all 200ms ease"
+                >
+                  <Icon as={FaTwitter} boxSize="full" />
+                </Link>
+                <Link
+                  href="https://www.youtube.com/channel/UC8bjrtWOPuHdvMfZ3ScAI-Q"
+                  target="_blank"
+                  gridArea="-3 / -2 / span 1 / span 1"
+                  p="30%"
+                  color="#f2bebe"
+                  _hover={{
+                    color: "#dc4e4e",
+                    backgroundImage:
+                      "linear-gradient(to bottom, #ffffff 0%, #f3ffe9 50.52%, #e7feff 100%)",
+                  }}
+                  transition="all 200ms ease"
+                >
+                  <Icon as={FaYoutube} boxSize="full" />
+                </Link>
+              </Grid>
+            </Box>
+          </Center>
+        </GridProvider>
+      </Csr>
+    </>
+  );
 };
 
 export default Homepage;
