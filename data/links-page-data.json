@@ -22,6 +22,10 @@
         {
           "label": "Follow us on Twitter",
           "href": "https://twitter.com/psy_dao"
+        },
+        {
+          "label": "Molecule",
+          "href": "https://molecule.to"
         }
       ]
     },
@@ -30,10 +34,6 @@
       "description": "Other teams doing amazing work in the psychedelic and DeSci spaces",
       "color": "#C95BAA",
       "links": [
-        {
-          "label": "Molecule",
-          "href": "https://molecule.to"
-        },
         {
           "label": "Entheome Research Project",
           "href": "https://www.entheome.org"
