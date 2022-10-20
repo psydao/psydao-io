@@ -8,7 +8,7 @@ interface HeadProps {
 
 export const Head = ({
   title = "PsyDAO - A Psychedelics Research DAO",
-  image = "/psydao-seo-image.png",
+  image = "https://psydao.io/psydao-seo-image.png",
   children = null,
 }: HeadProps) => {
   return (
