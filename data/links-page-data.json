@@ -4,39 +4,39 @@
     {
       "links": [
         {
-          "variant": "special-fill",
-          "label": "Donate to our Gitcoint Grant",
-          "href": "https://gitcoin.co/grants/7298/psydao-democratizing-decentralizing-psychedelic-r"
-        },
-        {
           "label": "Watch our Manifesto Video",
           "href": "https://www.youtube.com/watch?v=OFIO5LJ8sP8"
         },
         {
-          "label": "Sign Up for our Newsletter",
+          "label": "Sign up for our Newsletter",
           "href": "https://www.getrevue.co/profile/psydao"
         },
         {
-          "label": "Dework",
-          "href": "https://app.dework.xyz/psydao"
+          "label": "Apply to contribute to the DAO",
+          "href": "https://airtable.com/shrCaOD9DaD57J3Mu"
+        },
+        {
+          "label": "Join our Discord",
+          "href": "https://discord.gg/hUH4MWxVFx"
+        },
+        {
+          "label": "Follow us on Twitter",
+          "href": "https://twitter.com/psy_dao"
         }
       ]
     },
     {
-      "heading": "Projects",
+      "heading": "Research Projects Spotlight",
+      "description": "Other teams doing amazing work in the psychedelic space",
       "color": "#C95BAA",
       "links": [
         {
-          "label": "Open Ketamine Research",
-          "href": "#"
-        },
-        {
           "label": "Entheome Research Project",
-          "href": "#"
+          "href": "https://www.entheome.org"
         },
         {
           "label": "Qualia Research Institute",
-          "href": "#"
+          "href": "https://qri.org"
         }
       ]
     }

@@ -1,9 +1,10 @@
 import {
-  Box,
+  Center,
   Container,
   Heading,
   HStack,
   Icon,
+  Text,
   VStack,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
@@ -60,11 +61,11 @@ const LinkPill = ({ color = "#9835BA", label, href, variant }: LinkSpec) => {
 const LinksPage = () => {
   const { subtitle, groups } = linksPageData;
   return (
-    <Box
+    <Center
       position="absolute"
       top="0"
       left="0"
-      h="100vh"
+      minH="100vh"
       w="100vw"
       px={["2", "4"]}
     >
@@ -100,24 +101,37 @@ const LinksPage = () => {
           {subtitle}
         </Heading>
         <VStack align="stretch" gap="8" mt="8">
-          {groups.map(({ heading, links, color = "#9835BA" }) => {
+          {groups.map(({ heading, description, links, color = "#9835BA" }) => {
             return (
               <VStack
                 key={heading + JSON.stringify(links)}
                 align="stretch"
                 gap="3"
               >
-                {heading && (
-                  <Heading
-                    as="h3"
-                    fontStyle="italic"
-                    fontSize="24px"
-                    textAlign="center"
-                    color={color}
-                  >
-                    {heading}
-                  </Heading>
-                )}
+                <div>
+                  {heading && (
+                    <Heading
+                      as="h3"
+                      fontStyle="italic"
+                      fontSize="24px"
+                      textAlign="center"
+                      color={color}
+                    >
+                      {heading}
+                    </Heading>
+                  )}
+                  {description && (
+                    <Text
+                      as="p"
+                      fontStyle="italic"
+                      fontSize="18px"
+                      textAlign="center"
+                      color={color}
+                    >
+                      {description}
+                    </Text>
+                  )}
+                </div>
                 {links.map((linkProps) => (
                   <LinkPill
                     key={JSON.stringify(linkProps)}
@@ -168,7 +182,7 @@ const LinksPage = () => {
           </motion.a>
         </HStack>
       </Container>
-    </Box>
+    </Center>
   );
 };
 
