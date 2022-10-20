@@ -12,7 +12,7 @@
           "href": "https://www.getrevue.co/profile/psydao"
         },
         {
-          "label": "Apply to contribute to the DAO",
+          "label": "Become a contributor",
           "href": "https://airtable.com/shrCaOD9DaD57J3Mu"
         },
         {
@@ -27,9 +27,13 @@
     },
     {
       "heading": "Research Projects Spotlight",
-      "description": "Other teams doing amazing work in the psychedelic space",
+      "description": "Other teams doing amazing work in the psychedelic and DeSci spaces",
       "color": "#C95BAA",
       "links": [
+        {
+          "label": "Molecule",
+          "href": "https://molecule.to"
+        },
         {
           "label": "Entheome Research Project",
           "href": "https://www.entheome.org"

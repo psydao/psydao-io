@@ -1,6 +1,6 @@
 import {
+  Box,
   Center,
-  Container,
   Heading,
   HStack,
   Icon,
@@ -83,8 +83,8 @@ const LinksPage = () => {
           objectPosition: "center",
         }}
       />
-      <Container
-        maxW="590px"
+      <Box
+        maxW="450px"
         bg="#fffafa"
         pt="9"
         px={["4", "8"]}
@@ -181,7 +181,7 @@ const LinksPage = () => {
             <Icon as={RiInstagramFill} boxSize="9" />
           </motion.a>
         </HStack>
-      </Container>
+      </Box>
     </Center>
   );
 };
