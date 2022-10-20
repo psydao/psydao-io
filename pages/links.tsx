@@ -15,6 +15,7 @@ import { RiInstagramFill } from "react-icons/ri";
 import { Head } from "components/head";
 import { MotionBox } from "components/motion-box";
 import linksPageData from "data/links-page-data.json";
+import Link from "next/link";
 import backgroundImage from "../public/links/background.png";
 import logo from "../public/links/wordmark-purple-h.svg";
 
@@ -95,11 +96,15 @@ const LinksPage = () => {
           my={["2", "4"]}
           borderRadius="lg"
         >
-          <Image
-            src={logo}
-            alt=""
-            style={{ maxWidth: 257, margin: "0 auto 26px" }}
-          />
+          <Link href="/">
+            <a>
+              <Image
+                src={logo}
+                alt=""
+                style={{ maxWidth: 257, margin: "0 auto 26px" }}
+              />
+            </a>
+          </Link>
           <Heading
             as="h2"
             fontStyle="italic"
