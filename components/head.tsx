@@ -2,27 +2,28 @@ import NextHead from "next/head";
 
 interface HeadProps {
   title?: string;
+  description?: string;
   image?: string;
   children?: React.ReactNode;
 }
 
 export const Head = ({
   title = "PsyDAO - A Psychedelics Research DAO",
+  description = "PsyDAO is forming a decentralised organisation with the goal of funding research at the intersection of psychedelics and mental health.",
   image = "https://psydao.io/psydao-seo-image.png",
   children = null,
 }: HeadProps) => {
   return (
     <NextHead>
+      <meta content="width=device-width, initial-scale=1" name="viewport" />
       <title>{title}</title>
       <meta content={title} property="og:title" />
       <meta content={title} property="twitter:title" />
-      <meta
-        name="description"
-        content="PsyDAO is forming a decentralised organisation with the goal of funding research at the intersection of psychedelics and mental health."
-      />
+      <meta name="description" content={description} />
+      <meta property="og:description" content={description} />
       <meta content={image} property="og:image" />
       <meta content={image} property="twitter:image" />
-      <meta content="width=device-width, initial-scale=1" name="viewport" />
+      <meta name="twitter:card" content="summary" />
       <link
         href="/psydao-favicon-light-mode.png"
         rel="shortcut icon"
