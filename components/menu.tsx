@@ -55,6 +55,7 @@ export const Menu = () => {
           background="linear-gradient(180deg, #FFFFFF 0%, #F3FFE9 50.52%, #E7FEFF 100%)"
           p="0"
           width="calc(100% + 2px)"
+          minWidth="0"
         >
           <Manifesto />
           <Link
