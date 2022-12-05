@@ -1,13 +1,18 @@
-import { Box, Image, Link, Text } from "@chakra-ui/react";
+import { Box, Image, Link, MenuItem, Text } from "@chakra-ui/react";
 
+import { Logo } from "components/icons";
 import { Item } from "components/item";
-import { Pill } from "components/pill";
 
 export const Manifesto = () => {
   return (
     <Item id="manifesto">
-      <Item.Icon>
-        <Pill>Manifesto</Pill>
+      <Item.Icon display="flex" alignItems="center">
+        <MenuItem fontStyle="italic">
+          <Box as="span" display="block" mr="3">
+            Manifesto
+          </Box>
+          <Logo />
+        </MenuItem>
       </Item.Icon>
       <Item.Window
         height={{ base: "90%", md: "70%" }}
@@ -35,9 +40,24 @@ export const Manifesto = () => {
             <Text color="#269200" fontSize="24px" mt="20">
               The PsyDAO Manifesto
             </Text>
-            <Text as="h1" mb="20">
+            <Text as="h1" mb="6">
               An Industrial Ego Death
             </Text>
+            <Box position="relative" width="100%" paddingBottom="56.25%">
+              <Box
+                as="iframe"
+                position="absolute"
+                top="0"
+                left="0"
+                height="100%"
+                width="100%"
+                src={`https://www.youtube-nocookie.com/embed/OFIO5LJ8sP8?modestbranding=1&rel=0`}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                title="Embedded YouTube"
+              />
+            </Box>
             <Text as="h2">Set</Text>
             <Text>
               Our species faces unprecedented challenges from pandemics, climate

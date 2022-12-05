@@ -9,13 +9,9 @@ import { Csr } from "components/csr";
 import { Grid } from "components/grid";
 import { GridProvider } from "components/grid-context";
 import { Head } from "components/head";
-import { Logo } from "components/icons";
-import { Item } from "components/item";
-import { Manifesto } from "components/manifesto";
 import { Marquee } from "components/marquee";
-import { Newsletter } from "components/newsletter";
+import { Menu } from "components/menu";
 import { PsydaoRadio } from "components/psydao-radio";
-import { Youtube } from "components/video";
 import { WindowManager } from "components/window-manager";
 import { psydaoDescription } from "lib/constants";
 
@@ -80,60 +76,7 @@ const Homepage: NextPage = () => {
                   <Marquee label={psydaoDescription} />
                 </Box>
                 <WindowManager>
-                  <Box
-                    height="calc(100% - 2px)"
-                    width="100%"
-                    gridArea={{
-                      base: "1 / 1 / span 4 / -1",
-                      lg: "1 / 1 / span 1 / -1",
-                    }}
-                    pos="absolute"
-                    border="none !important"
-                    display="grid"
-                    gridTemplateColumns={{ base: "1fr", lg: "repeat(4, auto)" }}
-                    gridTemplateRows={{ base: "repeat(4, 1fr)", lg: "1fr" }}
-                    alignItems="center"
-                    justifyItems="end"
-                    justifyContent="end"
-                    gap={{ base: "2px", lg: "4" }}
-                    pr={{ base: "2", md: "4" }}
-                  >
-                    <Youtube />
-                    <Manifesto />
-                    <Newsletter />
-                    <Item id="get-involved">
-                      <Item.Icon
-                        px="8"
-                        borderRadius="full"
-                        boxShadow="4px 4px 13px 0px #F2BEBEA1"
-                        background="linear-gradient(to bottom, #FFFFFF 0%, #F3FFE9 50.52%, #E7FEFF 100%)"
-                        color="#E69CFF"
-                        fontSize="24px"
-                        fontStyle="italic"
-                        fontWeight="700"
-                        textAlign="center"
-                        // TODO transition this 200ms with gradient transition hack
-                        // https://css-tricks.com/transitioning-gradients/
-                        _hover={{
-                          color: "#FFFFFF",
-                          background:
-                            "linear-gradient(to bottom, #FAC5FF 0%, #E69CFF 100%)",
-                        }}
-                      >
-                        <Link
-                          href="https://airtable.com/shrCaOD9DaD57J3Mu"
-                          target="_blank"
-                          display="flex"
-                          alignItems="center"
-                          gap="2"
-                          _hover={{ textDecor: "none" }}
-                        >
-                          <Logo />
-                          Get Involved
-                        </Link>
-                      </Item.Icon>
-                    </Item>
-                  </Box>
+                  <Menu />
                   <PsydaoRadio />
                 </WindowManager>
                 <Link
