@@ -13,6 +13,7 @@ import { RiCloseLine, RiMenuLine } from "react-icons/ri";
 import { Item } from "components/item";
 import { Manifesto } from "components/manifesto";
 import { AlchemistGrantContent } from "components/windows/alchemist-grant-content";
+import { RadioContent } from "components/windows/radio-content";
 
 export const Menu = () => {
   const disclosure = useDisclosure();
@@ -67,9 +68,27 @@ export const Menu = () => {
           >
             <MenuItem fontStyle="italic">Blog</MenuItem>
           </Link>
-          <MenuItem fontStyle="italic" textColor="gray.300">
-            Radio
-          </MenuItem>
+          <Item id="alchemist-grant">
+            <Item.Icon>
+              <MenuItem fontStyle="italic">Radio</MenuItem>
+            </Item.Icon>
+            <Item.Window
+              height="95%"
+              maxHeight="570px"
+              minHeight="350px"
+              width="95%"
+              maxWidth="440px"
+              minWidth="240px"
+              top="50%"
+              left="50%"
+              transform="translate(-50%, -50%)"
+            >
+              <Item.Window.TitleBar />
+              <Item.Window.Content p="0">
+                <RadioContent />
+              </Item.Window.Content>
+            </Item.Window>
+          </Item>
           <Link
             href="https://airtable.com/shrIwy0pCXfdXvvnu"
             target="_blank"

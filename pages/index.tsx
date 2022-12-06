@@ -11,7 +11,6 @@ import { GridProvider } from "components/grid-context";
 import { Head } from "components/head";
 import { Marquee } from "components/marquee";
 import { Menu } from "components/menu";
-import { PsydaoRadio } from "components/psydao-radio";
 import { WindowManager } from "components/window-manager";
 
 // TODO Extract Pill component since it seems it will become a basic primitive
@@ -66,7 +65,7 @@ const Homepage: NextPage = () => {
               <Grid
                 position="relative"
                 zIndex="0"
-                getNumberOfFillers={(cols, rows) => cols * (rows - 1) - 8}
+                getNumberOfFillers={(cols, rows) => cols * (rows - 1) - 7}
               >
                 <Box gridArea="1 / 1 / 3 / 3">
                   <Image src="/psydao-deep-logo.svg" alt="" h="100%" w="100%" />
@@ -76,7 +75,22 @@ const Homepage: NextPage = () => {
                 </Box>
                 <WindowManager>
                   <Menu />
-                  <PsydaoRadio />
+                  {/* TODO implement opening of radio window from click on radio SVG */}
+                  <Image
+                    src="/radio.svg"
+                    alt=""
+                    position="absolute"
+                    gridArea="-4 / 1 / span 2 / span 2"
+                    border="none"
+                    placeSelf="center"
+                    height="80%"
+                    width="80%"
+                    // cursor="pointer"
+                    opacity="0.5"
+                    // _hover={{
+                    //   opacity: 1,
+                    // }}
+                  />
                 </WindowManager>
                 <Link
                   href="https://discord.gg/hUH4MWxVFx"
