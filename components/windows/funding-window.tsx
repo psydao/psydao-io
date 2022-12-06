@@ -18,7 +18,7 @@ export const FundingWindow = () => {
       >
         <Item.Window.TitleBar />
         <Item.Window.Content p="0">
-          <Box p="4">
+          <Box p="4" pb="8">
             <Image src="/windows/alchemist/hero.png" alt="" margin="0 auto" />
             <Text
               as="h1"
@@ -49,7 +49,11 @@ export const FundingWindow = () => {
               fontStyle="italic"
               mt="1"
             >
-              <Link href="#" target="_blank" textDecor="underline">
+              <Link
+                href="https://airtable.com/shrgIF1554wmZ3ngh"
+                target="_blank"
+                textDecor="underline"
+              >
                 Apply
               </Link>
             </Text>
@@ -69,7 +73,11 @@ export const FundingWindow = () => {
               fontStyle="italic"
               mt="1"
             >
-              <Link href="#" target="_blank" textDecor="underline">
+              <Link
+                href="https://airtable.com/shrIwy0pCXfdXvvnu"
+                target="_blank"
+                textDecor="underline"
+              >
                 Apply
               </Link>
             </Text>
