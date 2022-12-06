@@ -71,7 +71,7 @@ const Homepage: NextPage = () => {
                   <Image src="/psydao-deep-logo.svg" alt="" h="100%" w="100%" />
                 </Box>
                 <Box gridArea="-2 / 1 / -1 / -1">
-                  <Marquee label="Achemist Grant applications are now open" />
+                  <Marquee label="WELCOME TO PSYDAO # FUNDING RESEARCH AT THE INTERSECTION OF PSYCHEDELICS AND MENTAL HEALTH # NOW ACCEPTING APPLICATIONS FOR RESEARCH PROJECT FUNDING AND ALCHEMIST GRANTS" />
                 </Box>
                 <WindowManager>
                   <Menu />
