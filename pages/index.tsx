@@ -13,7 +13,6 @@ import { Marquee } from "components/marquee";
 import { Menu } from "components/menu";
 import { PsydaoRadio } from "components/psydao-radio";
 import { WindowManager } from "components/window-manager";
-import { psydaoDescription } from "lib/constants";
 
 // TODO Extract Pill component since it seems it will become a basic primitive
 // in our design
@@ -73,7 +72,7 @@ const Homepage: NextPage = () => {
                   <Image src="/psydao-deep-logo.svg" alt="" h="100%" w="100%" />
                 </Box>
                 <Box gridArea="-2 / 1 / -1 / -1">
-                  <Marquee label={psydaoDescription} />
+                  <Marquee label="Achemist Grant applications are now open" />
                 </Box>
                 <WindowManager>
                   <Menu />

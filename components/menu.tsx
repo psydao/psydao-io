@@ -10,7 +10,9 @@ import {
 } from "@chakra-ui/react";
 import { RiCloseLine, RiMenuLine } from "react-icons/ri";
 
+import { Item } from "components/item";
 import { Manifesto } from "components/manifesto";
+import { AlchemistGrantContent } from "components/windows/alchemist-grant-content";
 
 export const Menu = () => {
   const disclosure = useDisclosure();
@@ -75,9 +77,27 @@ export const Menu = () => {
           >
             <MenuItem fontStyle="italic">Get Funded</MenuItem>
           </Link>
-          <MenuItem fontStyle="italic" textColor="gray.300">
-            Alchemist Grant
-          </MenuItem>
+          <Item id="alchemist-grant">
+            <Item.Icon>
+              <MenuItem fontStyle="italic">Alchemist Grant</MenuItem>
+            </Item.Icon>
+            <Item.Window
+              height="95%"
+              maxHeight="510px"
+              minHeight="350px"
+              width="95%"
+              maxWidth="345px"
+              minWidth="240px"
+              top="50%"
+              left="50%"
+              transform="translate(-50%, -50%)"
+            >
+              <Item.Window.TitleBar />
+              <Item.Window.Content p="0">
+                <AlchemistGrantContent />
+              </Item.Window.Content>
+            </Item.Window>
+          </Item>
           <Link
             href="https://www.getrevue.co/profile/psydao"
             target="_blank"
