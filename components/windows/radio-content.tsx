@@ -127,6 +127,7 @@ export const RadioContent = () => {
           display="flex"
           alignItems="center"
           gap="1"
+          cursor="pointer"
         >
           <Icon as={RiArrowLeftLine} />
           <Text as="span">Go back</Text>
