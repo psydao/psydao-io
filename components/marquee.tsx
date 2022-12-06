@@ -1,6 +1,7 @@
 import type { BoxProps } from "@chakra-ui/react";
 import { Box, keyframes, Text } from "@chakra-ui/react";
 
+import { Logo } from "components/icons";
 import { useDimensions } from "lib/hooks";
 
 const scroll = keyframes`
@@ -9,12 +10,19 @@ const scroll = keyframes`
 `;
 
 interface MarqueeProps extends Omit<BoxProps, "children"> {
-  label: string;
+  text: string | string[];
 }
 
-export const Marquee = ({ label, ...rest }: MarqueeProps) => {
+export const Marquee = ({ text, ...rest }: MarqueeProps) => {
   const { contentBox, ref } = useDimensions();
-  const time = label.length / 3;
+
+  let time;
+  if (Array.isArray(text)) {
+    time = text.join(" * ").length / 3;
+  } else {
+    time = text.length / 3;
+  }
+
   return (
     <Box
       ref={ref}
@@ -39,12 +47,35 @@ export const Marquee = ({ label, ...rest }: MarqueeProps) => {
           fontSize={`${contentBox.height}px`}
           lineHeight={`${contentBox.height}px`}
         >
-          <Text as="span" pl="0.3em" pr="3em">
-            {label}
-          </Text>
-          <Text as="span" pl="0.3em" pr="3em">
-            {label}
-          </Text>
+          {Array.isArray(text) ? (
+            <Box display="inline-flex">
+              <Box display="inline-flex" pl="10" gap="10" alignItems="center">
+                {text.map((cur) => (
+                  <>
+                    <Text>{cur}</Text>
+                    <Logo boxSize="0.6em" />
+                  </>
+                ))}
+              </Box>
+              <Box display="inline-flex" pl="10" gap="10" alignItems="center">
+                {text.map((cur) => (
+                  <>
+                    <Text>{cur}</Text>
+                    <Logo boxSize="0.6em" />
+                  </>
+                ))}
+              </Box>
+            </Box>
+          ) : (
+            <>
+              <Text as="span" pl="0.3em" pr="3em">
+                {text}
+              </Text>
+              <Text as="span" pl="0.3em" pr="3em">
+                {text}
+              </Text>
+            </>
+          )}
         </Box>
       )}
     </Box>
