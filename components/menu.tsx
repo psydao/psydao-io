@@ -74,10 +74,10 @@ export const Menu = () => {
             </Item.Icon>
             <Item.Window
               height="95%"
-              maxHeight="570px"
+              maxHeight="630px"
               minHeight="350px"
               width="95%"
-              maxWidth="440px"
+              maxWidth="500px"
               minWidth="240px"
               top="50%"
               left="50%"
