@@ -12,6 +12,7 @@ import { Head } from "components/head";
 import { Marquee } from "components/marquee";
 import { Menu } from "components/menu";
 import { WindowManager } from "components/window-manager";
+import { FundingWindow } from "components/windows/funding-window";
 
 // TODO Extract Pill component since it seems it will become a basic primitive
 // in our design
@@ -75,6 +76,7 @@ const Homepage: NextPage = () => {
                 </Box>
                 <WindowManager>
                   <Menu />
+                  <FundingWindow />
                   {/* TODO implement opening of radio window from click on radio SVG */}
                   <Image
                     src="/radio.svg"
