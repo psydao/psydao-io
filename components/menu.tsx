@@ -12,7 +12,7 @@ import { RiCloseLine, RiMenuLine } from "react-icons/ri";
 
 import { Item } from "components/item";
 import { Manifesto } from "components/manifesto";
-import { AlchemistGrantContent } from "components/windows/alchemist-grant-content";
+import { Newsletter } from "components/newsletter";
 import { RadioContent } from "components/windows/radio-content";
 
 export const Menu = () => {
@@ -96,34 +96,14 @@ export const Menu = () => {
           >
             <MenuItem fontStyle="italic">Get Funded</MenuItem>
           </Link>
-          <Item id="alchemist-grant">
-            <Item.Icon>
-              <MenuItem fontStyle="italic">Alchemist Grant</MenuItem>
-            </Item.Icon>
-            <Item.Window
-              height="95%"
-              maxHeight="510px"
-              minHeight="350px"
-              width="95%"
-              maxWidth="345px"
-              minWidth="240px"
-              top="50%"
-              left="50%"
-              transform="translate(-50%, -50%)"
-            >
-              <Item.Window.TitleBar />
-              <Item.Window.Content p="0">
-                <AlchemistGrantContent />
-              </Item.Window.Content>
-            </Item.Window>
-          </Item>
           <Link
-            href="https://www.getrevue.co/profile/psydao"
+            href="https://airtable.com/shrgIF1554wmZ3ngh"
             target="_blank"
             _hover={{ textDecor: "none" }}
           >
-            <MenuItem fontStyle="italic">Newsletter</MenuItem>
+            <MenuItem fontStyle="italic">Alchemist Grant</MenuItem>
           </Link>
+          <Newsletter />
           <Link
             href="https://airtable.com/shrCaOD9DaD57J3Mu"
             target="_blank"

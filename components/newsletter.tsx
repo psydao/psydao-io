@@ -1,13 +1,20 @@
-import { Box, Button, Flex, Input, Link, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Input,
+  Link,
+  MenuItem,
+  Text,
+} from "@chakra-ui/react";
 
 import { Item } from "components/item";
-import { Pill } from "components/pill";
 
 export const Newsletter = () => {
   return (
     <Item id="newsletter">
       <Item.Icon>
-        <Pill>News</Pill>
+        <MenuItem fontStyle="italic">Newsletter</MenuItem>
       </Item.Icon>
       <Item.Window
         height={{ base: "380px", md: "410px" }}
