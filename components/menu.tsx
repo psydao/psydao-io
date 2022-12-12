@@ -68,7 +68,7 @@ export const Menu = () => {
           >
             <MenuItem fontStyle="italic">Blog</MenuItem>
           </Link>
-          <Item id="alchemist-grant">
+          <Item id="radio">
             <Item.Icon>
               <MenuItem fontStyle="italic">Radio</MenuItem>
             </Item.Icon>
