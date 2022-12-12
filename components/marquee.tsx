@@ -1,5 +1,6 @@
 import type { BoxProps } from "@chakra-ui/react";
 import { Box, keyframes, Text } from "@chakra-ui/react";
+import { Fragment } from "react";
 
 import { Logo } from "components/icons";
 import { useDimensions } from "lib/hooks";
@@ -51,18 +52,18 @@ export const Marquee = ({ text, ...rest }: MarqueeProps) => {
             <Box display="inline-flex">
               <Box display="inline-flex" pl="10" gap="10" alignItems="center">
                 {text.map((cur) => (
-                  <>
+                  <Fragment key={cur}>
                     <Text>{cur}</Text>
                     <Logo boxSize="0.6em" />
-                  </>
+                  </Fragment>
                 ))}
               </Box>
               <Box display="inline-flex" pl="10" gap="10" alignItems="center">
                 {text.map((cur) => (
-                  <>
+                  <Fragment key={cur}>
                     <Text>{cur}</Text>
                     <Logo boxSize="0.6em" />
-                  </>
+                  </Fragment>
                 ))}
               </Box>
             </Box>
