@@ -66,7 +66,7 @@ const Homepage: NextPage = () => {
               <Grid
                 position="relative"
                 zIndex="0"
-                getNumberOfFillers={(cols, rows) => cols * (rows - 1) - 7}
+                getNumberOfFillers={(cols, rows) => cols * (rows - 1) - 11}
               >
                 <Box gridArea="1 / 1 / 3 / 3">
                   <Image src="/psydao-deep-logo.svg" alt="" h="100%" w="100%" />
@@ -84,21 +84,24 @@ const Homepage: NextPage = () => {
                   <Menu />
                   <FundingWindow />
                   {/* TODO implement opening of radio window from click on radio SVG */}
-                  <Image
-                    src="/radio.svg"
-                    alt=""
-                    position="absolute"
-                    gridArea="-4 / 1 / span 2 / span 2"
-                    border="none"
-                    placeSelf="center"
-                    height="80%"
-                    width="80%"
-                    // cursor="pointer"
-                    opacity="0.5"
-                    // _hover={{
-                    //   opacity: 1,
-                    // }}
-                  />
+                  <Box gridArea="-4 / 1 / span 2 / span 2" p="3">
+                    <Image
+                      src="/radio.svg"
+                      alt=""
+                      height="100%"
+                      width="100%"
+                      // cursor="pointer"
+                      opacity="0.5"
+                      // _hover={{
+                      //   opacity: 1,
+                      // }}
+                      // onClick={() =>
+                      //   alert(
+                      //     "You can access our playlists through Menu > Radio"
+                      //   )
+                      // }
+                    />
+                  </Box>
                 </WindowManager>
                 <Link
                   href="https://discord.gg/hUH4MWxVFx"
