@@ -37,15 +37,12 @@ export const Highlight = () => {
             lineHeight="100%"
             mt="8"
           >
-            Alchemist Grants now open!
+            Research Project Funding
           </Text>
-          <Text mt="2">
-            Micro-grant ($100–$3K) program funding student & youth researchers,
-            artists, and creators broadly in the field of psychedelics.
-          </Text>
+          <Text mt="2">We&#39;re seeking early-stage projects to fund.</Text>
           <Text textColor="#269200" fontWeight="700" fontStyle="italic" mt="1">
             <Link
-              href="https://airtable.com/shrgIF1554wmZ3ngh"
+              href="https://airtable.com/shrIwy0pCXfdXvvnu"
               target="_blank"
               textDecor="underline"
             >
@@ -59,12 +56,15 @@ export const Highlight = () => {
             lineHeight="100%"
             mt="8"
           >
-            Research Project Funding
+            Alchemist Grants now open!
           </Text>
-          <Text mt="2">We&#39;re seeking early-stage projects to fund.</Text>
+          <Text mt="2">
+            Micro-grant ($100–$3K) program funding student & youth researchers,
+            artists, and creators broadly in the field of psychedelics.
+          </Text>
           <Text textColor="#269200" fontWeight="700" fontStyle="italic" mt="1">
             <Link
-              href="https://airtable.com/shrIwy0pCXfdXvvnu"
+              href="https://airtable.com/shrgIF1554wmZ3ngh"
               target="_blank"
               textDecor="underline"
             >
