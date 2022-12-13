@@ -10,10 +10,8 @@ import {
 } from "@chakra-ui/react";
 import { RiCloseLine, RiMenuLine } from "react-icons/ri";
 
-import { Item } from "components/item";
-import { Manifesto } from "components/manifesto";
-import { Newsletter } from "components/newsletter";
-import { RadioContent } from "components/windows/radio-content";
+import { Logo } from "components/icons";
+import { Open } from "components/window-manager";
 
 export const Menu = () => {
   const disclosure = useDisclosure();
@@ -60,7 +58,14 @@ export const Menu = () => {
           width="calc(100% + 2px)"
           minWidth="0"
         >
-          <Manifesto />
+          <Open id="manifesto">
+            <MenuItem fontStyle="italic">
+              <Box as="span" display="block" mr="3">
+                Manifesto
+              </Box>
+              <Logo />
+            </MenuItem>
+          </Open>
           <Link
             href="https://mirror.xyz/0xB4962470651F204adD0c0B1F33688BE9f90c338A"
             target="_blank"
@@ -68,27 +73,9 @@ export const Menu = () => {
           >
             <MenuItem fontStyle="italic">Blog</MenuItem>
           </Link>
-          <Item id="radio">
-            <Item.Icon>
-              <MenuItem fontStyle="italic">Radio</MenuItem>
-            </Item.Icon>
-            <Item.Window
-              height="95%"
-              maxHeight="630px"
-              minHeight="350px"
-              width="95%"
-              maxWidth="500px"
-              minWidth="240px"
-              top="50%"
-              left="50%"
-              transform="translate(-50%, -50%)"
-            >
-              <Item.Window.TitleBar />
-              <Item.Window.Content p="0">
-                <RadioContent />
-              </Item.Window.Content>
-            </Item.Window>
-          </Item>
+          <Open id="radio">
+            <MenuItem fontStyle="italic">Radio</MenuItem>
+          </Open>
           <Link
             href="https://airtable.com/shrIwy0pCXfdXvvnu"
             target="_blank"
@@ -103,7 +90,9 @@ export const Menu = () => {
           >
             <MenuItem fontStyle="italic">Alchemist Grant</MenuItem>
           </Link>
-          <Newsletter />
+          <Open id="newsletter">
+            <MenuItem fontStyle="italic">Newsletter</MenuItem>
+          </Open>
           <Link
             href="https://airtable.com/shrCaOD9DaD57J3Mu"
             target="_blank"

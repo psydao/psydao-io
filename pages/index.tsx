@@ -11,8 +11,11 @@ import { GridProvider } from "components/grid-context";
 import { Head } from "components/head";
 import { Marquee } from "components/marquee";
 import { Menu } from "components/menu";
-import { WindowManager } from "components/window-manager";
-import { FundingWindow } from "components/windows/funding-window";
+import { Open, WindowManager } from "components/window-manager";
+import { Highlight } from "components/windows/highlight";
+import { Manifesto } from "components/windows/manifesto";
+import { Newsletter } from "components/windows/newsletter";
+import { Radio } from "components/windows/radio";
 
 // TODO Extract Pill component since it seems it will become a basic primitive
 // in our design
@@ -82,25 +85,32 @@ const Homepage: NextPage = () => {
                 </Box>
                 <WindowManager>
                   <Menu />
-                  <FundingWindow />
-                  {/* TODO implement opening of radio window from click on radio SVG */}
-                  <Box gridArea="-4 / 1 / span 2 / span 2" p="3">
+                  <Open id="radio" gridArea="-4 / 1 / span 2 / span 2" p="3">
                     <Image
                       src="/radio.svg"
                       alt=""
                       height="100%"
                       width="100%"
-                      // cursor="pointer"
+                      cursor="pointer"
                       opacity="0.5"
-                      // _hover={{
-                      //   opacity: 1,
-                      // }}
-                      // onClick={() =>
-                      //   alert(
-                      //     "You can access our playlists through Menu > Radio"
-                      //   )
-                      // }
+                      _hover={{
+                        opacity: 1,
+                      }}
                     />
+                  </Open>
+                  <Box
+                    position="absolute"
+                    top="0"
+                    right="0"
+                    bottom="0"
+                    left="0"
+                    pointerEvents="none"
+                    overflow="hidden"
+                  >
+                    <Highlight />
+                    <Radio />
+                    <Manifesto />
+                    <Newsletter />
                   </Box>
                 </WindowManager>
                 <Link

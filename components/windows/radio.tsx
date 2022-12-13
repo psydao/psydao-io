@@ -1,5 +1,6 @@
 import { Box, Icon, Image, Text, type BoxProps } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import { Window } from "components/window";
 import { useState } from "react";
 import { RiArrowLeftLine } from "react-icons/ri";
 
@@ -116,7 +117,7 @@ const Catalogue = ({ children, ...rest }: BoxProps) => {
   );
 };
 
-export const RadioContent = () => {
+const RadioContent = () => {
   const [openPlaylist, setOpenPlaylist] = useState("");
 
   if (openPlaylist) {
@@ -156,5 +157,27 @@ export const RadioContent = () => {
         />
       ))}
     </Catalogue>
+  );
+};
+
+export const Radio = () => {
+  return (
+    <Window
+      id="radio"
+      height="95%"
+      maxHeight="630px"
+      minHeight="350px"
+      width="95%"
+      maxWidth="500px"
+      minWidth="240px"
+      top="50%"
+      left="50%"
+      transform="translate(-50%, -50%)"
+    >
+      <Window.TitleBar />
+      <Window.Content p="0">
+        <RadioContent />
+      </Window.Content>
+    </Window>
   );
 };

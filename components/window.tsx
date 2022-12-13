@@ -1,11 +1,9 @@
 import type { BoxProps } from "@chakra-ui/react";
 import { Box, chakra } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
+import { useLayoutEffect } from "react";
 import { Rnd } from "react-rnd";
 
 import { Cross, Drag } from "components/icons";
-import { useItemContext } from "components/item";
 import { MotionBox } from "components/motion-box";
 import { useWindowManager } from "components/window-manager";
 import { AnimatePresence } from "framer-motion";
@@ -13,10 +11,9 @@ import { createCtx } from "lib/context";
 
 // TODO fix types
 interface WindowContext {
-  onClose: () => void;
   border: BoxProps["border"];
+  id: string;
   padding: BoxProps["padding"];
-  pointerDragging: boolean;
 }
 
 const [useWindowContext, WindowContextProvider] = createCtx<WindowContext>();
@@ -26,7 +23,8 @@ interface TitleBarProps extends BoxProps {
 }
 
 const TitleBar = ({ hasBorder = true, ...rest }: TitleBarProps) => {
-  const { onClose, border, padding } = useWindowContext();
+  const { border, id, padding } = useWindowContext();
+  const { dispatch } = useWindowManager();
 
   return (
     <Box
@@ -49,7 +47,7 @@ const TitleBar = ({ hasBorder = true, ...rest }: TitleBarProps) => {
       <Box
         p={padding}
         flex="0 0 auto"
-        onClick={onClose}
+        onClick={() => dispatch({ type: "close", id })}
         cursor="pointer"
         pointerEvents="all"
       >
@@ -62,17 +60,20 @@ const TitleBar = ({ hasBorder = true, ...rest }: TitleBarProps) => {
 interface ContentProps extends BoxProps {}
 
 const Content = (props: ContentProps) => {
-  const { padding, pointerDragging } = useWindowContext();
+  const { padding } = useWindowContext();
+  const {
+    state: { isPointerDragging },
+  } = useWindowManager();
 
   return (
     <Box
       flex="1 1 auto"
       overflow="auto"
-      userSelect={pointerDragging ? "none" : "text"}
-      pointerEvents={pointerDragging ? "none" : "auto"}
+      userSelect={isPointerDragging ? "none" : "text"}
+      pointerEvents={isPointerDragging ? "none" : "auto"}
       p={padding}
       sx={
-        pointerDragging ? { "&::-webkit-scrollbar": { display: "none" } } : {}
+        isPointerDragging ? { "&::-webkit-scrollbar": { display: "none" } } : {}
       }
       {...props}
     />
@@ -104,14 +105,18 @@ const Resizable = chakra(Rnd, {
   shouldForwardProp: (prop) => prop in validRndProps,
 });
 
-interface WindowProps
-  extends React.ComponentPropsWithoutRef<typeof Resizable> {}
+interface WindowProps extends React.ComponentPropsWithoutRef<typeof Resizable> {
+  defaultIsOpen?: boolean;
+  id: string;
+}
 
 // TODO the current approach to picking up border and padding is a bit limited
 // because I think unexpected things might happen when supplying partial props
 // for those (px, py, pt, borderTop, borderRight, etc.)
 export const Window = ({
   children,
+  defaultIsOpen = false,
+  id,
   border = "2px solid #f2bebe",
   padding = "2",
   resizable,
@@ -119,49 +124,40 @@ export const Window = ({
   lockAspectRatioExtraHeight,
   ...rest
 }: WindowProps) => {
-  const { id, isOpen, onClose } = useItemContext();
-  const {
-    windowLayerRef,
-    focus,
-    windowStack,
-    setPointerDragging,
-    pointerDragging,
-  } = useWindowManager();
+  const { dispatch, state } = useWindowManager();
 
-  // TODO find a less ugly way to refresh component. The problem solved by the
-  // following segment is that windowLayerRef will be null at first and the
-  // defaultIsOpen from useDisclosure won't be honored. This state/effect
-  // produces a rerender that picks up the correct values. But it's ugly and you
-  // know it.
-  const [, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const index = state.windows.findIndex((cur) => cur.id === id);
+  const window = state.windows[index];
+
+  useLayoutEffect(() => {
+    if (defaultIsOpen && window === undefined) {
+      dispatch({ type: "foreground", id });
+    }
+  });
 
   const handleStart = () => {
-    focus(id);
-    setPointerDragging(true);
+    dispatch({ type: "foreground", id });
+    dispatch({ type: "startDrag" });
   };
 
   const handleEnd = () => {
-    setPointerDragging(false);
+    dispatch({ type: "stopDrag" });
   };
 
-  if (windowLayerRef.current) {
-    return createPortal(
+  if (window) {
+    return (
       <WindowContextProvider
         value={{
-          onClose: onClose,
+          id,
           border,
           padding,
-          pointerDragging,
         }}
       >
         <AnimatePresence>
-          {isOpen && (
+          {window.isOpen && (
             <MotionBox
               position="absolute"
-              zIndex={windowStack[id]}
+              zIndex={index}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -179,8 +175,8 @@ export const Window = ({
                 minWidth="200px"
                 border={border}
                 enableResizing={resizable}
-                onMouseDown={() => focus(id)}
-                onTouchStart={() => focus(id)}
+                onMouseDown={() => dispatch({ type: "foreground", id })}
+                onTouchStart={() => dispatch({ type: "foreground", id })}
                 onDragStart={handleStart}
                 onResizeStart={handleStart}
                 onDragStop={handleEnd}
@@ -195,8 +191,7 @@ export const Window = ({
             </MotionBox>
           )}
         </AnimatePresence>
-      </WindowContextProvider>,
-      windowLayerRef.current
+      </WindowContextProvider>
     );
   }
 
