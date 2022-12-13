@@ -29,29 +29,41 @@ const PlaylistCard = ({ playlistId, ...rest }: PlaylistCardProps) => {
 
   if (status === "success") {
     return (
-      <Box display="grid" cursor="pointer" {...rest}>
+      <Box
+        display="flex"
+        flexDirection="column"
+        cursor="pointer"
+        border="2px solid #f2bebe"
+        {...rest}
+      >
         <Image
           src={data?.thumbnail_url || "/psydao-seo-image.png"}
           alt=""
-          gridArea="1 / 1 / 2 / 2"
           objectFit="cover"
-          height="100%"
+          height="auto"
           width="100%"
+          sx={{
+            aspectRatio: "1 / 1",
+          }}
+          borderBottom="2px solid #f2bebe"
         />
         {data?.title && (
-          <Box gridArea="1 / 1 / 2 / 2" textAlign="center" placeSelf="center">
+          <Box
+            textAlign="center"
+            flex="1 1 auto"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            p="3"
+            backgroundColor="#fff5f5"
+          >
             <Text
               as="span"
-              background="transparent"
-              backgroundImage="linear-gradient(to right, #f2bebe, #f2bebe)"
-              boxDecorationBreak="clone"
-              placeSelf="center"
               fontSize="20px"
               textAlign="center"
               fontWeight="700"
               fontStyle="italic"
-              margin="0 -0.4em"
-              padding="0.1em 0.4em"
+              lineHeight="1.1em"
             >
               {data.title}
             </Text>
@@ -95,7 +107,7 @@ const Catalogue = ({ children, ...rest }: BoxProps) => {
         mt="3"
         display="grid"
         gap="3"
-        gridTemplateColumns="repeat(auto-fill, minmax(150px, 1fr))"
+        gridTemplateColumns="repeat(auto-fill, minmax(170px, 1fr))"
         gridAutoRows="1fr"
         sx={{
           "&::before": {
