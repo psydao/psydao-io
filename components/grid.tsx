@@ -22,7 +22,6 @@ export const Grid = ({ children, getNumberOfFillers, ...rest }: GridProps) => {
     };
     return (
       <ChakraGrid
-        // @ts-expect-error
         templateColumns={`repeat(${cols}, ${trackSize}px)`}
         templateRows={`repeat(${rows}, ${trackSize}px)`}
         placeContent="center"
