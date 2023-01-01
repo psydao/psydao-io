@@ -6,7 +6,7 @@ export const Manifesto = () => {
   return (
     <Window
       id="manifesto"
-      height={{ base: "90%", md: "70%" }}
+      height={{ base: "80%", md: "70%" }}
       maxHeight="1000px"
       minHeight="350px"
       width="95%"
