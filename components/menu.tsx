@@ -19,8 +19,11 @@ export const Menu = () => {
     <Box
       position="absolute"
       top="0"
+      left="-2px"
       gridArea="1 / -5 / span 1 / -1"
-      width="100%"
+      width="calc(100% + 2px)"
+      zIndex={10}
+      boxShadow="0px 8px 12px rgba(152, 53, 186, 0.22)"
     >
       <ChakraMenu {...disclosure} gutter={0} matchWidth={true}>
         <MenuButton
@@ -30,6 +33,7 @@ export const Menu = () => {
           color="#f2bebe"
           backgroundColor="#FFFAF9"
           width="100%"
+          borderLeft="2px solid #f2bebe"
         >
           <Box
             display="flex"
@@ -51,12 +55,13 @@ export const Menu = () => {
           borderTop="2px solid #f2bebe"
           borderRight="2px solid #f2bebe"
           borderBottom="2px solid #f2bebe"
-          borderLeft="none"
+          borderLeft="2px solid #f2bebe"
           rounded="none"
           background="linear-gradient(180deg, #FFFFFF 0%, #F3FFE9 50.52%, #E7FEFF 100%)"
           p="0"
           width="calc(100% + 2px)"
           minWidth="0"
+          boxShadow="0px 8px 12px rgba(152, 53, 186, 0.22)"
         >
           <Open id="manifesto">
             <MenuItem fontStyle="italic">
