@@ -22,7 +22,7 @@ export const Menu = () => {
       left="-2px"
       gridArea="1 / -5 / span 1 / -1"
       width="calc(100% + 2px)"
-      zIndex={10}
+      zIndex={disclosure.isOpen ? 10 : "unset"}
     >
       <ChakraMenu {...disclosure} gutter={0} matchWidth={true}>
         <MenuButton
