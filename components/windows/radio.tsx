@@ -176,7 +176,7 @@ export const Radio = () => {
   return (
     <Window
       id="radio"
-      height="95%"
+      height="80%"
       maxHeight="630px"
       minHeight="350px"
       width="95%"
