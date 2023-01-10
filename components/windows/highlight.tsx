@@ -1,6 +1,8 @@
 import { Box, Image, Link, Text } from "@chakra-ui/react";
 
 import { Window } from "components/window";
+import { MixpanelTracking } from "../../services/mixpanel";
+
 
 export const Highlight = () => {
   return (
@@ -45,6 +47,9 @@ export const Highlight = () => {
               href="https://airtable.com/shrIwy0pCXfdXvvnu"
               target="_blank"
               textDecor="underline"
+              onClick={() =>
+                MixpanelTracking.getInstance().applyTodayCtaClicked("Research_Project")
+              }
             >
               Apply
             </Link>
@@ -67,6 +72,9 @@ export const Highlight = () => {
               href="https://airtable.com/shrgIF1554wmZ3ngh"
               target="_blank"
               textDecor="underline"
+              onClick={() =>
+                MixpanelTracking.getInstance().applyTodayCtaClicked("Microgrant")
+              }
             >
               Apply
             </Link>

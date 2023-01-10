@@ -12,9 +12,11 @@ import { RiCloseLine, RiMenuLine } from "react-icons/ri";
 
 import { Logo } from "components/icons";
 import { Open } from "components/window-manager";
+import { MixpanelTracking } from "../services/mixpanel";
 
 export const Menu = () => {
   const disclosure = useDisclosure();
+
   return (
     <Box
       position="absolute"
@@ -64,7 +66,14 @@ export const Menu = () => {
         >
           <Open id="manifesto">
             <MenuItem fontStyle="italic">
-              <Box as="span" display="block" mr="3">
+              <Box
+                as="span"
+                display="block"
+                mr="3"
+                onClick={() =>
+                  MixpanelTracking.getInstance().menuLinkClicked("Manifesto")
+                }
+              >
                 Manifesto
               </Box>
               <Logo />
@@ -75,34 +84,80 @@ export const Menu = () => {
             target="_blank"
             _hover={{ textDecor: "none" }}
           >
-            <MenuItem fontStyle="italic">Blog</MenuItem>
+            <MenuItem
+              fontStyle="italic"
+              onClick={() =>
+                MixpanelTracking.getInstance().menuLinkClicked("Blog")
+              }
+            >
+              Blog
+            </MenuItem>
           </Link>
           <Open id="radio">
-            <MenuItem fontStyle="italic">Radio</MenuItem>
+            <MenuItem
+              fontStyle="italic"
+              onClick={() =>
+                MixpanelTracking.getInstance().menuLinkClicked("Radio")
+              }
+            >
+              Radio
+            </MenuItem>
           </Open>
           <Link
             href="https://airtable.com/shrIwy0pCXfdXvvnu"
             target="_blank"
             _hover={{ textDecor: "none" }}
           >
-            <MenuItem fontStyle="italic">Get Funded</MenuItem>
+            <MenuItem
+              fontStyle="italic"
+              onClick={() =>
+                MixpanelTracking.getInstance().menuLinkClicked("Get_Funded")
+              }
+            >
+              Get Funded
+            </MenuItem>
           </Link>
           <Link
             href="https://airtable.com/shrgIF1554wmZ3ngh"
             target="_blank"
             _hover={{ textDecor: "none" }}
           >
-            <MenuItem fontStyle="italic">Alchemist Grant</MenuItem>
+            <MenuItem
+              fontStyle="italic"
+              onClick={() =>
+                MixpanelTracking.getInstance().menuLinkClicked(
+                  "Alchemist_Grant"
+                )
+              }
+            >
+              Alchemist Grant
+            </MenuItem>
           </Link>
           <Open id="newsletter">
-            <MenuItem fontStyle="italic">Newsletter</MenuItem>
+            <MenuItem
+              fontStyle="italic"
+              onClick={() =>
+                MixpanelTracking.getInstance().menuLinkClicked("Newsletter")
+              }
+            >
+              Newsletter
+            </MenuItem>
           </Open>
           <Link
             href="https://airtable.com/shrCaOD9DaD57J3Mu"
             target="_blank"
             _hover={{ textDecor: "none" }}
           >
-            <MenuItem fontStyle="italic">Become a Contributor</MenuItem>
+            <MenuItem
+              fontStyle="italic"
+              onClick={() =>
+                MixpanelTracking.getInstance().menuLinkClicked(
+                  "Become_a_Contributor"
+                )
+              }
+            >
+              Become a Contributor
+            </MenuItem>
           </Link>
         </MenuList>
       </ChakraMenu>
