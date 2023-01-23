@@ -44,7 +44,7 @@ export const Highlight = () => {
           <Text mt="2">We&#39;re seeking early-stage projects to fund.</Text>
           <Text textColor="#269200" fontWeight="700" fontStyle="italic" mt="1">
             <Link
-              href="https://airtable.com/shrIwy0pCXfdXvvnu"
+              href="https://airtable.com/shrIE3qROFJe9h5uM"
               target="_blank"
               textDecor="underline"
               onClick={() =>
@@ -69,7 +69,7 @@ export const Highlight = () => {
           </Text>
           <Text textColor="#269200" fontWeight="700" fontStyle="italic" mt="1">
             <Link
-              href="https://airtable.com/shrgIF1554wmZ3ngh"
+              href="https://airtable.com/shrPp14v1pILFIBg3"
               target="_blank"
               textDecor="underline"
               onClick={() =>
