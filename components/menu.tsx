@@ -118,7 +118,7 @@ export const Menu = () => {
             </MenuItem>
           </Link>
           <Link
-            href="https://airtable.com/shrgIF1554wmZ3ngh"
+            href="https://airtable.com/shrPp14v1pILFIBg3"
             target="_blank"
             _hover={{ textDecor: "none" }}
           >
