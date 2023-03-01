@@ -114,7 +114,7 @@ export const Menu = () => {
                 MixpanelTracking.getInstance().menuLinkClicked("Get_Funded")
               }
             >
-              Get Funded
+              Get Funding for Research
             </MenuItem>
           </Link>
           <Link
@@ -130,7 +130,7 @@ export const Menu = () => {
                 )
               }
             >
-              Alchemist Grant
+              Small Alchemist Grants
             </MenuItem>
           </Link>
           <Open id="newsletter">
