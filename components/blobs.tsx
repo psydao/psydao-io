@@ -111,7 +111,7 @@ export const Blobs = ({ palette = defaultPalette, ...rest }: BlobsProps) => {
     <Box position="absolute" top="0" right="0" bottom="0" left="0" {...rest}>
       <Box
         // https://github.com/chakra-ui/chakra-ui/issues/2687
-        // @ts-expect-error
+       // @ts-ignore
         ref={ref}
         as="canvas"
         height="100%"

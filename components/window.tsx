@@ -105,10 +105,14 @@ const Resizable = chakra(Rnd, {
   shouldForwardProp: (prop) => prop in validRndProps,
 });
 
-interface WindowProps extends React.ComponentPropsWithoutRef<typeof Resizable> {
+interface WindowProps extends BoxProps {
   defaultIsOpen?: boolean;
   id: string;
+  resizable?: boolean;
+  lockAspectRatio?: number;
+  lockAspectRatioExtraHeight?: number;
 }
+
 
 // TODO the current approach to picking up border and padding is a bit limited
 // because I think unexpected things might happen when supplying partial props
