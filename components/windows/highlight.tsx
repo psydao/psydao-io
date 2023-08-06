@@ -44,7 +44,7 @@ export const Highlight = () => {
           <Text mt="2">We&#39;re seeking early-stage, commercialisable projects to fund.</Text>
           <Text textColor="#269200" fontWeight="700" fontStyle="italic" mt="1">
             <Link
-              href="https://airtable.com/shrIE3qROFJe9h5uM"
+              href="https://research-application-form.vercel.app/PsyDAO"
               target="_blank"
               textDecor="underline"
               onClick={() =>
