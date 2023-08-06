@@ -118,7 +118,7 @@ export const Menu = () => {
             </MenuItem>
           </Link>
           <Link
-            href="https://airtable.com/shrPp14v1pILFIBg3"
+            href="https://research-application-form.vercel.app/PsyDAO"
             target="_blank"
             _hover={{ textDecor: "none" }}
           >
