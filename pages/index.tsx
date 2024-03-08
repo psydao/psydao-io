@@ -17,6 +17,7 @@ import { Manifesto } from "components/windows/manifesto";
 import { Newsletter } from "components/windows/newsletter";
 import { Radio } from "components/windows/radio";
 import { MixpanelTracking } from "../services/mixpanel";
+import { SwapWidget } from "components/windows/swap-widget";
 
 // TODO Extract Pill component since it seems it will become a basic primitive
 // in our design
@@ -109,7 +110,8 @@ const Homepage: NextPage = () => {
                     pointerEvents="none"
                     overflow="hidden"
                   >
-                    <Highlight />
+                    {/* <Highlight /> */}
+                    <SwapWidget />
                     <Radio />
                     <Manifesto />
                     <Newsletter />
