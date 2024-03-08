@@ -58,5 +58,5 @@ export class MixpanelTracking {
     this.track("apply_today_CTA_clicked", {
       cta: cta,
     });
-}
+  }
 }

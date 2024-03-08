@@ -12,9 +12,10 @@
     "@chakra-ui/react": "^2.3.4",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
+    "@rainbow-me/rainbowkit": "^2.0.1",
     "@react-three/drei": "^9.31.1",
     "@react-three/fiber": "^8.7.4",
-    "@tanstack/react-query": "^4.19.1",
+    "@tanstack/react-query": "^5.25.0",
     "@types/mixpanel-browser": "^2.38.0",
     "@vimeo/player": "^2.17.1",
     "framer-motion": "^6.5.1",
@@ -24,7 +25,9 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.4.0",
     "react-rnd": "^10.3.7",
-    "three": "^0.142.0"
+    "three": "^0.142.0",
+    "viem": "^2.7.20",
+    "wagmi": "^2.5.7"
   },
   "devDependencies": {
     "@types/node": "^16.11.59",

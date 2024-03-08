@@ -18,7 +18,6 @@ import { Newsletter } from "components/windows/newsletter";
 import { Radio } from "components/windows/radio";
 import { MixpanelTracking } from "../services/mixpanel";
 
-
 // TODO Extract Pill component since it seems it will become a basic primitive
 // in our design
 
@@ -34,8 +33,6 @@ const Homepage: NextPage = () => {
       );
       MixpanelTracking.getInstance().pageView();
     };
-
-
 
     updateHeight();
     window.addEventListener("resize", updateHeight);
