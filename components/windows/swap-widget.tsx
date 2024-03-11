@@ -1,9 +1,9 @@
-import { Box, Button, Flex, Image, Link, Text } from "@chakra-ui/react";
+import { Box, Flex, Image, Link, Text } from "@chakra-ui/react";
 import { ArrowDownIcon } from "@chakra-ui/icons";
 
 import { Window } from "components/window";
-import { MixpanelTracking } from "../../services/mixpanel";
 import { TokenContainer } from "components/token-container";
+import { ConnectWalletButton } from "components/connect-button";
 
 export const SwapWidget = () => {
   return (
@@ -76,15 +76,7 @@ export const SwapWidget = () => {
                 name="psyDAO"
                 symbol="PSY"
               />
-              <Button
-                variant={"unstyled"}
-                w={"full"}
-                bg={"linear-gradient(90deg, #b24fe4, #e09da3)"}
-                color={"white"}
-                mb={9}
-              >
-                Connect A Wallet
-              </Button>
+              <ConnectWalletButton />
             </Flex>
           </Flex>
         </Flex>
