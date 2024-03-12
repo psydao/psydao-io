@@ -48,7 +48,7 @@ export const SwapWidget = () => {
             direction={"column"}
             alignItems={"start"}
             textAlign={"center"}
-            w={"fit-content"}
+            px={20}
           >
             <Image src="/windows/swap/placeholder.png" alt="" margin="0 auto" />
             <Text fontSize={"16px"} color={"#f3c1c1"}>

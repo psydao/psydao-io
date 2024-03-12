@@ -18,6 +18,7 @@ import { Newsletter } from "components/windows/newsletter";
 import { Radio } from "components/windows/radio";
 import { MixpanelTracking } from "../services/mixpanel";
 import { SwapWidget } from "components/windows/swap-widget";
+import { useRestrictedCountries } from "hooks/restrictedCountries";
 
 // TODO Extract Pill component since it seems it will become a basic primitive
 // in our design
@@ -26,6 +27,8 @@ import { SwapWidget } from "components/windows/swap-widget";
 // probably a theme prop
 
 const Homepage: NextPage = () => {
+  useRestrictedCountries();
+
   useEffect(() => {
     const updateHeight = () => {
       document.documentElement.style.setProperty(
