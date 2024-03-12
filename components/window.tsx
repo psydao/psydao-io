@@ -26,6 +26,8 @@ const TitleBar = ({ hasBorder = true, ...rest }: TitleBarProps) => {
   const { border, id, padding } = useWindowContext();
   const { dispatch } = useWindowManager();
 
+  console.log(id);
+
   return (
     <Box
       display="flex"
@@ -112,7 +114,6 @@ interface WindowProps extends BoxProps {
   lockAspectRatio?: number;
   lockAspectRatioExtraHeight?: number;
 }
-
 
 // TODO the current approach to picking up border and padding is a bit limited
 // because I think unexpected things might happen when supplying partial props

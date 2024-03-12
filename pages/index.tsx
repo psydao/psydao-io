@@ -1,6 +1,6 @@
 import { Box, Center, Icon, Image, Link, Text } from "@chakra-ui/react";
 import type { NextPage } from "next";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FaDiscord, FaTwitter, FaYoutube } from "react-icons/fa";
 
 import { BackgroundGrid } from "components/background-grid";
@@ -18,6 +18,7 @@ import { Newsletter } from "components/windows/newsletter";
 import { Radio } from "components/windows/radio";
 import { MixpanelTracking } from "../services/mixpanel";
 import { SwapWidget } from "components/windows/swap-widget";
+import { Window } from "components/window";
 
 // TODO Extract Pill component since it seems it will become a basic primitive
 // in our design
@@ -74,19 +75,28 @@ const Homepage: NextPage = () => {
                 zIndex="0"
                 getNumberOfFillers={(cols, rows) => cols * (rows - 1) - 11}
               >
-                <Box gridArea="1 / 1 / 3 / 3">
-                  <Image src="/psydao-deep-logo.svg" alt="" h="100%" w="100%" />
-                </Box>
-                <Box gridArea="-2 / 1 / -1 / -1">
-                  <Marquee
-                    text={[
-                      "WELCOME TO PSYDAO",
-                      "FUNDING RESEARCH AT THE INTERSECTION OF PSYCHEDELICS AND MENTAL HEALTH",
-                      "NOW ACCEPTING APPLICATIONS FOR RESEARCH PROJECT FUNDING AND ALCHEMIST GRANTS",
-                    ]}
-                  />
-                </Box>
                 <WindowManager>
+                  <Box gridArea="1 / 1 / 3 / 3">
+                    {/* TODO: temporary until I can find a better way to do this */}
+                    <Open h="100%" w="100%" id="swap">
+                      <Image
+                        src="/psydao-deep-logo.svg"
+                        alt=""
+                        h="100%"
+                        w="100%"
+                      />
+                    </Open>
+                  </Box>
+                  <Box gridArea="-2 / 1 / -1 / -1">
+                    <Marquee
+                      text={[
+                        "WELCOME TO PSYDAO",
+                        "FUNDING RESEARCH AT THE INTERSECTION OF PSYCHEDELICS AND MENTAL HEALTH",
+                        "NOW ACCEPTING APPLICATIONS FOR RESEARCH PROJECT FUNDING AND ALCHEMIST GRANTS",
+                      ]}
+                    />
+                  </Box>
+
                   <Menu />
                   <Open id="radio" gridArea="-4 / 1 / span 2 / span 2" p="3">
                     <Image
@@ -110,7 +120,7 @@ const Homepage: NextPage = () => {
                     pointerEvents="none"
                     overflow="hidden"
                   >
-                    {/* <Highlight /> */}
+                    <Highlight />
                     <SwapWidget />
                     <Radio />
                     <Manifesto />

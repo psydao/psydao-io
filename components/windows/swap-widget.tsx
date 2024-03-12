@@ -8,8 +8,7 @@ import { ConnectWalletButton } from "components/connect-button";
 export const SwapWidget = () => {
   return (
     <Window
-      id="highlight"
-      defaultIsOpen={true}
+      id="swap"
       height="80%"
       maxHeight="640px"
       minHeight="350px"
@@ -19,6 +18,8 @@ export const SwapWidget = () => {
       top="50%"
       left="50%"
       transform="translate(-50%, -50%)"
+      bgImage={"url(/windows/swap/background-image.png)"}
+      bgSize={"cover"}
     >
       <Window.TitleBar />
       <Window.Content p="0">
@@ -29,6 +30,7 @@ export const SwapWidget = () => {
             fontStyle="italic"
             mt="1"
             fontSize={"36px"}
+            fontFamily={"Amiri"}
           >
             PSY token sale now open
           </Text>
@@ -39,6 +41,7 @@ export const SwapWidget = () => {
             fontStyle="italic"
             fontSize={"24px"}
             textUnderlineOffset={"12px"}
+            fontFamily={"Amiri"}
           >
             Whitepaper
           </Link>
@@ -49,15 +52,36 @@ export const SwapWidget = () => {
             alignItems={"start"}
             textAlign={"center"}
             w={"fit-content"}
+            gap={2}
           >
-            <Image src="/windows/swap/placeholder.png" alt="" margin="0 auto" />
-            <Text fontSize={"16px"} color={"#f3c1c1"}>
+            <Image
+              src="/windows/swap/swap-banner-image.png"
+              alt=""
+              margin="0 auto"
+              maxW={"342px"}
+            />
+            <Text
+              fontFamily={"Amiri"}
+              fontSize={"16px"}
+              color={"#f3c1c1"}
+              fontStyle={"italic"}
+            >
               $0.1 per PSY
             </Text>
-            <Text fontSize={"16px"} color={"#f3c1c1"}>
+            <Text
+              fontFamily={"Amiri"}
+              fontSize={"16px"}
+              color={"#f3c1c1"}
+              fontStyle={"italic"}
+            >
               $1.023m Circulating Market Cap
             </Text>
-            <Text fontSize={"16px"} color={"#f3c1c1"}>
+            <Text
+              fontFamily={"Amiri"}
+              fontSize={"16px"}
+              color={"#f3c1c1"}
+              fontStyle={"italic"}
+            >
               PSY remaining for sale: 85%
             </Text>
             <Flex direction={"column"} alignItems={"center"} w={"full"} gap={4}>
@@ -66,6 +90,7 @@ export const SwapWidget = () => {
                 header="From"
                 name="Ethereum"
                 symbol="ETH"
+                image="/windows/swap/ETH.svg"
               />
               <Box>
                 <ArrowDownIcon />
@@ -75,6 +100,7 @@ export const SwapWidget = () => {
                 header="To (estimated)"
                 name="psyDAO"
                 symbol="PSY"
+                image="/windows/swap/PSY.svg"
               />
               <ConnectWalletButton />
             </Flex>

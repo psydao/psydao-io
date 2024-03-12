@@ -15,6 +15,9 @@ const LinearButton: React.FC<LinearButtonProps> = ({ onClick, children }) => {
       bg={"linear-gradient(90deg, #b24fe4, #e09da3)"}
       color={"white"}
       mb={9}
+      borderRadius={"full"}
+      paddingY={5}
+      display={"flex"}
     >
       {children}
     </Button>
