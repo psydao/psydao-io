@@ -20,17 +20,16 @@ export const SwapWidget = () => {
       transform="translate(-50%, -50%)"
       bgImage={"url(/windows/swap/background-image.png)"}
       bgSize={"cover"}
-      p={2}
     >
       <Window.TitleBar />
-      <Window.Content p="0">
+      <Window.Content p={2}>
         <Box p={6} pb={8}>
           <Text
             textColor="#269200"
             fontWeight="500"
             fontStyle="italic"
             mt="1"
-            fontSize={{ base: "20px", md: "36px" }}
+            fontSize={{ base: "20px", sm: "36px" }}
             fontFamily={"Amiri"}
           >
             PSY token sale now open
@@ -59,11 +58,11 @@ export const SwapWidget = () => {
               src="/windows/swap/swap-banner-image.png"
               alt=""
               margin="0 auto"
-              maxW={{ base: "220px", md: "342px" }}
+              maxW={{ base: "220px", sm: "342px" }}
             />
             <Text
               fontFamily={"Amiri"}
-              fontSize={{ base: "10px", md: "16px" }}
+              fontSize={{ base: "10px", sm: "16px" }}
               color={"#f3c1c1"}
               fontStyle={"italic"}
             >
@@ -71,7 +70,7 @@ export const SwapWidget = () => {
             </Text>
             <Text
               fontFamily={"Amiri"}
-              fontSize={{ base: "10px", md: "16px" }}
+              fontSize={{ base: "10px", sm: "16px" }}
               color={"#f3c1c1"}
               fontStyle={"italic"}
             >
@@ -79,7 +78,7 @@ export const SwapWidget = () => {
             </Text>
             <Text
               fontFamily={"Amiri"}
-              fontSize={{ base: "10px", md: "16px" }}
+              fontSize={{ base: "10px", sm: "16px" }}
               color={"#f3c1c1"}
               fontStyle={"italic"}
             >
