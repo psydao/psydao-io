@@ -71,6 +71,8 @@ const Homepage: NextPage = () => {
 
   const fadeinAnimate = `${fadeIn} infinite 6s`;
 
+  const SALE_ACTIVE = true;
+
   return (
     <>
       <Head />
@@ -110,23 +112,34 @@ const Homepage: NextPage = () => {
                     {/* TODO: temporary until I can find a better way to do this */}
                     <Open h="100%" w="100%" id="swap">
                       <Box h="100%" w="100%" position={"relative"}>
-                        <Image
-                          src="/purple-logo.png"
-                          h={"100%"}
-                          w={"100%"}
-                          alt="logo"
-                          position={"absolute"}
-                          top={0}
-                        />
-                        <Image
-                          src="/purple-logo-glow.png"
-                          h={"100%"}
-                          w={"100%"}
-                          alt="logo"
-                          animation={`${fadeinAnimate}`}
-                          position={"absolute"}
-                          top={0}
-                        />
+                        {SALE_ACTIVE ? (
+                          <>
+                            <Image
+                              src="/purple-logo.png"
+                              h={"100%"}
+                              w={"100%"}
+                              alt="logo"
+                              position={"absolute"}
+                              top={0}
+                            />
+                            <Image
+                              src="/purple-logo-glow.png"
+                              h={"100%"}
+                              w={"100%"}
+                              alt="logo"
+                              animation={`${fadeinAnimate}`}
+                              position={"absolute"}
+                              top={0}
+                            />
+                          </>
+                        ) : (
+                          <Image
+                            h={"100%"}
+                            w={"100%"}
+                            alt="logo"
+                            src="/psydao-deep-logo.svg"
+                          />
+                        )}
                       </Box>
                     </Open>
                   </Box>
