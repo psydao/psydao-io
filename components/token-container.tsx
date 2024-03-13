@@ -43,12 +43,20 @@ export const TokenContainer = (props: TokenContainerProps) => {
         <Flex
           gap={2}
           alignItems={"center"}
-          direction={{ base: "column", lg: "row" }}
+          direction={{ base: "column", md: "row" }}
         >
-          <Text fontWeight={600} color={"#97929e"}>
+          <Text
+            fontWeight={600}
+            color={"#97929e"}
+            fontSize={{ base: "12px", md: "16px" }}
+          >
             {props.amount}
           </Text>
-          <Text fontWeight={700} color={"black"}>
+          <Text
+            fontWeight={700}
+            color={"black"}
+            fontSize={{ base: "12px", md: "16px" }}
+          >
             {props.symbol}
           </Text>
         </Flex>
