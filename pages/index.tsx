@@ -1,4 +1,12 @@
-import { Box, Center, Icon, Image, Link, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Center,
+  Icon,
+  Image,
+  Link,
+  Text,
+  keyframes,
+} from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { useEffect, useState } from "react";
 import { FaDiscord, FaTwitter, FaYoutube } from "react-icons/fa";
@@ -18,7 +26,7 @@ import { Newsletter } from "components/windows/newsletter";
 import { Radio } from "components/windows/radio";
 import { MixpanelTracking } from "../services/mixpanel";
 import { SwapWidget } from "components/windows/swap-widget";
-import { Window } from "components/window";
+import styles from "../components/purple-button.module.css";
 
 // TODO Extract Pill component since it seems it will become a basic primitive
 // in our design
@@ -40,6 +48,26 @@ const Homepage: NextPage = () => {
     window.addEventListener("resize", updateHeight);
     return () => window.removeEventListener("resize", updateHeight);
   }, []);
+
+  const fadeIn = keyframes`
+   0% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+  `;
+
+  const fadeinAnimate = `${fadeIn} infinite 6s`;
 
   return (
     <>
@@ -79,12 +107,25 @@ const Homepage: NextPage = () => {
                   <Box gridArea="1 / 1 / 3 / 3">
                     {/* TODO: temporary until I can find a better way to do this */}
                     <Open h="100%" w="100%" id="swap">
-                      <Image
-                        src="/psydao-deep-logo.svg"
-                        alt=""
-                        h="100%"
-                        w="100%"
-                      />
+                      <Box h="100%" w="100%" position={"relative"}>
+                        <Image
+                          src="/purple-logo.png"
+                          h={"100%"}
+                          w={"100%"}
+                          alt="logo"
+                          position={"absolute"}
+                          top={0}
+                        />
+                        <Image
+                          src="/purple-logo-glow.png"
+                          h={"100%"}
+                          w={"100%"}
+                          alt="logo"
+                          animation={`${fadeinAnimate}`}
+                          position={"absolute"}
+                          top={0}
+                        />
+                      </Box>
                     </Open>
                   </Box>
                   <Box gridArea="-2 / 1 / -1 / -1">
