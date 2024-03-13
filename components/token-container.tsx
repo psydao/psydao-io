@@ -40,7 +40,11 @@ export const TokenContainer = (props: TokenContainerProps) => {
             />
           </Flex>
         </Box>
-        <Flex gap={2} alignItems={"center"}>
+        <Flex
+          gap={2}
+          alignItems={"center"}
+          direction={{ base: "column", lg: "row" }}
+        >
           <Text fontWeight={600} color={"#97929e"}>
             {props.amount}
           </Text>

@@ -11,7 +11,7 @@ const LinearButton: React.FC<LinearButtonProps> = ({ onClick, children }) => {
     <Button
       onClick={onClick}
       variant={"unstyled"}
-      w={"full"}
+      w={"100%"}
       bg={"linear-gradient(90deg, #b24fe4, #e09da3)"}
       color={"white"}
       mb={9}
