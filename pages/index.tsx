@@ -8,7 +8,7 @@ import {
   keyframes,
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { FaDiscord, FaTwitter, FaYoutube } from "react-icons/fa";
 
 import { BackgroundGrid } from "components/background-grid";
@@ -115,7 +115,7 @@ const Homepage: NextPage = () => {
                         {SALE_ACTIVE ? (
                           <>
                             <Image
-                              src="/purple-logo.png"
+                              src="/purple-logo.svg"
                               h={"100%"}
                               w={"100%"}
                               alt="logo"
@@ -123,7 +123,7 @@ const Homepage: NextPage = () => {
                               top={0}
                             />
                             <Image
-                              src="/purple-logo-glow.png"
+                              src="/purple-logo-glow.svg"
                               h={"100%"}
                               w={"100%"}
                               alt="logo"

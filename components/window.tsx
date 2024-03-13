@@ -26,8 +26,6 @@ const TitleBar = ({ hasBorder = true, ...rest }: TitleBarProps) => {
   const { border, id, padding } = useWindowContext();
   const { dispatch } = useWindowManager();
 
-  console.log(id);
-
   return (
     <Box
       display="flex"
