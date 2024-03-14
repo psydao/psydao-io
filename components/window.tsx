@@ -113,7 +113,6 @@ interface WindowProps extends BoxProps {
   lockAspectRatioExtraHeight?: number;
 }
 
-
 // TODO the current approach to picking up border and padding is a bit limited
 // because I think unexpected things might happen when supplying partial props
 // for those (px, py, pt, borderTop, borderRight, etc.)
