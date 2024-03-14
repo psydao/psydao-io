@@ -11,11 +11,15 @@ import {
 import { RiCloseLine, RiMenuLine } from "react-icons/ri";
 
 import { Logo } from "components/icons";
-import { Open } from "components/window-manager";
+import { Close, Open } from "components/window-manager";
 import { MixpanelTracking } from "../services/mixpanel";
+import TermsAndConditionsModal from "./modals/TsAndCs";
+import { useState } from "react";
 
 export const Menu = () => {
   const disclosure = useDisclosure();
+
+  const [modalOpen, setModalOpen] = useState(false);
 
   return (
     <Box
@@ -163,7 +167,19 @@ export const Menu = () => {
           <Open id="swap">
             <MenuItem fontStyle="italic">Buy PSY</MenuItem>
           </Open>
+          <Close id="swap">
+            <MenuItem
+              fontStyle="italic"
+              onClick={() => setModalOpen((prev) => !prev)}
+            >
+              Terms and Conditions
+            </MenuItem>
+          </Close>
         </MenuList>
+        <TermsAndConditionsModal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen((prev) => !prev)}
+        />
       </ChakraMenu>
     </Box>
   );
