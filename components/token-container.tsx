@@ -1,7 +1,8 @@
 import { Box, Flex, FlexProps, Text } from "@chakra-ui/react";
+import Image from "next/image";
 
 type TokenContainerProps = FlexProps & {
-  image?: string;
+  image: string;
   name: string;
   symbol: string;
   header: string;
@@ -18,6 +19,7 @@ export const TokenContainer = (props: TokenContainerProps) => {
       borderRadius={"3xl"}
       direction={"column"}
       gap={2}
+      boxShadow={"-2px 2px 4px 0px rgba(0, 0, 0, 0.12) inset"}
     >
       <Text
         color={"#686478"}
@@ -28,16 +30,38 @@ export const TokenContainer = (props: TokenContainerProps) => {
         {props.header}
       </Text>
       <Flex w={"full"} justifyContent={"space-between"} alignItems={"center"}>
-        <Box borderRadius={"full"} bg={"white"} paddingY={2} paddingX={4}>
-          <Text color={"black"} fontWeight={600}>
-            {props.name}
-          </Text>
+        <Box
+          borderRadius={"full"}
+          bg={"white"}
+          paddingY={{ base: 1, sm: 2 }}
+          paddingX={{ base: 2, sm: 4 }}
+        >
+          <Flex
+            gap={1}
+            position={"relative"}
+            height={{ base: "28px", sm: "28px" }}
+            width={{ base: "76px", sm: "96px" }}
+          >
+            <Image
+              src={props.image}
+              alt={`${props.symbol} icon`}
+              layout="fill"
+            />
+          </Flex>
         </Box>
         <Flex gap={2} alignItems={"center"}>
-          <Text fontWeight={600} color={"#97929e"}>
+          <Text
+            fontWeight={600}
+            color={"#97929e"}
+            fontSize={{ base: "12px", sm: "16px" }}
+          >
             {props.amount}
           </Text>
-          <Text fontWeight={700} color={"black"}>
+          <Text
+            fontWeight={700}
+            color={"black"}
+            fontSize={{ base: "12px", sm: "16px" }}
+          >
             {props.symbol}
           </Text>
         </Flex>

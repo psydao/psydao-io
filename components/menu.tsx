@@ -67,6 +67,7 @@ export const Menu = () => {
           width="calc(100% + 2px)"
           minWidth="0"
           boxShadow="0px 8px 12px rgba(152, 53, 186, 0.22)"
+          color={"#9835BA"}
         >
           <Open id="manifesto">
             <MenuItem fontStyle="italic">
