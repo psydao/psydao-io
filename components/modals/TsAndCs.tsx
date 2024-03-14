@@ -127,7 +127,6 @@ const TermsAndConditionsModal = (props: TsAndCsProps) => {
               color={"white"}
               _hover={{
                 backgroundColor: "purple.300",
-                // color: "black",
               }}
             >
               Accept Terms and Conditions
