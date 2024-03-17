@@ -133,32 +133,11 @@ export const Menu = () => {
               Small Alchemist Grants
             </MenuItem>
           </Link>
-          <Open id="newsletter">
-            <MenuItem
-              fontStyle="italic"
-              onClick={() =>
-                MixpanelTracking.getInstance().menuLinkClicked("Newsletter")
-              }
-            >
-              Newsletter
-            </MenuItem>
-          </Open>
           <Link
             href="https://airtable.com/shrCaOD9DaD57J3Mu"
             target="_blank"
             _hover={{ textDecor: "none" }}
-          >
-            <MenuItem
-              fontStyle="italic"
-              onClick={() =>
-                MixpanelTracking.getInstance().menuLinkClicked(
-                  "Become_a_Contributor"
-                )
-              }
-            >
-              Become a Contributor
-            </MenuItem>
-          </Link>
+          ></Link>
         </MenuList>
       </ChakraMenu>
     </Box>
