@@ -22,7 +22,6 @@ import { Menu } from "components/menu";
 import { Open, WindowManager } from "components/window-manager";
 import { Highlight } from "components/windows/highlight";
 import { Manifesto } from "components/windows/manifesto";
-import { Newsletter } from "components/windows/newsletter";
 import { Radio } from "components/windows/radio";
 import { MixpanelTracking } from "../services/mixpanel";
 import { SwapWidget } from "components/windows/swap-widget";
@@ -180,7 +179,6 @@ const Homepage: NextPage = () => {
                     <SwapWidget />
                     <Radio />
                     <Manifesto />
-                    <Newsletter />
                   </Box>
                 </WindowManager>
                 <Link
