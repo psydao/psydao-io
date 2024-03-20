@@ -104,7 +104,7 @@ export const Menu = () => {
             </MenuItem>
           </Open>
           <Link
-            href="https://research-application-form.vercel.app/PsyDAO"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSclWo6ALQ-atJtrE0CQ4ft-JmXWIkaRVpg0cTqhvfKOHLhSCQ/viewform"
             target="_blank"
             _hover={{ textDecor: "none" }}
           >
@@ -118,7 +118,7 @@ export const Menu = () => {
             </MenuItem>
           </Link>
           <Link
-            href="https://airtable.com/shrPp14v1pILFIBg3"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSc3hj_RyIyh3qEkR9WMbx1PD0WAdz_lpm96eCCl60nuCujYpQ/viewform"
             target="_blank"
             _hover={{ textDecor: "none" }}
           >
