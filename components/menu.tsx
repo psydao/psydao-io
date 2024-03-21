@@ -80,7 +80,7 @@ export const Menu = () => {
             </MenuItem>
           </Open>
           <Link
-            href="https://medium.com/@psyDAO"
+            href="https://mirror.xyz/0x3ccF80a0f26ED8BC2E11d2a4e0813816048BCA38"
             target="_blank"
             _hover={{ textDecor: "none" }}
           >
