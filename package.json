@@ -19,6 +19,7 @@
     "@tanstack/react-query": "^5.25.0",
     "@types/mixpanel-browser": "^2.38.0",
     "@vimeo/player": "^2.17.1",
+    "cors": "^2.8.5",
     "ethers": "^6.11.1",
     "framer-motion": "^6.5.1",
     "mixpanel-browser": "^2.47.0",
@@ -29,11 +30,13 @@
     "react-icons": "^4.4.0",
     "react-rnd": "^10.3.7",
     "siwe": "^2.1.4",
+    "swr": "^2.2.5",
     "three": "^0.142.0",
     "viem": "^2.7.20",
     "wagmi": "^2.5.7"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/node": "^16.11.59",
     "@types/react": "^18.0.20",
     "@types/react-dom": "^18.0.6",

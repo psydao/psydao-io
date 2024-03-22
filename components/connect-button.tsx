@@ -1,12 +1,31 @@
 import { Box } from "@chakra-ui/react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import LinearButton from "./linear-button";
+import { useBuyToken } from "hooks/useBuyToken";
+import { useSignInWallet } from "hooks/useSignInWallet";
+import { useEffect } from "react";
 
 export const ConnectWalletButton = () => {
+  const { buyToken, isBlackListWallet } = useBuyToken();
+  const signIn = useSignInWallet();
+
+  useEffect(() => {
+    if (!isBlackListWallet && typeof isBlackListWallet === "boolean") {
+      signIn();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isBlackListWallet]);
+
   return (
     <ConnectButton.Custom>
       {({ account, chain, openAccountModal, openConnectModal, mounted }) => {
         const connected = mounted && account && chain;
+
+        const sendTransactionHandler = async () => {
+          await buyToken();
+          openAccountModal;
+        };
+
         return (
           <Box w="full">
             {(() => {
@@ -25,7 +44,7 @@ export const ConnectWalletButton = () => {
                 );
               }
               return (
-                <LinearButton onClick={openAccountModal}>
+                <LinearButton onClick={sendTransactionHandler}>
                   {account.displayName}
                   {account.displayBalance ? ` (${account.displayBalance})` : ""}
                 </LinearButton>
