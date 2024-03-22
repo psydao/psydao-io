@@ -8,7 +8,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import Image from "next/future/image";
+import Image from "next/image";
 import { FaDiscord, FaTwitter, FaYoutube } from "react-icons/fa";
 import { RiInstagramFill } from "react-icons/ri";
 
