@@ -143,6 +143,16 @@ export const Menu = () => {
             target="_blank"
             _hover={{ textDecor: "none" }}
           ></Link>
+          <Open id="swap">
+            <MenuItem
+              fontStyle="italic"
+              onClick={() =>
+                MixpanelTracking.getInstance().menuLinkClicked("swap")
+              }
+            >
+              Buy PSY
+            </MenuItem>
+          </Open>
         </MenuList>
         <TermsAndConditionsModal
           isOpen={modalOpen}
