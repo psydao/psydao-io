@@ -1,14 +1,24 @@
-import Router from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
-const RESTRICTED_COUNTRIES = [""];
+const RESTRICTED_COUNTRIES = [
+  { name: "United States of America", code: "US" },
+  { name: "Belarus", code: "BY" },
+  { name: "Myanmar", code: "MM" },
+  { name: "Côte d'Ivoire", code: "CI" },
+  { name: "Cuba", code: "CU" },
+  { name: "Democratic Republic of the Congo", code: "CD" },
+  { name: "Iran (Islamic Republic of)", code: "IR" },
+  { name: "Iraq", code: "IQ" },
+  { name: "Liberia", code: "LR" },
+  { name: "Korea (Democratic People's Republic of)", code: "KP" },
+  { name: "Syrian Arab Republic", code: "SY" },
+  { name: "Zimbabwe", code: "ZW" },
+];
 
 export const useRestrictedCountries = () => {
+  const [isRestricted, setIsRestricted] = useState(false);
   const [cookies, setCookie] = useCookies(["countryCode"]);
-
-  const isRestricted =
-    cookies.countryCode && RESTRICTED_COUNTRIES.includes(cookies.countryCode);
 
   useEffect(() => {
     const fetchCountryCode = async () => {
@@ -28,10 +38,15 @@ export const useRestrictedCountries = () => {
   }, [cookies.countryCode, setCookie]);
 
   useEffect(() => {
-    if (isRestricted) {
-      Router.push("/restricted");
+    if (
+      cookies?.countryCode &&
+      RESTRICTED_COUNTRIES.some(
+        (country) => country.code === cookies.countryCode
+      )
+    ) {
+      setIsRestricted(true);
     }
-  }, [isRestricted]);
+  }, [cookies]);
 
-  return null;
+  return isRestricted;
 };
