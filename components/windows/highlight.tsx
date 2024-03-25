@@ -44,7 +44,7 @@ export const Highlight = () => {
           <Text mt="2">We&#39;re seeking early-stage, commercialisable projects to fund.</Text>
           <Text textColor="#269200" fontWeight="700" fontStyle="italic" mt="1">
             <Link
-              href="https://research-application-form.vercel.app/PsyDAO"
+              href="https://docs.google.com/forms/d/e/1FAIpQLSclWo6ALQ-atJtrE0CQ4ft-JmXWIkaRVpg0cTqhvfKOHLhSCQ/viewform"
               target="_blank"
               textDecor="underline"
               onClick={() =>
@@ -69,7 +69,7 @@ export const Highlight = () => {
           </Text>
           <Text textColor="#269200" fontWeight="700" fontStyle="italic" mt="1">
             <Link
-              href="https://airtable.com/shrPp14v1pILFIBg3"
+              href="https://docs.google.com/forms/d/e/1FAIpQLSc3hj_RyIyh3qEkR9WMbx1PD0WAdz_lpm96eCCl60nuCujYpQ/viewform"
               target="_blank"
               textDecor="underline"
               onClick={() =>
