@@ -1,16 +1,30 @@
 import { Box, Flex, Image, Link, Text, useMediaQuery } from "@chakra-ui/react";
-import { ArrowDownIcon } from "@chakra-ui/icons";
 
 import { Window } from "components/window";
 import { TokenContainer } from "components/token-container";
 import { ConnectWalletButton } from "components/connect-button";
 import { useRestrictedCountries } from "hooks/restrictedCountries";
 import { RestrictedCountries } from "components/swap-widget/RestrictedCountries";
+import { useState } from "react";
+import { useAccount, useBalance } from "wagmi";
+import { formatUnits } from "viem";
 
 export const SwapWidget = () => {
   const isRescricted = useRestrictedCountries();
-
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
+
+  const [isSwapped, setIsSwapped] = useState<boolean>(false);
+  const [ethAmount, setEthAmount] = useState<string>("");
+  const [tokenAmount, setTokenAmount] = useState<string>("");
+  const { address } = useAccount();
+  const ethBalance = useBalance({
+    address: address,
+  });
+  const formattedEthBalance = parseFloat(
+    formatUnits(ethBalance.data ? ethBalance.data.value : BigInt(0), 18)
+  ).toPrecision(4);
+
+  console.log(address, formattedEthBalance);
 
   return (
     <Window
@@ -99,21 +113,28 @@ export const SwapWidget = () => {
                   gap={4}
                 >
                   <TokenContainer
-                    amount="0.0"
-                    header="From"
-                    name="Ethereum"
-                    symbol="ETH"
-                    image="/windows/swap/ETH.svg"
+                    amount={isSwapped ? tokenAmount : ethAmount}
+                    setAmount={isSwapped ? setTokenAmount : setEthAmount}
+                    header={isSwapped ? "Receive" : "Send"}
+                    name={isSwapped ? "psyDAO" : "Ethereum"}
+                    symbol={isSwapped ? "PSY" : "ETH"}
+                    image={`/windows/swap/${isSwapped ? "PSY" : "ETH"}.svg`}
+                    maxBalance={formattedEthBalance}
                   />
                   <Box>
-                    <ArrowDownIcon />
+                    <Image
+                      cursor={"pointer"}
+                      alt="Arrow Swap"
+                      src={"/windows/swap/arrow-swap-icon.svg"}
+                      onClick={() => setIsSwapped((prev) => !prev)}
+                    />
                   </Box>
                   <TokenContainer
-                    amount="0.0"
-                    header="To (estimated)"
-                    name="psyDAO"
-                    symbol="PSY"
-                    image="/windows/swap/PSY.svg"
+                    amount={isSwapped ? ethAmount : tokenAmount}
+                    header={isSwapped ? "Send" : "Receive"}
+                    name={isSwapped ? "Ethereum" : "psyDAO"}
+                    symbol={isSwapped ? "ETH" : "PSY"}
+                    image={`/windows/swap/${isSwapped ? "ETH" : "PSY"}.svg`}
                   />
                   <ConnectWalletButton />
                 </Flex>
