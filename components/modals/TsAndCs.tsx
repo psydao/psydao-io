@@ -1,33 +1,38 @@
-import {
-  Box,
-  Button,
-  CloseButton,
-  Divider,
-  Flex,
-  Text,
-} from "@chakra-ui/react";
+import { Button, Divider, Flex, Text, useToast } from "@chakra-ui/react";
 import { ModalContainer } from "./modal";
 
 type TsAndCsProps = {
   isOpen: boolean;
-  onClose: () => void;
+  onAccept: () => void;
+  onClose?: () => void;
 };
 
 const TermsAndConditionsModal = (props: TsAndCsProps) => {
+  const toast = useToast();
+  const handleOnClose = () => {
+    if (props.onClose) {
+      props.onClose();
+    } else {
+      toast({
+        title: "You have to accept Terms and Conditions",
+        position: "top-right",
+        status: "error",
+        isClosable: true,
+      });
+    }
+  };
+
   return (
-    <ModalContainer isOpen={props.isOpen} onClose={props.onClose}>
-      <CloseButton
-        position={"absolute"}
-        top={5}
-        right={5}
-        onClick={props.onClose}
-      />
+    <ModalContainer isOpen={props.isOpen} onClose={handleOnClose}>
       <Flex
         direction={"column"}
         alignItems={"flex-start"}
         w="100%"
         gap={4}
         pb={4}
+        height={"fit-content"}
+        maxW={{ base: "60vw", lg: "650px" }}
+        maxH={{ base: "50vh", lg: "45vh" }}
       >
         <Flex direction={"column"} alignItems={"flex-start"}>
           <Text color="#9835BA" fontWeight={600} fontSize={"24px"}>
@@ -41,9 +46,9 @@ const TermsAndConditionsModal = (props: TsAndCsProps) => {
         <Flex
           direction={"column"}
           overflowY={"scroll"}
-          maxW={{ base: "400px", lg: "600px" }}
-          maxH={{ base: "300px", lg: "500px" }}
           gap={4}
+          h={"full"}
+          w={"full"}
         >
           <Text>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -121,7 +126,7 @@ const TermsAndConditionsModal = (props: TsAndCsProps) => {
           </Text>
           <Flex w={"100%"} justifyContent={"center"}>
             <Button
-              onClick={props.onClose}
+              onClick={props.onAccept}
               variant={"solid"}
               bg={"purple"}
               color={"white"}

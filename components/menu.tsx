@@ -19,7 +19,17 @@ import { useState } from "react";
 export const Menu = () => {
   const disclosure = useDisclosure();
 
-  const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(
+    localStorage.getItem("acceptedTermsAndConditions") !== "true"
+  );
+
+  const handleOnAccept = () => {
+    if (!localStorage.getItem("acceptedTermsAndConditions")) {
+      localStorage.setItem("acceptedTermsAndConditions", "true");
+    }
+
+    setModalOpen((prev) => !prev);
+  };
 
   return (
     <Box
@@ -154,10 +164,7 @@ export const Menu = () => {
             </MenuItem>
           </Open>
         </MenuList>
-        <TermsAndConditionsModal
-          isOpen={modalOpen}
-          onClose={() => setModalOpen((prev) => !prev)}
-        />
+        <TermsAndConditionsModal isOpen={modalOpen} onAccept={handleOnAccept} />
       </ChakraMenu>
     </Box>
   );
