@@ -38,12 +38,6 @@ export const useBuyToken = () => {
         }
 
         if (data.identifications?.length === 0) {
-          toast({
-            title: "Wallet is not in blacklist",
-            position: "top-right",
-            status: "success",
-            isClosable: true,
-          });
           setIsBlackListWallet(false);
           return;
         }
