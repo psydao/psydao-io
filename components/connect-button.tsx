@@ -31,20 +31,29 @@ export const ConnectWalletButton = () => {
             {(() => {
               if (!connected) {
                 return (
-                  <LinearButton onClick={openConnectModal}>
+                  <LinearButton
+                    customStyle={{ width: "100%", mb: 9 }}
+                    onClick={openConnectModal}
+                  >
                     Connect A Wallet
                   </LinearButton>
                 );
               }
               if (chain.unsupported) {
                 return (
-                  <LinearButton onClick={openConnectModal}>
+                  <LinearButton
+                    customStyle={{ width: "100%", mb: 9 }}
+                    onClick={openConnectModal}
+                  >
                     Wrong network
                   </LinearButton>
                 );
               }
               return (
-                <LinearButton onClick={sendTransactionHandler}>
+                <LinearButton
+                  customStyle={{ width: "100%", mb: 9 }}
+                  onClick={sendTransactionHandler}
+                >
                   {account.displayName}
                   {account.displayBalance ? ` (${account.displayBalance})` : ""}
                 </LinearButton>

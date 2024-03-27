@@ -1,23 +1,31 @@
 import React from "react";
 import { Button } from "@chakra-ui/react";
 
+type CustomStyle = {
+  [key: string]: string | number;
+};
+
 interface LinearButtonProps {
   onClick: () => void;
   children: React.ReactNode;
+  customStyle?: CustomStyle;
 }
 
-const LinearButton: React.FC<LinearButtonProps> = ({ onClick, children }) => {
+const LinearButton: React.FC<LinearButtonProps> = ({
+  onClick,
+  children,
+  customStyle,
+}) => {
   return (
     <Button
       onClick={onClick}
       variant={"unstyled"}
-      w={"100%"}
       bg={"linear-gradient(90deg, #b24fe4, #e09da3)"}
       color={"white"}
-      mb={9}
       borderRadius={"full"}
       paddingY={5}
       display={"flex"}
+      {...customStyle}
     >
       {children}
     </Button>

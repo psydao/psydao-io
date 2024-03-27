@@ -8,6 +8,7 @@ import { RestrictedCountries } from "components/swap-widget/RestrictedCountries"
 import { useState } from "react";
 import { useAccount, useBalance } from "wagmi";
 import { formatUnits } from "viem";
+import { SwapTsAndCs } from "components/swap-widget/SwapTsAndCs";
 
 export const SwapWidget = () => {
   const isRescricted = useRestrictedCountries();
@@ -16,6 +17,10 @@ export const SwapWidget = () => {
   const [isSwapped, setIsSwapped] = useState<boolean>(false);
   const [ethAmount, setEthAmount] = useState<string>("");
   const [tokenAmount, setTokenAmount] = useState<string>("");
+  const [termsAndConditions, setTermsAndConditions] = useState(
+    localStorage.getItem("acceptedTermsAndConditions") === "true"
+  );
+
   const { address } = useAccount();
   const ethBalance = useBalance({
     address: address,
@@ -23,8 +28,6 @@ export const SwapWidget = () => {
   const formattedEthBalance = parseFloat(
     formatUnits(ethBalance.data ? ethBalance.data.value : BigInt(0), 18)
   ).toPrecision(4);
-
-  console.log(address, formattedEthBalance);
 
   return (
     <Window
@@ -43,6 +46,8 @@ export const SwapWidget = () => {
       <Window.Content p={2}>
         {isRescricted ? (
           <RestrictedCountries />
+        ) : !termsAndConditions ? (
+          <SwapTsAndCs setTermsAndConditions={setTermsAndConditions} />
         ) : (
           <>
             <Box p={6} pb={8}>

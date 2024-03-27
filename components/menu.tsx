@@ -11,7 +11,7 @@ import {
 import { RiCloseLine, RiMenuLine } from "react-icons/ri";
 
 import { Logo } from "components/icons";
-import { Close, Open } from "components/window-manager";
+import { Open } from "components/window-manager";
 import { MixpanelTracking } from "../services/mixpanel";
 import TermsAndConditionsModal from "./modals/TsAndCs";
 import { useState } from "react";
@@ -19,9 +19,7 @@ import { useState } from "react";
 export const Menu = () => {
   const disclosure = useDisclosure();
 
-  const [modalOpen, setModalOpen] = useState(
-    localStorage.getItem("acceptedTermsAndConditions") !== "true"
-  );
+  const [modalOpen, setModalOpen] = useState(false);
 
   const handleOnAccept = () => {
     if (!localStorage.getItem("acceptedTermsAndConditions")) {
@@ -164,7 +162,11 @@ export const Menu = () => {
             </MenuItem>
           </Open>
         </MenuList>
-        <TermsAndConditionsModal isOpen={modalOpen} onAccept={handleOnAccept} />
+        <TermsAndConditionsModal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen((prev) => !prev)}
+          onAccept={handleOnAccept}
+        />
       </ChakraMenu>
     </Box>
   );

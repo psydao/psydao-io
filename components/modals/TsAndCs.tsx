@@ -1,29 +1,28 @@
-import { Button, Divider, Flex, Text, useToast } from "@chakra-ui/react";
+import { Button, CloseButton, Divider, Flex, Text } from "@chakra-ui/react";
 import { ModalContainer } from "./modal";
 
 type TsAndCsProps = {
   isOpen: boolean;
-  onAccept: () => void;
-  onClose?: () => void;
+  onClose: () => void;
+  onAccept?: () => void;
 };
 
 const TermsAndConditionsModal = (props: TsAndCsProps) => {
-  const toast = useToast();
-  const handleOnClose = () => {
-    if (props.onClose) {
-      props.onClose();
-    } else {
-      toast({
-        title: "You have to accept Terms and Conditions",
-        position: "top-right",
-        status: "error",
-        isClosable: true,
-      });
+  const handleOnAccept = () => {
+    if (props.onAccept) {
+      props.onAccept();
     }
+    props.onClose();
   };
 
   return (
-    <ModalContainer isOpen={props.isOpen} onClose={handleOnClose}>
+    <ModalContainer isOpen={props.isOpen} onClose={props.onClose}>
+      <CloseButton
+        position={"absolute"}
+        top={5}
+        right={5}
+        onClick={props.onClose}
+      />
       <Flex
         direction={"column"}
         alignItems={"flex-start"}
@@ -126,7 +125,7 @@ const TermsAndConditionsModal = (props: TsAndCsProps) => {
           </Text>
           <Flex w={"100%"} justifyContent={"center"}>
             <Button
-              onClick={props.onAccept}
+              onClick={handleOnAccept}
               variant={"solid"}
               bg={"purple"}
               color={"white"}
