@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Center,
   Icon,
   Image,
@@ -26,6 +27,8 @@ import { Radio } from "components/windows/radio";
 import { MixpanelTracking } from "../services/mixpanel";
 import { SwapWidget } from "components/windows/swap-widget";
 import { useRestrictedCountries } from "hooks/restrictedCountries";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // TODO Extract Pill component since it seems it will become a basic primitive
 // in our design
@@ -91,6 +94,7 @@ const Homepage: NextPage = () => {
           </noscript>
         }
       >
+        <ToastContainer />
         <GridProvider>
           <Center
             h="var(--app-height)"
