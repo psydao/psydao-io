@@ -45,7 +45,7 @@ export const SwapWidget = () => {
       : amountValue * psyDAOTokenPrice;
     const value = fromEth ? usdValue / psyDAOTokenPrice : usdValue / ethPrice;
     if (!isNaN(value)) {
-      setValue(value.toFixed(2));
+      setValue(value.toFixed(5));
     } else {
       setValue("0.00");
     }
