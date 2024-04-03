@@ -23,7 +23,6 @@ export const ConnectWalletButton = () => {
 
         const sendTransactionHandler = async () => {
           await buyToken();
-          openAccountModal;
         };
 
         return (
@@ -54,8 +53,7 @@ export const ConnectWalletButton = () => {
                   customStyle={{ width: "100%", mb: 9 }}
                   onClick={sendTransactionHandler}
                 >
-                  {account.displayName}
-                  {account.displayBalance ? ` (${account.displayBalance})` : ""}
+                  Buy
                 </LinearButton>
               );
             })()}

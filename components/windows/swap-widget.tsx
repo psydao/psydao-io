@@ -5,10 +5,12 @@ import { TokenContainer } from "components/token-container";
 import { ConnectWalletButton } from "components/connect-button";
 import { useRestrictedCountries } from "hooks/restrictedCountries";
 import { RestrictedCountries } from "components/swap-widget/RestrictedCountries";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAccount, useBalance } from "wagmi";
 import { formatUnits } from "viem";
 import { SwapTsAndCs } from "components/swap-widget/SwapTsAndCs";
+import { useEthPrice } from "hooks/useEtherPrice";
+import { psyDAOTokenPrice } from "constants/psyTokenPrice";
 
 export const SwapWidget = () => {
   const isRescricted = useRestrictedCountries();
@@ -28,6 +30,32 @@ export const SwapWidget = () => {
   const formattedEthBalance = parseFloat(
     formatUnits(ethBalance.data ? ethBalance.data.value : BigInt(0), 18)
   ).toPrecision(4);
+
+  const ethPrice = useEthPrice();
+
+  useEffect(() => {
+    if (ethPrice) {
+      if (isSwapped) {
+        const tokenAmountValue = tokenAmount.length ? Number(tokenAmount) : 0;
+        const usdValue = tokenAmountValue * psyDAOTokenPrice;
+        const ethValue = usdValue / ethPrice;
+        if (!isNaN(ethValue)) {
+          setEthAmount(ethValue.toFixed(2));
+        } else {
+          setEthAmount("0.00");
+        }
+      } else {
+        const ethAmountValue = ethAmount.length ? Number(ethAmount) : 0;
+        const usdValue = ethAmountValue * ethPrice;
+        const tokens = usdValue / psyDAOTokenPrice;
+        if (!isNaN(tokens)) {
+          setTokenAmount(tokens.toFixed(2));
+        } else {
+          setTokenAmount("0.00");
+        }
+      }
+    }
+  }, [ethAmount, ethPrice, isSwapped, tokenAmount]);
 
   return (
     <Window
@@ -140,6 +168,7 @@ export const SwapWidget = () => {
                     name={isSwapped ? "Ethereum" : "psyDAO"}
                     symbol={isSwapped ? "ETH" : "PSY"}
                     image={`/windows/swap/${isSwapped ? "ETH" : "PSY"}.svg`}
+                    maxBalance={formattedEthBalance}
                   />
                   <ConnectWalletButton />
                 </Flex>
