@@ -8,6 +8,7 @@ type TokenContainerProps = FlexProps & {
   symbol: string;
   header: string;
   amount: string;
+  isSwapped: boolean;
   setAmount?: Dispatch<SetStateAction<string>>;
   maxBalance?: string;
 };
@@ -89,18 +90,22 @@ export const TokenContainer = (props: TokenContainerProps) => {
             <Input
               variant="flushed"
               focusBorderColor="#f2bebe"
-              placeholder="0.00"
+              placeholder={props.isSwapped ? "0" : "0.00"}
               textAlign={"right"}
               type="number"
               fontWeight={600}
               color={"#97929e"}
-              value={props.amount}
+              value={props.isSwapped ? parseInt(props.amount) : props.amount}
               fontSize={{ base: "12px", sm: "16px" }}
               onChange={(e) => {
+                const value = props.isSwapped
+                  ? e.target.value.replace(/[^\d]/, "")
+                  : e.target.value;
                 if (props.setAmount) {
-                  props.setAmount(e.target.value);
+                  props.setAmount(value);
                 }
               }}
+              step={1}
             />
           ) : (
             <Text
@@ -108,7 +113,13 @@ export const TokenContainer = (props: TokenContainerProps) => {
               color={"#97929e"}
               fontSize={{ base: "12px", sm: "16px" }}
             >
-              {props.amount.length > 0 ? props.amount : "0.00"}
+              {props.amount.length > 0
+                ? !props.isSwapped
+                  ? parseInt(props.amount)
+                  : props.amount
+                : props.isSwapped
+                ? "0"
+                : "0.00"}
             </Text>
           )}
           <Text
