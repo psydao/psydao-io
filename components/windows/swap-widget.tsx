@@ -5,7 +5,7 @@ import { TokenContainer } from "components/token-container";
 import { ConnectWalletButton } from "components/connect-button";
 import { useRestrictedCountries } from "hooks/restrictedCountries";
 import { RestrictedCountries } from "components/swap-widget/RestrictedCountries";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useAccount, useBalance } from "wagmi";
 import { formatUnits } from "viem";
 import { SwapTsAndCs } from "components/swap-widget/SwapTsAndCs";
@@ -33,26 +33,30 @@ export const SwapWidget = () => {
 
   const ethPrice = useEthPrice();
 
+  const calculatePriceAndToken = (
+    amount: string,
+    setValue: Dispatch<SetStateAction<string>>,
+    ethPrice: number,
+    fromEth?: boolean
+  ) => {
+    const amountValue = amount.length ? Number(amount) : 0;
+    const usdValue = fromEth
+      ? amountValue * ethPrice
+      : amountValue * psyDAOTokenPrice;
+    const value = fromEth ? usdValue / psyDAOTokenPrice : usdValue / ethPrice;
+    if (!isNaN(value)) {
+      setValue(value.toFixed(2));
+    } else {
+      setValue("0.00");
+    }
+  };
+
   useEffect(() => {
     if (ethPrice) {
       if (isSwapped) {
-        const tokenAmountValue = tokenAmount.length ? Number(tokenAmount) : 0;
-        const usdValue = tokenAmountValue * psyDAOTokenPrice;
-        const ethValue = usdValue / ethPrice;
-        if (!isNaN(ethValue)) {
-          setEthAmount(ethValue.toFixed(2));
-        } else {
-          setEthAmount("0.00");
-        }
+        calculatePriceAndToken(tokenAmount, setEthAmount, ethPrice);
       } else {
-        const ethAmountValue = ethAmount.length ? Number(ethAmount) : 0;
-        const usdValue = ethAmountValue * ethPrice;
-        const tokens = usdValue / psyDAOTokenPrice;
-        if (!isNaN(tokens)) {
-          setTokenAmount(tokens.toFixed(2));
-        } else {
-          setTokenAmount("0.00");
-        }
+        calculatePriceAndToken(ethAmount, setTokenAmount, ethPrice, true);
       }
     }
   }, [ethAmount, ethPrice, isSwapped, tokenAmount]);
@@ -113,7 +117,7 @@ export const SwapWidget = () => {
                   src="/windows/swap/swap-banner-image.png"
                   alt=""
                   margin="0 auto"
-                  maxW={{ base: "220px", sm: "342px" }}
+                  maxW={{ base: "220px", sm: "390px" }}
                 />
                 <Text
                   fontFamily={"Amiri"}
@@ -121,7 +125,7 @@ export const SwapWidget = () => {
                   color={"#f3c1c1"}
                   fontStyle={"italic"}
                 >
-                  $0.1 per PSY
+                  {`$${psyDAOTokenPrice} per PSY`}
                 </Text>
                 <Text
                   fontFamily={"Amiri"}
@@ -153,6 +157,7 @@ export const SwapWidget = () => {
                     symbol={isSwapped ? "PSY" : "ETH"}
                     image={`/windows/swap/${isSwapped ? "PSY" : "ETH"}.svg`}
                     maxBalance={formattedEthBalance}
+                    isSwapped={isSwapped}
                   />
                   <Box>
                     <Image
@@ -169,6 +174,7 @@ export const SwapWidget = () => {
                     symbol={isSwapped ? "ETH" : "PSY"}
                     image={`/windows/swap/${isSwapped ? "ETH" : "PSY"}.svg`}
                     maxBalance={formattedEthBalance}
+                    isSwapped={isSwapped}
                   />
                   <ConnectWalletButton />
                 </Flex>
