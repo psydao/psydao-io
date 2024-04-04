@@ -64,6 +64,7 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
       <Image
         src="/windows/swap/terms-conditions.png"
         alt="Terms and conditions background"
+        objectFit={"fill"}
       />
       <TermsAndConditionsModal
         isOpen={openModal}
