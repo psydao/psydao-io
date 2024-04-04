@@ -57,8 +57,8 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
         </LinearButton>
       </Flex>
       <Image
-        src="/windows/swap/restricted-countries.png"
-        alt="Restricted countries background"
+        src="/windows/swap/terms-conditions.png"
+        alt="Terms and conditions background"
       />
       <TermsAndConditionsModal
         isOpen={openModal}
