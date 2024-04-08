@@ -20,23 +20,28 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
       <Flex
         flexWrap={"wrap"}
         alignItems={"center"}
-        justifyContent={{ base: "center", md: "space-between" }}
+        justifyContent={"center"}
+        direction={"column"}
         pb={6}
         gap={4}
       >
-        <Box flexDirection={"column"}>
+        <Flex
+          direction={"column"}
+          alignItems={"center"}
+          textAlign={"center"}
+          color={"#269200"}
+        >
           <Text
-            textColor="#9835BA"
-            fontSize={{ base: "20px", sm: "32px" }}
+            fontSize={{ base: "20px", md: "48px" }}
             fontFamily={"Amiri"}
-            textAlign={{ base: "center", md: "left" }}
+            fontStyle={"italic"}
           >
             Before you start
           </Text>
           <Text
-            textColor="#9835BA"
-            fontSize={{ base: "16px", sm: "20px" }}
+            fontSize={{ base: "16px", md: "24px" }}
             fontFamily={"Amiri"}
+            fontStyle={"italic"}
           >
             Please read and accept our{" "}
             <Text
@@ -48,17 +53,18 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
             </Text>{" "}
             to proceed.
           </Text>
-        </Box>
+        </Flex>
         <LinearButton
           customStyle={{ width: "fit-content", padding: "20px" }}
           onClick={handleAccept}
         >
-          <Text fontSize={{ base: "14px", sm: "18px" }}>I Accept</Text>
+          <Text fontSize={{ base: "14px", md: "18px" }}>I Accept</Text>
         </LinearButton>
       </Flex>
       <Image
-        src="/windows/swap/restricted-countries.png"
-        alt="Restricted countries background"
+        src="/windows/swap/terms-conditions.png"
+        alt="Terms and conditions background"
+        objectFit={"fill"}
       />
       <TermsAndConditionsModal
         isOpen={openModal}
