@@ -2,9 +2,11 @@ import { useAccount } from "wagmi";
 import { useToast } from "@chakra-ui/react";
 import { useBlackListWallets } from "./useBlackListWallets";
 import { useState } from "react";
+import { useSendTokenSale } from "services/web3/useSendTokenSale";
 
 export const useBuyToken = () => {
   const { address } = useAccount();
+  const { sendTokenSale } = useSendTokenSale();
   const toast = useToast();
   // Use this address if you want to test blacklist: 0x1da5821544e25c636c1417ba96ade4cf6d2f9b5a
   const { data } = useBlackListWallets(address as string);
@@ -13,7 +15,7 @@ export const useBuyToken = () => {
     null
   );
 
-  const buyToken = async () => {
+  const buyToken = async (amountOfPsyTokens: number, ethToSpent: string) => {
     if (!address) {
       toast({
         title: "Please connect your wallet first",
@@ -39,6 +41,7 @@ export const useBuyToken = () => {
 
         if (data.identifications?.length === 0) {
           setIsBlackListWallet(false);
+          sendTokenSale(amountOfPsyTokens, ethToSpent);
           return;
         }
       }

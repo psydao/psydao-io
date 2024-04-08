@@ -11,8 +11,15 @@ import {
   ledgerWallet,
   trustWallet,
 } from "@rainbow-me/rainbowkit/wallets";
-import { WagmiProvider } from "wagmi";
-import { arbitrum, goerli, mainnet, optimism, polygon } from "wagmi/chains";
+import { WagmiProvider, http } from "wagmi";
+import {
+  arbitrum,
+  goerli,
+  mainnet,
+  optimism,
+  polygon,
+  sepolia,
+} from "wagmi/chains";
 import { useColorMode } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -28,7 +35,11 @@ const wagmiConfig = getDefaultConfig({
       wallets: [argentWallet, trustWallet, ledgerWallet],
     },
   ],
-  chains: [mainnet, goerli, polygon, optimism, arbitrum],
+  chains: [mainnet, sepolia],
+  transports: {
+    [mainnet.id]: http(),
+    [sepolia.id]: http(),
+  },
   ssr: true,
 });
 

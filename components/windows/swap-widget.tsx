@@ -5,12 +5,19 @@ import { TokenContainer } from "components/token-container";
 import { ConnectWalletButton } from "components/connect-button";
 import { useRestrictedCountries } from "hooks/restrictedCountries";
 import { RestrictedCountries } from "components/swap-widget/RestrictedCountries";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useAccount, useBalance } from "wagmi";
-import { formatUnits } from "viem";
+import { formatEther, formatUnits, parseEther } from "viem";
 import { SwapTsAndCs } from "components/swap-widget/SwapTsAndCs";
-import { useEthPrice } from "hooks/useEtherPrice";
 import { psyDAOTokenPrice } from "constants/psyTokenPrice";
+import { useReadEthPrice } from "services/web3/useReadEthPrice";
+import { useReadTokenPriceInDollar } from "services/web3/useReadTokenPriceInDollar";
 
 export const SwapWidget = () => {
   const isRescricted = useRestrictedCountries();
@@ -31,35 +38,69 @@ export const SwapWidget = () => {
     formatUnits(ethBalance.data ? ethBalance.data.value : BigInt(0), 18)
   ).toPrecision(4);
 
-  const ethPrice = useEthPrice();
+  const { data: ethPrice } = useReadEthPrice();
+  const { data: tokenPriceInDollar } = useReadTokenPriceInDollar();
 
-  const calculatePriceAndToken = (
-    amount: string,
-    setValue: Dispatch<SetStateAction<string>>,
-    ethPrice: number,
-    fromEth?: boolean
-  ) => {
-    const amountValue = amount.length ? Number(amount) : 0;
-    const usdValue = fromEth
-      ? amountValue * ethPrice
-      : amountValue * psyDAOTokenPrice;
-    const value = fromEth ? usdValue / psyDAOTokenPrice : usdValue / ethPrice;
-    if (!isNaN(value)) {
-      setValue(value.toFixed(5));
-    } else {
-      setValue("0.00");
-    }
-  };
+  const calculateTokenAmount = useCallback(
+    (amountOfEth: number) => {
+      if (ethPrice && tokenPriceInDollar) {
+        const ethPriceBigInt = BigInt(Number(ethPrice));
+        const tokenPriceInDollarBigInt = BigInt(Number(tokenPriceInDollar));
+        const amountOfEthBigInt = parseEther(amountOfEth.toString());
+
+        const tokenAmount =
+          Number(
+            (amountOfEthBigInt * ethPriceBigInt) / tokenPriceInDollarBigInt
+          ) / 1e10;
+
+        return Math.round(tokenAmount);
+      }
+
+      return 0;
+    },
+    [ethPrice, tokenPriceInDollar]
+  );
+
+  const calculatePriceAndToken = useCallback(
+    (
+      amount: string,
+      setValue: Dispatch<SetStateAction<string>>,
+      ethPrice: any,
+      fromEth?: boolean
+    ) => {
+      const amountValue = amount.length ? Number(amount) : 0;
+      const value = fromEth
+        ? calculateTokenAmount(amountValue)
+        : Math.floor(Number(tokenPriceInDollar) / ethPrice) *
+          1e10 *
+          amountValue;
+
+      if (!isNaN(value)) {
+        const formattedEther = formatEther(BigInt(value));
+        setValue(fromEth ? value.toString() : formattedEther);
+      } else {
+        setValue("");
+      }
+    },
+    [calculateTokenAmount, tokenPriceInDollar]
+  );
 
   useEffect(() => {
-    if (ethPrice) {
+    if (ethPrice && tokenPriceInDollar) {
       if (isSwapped) {
         calculatePriceAndToken(tokenAmount, setEthAmount, ethPrice);
       } else {
         calculatePriceAndToken(ethAmount, setTokenAmount, ethPrice, true);
       }
     }
-  }, [ethAmount, ethPrice, isSwapped, tokenAmount]);
+  }, [
+    calculatePriceAndToken,
+    ethAmount,
+    ethPrice,
+    isSwapped,
+    tokenAmount,
+    tokenPriceInDollar,
+  ]);
 
   return (
     <Window
@@ -176,7 +217,15 @@ export const SwapWidget = () => {
                     maxBalance={formattedEthBalance}
                     isSwapped={isSwapped}
                   />
-                  <ConnectWalletButton />
+                  <ConnectWalletButton
+                    tokenAmount={tokenAmount}
+                    ethAmount={ethAmount}
+                    ethToSend={
+                      Math.floor(Number(tokenPriceInDollar) / ethPrice) *
+                      1e10 *
+                      Number(tokenAmount)
+                    }
+                  />
                 </Flex>
               </Flex>
             </Flex>
