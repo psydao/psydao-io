@@ -4,9 +4,9 @@ import LinearButton from "./linear-button";
 import { useBuyToken } from "hooks/useBuyToken";
 import { useSignInWallet } from "hooks/useSignInWallet";
 import { useEffect } from "react";
-import { customToast } from "./toasts/SwapSuccess";
-import { displaySwapSuccess } from "./toasts/displaySwapSuccess";
+
 import { formatEther } from "viem";
+import { customToast } from "./toasts/SwapSuccess";
 
 interface ConnectWalletButtonProps {
   tokenAmount: string;
@@ -19,15 +19,62 @@ export const ConnectWalletButton = ({
   ethAmount,
   ethToSend,
 }: ConnectWalletButtonProps) => {
-  const { buyToken, isBlackListWallet } = useBuyToken();
+  const { buyToken, isBlackListWallet, error, isConfirmed, isConfirming } =
+    useBuyToken();
   const signIn = useSignInWallet();
 
   useEffect(() => {
     if (!isBlackListWallet && typeof isBlackListWallet === "boolean") {
       signIn();
     }
+    if (error && error.message.includes("User rejected")) {
+      customToast(
+        {
+          mainText: "Request rejected by user. Please try again",
+        },
+        {
+          type: "error",
+        }
+      );
+    } else if (
+      error &&
+      error.message.includes("Amount Must Be Bigger Than 0")
+    ) {
+      customToast(
+        {
+          mainText: "Please enter an amount greater than 0",
+        },
+        {
+          type: "error",
+        }
+      );
+    } else if (
+      error &&
+      !error.message.includes("user rejected request") &&
+      !error.message.includes("Amount Must Be Bigger Than 0")
+    ) {
+      customToast(
+        {
+          mainText: "An error occurred. Please try again later",
+        },
+        {
+          type: "error",
+        }
+      );
+    } else if (isConfirmed) {
+      customToast(
+        {
+          mainText: "You’ve successfully converted ETH to PSY",
+        },
+        {
+          type: "success",
+        }
+      );
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isBlackListWallet]);
+  }, [isBlackListWallet, error, isConfirmed]);
+
+  useEffect(() => {}, [error, isConfirmed]);
 
   return (
     <ConnectButton.Custom>
@@ -35,7 +82,6 @@ export const ConnectWalletButton = ({
         const connected = mounted && account && chain;
 
         const sendTransactionHandler = async () => {
-          displaySwapSuccess(true);
           await buyToken(Number(tokenAmount), formatEther(ethToSend));
         };
 
@@ -64,10 +110,14 @@ export const ConnectWalletButton = ({
               }
               return (
                 <LinearButton
-                  customStyle={{ width: "100%", mb: 9 }}
+                  customStyle={{
+                    width: "100%",
+                    mb: 9,
+                  }}
                   onClick={sendTransactionHandler}
+                  isConfirming={isConfirming}
                 >
-                  Buy
+                  {isConfirming ? "PSY incoming..." : "Buy"}
                 </LinearButton>
               );
             })()}
