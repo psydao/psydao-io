@@ -27,6 +27,10 @@ export const ConnectWalletButton = ({
     if (!isBlackListWallet && typeof isBlackListWallet === "boolean") {
       signIn();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isBlackListWallet]);
+
+  useEffect(() => {
     if (error && error.message.includes("User rejected")) {
       customToast(
         {
@@ -71,8 +75,7 @@ export const ConnectWalletButton = ({
         }
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isBlackListWallet, error, isConfirmed]);
+  }, [error, isConfirmed]);
 
   useEffect(() => {}, [error, isConfirmed]);
 
