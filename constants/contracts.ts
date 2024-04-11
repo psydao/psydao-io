@@ -1,4 +1,4 @@
-export const tokenSaleContract = "0x21815ccdb31e7cb03de0700fda96da6e559d31e8";
+export const tokenSaleContract = "0x3C6bF5a124772926CC80fA2ED6f01C1ee596Ee6f";
 
 // Chainlink
 export const chainLinkMainnet = "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419";
