@@ -9,12 +9,14 @@ interface LinearButtonProps {
   onClick: () => void;
   children: React.ReactNode;
   customStyle?: CustomStyle;
+  isConfirming?: boolean;
 }
 
 const LinearButton: React.FC<LinearButtonProps> = ({
   onClick,
   children,
   customStyle,
+  isConfirming,
 }) => {
   return (
     <Button
@@ -25,6 +27,10 @@ const LinearButton: React.FC<LinearButtonProps> = ({
       borderRadius={"full"}
       paddingY={5}
       display={"flex"}
+      isDisabled={isConfirming}
+      _hover={{
+        opacity: "0.8",
+      }}
       {...customStyle}
     >
       {children}

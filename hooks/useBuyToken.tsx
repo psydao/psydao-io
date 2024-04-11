@@ -6,7 +6,8 @@ import { useSendTokenSale } from "services/web3/useSendTokenSale";
 
 export const useBuyToken = () => {
   const { address } = useAccount();
-  const { sendTokenSale } = useSendTokenSale();
+  const { sendTokenSale, error, isConfirmed, isConfirming } =
+    useSendTokenSale();
   const toast = useToast();
   // Use this address if you want to test blacklist: 0x1da5821544e25c636c1417ba96ade4cf6d2f9b5a
   const { data } = useBlackListWallets(address as string);
@@ -41,7 +42,7 @@ export const useBuyToken = () => {
 
         if (data.identifications?.length === 0) {
           setIsBlackListWallet(false);
-          sendTokenSale(amountOfPsyTokens, ethToSpent);
+          await sendTokenSale(amountOfPsyTokens, ethToSpent);
           return;
         }
       }
@@ -58,5 +59,8 @@ export const useBuyToken = () => {
   return {
     isBlackListWallet,
     buyToken,
+    error,
+    isConfirmed,
+    isConfirming,
   };
 };
