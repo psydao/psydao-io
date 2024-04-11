@@ -18,12 +18,14 @@ import { SwapTsAndCs } from "components/swap-widget/SwapTsAndCs";
 import { psyDAOTokenPrice } from "constants/psyTokenPrice";
 import { useReadEthPrice } from "services/web3/useReadEthPrice";
 import { useReadTokenPriceInDollar } from "services/web3/useReadTokenPriceInDollar";
+import { ArrowDownIcon } from "@chakra-ui/icons";
 
 export const SwapWidget = () => {
   const isRescricted = useRestrictedCountries();
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
 
-  const [isSwapped, setIsSwapped] = useState<boolean>(false);
+  const [focused, setFocused] = useState<string>("");
+
   const [ethAmount, setEthAmount] = useState<string>("");
   const [tokenAmount, setTokenAmount] = useState<string>("");
   const [termsAndConditions, setTermsAndConditions] = useState(
@@ -86,19 +88,26 @@ export const SwapWidget = () => {
   );
 
   useEffect(() => {
-    if (ethPrice && tokenPriceInDollar) {
-      if (isSwapped) {
-        calculatePriceAndToken(tokenAmount, setEthAmount, ethPrice);
-      } else {
-        calculatePriceAndToken(ethAmount, setTokenAmount, ethPrice, true);
-      }
+    if (ethPrice && tokenPriceInDollar && focused === "PSY") {
+      calculatePriceAndToken(tokenAmount, setEthAmount, ethPrice);
+    }
+  }, [
+    calculatePriceAndToken,
+    ethPrice,
+    focused,
+    tokenAmount,
+    tokenPriceInDollar,
+  ]);
+
+  useEffect(() => {
+    if (ethPrice && tokenPriceInDollar && focused === "ETH") {
+      calculatePriceAndToken(ethAmount, setTokenAmount, ethPrice, true);
     }
   }, [
     calculatePriceAndToken,
     ethAmount,
     ethPrice,
-    isSwapped,
-    tokenAmount,
+    focused,
     tokenPriceInDollar,
   ]);
 
@@ -191,31 +200,25 @@ export const SwapWidget = () => {
                   gap={4}
                 >
                   <TokenContainer
-                    amount={isSwapped ? tokenAmount : ethAmount}
-                    setAmount={isSwapped ? setTokenAmount : setEthAmount}
-                    header={isSwapped ? "Receive" : "Send"}
-                    name={isSwapped ? "psyDAO" : "Ethereum"}
-                    symbol={isSwapped ? "PSY" : "ETH"}
-                    image={`/windows/swap/${isSwapped ? "PSY" : "ETH"}.svg`}
+                    amount={ethAmount}
+                    setAmount={setEthAmount}
+                    header="Send"
+                    name="Ethereum"
+                    symbol="ETH"
+                    image="/windows/swap/ETH.svg"
                     maxBalance={formattedEthBalance}
-                    isSwapped={isSwapped}
+                    setFocused={setFocused}
                   />
-                  <Box>
-                    <Image
-                      cursor={"pointer"}
-                      alt="Arrow Swap"
-                      src={"/windows/swap/arrow-swap-icon.svg"}
-                      onClick={() => setIsSwapped((prev) => !prev)}
-                    />
-                  </Box>
+                  <ArrowDownIcon />
                   <TokenContainer
-                    amount={isSwapped ? ethAmount : tokenAmount}
-                    header={isSwapped ? "Send" : "Receive"}
-                    name={isSwapped ? "Ethereum" : "psyDAO"}
-                    symbol={isSwapped ? "ETH" : "PSY"}
-                    image={`/windows/swap/${isSwapped ? "ETH" : "PSY"}.svg`}
+                    amount={tokenAmount}
+                    setAmount={setTokenAmount}
+                    header="Receive"
+                    name="psyDAO"
+                    symbol="PSY"
+                    image="/windows/swap/PSY.svg"
                     maxBalance={formattedEthBalance}
-                    isSwapped={isSwapped}
+                    setFocused={setFocused}
                   />
                   <ConnectWalletButton
                     tokenAmount={tokenAmount}

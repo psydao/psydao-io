@@ -8,12 +8,14 @@ type TokenContainerProps = FlexProps & {
   symbol: string;
   header: string;
   amount: string;
-  isSwapped: boolean;
-  setAmount?: Dispatch<SetStateAction<string>>;
+  setAmount: Dispatch<SetStateAction<string>>;
+  setFocused: Dispatch<SetStateAction<string>>;
   maxBalance?: string;
 };
 
 export const TokenContainer = (props: TokenContainerProps) => {
+  const ethCard = props.symbol === "ETH";
+
   return (
     <Flex
       bgColor={"#fbf6f8"}
@@ -47,7 +49,7 @@ export const TokenContainer = (props: TokenContainerProps) => {
               h={"fit-content"}
               p={"2px 6px"}
               onClick={() => {
-                if (props.setAmount && props.maxBalance) {
+                if (props.maxBalance) {
                   props.setAmount(props.maxBalance);
                 }
               }}
@@ -86,42 +88,25 @@ export const TokenContainer = (props: TokenContainerProps) => {
           </Flex>
         </Box>
         <Flex gap={2} alignItems={"center"}>
-          {props.setAmount ? (
-            <Input
-              variant="flushed"
-              focusBorderColor="#f2bebe"
-              placeholder={props.isSwapped ? "0" : "0.00"}
-              textAlign={"right"}
-              type="number"
-              fontWeight={600}
-              color={"#97929e"}
-              value={props.isSwapped ? parseInt(props.amount) : props.amount}
-              fontSize={{ base: "12px", sm: "16px" }}
-              onChange={(e) => {
-                const value = props.isSwapped
-                  ? e.target.value.replace(/[^\d]/, "")
-                  : e.target.value;
-                if (props.setAmount) {
-                  props.setAmount(value);
-                }
-              }}
-              step={1}
-            />
-          ) : (
-            <Text
-              fontWeight={600}
-              color={"#97929e"}
-              fontSize={{ base: "12px", sm: "16px" }}
-            >
-              {props.amount.length > 0
-                ? !props.isSwapped
-                  ? parseInt(props.amount)
-                  : props.amount
-                : props.isSwapped
-                ? "0"
-                : "0.00"}
-            </Text>
-          )}
+          <Input
+            variant="flushed"
+            focusBorderColor="#f2bebe"
+            placeholder={ethCard ? "0.00" : "0"}
+            textAlign={"right"}
+            type="number"
+            fontWeight={600}
+            color={"#97929e"}
+            value={ethCard ? props.amount : parseInt(props.amount)}
+            fontSize={{ base: "12px", sm: "16px" }}
+            onFocus={() => props.setFocused(props.symbol)}
+            onChange={(e) => {
+              const value = ethCard
+                ? e.target.value
+                : e.target.value.replace(/[^\d]/, "");
+              props.setAmount(value);
+            }}
+            step={1}
+          />
           <Text
             fontWeight={700}
             color={"black"}
