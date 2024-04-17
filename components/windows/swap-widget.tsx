@@ -123,6 +123,7 @@ export const SwapWidget = () => {
       top="50%"
       left="50%"
       transform="translate(-50%, -50%)"
+      defaultIsOpen={true}
     >
       <Window.TitleBar />
       <Window.Content p={2}>

@@ -9,25 +9,13 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { RiCloseLine, RiMenuLine } from "react-icons/ri";
-
 import { Logo } from "components/icons";
 import { Open } from "components/window-manager";
 import { MixpanelTracking } from "../services/mixpanel";
-import TermsAndConditionsModal from "./modals/TsAndCs";
 import { useState } from "react";
 
 export const Menu = () => {
   const disclosure = useDisclosure();
-
-  const [modalOpen, setModalOpen] = useState(false);
-
-  const handleOnAccept = () => {
-    if (!localStorage.getItem("acceptedTermsAndConditions")) {
-      localStorage.setItem("acceptedTermsAndConditions", "true");
-    }
-
-    setModalOpen((prev) => !prev);
-  };
 
   return (
     <Box
@@ -162,11 +150,6 @@ export const Menu = () => {
             </MenuItem>
           </Open>
         </MenuList>
-        <TermsAndConditionsModal
-          isOpen={modalOpen}
-          onClose={() => setModalOpen((prev) => !prev)}
-          onAccept={handleOnAccept}
-        />
       </ChakraMenu>
     </Box>
   );
