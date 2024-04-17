@@ -1,6 +1,5 @@
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import { Flex, Image, Link, Text } from "@chakra-ui/react";
 import LinearButton from "components/linear-button";
-import TermsAndConditionsModal from "components/modals/TsAndCs";
 import React, { Dispatch, SetStateAction, useState } from "react";
 
 interface SwapTsAndCsType {
@@ -8,8 +7,7 @@ interface SwapTsAndCsType {
 }
 
 export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
-  const [openModal, setOpenModal] = useState(false);
-
+  const [userHasClicked, setUserHasClicked] = useState(false);
   const handleAccept = () => {
     setTermsAndConditions(true);
     localStorage.setItem("acceptedTermsAndConditions", "true");
@@ -44,19 +42,24 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
             fontStyle={"italic"}
           >
             Please read and accept our{" "}
-            <Text
-              as={"u"}
+            <Link
               cursor={"pointer"}
-              onClick={() => setOpenModal(true)}
+              href="/documents/psydao-terms-and-conditions.pdf"
+              target="_blank"
+              rel="noreferrer noopener"
+              textDecoration={"underline"}
+              textUnderlineOffset={"8px"}
+              onClick={() => setUserHasClicked(true)}
             >
               Terms and Conditions
-            </Text>{" "}
+            </Link>{" "}
             to proceed.
           </Text>
         </Flex>
         <LinearButton
           customStyle={{ width: "fit-content", padding: "20px" }}
           onClick={handleAccept}
+          isDisabled={!userHasClicked}
         >
           <Text fontSize={{ base: "14px", md: "18px" }}>I Accept</Text>
         </LinearButton>
@@ -65,11 +68,6 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
         src="/windows/swap/terms-conditions.png"
         alt="Terms and conditions background"
         objectFit={"fill"}
-      />
-      <TermsAndConditionsModal
-        isOpen={openModal}
-        onClose={() => setOpenModal((prev) => !prev)}
-        onAccept={handleAccept}
       />
     </>
   );

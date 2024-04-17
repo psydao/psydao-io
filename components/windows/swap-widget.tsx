@@ -151,6 +151,9 @@ export const SwapWidget = () => {
                 fontSize={{ base: "18px", md: "24px" }}
                 textUnderlineOffset={"12px"}
                 fontFamily={"Amiri"}
+                href="/documents/psydao-whitepaper.pdf"
+                target="_blank"
+                rel="noreferrer noopener"
               >
                 Whitepaper
               </Link>
