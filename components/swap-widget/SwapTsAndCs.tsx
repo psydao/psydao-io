@@ -1,6 +1,5 @@
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import { Flex, Image, Link, Text } from "@chakra-ui/react";
 import LinearButton from "components/linear-button";
-import TermsAndConditionsModal from "components/modals/TsAndCs";
 import React, { Dispatch, SetStateAction, useState } from "react";
 
 interface SwapTsAndCsType {
@@ -44,13 +43,16 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
             fontStyle={"italic"}
           >
             Please read and accept our{" "}
-            <Text
-              as={"u"}
+            <Link
               cursor={"pointer"}
-              onClick={() => setOpenModal(true)}
+              href="/documents/psydao-terms-and-conditions.pdf"
+              target="_blank"
+              rel="noreferrer noopener"
+              textDecoration={"underline"}
+              textUnderlineOffset={"8px"}
             >
               Terms and Conditions
-            </Text>{" "}
+            </Link>{" "}
             to proceed.
           </Text>
         </Flex>
@@ -65,11 +67,6 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
         src="/windows/swap/terms-conditions.png"
         alt="Terms and conditions background"
         objectFit={"fill"}
-      />
-      <TermsAndConditionsModal
-        isOpen={openModal}
-        onClose={() => setOpenModal((prev) => !prev)}
-        onAccept={handleAccept}
       />
     </>
   );
