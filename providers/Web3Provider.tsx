@@ -13,11 +13,7 @@ import {
 } from "@rainbow-me/rainbowkit/wallets";
 import { WagmiProvider, http } from "wagmi";
 import {
-  arbitrum,
-  goerli,
   mainnet,
-  optimism,
-  polygon,
   sepolia,
 } from "wagmi/chains";
 import { useColorMode } from "@chakra-ui/react";
@@ -26,8 +22,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const { wallets } = getDefaultWallets();
 
 const wagmiConfig = getDefaultConfig({
-  appName: process.env.NEXT_PUBLIC_APP_NAME || "",
-  projectId: process.env.NEXT_PUBLIC_PROJECT_ID || "",
+  appName: process.env.NEXT_PUBLIC_APP_NAME ?? "",
+  projectId: process.env.NEXT_PUBLIC_PROJECT_ID ?? "",
   wallets: [
     ...wallets,
     {

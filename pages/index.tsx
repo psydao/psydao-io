@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Center,
   Icon,
   Image,
@@ -21,7 +20,6 @@ import { Head } from "components/head";
 import { Marquee } from "components/marquee";
 import { Menu } from "components/menu";
 import { Open, WindowManager } from "components/window-manager";
-import { Highlight } from "components/windows/highlight";
 import { Manifesto } from "components/windows/manifesto";
 import { Radio } from "components/windows/radio";
 import { MixpanelTracking } from "../services/mixpanel";
@@ -184,7 +182,7 @@ const Homepage: NextPage = () => {
                   </Box>
                 </WindowManager>
                 <Link
-                  href="https://discord.gg/hUH4MWxVFx"
+                  href="https://discord.gg/FJHQtBZYdp"
                   target="_blank"
                   gridArea="-3 / -4 / span 1 / span 1"
                   p="30%"

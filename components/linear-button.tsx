@@ -29,7 +29,7 @@ const LinearButton: React.FC<LinearButtonProps> = ({
       borderRadius={"full"}
       paddingY={5}
       display={"flex"}
-      isDisabled={isConfirming || isDisabled}
+      isDisabled={isConfirming ?? isDisabled}
       _hover={{
         opacity: "0.8",
       }}

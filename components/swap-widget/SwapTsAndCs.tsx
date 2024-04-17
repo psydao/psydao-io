@@ -1,6 +1,6 @@
 import { Flex, Image, Link, Text } from "@chakra-ui/react";
 import LinearButton from "components/linear-button";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { type Dispatch, type SetStateAction, useState } from "react";
 
 interface SwapTsAndCsType {
   setTermsAndConditions: Dispatch<SetStateAction<boolean>>;

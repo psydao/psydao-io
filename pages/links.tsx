@@ -178,7 +178,7 @@ const LinksPage = () => {
               <Icon as={FaYoutube} boxSize="9" />
             </motion.a>
             <motion.a
-              href="https://discord.gg/hUH4MWxVFx"
+              href="https://discord.gg/FJHQtBZYdp"
               target="_blank"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

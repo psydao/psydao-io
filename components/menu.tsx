@@ -12,7 +12,6 @@ import { RiCloseLine, RiMenuLine } from "react-icons/ri";
 import { Logo } from "components/icons";
 import { Open } from "components/window-manager";
 import { MixpanelTracking } from "../services/mixpanel";
-import { useState } from "react";
 
 export const Menu = () => {
   const disclosure = useDisclosure();

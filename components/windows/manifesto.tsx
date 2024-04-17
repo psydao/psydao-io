@@ -362,7 +362,7 @@ export const Manifesto = () => {
               color: "#fffafa",
               textDecor: "none",
             }}
-            href="https://discord.gg/hUH4MWxVFx"
+            href="https://discord.gg/FJHQtBZYdp"
             target="_blank"
           >
             <Text as="span" display="inline-block">

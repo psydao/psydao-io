@@ -1,11 +1,10 @@
-import { CloseIcon, InfoIcon, WarningIcon } from "@chakra-ui/icons";
+import { CloseIcon, WarningIcon } from "@chakra-ui/icons";
 import { Button, Flex, Text } from "@chakra-ui/react";
 import {
-  Id,
+  type Id,
   toast,
-  ToastContentProps,
-  ToastOptions,
-  TypeOptions,
+  type ToastOptions,
+  type TypeOptions,
 } from "react-toastify";
 import CheckIcon from "public/icons/check.svg";
 

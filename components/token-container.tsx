@@ -1,6 +1,6 @@
-import { Box, Button, Flex, FlexProps, Input, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, type FlexProps, Input, Text } from "@chakra-ui/react";
 import Image from "next/image";
-import { Dispatch, SetStateAction } from "react";
+import { type Dispatch, type SetStateAction } from "react";
 
 type TokenContainerProps = FlexProps & {
   image: string;
