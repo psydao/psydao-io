@@ -7,8 +7,7 @@ interface SwapTsAndCsType {
 }
 
 export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
-  const [openModal, setOpenModal] = useState(false);
-
+  const [userHasClicked, setUserHasClicked] = useState(false);
   const handleAccept = () => {
     setTermsAndConditions(true);
     localStorage.setItem("acceptedTermsAndConditions", "true");
@@ -50,6 +49,7 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
               rel="noreferrer noopener"
               textDecoration={"underline"}
               textUnderlineOffset={"8px"}
+              onClick={() => setUserHasClicked(true)}
             >
               Terms and Conditions
             </Link>{" "}
@@ -59,6 +59,7 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
         <LinearButton
           customStyle={{ width: "fit-content", padding: "20px" }}
           onClick={handleAccept}
+          isDisabled={!userHasClicked}
         >
           <Text fontSize={{ base: "14px", md: "18px" }}>I Accept</Text>
         </LinearButton>
