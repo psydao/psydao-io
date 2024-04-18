@@ -80,7 +80,10 @@ export const ConnectWalletButton = ({
         const connected = mounted && account && chain;
 
         const sendTransactionHandler = async () => {
-          await buyToken(Number(tokenAmount), formatEther(BigInt(ethToSend)));
+          await buyToken(
+            Number(tokenAmount),
+            formatEther(BigInt(!isNaN(ethToSend) ? ethToSend : 0))
+          );
         };
 
         return (
