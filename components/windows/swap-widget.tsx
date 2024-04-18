@@ -3,7 +3,7 @@ import { Box, Flex, Image, Link, Text, useMediaQuery } from "@chakra-ui/react";
 import { Window } from "components/window";
 import { TokenContainer } from "components/token-container";
 import { ConnectWalletButton } from "components/connect-button";
-import { useRestrictedCountries } from "hooks/restrictedCountries";
+import { useRescrictedCountries } from "hooks/restrictedCountries";
 import { RestrictedCountries } from "components/swap-widget/RestrictedCountries";
 import {
   Dispatch,
@@ -21,7 +21,7 @@ import { useReadTokenPriceInDollar } from "services/web3/useReadTokenPriceInDoll
 import { ArrowDownIcon } from "@chakra-ui/icons";
 
 export const SwapWidget = () => {
-  const isRescricted = useRestrictedCountries();
+  const isRescricted = useRescrictedCountries();
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
 
   const [focused, setFocused] = useState<string>("");

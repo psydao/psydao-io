@@ -77,8 +77,6 @@ export const ConnectWalletButton = ({
     }
   }, [error, isConfirmed]);
 
-  useEffect(() => {}, [error, isConfirmed]);
-
   return (
     <ConnectButton.Custom>
       {({ account, chain, openAccountModal, openConnectModal, mounted }) => {

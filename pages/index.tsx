@@ -24,7 +24,7 @@ import { Manifesto } from "components/windows/manifesto";
 import { Radio } from "components/windows/radio";
 import { MixpanelTracking } from "../services/mixpanel";
 import { SwapWidget } from "components/windows/swap-widget";
-import { useRestrictedCountries } from "hooks/restrictedCountries";
+import { useRescrictedCountries } from "hooks/restrictedCountries";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -35,7 +35,7 @@ import "react-toastify/dist/ReactToastify.css";
 // probably a theme prop
 
 const Homepage: NextPage = () => {
-  useRestrictedCountries();
+  useRescrictedCountries();
 
   useEffect(() => {
     const updateHeight = () => {

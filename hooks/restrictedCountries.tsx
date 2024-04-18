@@ -16,7 +16,7 @@ const RESTRICTED_COUNTRIES = [
   { name: "Zimbabwe", code: "ZW" },
 ];
 
-export const useRestrictedCountries = () => {
+export const useRescrictedCountries = () => {
   const [isRestricted, setIsRestricted] = useState(false);
   const [cookies, setCookie] = useCookies(["countryCode"]);
 

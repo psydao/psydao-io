@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { tokenSaleContract } from "constants/contracts";
 import { parseEther } from "viem";
-import tokenSaleAbi from "../../abis/tokenSaleAbi.json";
+import tokenSaleAbi from "@/abis/tokenSaleAbi.json";
 
 export const useSendTokenSale = () => {
   const { data, writeContract, isPending, error } = useWriteContract();
