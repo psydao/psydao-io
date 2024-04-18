@@ -10,7 +10,15 @@ import { Web3Provider } from "providers/Web3Provider";
 
 const { ToastContainer } = createStandaloneToast();
 
-export const theme = extendTheme({});
+export const theme = extendTheme({
+  styles: {
+    global: () => ({
+      body: {
+        fontFamily: "Amiri"
+      }
+    })
+  }
+});
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (

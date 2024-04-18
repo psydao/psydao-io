@@ -1,4 +1,11 @@
-import { Box, Button, Flex, type FlexProps, Input, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  type FlexProps,
+  Input,
+  Text
+} from "@chakra-ui/react";
 import Image from "next/image";
 import { type Dispatch, type SetStateAction } from "react";
 
@@ -33,12 +40,17 @@ export const TokenContainer = (props: TokenContainerProps) => {
           fontSize={"16px"}
           fontWeight={700}
           textAlign={"start"}
+          fontFamily="'Public Sans'"
         >
           {props.header}
         </Text>
         {props.header === "Send" && (
           <Flex alignItems={"center"} gap={1}>
-            <Text fontSize={"10px"} color={"#656075"}>
+            <Text
+              fontSize={"10px"}
+              color={"#656075"}
+              fontFamily="'Public Sans'"
+            >
               {`Balance: ${props.maxBalance} ETH`}{" "}
             </Text>
             <Button
@@ -60,6 +72,7 @@ export const TokenContainer = (props: TokenContainerProps) => {
                 fontSize={"10px"}
                 bgGradient={"linear(to-r, #B14CE7, #E09CA4)"}
                 bgClip="text"
+                fontFamily="'Public Sans'"
               >
                 MAX
               </Text>
@@ -98,6 +111,7 @@ export const TokenContainer = (props: TokenContainerProps) => {
             color={"#97929e"}
             value={ethCard ? props.amount : parseInt(props.amount)}
             fontSize={{ base: "12px", sm: "16px" }}
+            fontFamily="'Public Sans'"
             onFocus={() => props.setFocused(props.symbol)}
             onChange={(e) => {
               const value = ethCard
@@ -111,6 +125,7 @@ export const TokenContainer = (props: TokenContainerProps) => {
             fontWeight={700}
             color={"black"}
             fontSize={{ base: "12px", sm: "16px" }}
+            fontFamily="'Public Sans'"
           >
             {props.symbol}
           </Text>
