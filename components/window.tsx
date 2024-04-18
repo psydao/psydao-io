@@ -57,12 +57,10 @@ const TitleBar = ({ hasBorder = true, ...rest }: TitleBarProps) => {
   );
 };
 
-interface ContentProps extends BoxProps {}
-
-const Content = (props: ContentProps) => {
+const Content = (props: BoxProps) => {
   const { padding } = useWindowContext();
   const {
-    state: { isPointerDragging },
+    state: { isPointerDragging }
   } = useWindowManager();
 
   return (
@@ -113,7 +111,6 @@ interface WindowProps extends BoxProps {
   lockAspectRatioExtraHeight?: number;
 }
 
-
 // TODO the current approach to picking up border and padding is a bit limited
 // because I think unexpected things might happen when supplying partial props
 // for those (px, py, pt, borderTop, borderRight, etc.)
@@ -159,6 +156,7 @@ export const Window = ({
       >
         <AnimatePresence>
           {window.isOpen && (
+            //@ts-expect-error error 
             <MotionBox
               position="absolute"
               zIndex={index}

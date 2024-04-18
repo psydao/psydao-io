@@ -18,13 +18,13 @@ export const useDimensions = () => {
     const observer = new ResizeObserver((entries) => {
       setDimensions({
         contentBox: {
-          height: entries[0].contentBoxSize[0].blockSize,
-          width: entries[0].contentBoxSize[0].inlineSize,
+          height: entries?.[0]?.contentBoxSize?.[0]?.blockSize ?? 0,
+          width: entries?.[0]?.contentBoxSize?.[0]?.inlineSize ?? 0
         },
         borderBox: {
-          height: entries[0].borderBoxSize[0].blockSize,
-          width: entries[0].borderBoxSize[0].inlineSize,
-        },
+          height: entries?.[0]?.borderBoxSize?.[0]?.blockSize ?? 0,
+          width: entries?.[0]?.borderBoxSize?.[0]?.inlineSize ?? 0
+        }
       });
     });
 

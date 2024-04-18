@@ -18,7 +18,7 @@ export class MixpanelTracking {
         "Error: Instance creation of MixpanelTracking is not allowed. Use Mixpanel.getInstance()"
       );
 
-    mixpanel.init(process.env.NEXT_PUBLIC_MIXPANEL_ID || "", {
+    mixpanel.init(process.env.NEXT_PUBLIC_MIXPANEL_ID ?? "", {
       debug: true,
       ignore_dnt: true,
       api_host: "https://api-eu.mixpanel.com",
@@ -58,5 +58,5 @@ export class MixpanelTracking {
     this.track("apply_today_CTA_clicked", {
       cta: cta,
     });
-}
+  }
 }

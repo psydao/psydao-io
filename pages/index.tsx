@@ -1,4 +1,12 @@
-import { Box, Center, Icon, Image, Link, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Center,
+  Icon,
+  Image,
+  Link,
+  Text,
+  keyframes,
+} from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { useEffect } from "react";
 import { FaDiscord, FaTwitter, FaYoutube } from "react-icons/fa";
@@ -12,11 +20,13 @@ import { Head } from "components/head";
 import { Marquee } from "components/marquee";
 import { Menu } from "components/menu";
 import { Open, WindowManager } from "components/window-manager";
-import { Highlight } from "components/windows/highlight";
 import { Manifesto } from "components/windows/manifesto";
 import { Radio } from "components/windows/radio";
 import { MixpanelTracking } from "../services/mixpanel";
-
+import { SwapWidget } from "components/windows/swap-widget";
+import { useRescrictedCountries } from "hooks/restrictedCountries";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // TODO Extract Pill component since it seems it will become a basic primitive
 // in our design
@@ -25,6 +35,8 @@ import { MixpanelTracking } from "../services/mixpanel";
 // probably a theme prop
 
 const Homepage: NextPage = () => {
+  useRescrictedCountries();
+
   useEffect(() => {
     const updateHeight = () => {
       document.documentElement.style.setProperty(
@@ -34,12 +46,32 @@ const Homepage: NextPage = () => {
       MixpanelTracking.getInstance().pageView();
     };
 
-
-
     updateHeight();
     window.addEventListener("resize", updateHeight);
     return () => window.removeEventListener("resize", updateHeight);
   }, []);
+
+  const fadeIn = keyframes`
+   0% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+  `;
+
+  const fadeinAnimate = `${fadeIn} infinite 6s`;
+
+  const SALE_ACTIVE = true;
 
   return (
     <>
@@ -60,6 +92,7 @@ const Homepage: NextPage = () => {
           </noscript>
         }
       >
+        <ToastContainer />
         <GridProvider>
           <Center
             h="var(--app-height)"
@@ -75,19 +108,51 @@ const Homepage: NextPage = () => {
                 zIndex="0"
                 getNumberOfFillers={(cols, rows) => cols * (rows - 1) - 11}
               >
-                <Box gridArea="1 / 1 / 3 / 3">
-                  <Image src="/psydao-deep-logo.svg" alt="" h="100%" w="100%" />
-                </Box>
-                <Box gridArea="-2 / 1 / -1 / -1">
-                  <Marquee
-                    text={[
-                      "WELCOME TO PSYDAO",
-                      "FUNDING RESEARCH AT THE INTERSECTION OF PSYCHEDELICS AND MENTAL HEALTH",
-                      "NOW ACCEPTING APPLICATIONS FOR RESEARCH PROJECT FUNDING AND ALCHEMIST GRANTS",
-                    ]}
-                  />
-                </Box>
                 <WindowManager>
+                  <Box gridArea="1 / 1 / 3 / 3">
+                    {/* TODO: temporary until I can find a better way to do this */}
+
+                    <Box h="100%" w="100%" position={"relative"}>
+                      {SALE_ACTIVE ? (
+                        <>
+                          <Image
+                            src="/purple-logo.svg"
+                            h={"100%"}
+                            w={"100%"}
+                            alt="logo"
+                            position={"absolute"}
+                            top={0}
+                          />
+                          <Image
+                            src="/purple-logo-glow.svg"
+                            h={"100%"}
+                            w={"100%"}
+                            alt="logo"
+                            animation={`${fadeinAnimate}`}
+                            position={"absolute"}
+                            top={0}
+                          />
+                        </>
+                      ) : (
+                        <Image
+                          h={"100%"}
+                          w={"100%"}
+                          alt="logo"
+                          src="/psydao-deep-logo.svg"
+                        />
+                      )}
+                    </Box>
+                  </Box>
+                  <Box gridArea="-2 / 1 / -1 / -1">
+                    <Marquee
+                      text={[
+                        "WELCOME TO PSYDAO",
+                        "FUNDING RESEARCH AT THE INTERSECTION OF PSYCHEDELICS AND MENTAL HEALTH",
+                        "NOW ACCEPTING APPLICATIONS FOR RESEARCH PROJECT FUNDING AND ALCHEMIST GRANTS",
+                      ]}
+                    />
+                  </Box>
+
                   <Menu />
                   <Open id="radio" gridArea="-4 / 1 / span 2 / span 2" p="3">
                     <Image
@@ -111,13 +176,13 @@ const Homepage: NextPage = () => {
                     pointerEvents="none"
                     overflow="hidden"
                   >
-                    <Highlight />
+                    <SwapWidget />
                     <Radio />
                     <Manifesto />
                   </Box>
                 </WindowManager>
                 <Link
-                  href="https://discord.gg/hUH4MWxVFx"
+                  href="https://discord.gg/FJHQtBZYdp"
                   target="_blank"
                   gridArea="-3 / -4 / span 1 / span 1"
                   p="30%"

@@ -8,7 +8,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import Image from "next/future/image";
+import Image from "next/image";
 import { FaDiscord, FaTwitter, FaYoutube } from "react-icons/fa";
 import { RiInstagramFill } from "react-icons/ri";
 
@@ -84,7 +84,7 @@ const LinksPage = () => {
             height: "100%",
             width: "100%",
             objectFit: "cover",
-            objectPosition: "center",
+            objectPosition: "center"
           }}
         />
         <Box
@@ -99,7 +99,7 @@ const LinksPage = () => {
           <Link href="/">
             <a>
               <Image
-                src={logo}
+                src={logo as string}
                 alt=""
                 style={{ maxWidth: 257, margin: "0 auto 26px" }}
               />
@@ -178,7 +178,7 @@ const LinksPage = () => {
               <Icon as={FaYoutube} boxSize="9" />
             </motion.a>
             <motion.a
-              href="https://discord.gg/hUH4MWxVFx"
+              href="https://discord.gg/FJHQtBZYdp"
               target="_blank"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

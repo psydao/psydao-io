@@ -1,20 +1,33 @@
-import { ChakraProvider } from "@chakra-ui/react";
-import { Global } from "@emotion/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { AppProps } from "next/app";
-
+import {
+  ChakraProvider,
+  extendTheme,
+  createStandaloneToast,
+} from "@chakra-ui/react";
+import { Global } from "@emotion/react";
 import { fontFaces } from "lib/constants";
-import { theme } from "lib/theme";
+import { Web3Provider } from "providers/Web3Provider";
 
-const queryClient = new QueryClient();
+const { ToastContainer } = createStandaloneToast();
+
+export const theme = extendTheme({
+  styles: {
+    global: () => ({
+      body: {
+        fontFamily: "Amiri"
+      }
+    })
+  }
+});
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <ChakraProvider theme={theme}>
       <Global styles={fontFaces} />
-      <QueryClientProvider client={queryClient}>
+      <Web3Provider>
         <Component {...pageProps} />
-      </QueryClientProvider>
+        <ToastContainer />
+      </Web3Provider>
     </ChakraProvider>
   );
 };

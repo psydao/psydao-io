@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 
-export const createCtx = <A extends {} | null>() => {
+export const createCtx = <A extends object | null>() => {
   const ctx = createContext<A | undefined>(undefined);
   function useCtx() {
     const c = useContext(ctx);

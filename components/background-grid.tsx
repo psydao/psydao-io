@@ -8,10 +8,9 @@ import { useGrid } from "components/grid-context";
 const randomIntInRange = (min: number, max: number) =>
   Math.trunc(Math.random() * (max - min) + min);
 
-const randomPick = <T extends unknown>(arr: T[]): T =>
-  arr[randomIntInRange(0, arr.length)];
+const randomPick = <T,>(arr: T[]) => arr[randomIntInRange(0, arr.length)];
 
-const randomPickN = <T extends unknown>(arr: T[], n: number): T[] => {
+const randomPickN = <T,>(arr: T[], n: number) => {
   const available = [...arr];
   const result = [];
   for (let i = 0; i < n; i += 1) {
@@ -46,15 +45,13 @@ const paths = [
   "/background/shrooms.jpg",
   "/background/stamp-borderless.jpg",
   "/background/stan-grof.jpg",
-  "/background/suit-man.jpg",
+  "/background/suit-man.jpg"
 ];
 
 interface Image {
-  src: string;
+  src?: string;
   gridArea: string;
 }
-
-const numberOfImages = 4;
 
 export const BackgroundGrid = () => {
   const { cols, rows } = useGrid();

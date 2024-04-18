@@ -9,7 +9,6 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { RiCloseLine, RiMenuLine } from "react-icons/ri";
-
 import { Logo } from "components/icons";
 import { Open } from "components/window-manager";
 import { MixpanelTracking } from "../services/mixpanel";
@@ -63,6 +62,7 @@ export const Menu = () => {
           width="calc(100% + 2px)"
           minWidth="0"
           boxShadow="0px 8px 12px rgba(152, 53, 186, 0.22)"
+          color={"#9835BA"}
         >
           <Open id="manifesto">
             <MenuItem fontStyle="italic">
@@ -138,6 +138,16 @@ export const Menu = () => {
             target="_blank"
             _hover={{ textDecor: "none" }}
           ></Link>
+          <Open id="swap">
+            <MenuItem
+              fontStyle="italic"
+              onClick={() =>
+                MixpanelTracking.getInstance().menuLinkClicked("swap")
+              }
+            >
+              Buy PSY
+            </MenuItem>
+          </Open>
         </MenuList>
       </ChakraMenu>
     </Box>
