@@ -10,14 +10,12 @@ import { customToast } from "./toasts/SwapSuccess";
 
 interface ConnectWalletButtonProps {
   tokenAmount: string;
-  ethAmount: string;
-  ethToSend: any;
+  ethToSend: number;
 }
 
 export const ConnectWalletButton = ({
   tokenAmount,
-  ethAmount,
-  ethToSend,
+  ethToSend
 }: ConnectWalletButtonProps) => {
   const { buyToken, isBlackListWallet, error, isConfirmed, isConfirming } =
     useBuyToken();
@@ -25,19 +23,18 @@ export const ConnectWalletButton = ({
 
   useEffect(() => {
     if (!isBlackListWallet && typeof isBlackListWallet === "boolean") {
-      signIn();
+      void signIn();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isBlackListWallet]);
 
   useEffect(() => {
     if (error && error.message.includes("User rejected")) {
       customToast(
         {
-          mainText: "Request rejected by user. Please try again",
+          mainText: "Request rejected by user. Please try again"
         },
         {
-          type: "error",
+          type: "error"
         }
       );
     } else if (
@@ -46,10 +43,10 @@ export const ConnectWalletButton = ({
     ) {
       customToast(
         {
-          mainText: "Please enter an amount greater than 0",
+          mainText: "Please enter an amount greater than 0"
         },
         {
-          type: "error",
+          type: "error"
         }
       );
     } else if (
@@ -59,19 +56,19 @@ export const ConnectWalletButton = ({
     ) {
       customToast(
         {
-          mainText: "An error occurred. Please try again later",
+          mainText: "An error occurred. Please try again later"
         },
         {
-          type: "error",
+          type: "error"
         }
       );
     } else if (isConfirmed) {
       customToast(
         {
-          mainText: "You’ve successfully converted ETH to PSY",
+          mainText: "You’ve successfully converted ETH to PSY"
         },
         {
-          type: "success",
+          type: "success"
         }
       );
     }
@@ -79,11 +76,11 @@ export const ConnectWalletButton = ({
 
   return (
     <ConnectButton.Custom>
-      {({ account, chain, openAccountModal, openConnectModal, mounted }) => {
+      {({ account, chain, openConnectModal, mounted }) => {
         const connected = mounted && account && chain;
 
         const sendTransactionHandler = async () => {
-          await buyToken(Number(tokenAmount), formatEther(ethToSend));
+          await buyToken(Number(tokenAmount), formatEther(BigInt(ethToSend)));
         };
 
         return (
@@ -113,7 +110,7 @@ export const ConnectWalletButton = ({
                 <LinearButton
                   customStyle={{
                     width: "100%",
-                    mb: 9,
+                    mb: 9
                   }}
                   onClick={sendTransactionHandler}
                   isConfirming={isConfirming}

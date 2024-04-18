@@ -1,10 +1,10 @@
 import {
   Modal,
   ModalContent,
-  ModalContentProps,
+  type ModalContentProps,
   ModalOverlay,
-  ModalOverlayProps,
-  ModalProps,
+  type ModalOverlayProps,
+  type ModalProps
 } from "@chakra-ui/react";
 
 interface Props extends ModalProps {

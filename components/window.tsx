@@ -57,12 +57,10 @@ const TitleBar = ({ hasBorder = true, ...rest }: TitleBarProps) => {
   );
 };
 
-interface ContentProps extends BoxProps {}
-
-const Content = (props: ContentProps) => {
+const Content = (props: BoxProps) => {
   const { padding } = useWindowContext();
   const {
-    state: { isPointerDragging },
+    state: { isPointerDragging }
   } = useWindowManager();
 
   return (

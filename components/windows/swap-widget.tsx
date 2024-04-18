@@ -6,11 +6,11 @@ import { ConnectWalletButton } from "components/connect-button";
 import { useRescrictedCountries } from "hooks/restrictedCountries";
 import { RestrictedCountries } from "components/swap-widget/RestrictedCountries";
 import {
-  Dispatch,
-  SetStateAction,
+  type Dispatch,
+  type SetStateAction,
   useCallback,
   useEffect,
-  useState,
+  useState
 } from "react";
 import { useAccount, useBalance } from "wagmi";
 import { formatEther, formatUnits, parseEther } from "viem";
@@ -34,19 +34,19 @@ export const SwapWidget = () => {
 
   const { address } = useAccount();
   const ethBalance = useBalance({
-    address: address,
+    address: address
   });
   const formattedEthBalance = parseFloat(
     formatUnits(ethBalance.data ? ethBalance.data.value : BigInt(0), 18)
   ).toPrecision(4);
 
-  const { data: ethPrice } = useReadEthPrice();
+  const ethPrice = useReadEthPrice();
   const { data: tokenPriceInDollar } = useReadTokenPriceInDollar();
 
   const calculateTokenAmount = useCallback(
     (amountOfEth: number) => {
-      if (ethPrice && tokenPriceInDollar) {
-        const ethPriceBigInt = BigInt(Number(ethPrice));
+      if (ethPrice?.data && tokenPriceInDollar) {
+        const ethPriceBigInt = BigInt(Number(ethPrice?.data));
         const tokenPriceInDollarBigInt = BigInt(Number(tokenPriceInDollar));
         const amountOfEthBigInt = parseEther(amountOfEth.toString());
 
@@ -60,7 +60,7 @@ export const SwapWidget = () => {
 
       return 0;
     },
-    [ethPrice, tokenPriceInDollar]
+    [ethPrice?.data, tokenPriceInDollar]
   );
 
   const calculatePriceAndToken = useCallback(
@@ -88,27 +88,27 @@ export const SwapWidget = () => {
   );
 
   useEffect(() => {
-    if (ethPrice && tokenPriceInDollar && focused === "PSY") {
-      calculatePriceAndToken(tokenAmount, setEthAmount, ethPrice);
+    if (ethPrice?.data && tokenPriceInDollar && focused === "PSY") {
+      calculatePriceAndToken(tokenAmount, setEthAmount, ethPrice?.data);
     }
   }, [
     calculatePriceAndToken,
-    ethPrice,
+    ethPrice?.data,
     focused,
     tokenAmount,
-    tokenPriceInDollar,
+    tokenPriceInDollar
   ]);
 
   useEffect(() => {
-    if (ethPrice && tokenPriceInDollar && focused === "ETH") {
-      calculatePriceAndToken(ethAmount, setTokenAmount, ethPrice, true);
+    if (ethPrice?.data && tokenPriceInDollar && focused === "ETH") {
+      calculatePriceAndToken(ethAmount, setTokenAmount, ethPrice?.data, true);
     }
   }, [
     calculatePriceAndToken,
     ethAmount,
-    ethPrice,
+    ethPrice?.data,
     focused,
-    tokenPriceInDollar,
+    tokenPriceInDollar
   ]);
 
   return (
@@ -226,9 +226,8 @@ export const SwapWidget = () => {
                   />
                   <ConnectWalletButton
                     tokenAmount={tokenAmount}
-                    ethAmount={ethAmount}
                     ethToSend={
-                      Math.floor(Number(tokenPriceInDollar) / ethPrice) *
+                      Math.floor(Number(tokenPriceInDollar) / ethPrice?.data) *
                       1e10 *
                       Number(tokenAmount)
                     }

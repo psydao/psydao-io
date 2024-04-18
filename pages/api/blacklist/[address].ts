@@ -11,29 +11,29 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  corsMiddleware(req, res, () => {});
+  corsMiddleware(req, res, () => null);
 
   const { address } = req.query;
 
   if (!address) {
-    res.status(400).json({ success: false, error: 'Provide address' });
+    res.status(400).json({ success: false, error: "Provide address" });
     return;
   }
 
-  const chainalysisURL = 'https://public.chainalysis.com/api/v1/address';
+  const chainalysisURL = "https://public.chainalysis.com/api/v1/address";
 
   if (address) {
     try {
-      const response = await fetch(`${chainalysisURL}/${address}`, {
+      const response = await fetch(`${chainalysisURL}/${address as string}`, {
         headers: {
-          'X-API-Key': process.env.CHAINALYSIS_API_KEY ?? '',
-          Accept: 'application/json'
+          "X-API-Key": process.env.CHAINALYSIS_API_KEY ?? "",
+          Accept: "application/json"
         }
       });
-      const json = await response.json();
+      const json: unknown = await response.json();
       res.json(json);
     } catch (err) {
-      res.status(500).json({ success: false, error: 'Something went wrong!' });
+      res.status(500).json({ success: false, error: "Something went wrong!" });
       return;
     }
   }

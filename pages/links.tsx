@@ -84,7 +84,7 @@ const LinksPage = () => {
             height: "100%",
             width: "100%",
             objectFit: "cover",
-            objectPosition: "center",
+            objectPosition: "center"
           }}
         />
         <Box
@@ -99,7 +99,7 @@ const LinksPage = () => {
           <Link href="/">
             <a>
               <Image
-                src={logo}
+                src={logo as string}
                 alt=""
                 style={{ maxWidth: 257, margin: "0 auto 26px" }}
               />

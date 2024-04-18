@@ -21,10 +21,16 @@ interface PlaylistCardProps extends BoxProps {
   playlistId: string;
 }
 
+interface UseQueryData {
+  thumbnail_url: string;
+  title: string;
+  status: boolean;
+}
+
 const PlaylistCard = ({ playlistId, ...rest }: PlaylistCardProps) => {
-  const { status, data } = useQuery({
+  const { status, data } = useQuery<UseQueryData>({
     queryKey: ["playlist", playlistId],
-    queryFn: () => getPlaylist(playlistId),
+    queryFn: () => getPlaylist(playlistId)
   });
 
   if (status === "success") {
@@ -43,7 +49,7 @@ const PlaylistCard = ({ playlistId, ...rest }: PlaylistCardProps) => {
           height="auto"
           width="100%"
           sx={{
-            aspectRatio: "1 / 1",
+            aspectRatio: "1 / 1"
           }}
           borderBottom="2px solid #f2bebe"
         />
