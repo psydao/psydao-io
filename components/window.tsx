@@ -156,6 +156,7 @@ export const Window = ({
       >
         <AnimatePresence>
           {window.isOpen && (
+            //@ts-expect-error error 
             <MotionBox
               position="absolute"
               zIndex={index}

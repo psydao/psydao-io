@@ -13,8 +13,22 @@ const RESTRICTED_COUNTRIES = [
   { name: "Liberia", code: "LR" },
   { name: "Korea (Democratic People's Republic of)", code: "KP" },
   { name: "Syrian Arab Republic", code: "SY" },
-  { name: "Zimbabwe", code: "ZW" },
+  { name: "Zimbabwe", code: "ZW" }
 ];
+
+interface apiData {
+  ip: string;
+  country_code: string;
+  country_name: string;
+  region_code: string;
+  region_name: string;
+  city: string;
+  zip_code: string;
+  time_zone: string;
+  latitude: number;
+  longitude: number;
+  metro_code: number;
+}
 
 export const useRescrictedCountries = () => {
   const [isRestricted, setIsRestricted] = useState(false);
@@ -24,15 +38,21 @@ export const useRescrictedCountries = () => {
     const fetchCountryCode = async () => {
       try {
         const response = await fetch("https://api.ipbase.com/v1/json/");
-        const data = await response.json();
-        const countryCode = data.country_code || null;
-        setCookie("countryCode", countryCode, { path: "/" });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = (await response.json()) as apiData;
+        if (data?.country_code) {
+          const countryCode = data.country_code;
+          setCookie("countryCode", countryCode, { path: "/" });
+        }
       } catch (error) {
         console.error("Failed to fetch country code:", error);
       }
     };
 
     if (!cookies.countryCode) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       fetchCountryCode();
     }
   }, [cookies.countryCode, setCookie]);
