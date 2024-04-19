@@ -11,7 +11,7 @@ const fetcher = async <T,>(url: string): Promise<T> => {
 export const swrOptions = {
   refreshWhenHidden: false,
   refreshInterval: 20_000, // 20 seconds
-  revalidateOnFocus: false,
+  revalidateOnFocus: false
 };
 
 export interface PricingResponse {

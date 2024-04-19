@@ -21,7 +21,7 @@ export class MixpanelTracking {
     mixpanel.init(process.env.NEXT_PUBLIC_MIXPANEL_ID ?? "", {
       debug: true,
       ignore_dnt: true,
-      api_host: "https://api-eu.mixpanel.com",
+      api_host: "https://api-eu.mixpanel.com"
     });
   }
   // tracking class
@@ -51,12 +51,12 @@ export class MixpanelTracking {
 
   public menuLinkClicked(menuLink: string) {
     this.track("menu_link_clicked", {
-      menuLink: menuLink,
+      menuLink: menuLink
     });
   }
   public applyTodayCtaClicked(cta: string) {
     this.track("apply_today_CTA_clicked", {
-      cta: cta,
+      cta: cta
     });
   }
 }

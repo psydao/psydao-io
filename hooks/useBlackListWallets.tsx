@@ -22,6 +22,6 @@ export const useBlackListWallets = (address: string) => {
   return {
     data,
     error,
-    isLoading: !data && !error,
+    isLoading: !data && !error
   };
 };

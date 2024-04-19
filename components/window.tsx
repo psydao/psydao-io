@@ -96,11 +96,11 @@ const validRndProps = {
   onResizeStart: true,
   onDragStop: true,
   onResizeStop: true,
-  bounds: true,
+  bounds: true
 };
 
 const Resizable = chakra(Rnd, {
-  shouldForwardProp: (prop) => prop in validRndProps,
+  shouldForwardProp: (prop) => prop in validRndProps
 });
 
 interface WindowProps extends BoxProps {
@@ -151,7 +151,7 @@ export const Window = ({
         value={{
           id,
           border,
-          padding,
+          padding
         }}
       >
         <AnimatePresence>

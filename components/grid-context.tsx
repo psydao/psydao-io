@@ -19,7 +19,7 @@ interface Tracks {
 const getTracks = ({
   borderWidth,
   minPadding,
-  trackSize,
+  trackSize
 }: GridParameters): Tracks | undefined => {
   if (typeof window !== "undefined") {
     const cols = Math.trunc(
@@ -32,7 +32,7 @@ const getTracks = ({
     );
     return {
       cols,
-      rows,
+      rows
     };
   }
 };
@@ -41,7 +41,7 @@ const getTracks = ({
 export const gridSpecs: { [breakpoint: string]: GridParameters } = {
   base: { borderWidth: 2, minPadding: 5, trackSize: 55 },
   md: { borderWidth: 2, minPadding: 10, trackSize: 60 },
-  xl: { borderWidth: 2, minPadding: 20, trackSize: 85 },
+  xl: { borderWidth: 2, minPadding: 20, trackSize: 85 }
 };
 
 export interface GridSpec extends GridParameters, Tracks {}
