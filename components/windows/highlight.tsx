@@ -3,7 +3,6 @@ import { Box, Image, Link, Text } from "@chakra-ui/react";
 import { Window } from "components/window";
 import { MixpanelTracking } from "../../services/mixpanel";
 
-
 export const Highlight = () => {
   return (
     <Window
@@ -41,14 +40,18 @@ export const Highlight = () => {
           >
             Research Project Funding
           </Text>
-          <Text mt="2">We&#39;re seeking early-stage, commercialisable projects to fund.</Text>
+          <Text mt="2">
+            We&#39;re seeking early-stage, commercialisable projects to fund.
+          </Text>
           <Text textColor="#269200" fontWeight="700" fontStyle="italic" mt="1">
             <Link
               href="https://docs.google.com/forms/d/e/1FAIpQLSclWo6ALQ-atJtrE0CQ4ft-JmXWIkaRVpg0cTqhvfKOHLhSCQ/viewform"
               target="_blank"
               textDecor="underline"
               onClick={() =>
-                MixpanelTracking.getInstance().applyTodayCtaClicked("Research_Project")
+                MixpanelTracking.getInstance().applyTodayCtaClicked(
+                  "Research_Project"
+                )
               }
             >
               Apply
@@ -73,7 +76,9 @@ export const Highlight = () => {
               target="_blank"
               textDecor="underline"
               onClick={() =>
-                MixpanelTracking.getInstance().applyTodayCtaClicked("Microgrant")
+                MixpanelTracking.getInstance().applyTodayCtaClicked(
+                  "Microgrant"
+                )
               }
             >
               Apply

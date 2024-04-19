@@ -360,7 +360,7 @@ export const Manifesto = () => {
             _hover={{
               background: "#9835BA",
               color: "#fffafa",
-              textDecor: "none",
+              textDecor: "none"
             }}
             href="https://discord.gg/FJHQtBZYdp"
             target="_blank"

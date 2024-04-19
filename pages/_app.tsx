@@ -2,7 +2,7 @@ import type { AppProps } from "next/app";
 import {
   ChakraProvider,
   extendTheme,
-  createStandaloneToast,
+  createStandaloneToast
 } from "@chakra-ui/react";
 import { Global } from "@emotion/react";
 import { fontFaces } from "lib/constants";

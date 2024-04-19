@@ -19,9 +19,6 @@ export const useReadTokenPriceInDollar = () => {
     functionName: "tokenPriceInDollar"
   });
 
-  console.log("error useReadTokenPriceInDollar", error);
-  console.log("data useReadTokenPriceInDollar", data);
-
   return {
     data,
     isPending,

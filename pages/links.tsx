@@ -5,7 +5,7 @@ import {
   HStack,
   Icon,
   Text,
-  VStack,
+  VStack
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -34,7 +34,7 @@ const LinkPill = ({ color = "#9835BA", label, href, variant }: LinkSpec) => {
       variantStyles = {
         background:
           "center / cover no-repeat url(/links/stars.png), linear-gradient(268.15deg, #B7FFFF 11.65%, #E69CFF 105.11%)",
-        backgroundBlendMode: "screen, normal",
+        backgroundBlendMode: "screen, normal"
       };
       break;
   }

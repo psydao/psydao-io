@@ -37,9 +37,6 @@ export const useSendTokenSale = () => {
     [writeContract]
   );
 
-  console.log("error sendTokenSale", error);
-  console.log("data sendTokenSale", data);
-
   return {
     data,
     sendTokenSale,

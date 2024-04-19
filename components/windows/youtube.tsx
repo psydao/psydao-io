@@ -12,7 +12,7 @@ export const Youtube = ({ embedId = "OFIO5LJ8sP8", ...rest }: YoutubeProps) => {
     base: 180,
     sm: 250,
     md: 360,
-    lg: 500,
+    lg: 500
   });
   const titleHeight = 30;
 

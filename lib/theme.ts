@@ -3,7 +3,7 @@ import { extendTheme } from "@chakra-ui/react";
 export const theme = extendTheme({
   fonts: {
     heading: `'Amiri', sans-serif`,
-    body: `'Amiri', serif`,
+    body: `'Amiri', serif`
   },
   colors: {
     background: {
@@ -29,7 +29,7 @@ export const theme = extendTheme({
       20: "#fffafa",
       21: "#fffafa",
       22: "#fffafa",
-      23: "#fffafa",
+      23: "#fffafa"
     },
     foreground: {
       1: "#f2bebe",
@@ -54,8 +54,8 @@ export const theme = extendTheme({
       20: "#f2bebe",
       21: "#f2bebe",
       22: "#f2bebe",
-      23: "#f2bebe",
-    },
+      23: "#f2bebe"
+    }
   },
   layerStyles: {
     window: {
@@ -64,7 +64,7 @@ export const theme = extendTheme({
         fontSize: "48px",
         fontStyle: "italic",
         letterSpacing: "-2%",
-        lineHeight: "110%",
+        lineHeight: "110%"
       },
       h2: {
         fontSize: "24px",
@@ -75,18 +75,18 @@ export const theme = extendTheme({
         mb: 5,
         textDecoration: "underline",
         textUnderlineOffset: "2px",
-        textTransform: "uppercase",
+        textTransform: "uppercase"
       },
       p: {
-        fontSize: "17px",
+        fontSize: "17px"
       },
       "p + p, img + p": {
-        mt: 5,
+        mt: 5
       },
       "li + li": {
-        mt: 2,
-      },
-    },
+        mt: 2
+      }
+    }
   },
   styles: {
     global: {
@@ -94,8 +94,8 @@ export const theme = extendTheme({
         bg: "background.12",
         color: "#9835BA",
         overscrollBehavior: "none",
-        userSelect: "none",
-      },
-    },
-  },
+        userSelect: "none"
+      }
+    }
+  }
 });

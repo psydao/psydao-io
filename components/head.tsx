@@ -11,7 +11,7 @@ export const Head = ({
   title = "PsyDAO - A Psychedelics Research DAO",
   description = "PsyDAO is forming a decentralised organisation with the goal of funding research at the intersection of psychedelics and mental health.",
   image = "https://psydao.io/psydao-seo-image.png",
-  children = null,
+  children = null
 }: HeadProps) => {
   return (
     <NextHead>

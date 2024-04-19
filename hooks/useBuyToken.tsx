@@ -22,7 +22,7 @@ export const useBuyToken = () => {
         title: "Please connect your wallet first",
         position: "top-right",
         status: "error",
-        isClosable: true,
+        isClosable: true
       });
       return;
     }
@@ -34,7 +34,7 @@ export const useBuyToken = () => {
             title: "Address wallet is on blacklist",
             position: "top-right",
             status: "error",
-            isClosable: true,
+            isClosable: true
           });
           setIsBlackListWallet(true);
           return;
@@ -51,7 +51,7 @@ export const useBuyToken = () => {
         title: "Something went wrong!",
         position: "top-right",
         status: "error",
-        isClosable: true,
+        isClosable: true
       });
     }
   };
@@ -61,6 +61,6 @@ export const useBuyToken = () => {
     buyToken,
     error,
     isConfirmed,
-    isConfirming,
+    isConfirming
   };
 };

@@ -4,7 +4,7 @@ import {
   type Id,
   toast,
   type ToastOptions,
-  type TypeOptions,
+  type TypeOptions
 } from "react-toastify";
 import CheckIcon from "public/icons/check.svg";
 
@@ -75,11 +75,11 @@ export function customToast(content: BodyProps, options?: ToastOptions): Id {
     style: {
       background: "linear-gradient(#FFFFFF, #F3FFE9, #E7FEFF)",
       width: "fit-content",
-      transform: "translateX(-20%)",
+      transform: "translateX(-20%)"
     },
     closeButton: CustomCloseButton,
     position: "top-center",
     autoClose: false,
-    ...options,
+    ...options
   });
 }
