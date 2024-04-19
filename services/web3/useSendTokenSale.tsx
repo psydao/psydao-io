@@ -4,7 +4,7 @@ import {
   tokenSaleContract,
   tokenSaleContractSepolia
 } from "constants/contracts";
-import { parseEther } from "viem";
+import { parseEther, parseUnits } from "viem";
 import tokenSaleAbi from "@/abis/tokenSaleAbi.json";
 import tokenSaleAbiSepolia from "@/abis/tokenSaleAbiSepolia.json";
 
@@ -18,6 +18,8 @@ export const useSendTokenSale = () => {
 
   const sendTokenSale = useCallback(
     async (amountOfPsyTokens: number, ethToSpent: string) => {
+      const psyGwei = parseUnits(amountOfPsyTokens.toString(), 18);
+      const ethGwei = parseUnits(ethToSpent, 18);
       return writeContract({
         address:
           process.env.NEXT_PUBLIC_CHAIN_ID === "1"
@@ -28,12 +30,15 @@ export const useSendTokenSale = () => {
           process.env.NEXT_PUBLIC_CHAIN_ID === "1"
             ? tokenSaleAbi
             : tokenSaleAbiSepolia,
-        args: [amountOfPsyTokens],
-        value: parseEther(ethToSpent)
+        args: [psyGwei],
+        value: ethGwei
       });
     },
     [writeContract]
   );
+
+  console.log("error sendTokenSale", error);
+  console.log("data sendTokenSale", data);
 
   return {
     data,
