@@ -13,7 +13,7 @@ import {
   useState
 } from "react";
 import { useAccount, useBalance } from "wagmi";
-import { formatEther, formatUnits, parseEther } from "viem";
+import { formatEther, formatUnits, parseEther, parseUnits } from "viem";
 import { SwapTsAndCs } from "components/swap-widget/SwapTsAndCs";
 import { psyDAOTokenPrice } from "constants/psyTokenPrice";
 import { useReadEthPrice } from "services/web3/useReadEthPrice";
@@ -71,9 +71,10 @@ export const SwapWidget = () => {
       fromEth?: boolean
     ) => {
       const amountValue = amount.length ? Number(amount) : 0;
+
       const value = fromEth
         ? calculateTokenAmount(amountValue)
-        : Math.floor(Number(tokenPriceInDollar) / ethPrice) *
+        : (Math.floor(Number(tokenPriceInDollar) / ethPrice) + 1) *
           1e10 *
           amountValue;
 
@@ -227,7 +228,8 @@ export const SwapWidget = () => {
                   <ConnectWalletButton
                     tokenAmount={tokenAmount}
                     ethToSend={
-                      Math.floor(Number(tokenPriceInDollar) / ethPrice?.data) *
+                      (Math.floor(Number(tokenPriceInDollar) / ethPrice?.data) +
+                        1) *
                       1e10 *
                       Number(tokenAmount)
                     }
