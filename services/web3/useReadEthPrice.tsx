@@ -16,9 +16,6 @@ export const useReadEthPrice = () => {
     functionName: "latestRoundData"
   });
 
-  console.log("error useReadEthPrice", error);
-  console.log("data useReadEthPrice", data && Number(data[1]));
-
   return {
     data: data && Number(data[1]),
     isPending,

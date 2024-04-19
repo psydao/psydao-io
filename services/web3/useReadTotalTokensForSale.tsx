@@ -6,7 +6,7 @@ import {
   tokenSaleContractSepolia
 } from "constants/contracts";
 
-export const useReadTokenPriceInDollar = () => {
+export const useReadTotalTokensForSale = () => {
   const { data, isPending, error } = useReadContract({
     abi:
       process.env.NEXT_PUBLIC_CHAIN_ID === "1"
@@ -16,7 +16,7 @@ export const useReadTokenPriceInDollar = () => {
       process.env.NEXT_PUBLIC_CHAIN_ID === "1"
         ? tokenSaleContract
         : tokenSaleContractSepolia,
-    functionName: "tokenPriceInDollar"
+    functionName: "totalTokensForSale"
   });
 
   return {
