@@ -197,14 +197,6 @@ export const SwapWidget = () => {
                   color={"#f3c1c1"}
                   fontStyle={"italic"}
                 >
-                  $1.023m Circulating Market Cap
-                </Text>
-                <Text
-                  fontFamily={"Amiri"}
-                  fontSize={{ base: "10px", sm: "16px" }}
-                  color={"#f3c1c1"}
-                  fontStyle={"italic"}
-                >
                   PSY remaining for sale:{" "}
                   {`${((Number(totalTokensForSaleValue) / 20466831) * 100).toFixed(2)}%`}
                 </Text>
