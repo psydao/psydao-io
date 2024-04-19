@@ -10,7 +10,8 @@ import {
   type SetStateAction,
   useCallback,
   useEffect,
-  useState
+  useState,
+  useMemo
 } from "react";
 import { useAccount, useBalance } from "wagmi";
 import { formatEther, formatUnits, parseEther, parseUnits } from "viem";
@@ -19,6 +20,7 @@ import { psyDAOTokenPrice } from "constants/psyTokenPrice";
 import { useReadEthPrice } from "services/web3/useReadEthPrice";
 import { useReadTokenPriceInDollar } from "services/web3/useReadTokenPriceInDollar";
 import { ArrowDownIcon } from "@chakra-ui/icons";
+import { useReadTotalTokensForSale } from "@/services/web3/useReadTotalTokensForSale";
 
 export const SwapWidget = () => {
   const isRescricted = useRescrictedCountries();
@@ -42,6 +44,13 @@ export const SwapWidget = () => {
 
   const ethPrice = useReadEthPrice();
   const { data: tokenPriceInDollar } = useReadTokenPriceInDollar();
+  const { data: totalTokensForSale } = useReadTotalTokensForSale();
+
+  const totalTokensForSaleValue = useMemo(() => {
+    if (totalTokensForSale) {
+      return formatUnits(BigInt(totalTokensForSale as number), 18);
+    }
+  }, [totalTokensForSale]);
 
   const calculateTokenAmount = useCallback(
     (amountOfEth: number) => {
@@ -196,7 +205,8 @@ export const SwapWidget = () => {
                   color={"#f3c1c1"}
                   fontStyle={"italic"}
                 >
-                  PSY remaining for sale: 85%
+                  PSY remaining for sale:{" "}
+                  {`${((Number(totalTokensForSaleValue) / 20466831) * 100).toFixed(2)}%`}
                 </Text>
                 <Flex
                   direction={"column"}
