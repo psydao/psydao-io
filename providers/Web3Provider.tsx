@@ -4,18 +4,15 @@ import {
   getDefaultWallets,
   lightTheme,
   RainbowKitProvider,
-  getDefaultConfig,
+  getDefaultConfig
 } from "@rainbow-me/rainbowkit";
 import {
   argentWallet,
   ledgerWallet,
-  trustWallet,
+  trustWallet
 } from "@rainbow-me/rainbowkit/wallets";
 import { WagmiProvider, http } from "wagmi";
-import {
-  mainnet,
-  sepolia,
-} from "wagmi/chains";
+import { mainnet, sepolia } from "wagmi/chains";
 import { useColorMode } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -28,15 +25,15 @@ const wagmiConfig = getDefaultConfig({
     ...wallets,
     {
       groupName: "Other",
-      wallets: [argentWallet, trustWallet, ledgerWallet],
-    },
+      wallets: [argentWallet, trustWallet, ledgerWallet]
+    }
   ],
   chains: [mainnet, sepolia],
   transports: {
     [mainnet.id]: http(),
-    [sepolia.id]: http(),
+    [sepolia.id]: http()
   },
-  ssr: true,
+  ssr: true
 });
 
 export const Web3Provider = ({ children }: { children: React.ReactNode }) => {

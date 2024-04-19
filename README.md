@@ -6,7 +6,7 @@
 
 ## Contributing
 
-Fill in [this form](https://airtable.com/shrCaOD9DaD57J3Mu) if you want to get involved and [join us](https://discord.gg/FJHQtBZYdp) on Discord.
+Fill in [this form](https://airtable.com/shrCaOD9DaD57J3Mu) if you want to get involved and [join us](https://discord.gg/FJHQtBZYdp) on our Discord.
 
 This is a [Next.js](https://nextjs.org/) app. You can run the development server locally with `npm run dev`. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 

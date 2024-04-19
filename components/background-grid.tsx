@@ -65,7 +65,7 @@ export const BackgroundGrid = () => {
       setImages(
         randomPickN(paths, 4).map((src) => ({
           src,
-          gridArea: randomGridArea({ cols, rows }),
+          gridArea: randomGridArea({ cols, rows })
         }))
       );
 
@@ -75,7 +75,7 @@ export const BackgroundGrid = () => {
             src: randomPick(
               paths.filter((path) => prev.every(({ src }) => src !== path))
             ),
-            gridArea: randomGridArea({ cols, rows }),
+            gridArea: randomGridArea({ cols, rows })
           })
         );
       };
@@ -113,7 +113,7 @@ export const BackgroundGrid = () => {
               objectFit: "cover",
               objectPosition: "center",
               position: "absolute",
-              zIndex: idx,
+              zIndex: idx
             }}
           />
         ))}

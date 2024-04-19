@@ -4,19 +4,19 @@ export const displaySwapSuccess = (isSuccessful: boolean) => {
   if (isSuccessful) {
     customToast(
       {
-        mainText: "You've successfully converted ETH to PSY",
+        mainText: "You've successfully converted ETH to PSY"
       },
       {
-        type: "success",
+        type: "success"
       }
     );
   } else {
     customToast(
       {
-        mainText: "Transaction failed. Please try again",
+        mainText: "Transaction failed. Please try again"
       },
       {
-        type: "error",
+        type: "error"
       }
     );
   }

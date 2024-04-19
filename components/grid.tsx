@@ -16,9 +16,9 @@ export const Grid = ({ children, getNumberOfFillers, ...rest }: GridProps) => {
       sx: {
         "& > *": {
           borderRight: `${borderWidth}px solid #f2bebe`,
-          borderBottom: `${borderWidth}px solid #f2bebe`,
-        },
-      },
+          borderBottom: `${borderWidth}px solid #f2bebe`
+        }
+      }
     };
     return (
       <ChakraGrid

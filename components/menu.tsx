@@ -6,7 +6,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  useDisclosure,
+  useDisclosure
 } from "@chakra-ui/react";
 import { RiCloseLine, RiMenuLine } from "react-icons/ri";
 import { Logo } from "components/icons";

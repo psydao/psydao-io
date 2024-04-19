@@ -10,19 +10,19 @@ const nextConfig = {
         {
           loader: "@svgr/webpack",
           options: {
-            svgoConfig: { plugins: [{ name: "removeViewBox", active: false }] },
-          },
-        },
-      ],
+            svgoConfig: { plugins: [{ name: "removeViewBox", active: false }] }
+          }
+        }
+      ]
     });
     config.experiments = { ...config.experiments, topLevelAwait: true };
     config.resolve.fallback = {
       ...config.resolve.fallback,
-      fs: false,
+      fs: false
     };
 
     return config;
-  },
+  }
 };
 
 module.exports = nextConfig;

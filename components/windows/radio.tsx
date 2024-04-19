@@ -10,7 +10,7 @@ const spotifyBaseUrl =
 const playlistIds = [
   "61u4KX89NkLEYDz8TKiW1a",
   "1PBcJLDCe0NwoGnsOS99vb",
-  "4NX5lgD0WEWbrygRUS1J9a",
+  "4NX5lgD0WEWbrygRUS1J9a"
 ];
 
 const getPlaylist = async (playlistId: string) => {
@@ -121,12 +121,12 @@ const Catalogue = ({ children, ...rest }: BoxProps) => {
             width: "0",
             paddingBottom: "100%",
             gridRow: "1 / 1",
-            gridColumn: "1 / 1",
+            gridColumn: "1 / 1"
           },
           "& > div:first-of-type": {
             gridRow: "1 / 1",
-            gridColumn: "1 / 1",
-          },
+            gridColumn: "1 / 1"
+          }
         }}
       >
         {children}

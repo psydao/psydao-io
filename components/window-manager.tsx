@@ -39,7 +39,7 @@ export type Action =
 
 const initialState: State = {
   isPointerDragging: false,
-  windows: [],
+  windows: []
 };
 
 const reducer = (state: State, action: Action): State => {
@@ -51,27 +51,27 @@ const reducer = (state: State, action: Action): State => {
           ...state.windows.filter(({ id }) => id !== action.id),
           {
             id: action.id,
-            isOpen: true,
-          },
-        ],
+            isOpen: true
+          }
+        ]
       };
     case "close":
       return {
         ...state,
         windows: state.windows.map(({ id, isOpen }) => ({
           id,
-          isOpen: id === action.id ? false : isOpen,
-        })),
+          isOpen: id === action.id ? false : isOpen
+        }))
       };
     case "startDrag":
       return {
         ...state,
-        isPointerDragging: true,
+        isPointerDragging: true
       };
     case "stopDrag":
       return {
         ...state,
-        isPointerDragging: false,
+        isPointerDragging: false
       };
   }
 };
@@ -95,7 +95,7 @@ export const WindowManager = ({ children }: WindowManagerProps) => {
     <WindowManagerProvider
       value={{
         state,
-        dispatch,
+        dispatch
       }}
     >
       {children}

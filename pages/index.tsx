@@ -5,7 +5,7 @@ import {
   Image,
   Link,
   Text,
-  keyframes,
+  keyframes
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { useEffect } from "react";
@@ -148,7 +148,7 @@ const Homepage: NextPage = () => {
                       text={[
                         "WELCOME TO PSYDAO",
                         "FUNDING RESEARCH AT THE INTERSECTION OF PSYCHEDELICS AND MENTAL HEALTH",
-                        "NOW ACCEPTING APPLICATIONS FOR RESEARCH PROJECT FUNDING AND ALCHEMIST GRANTS",
+                        "NOW ACCEPTING APPLICATIONS FOR RESEARCH PROJECT FUNDING AND ALCHEMIST GRANTS"
                       ]}
                     />
                   </Box>
@@ -163,7 +163,7 @@ const Homepage: NextPage = () => {
                       cursor="pointer"
                       opacity="0.5"
                       _hover={{
-                        opacity: 1,
+                        opacity: 1
                       }}
                     />
                   </Open>
@@ -190,7 +190,7 @@ const Homepage: NextPage = () => {
                   _hover={{
                     color: "#E69CFF",
                     backgroundImage:
-                      "linear-gradient(to bottom, #ffffff 0%, #f3ffe9 50.52%, #e7feff 100%)",
+                      "linear-gradient(to bottom, #ffffff 0%, #f3ffe9 50.52%, #e7feff 100%)"
                   }}
                   transition="all 200ms ease"
                 >
@@ -205,7 +205,7 @@ const Homepage: NextPage = () => {
                   _hover={{
                     color: "#a4ffff",
                     backgroundImage:
-                      "linear-gradient(to bottom, #ffffff 0%, #f3ffe9 50.52%, #e7feff 100%)",
+                      "linear-gradient(to bottom, #ffffff 0%, #f3ffe9 50.52%, #e7feff 100%)"
                   }}
                   transition="all 200ms ease"
                 >
@@ -220,7 +220,7 @@ const Homepage: NextPage = () => {
                   _hover={{
                     color: "#dc4e4e",
                     backgroundImage:
-                      "linear-gradient(to bottom, #ffffff 0%, #f3ffe9 50.52%, #e7feff 100%)",
+                      "linear-gradient(to bottom, #ffffff 0%, #f3ffe9 50.52%, #e7feff 100%)"
                   }}
                   transition="all 200ms ease"
                 >

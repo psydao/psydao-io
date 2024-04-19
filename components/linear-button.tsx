@@ -18,7 +18,7 @@ const LinearButton: React.FC<LinearButtonProps> = ({
   children,
   customStyle,
   isConfirming,
-  isDisabled,
+  isDisabled
 }) => {
   return (
     <Button
@@ -31,7 +31,7 @@ const LinearButton: React.FC<LinearButtonProps> = ({
       display={"flex"}
       isDisabled={isConfirming ?? isDisabled}
       _hover={{
-        opacity: "0.8",
+        opacity: "0.8"
       }}
       {...customStyle}
     >

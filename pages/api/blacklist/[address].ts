@@ -1,7 +1,6 @@
 import { type NextApiRequest, type NextApiResponse } from "next";
 
 import cors from "cors";
-export const runtime = "edge";
 
 const corsMiddleware = cors({
   methods: ["GET"],
