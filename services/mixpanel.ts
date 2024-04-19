@@ -19,7 +19,7 @@ export class MixpanelTracking {
       );
 
     mixpanel.init(process.env.NEXT_PUBLIC_MIXPANEL_ID ?? "", {
-      debug: true,
+      debug: false,
       ignore_dnt: true,
       api_host: "https://api-eu.mixpanel.com"
     });
