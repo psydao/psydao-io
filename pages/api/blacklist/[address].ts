@@ -1,11 +1,10 @@
-import { type NextApiRequest, type NextApiResponse } from "next";
+import { type NextApiRequest, type NextApiResponse } from 'next';
 
-import cors from "cors";
-export const runtime = "edge";
+import cors from 'cors';
 
 const corsMiddleware = cors({
-  methods: ["GET"],
-  origin: "*"
+  methods: ['GET'],
+  origin: '*'
 });
 
 export default async function handler(
