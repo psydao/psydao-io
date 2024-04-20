@@ -111,37 +111,43 @@ const Homepage: NextPage = () => {
                 <WindowManager>
                   <Box gridArea="1 / 1 / 3 / 3">
                     {/* TODO: temporary until I can find a better way to do this */}
-
-                    <Box h="100%" w="100%" position={"relative"}>
-                      {SALE_ACTIVE ? (
-                        <>
+                    <Open h="100%" w="100%" id="swap">
+                      <Box
+                        cursor="pointer"
+                        h="100%"
+                        w="100%"
+                        position={"relative"}
+                      >
+                        {SALE_ACTIVE ? (
+                          <>
+                            <Image
+                              src="/purple-logo.svg"
+                              h={"100%"}
+                              w={"100%"}
+                              alt="logo"
+                              position={"absolute"}
+                              top={0}
+                            />
+                            <Image
+                              src="/purple-logo-glow.svg"
+                              h={"100%"}
+                              w={"100%"}
+                              alt="logo"
+                              animation={`${fadeinAnimate}`}
+                              position={"absolute"}
+                              top={0}
+                            />
+                          </>
+                        ) : (
                           <Image
-                            src="/purple-logo.svg"
                             h={"100%"}
                             w={"100%"}
                             alt="logo"
-                            position={"absolute"}
-                            top={0}
+                            src="/psydao-deep-logo.svg"
                           />
-                          <Image
-                            src="/purple-logo-glow.svg"
-                            h={"100%"}
-                            w={"100%"}
-                            alt="logo"
-                            animation={`${fadeinAnimate}`}
-                            position={"absolute"}
-                            top={0}
-                          />
-                        </>
-                      ) : (
-                        <Image
-                          h={"100%"}
-                          w={"100%"}
-                          alt="logo"
-                          src="/psydao-deep-logo.svg"
-                        />
-                      )}
-                    </Box>
+                        )}
+                      </Box>
+                    </Open>
                   </Box>
                   <Box gridArea="-2 / 1 / -1 / -1">
                     <Marquee
