@@ -74,7 +74,6 @@ export const ConnectWalletButton = ({
       !error.message.includes("user rejected request") &&
       !error.message.includes("Amount Must Be Bigger Than 0")
     ) {
-      console.log(error);
       customToast(
         {
           mainText: "An error occurred. Please try again later"
