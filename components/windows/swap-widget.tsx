@@ -229,6 +229,8 @@ export const SwapWidget = () => {
                   />
                   <ConnectWalletButton
                     tokenAmount={tokenAmount}
+                    walletBalance={formattedEthBalance}
+                    totalTokensForSaleValue={totalTokensForSaleValue}
                     ethToSend={
                       (Math.floor(Number(tokenPriceInDollar) / ethPrice?.data) +
                         1) *
