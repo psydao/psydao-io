@@ -98,7 +98,7 @@ export const ConnectWalletButton = ({
   }, [error, isConfirmed]);
 
   const invalidAmountMoreEthThanWallet =
-    Number(formatEther(BigInt(!isNaN(ethToSend) ? ethToSend : 0))) >
+    Number(formatEther(BigInt(!isNaN(ethToSend) ? Math.round(ethToSend) : 0))) >
     Number(walletBalance);
 
   return (
@@ -134,7 +134,7 @@ export const ConnectWalletButton = ({
           }
           await buyToken(
             Number(tokenAmount),
-            formatEther(BigInt(!isNaN(ethToSend) ? ethToSend : 0))
+            formatEther(BigInt(!isNaN(ethToSend) ? Math.round(ethToSend) : 0))
           );
         };
 

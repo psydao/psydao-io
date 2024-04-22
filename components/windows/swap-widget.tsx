@@ -14,7 +14,7 @@ import {
   useMemo
 } from "react";
 import { useAccount, useBalance } from "wagmi";
-import { formatEther, formatUnits, parseEther, parseUnits } from "viem";
+import { formatUnits, parseEther } from "viem";
 import { SwapTsAndCs } from "components/swap-widget/SwapTsAndCs";
 import { psyDAOTokenPrice } from "constants/psyTokenPrice";
 import { useReadEthPrice } from "services/web3/useReadEthPrice";
@@ -53,20 +53,17 @@ export const SwapWidget = () => {
   }, [totalTokensForSale]);
 
   const calculateTokenAmount = useCallback(
-    (amountOfEth: number) => {
+    (amountOfEth: string) => {
       if (ethPrice?.data && tokenPriceInDollar) {
         const ethPriceBigInt = BigInt(Number(ethPrice?.data));
         const tokenPriceInDollarBigInt = BigInt(Number(tokenPriceInDollar));
-        const amountOfEthBigInt = parseEther(amountOfEth.toString());
+        const amountOfEthBigInt = parseEther(amountOfEth);
 
         const tokenAmount =
           Number(
             (amountOfEthBigInt * ethPriceBigInt) / tokenPriceInDollarBigInt
           ) / 1e10;
 
-        console.log("tokenAmount", tokenAmount);
-
-        // return Math.round(tokenAmount);
         return tokenAmount;
       }
 
@@ -85,16 +82,12 @@ export const SwapWidget = () => {
       const amountValue = amount.length ? Number(amount) : 0;
 
       const value = fromEth
-        ? calculateTokenAmount(amountValue)
-        : (Number(formatEther(tokenPriceInDollar as bigint)) / ethPrice + 1) *
-          amountValue;
-
-      console.log("value", value);
+        ? calculateTokenAmount(amount)
+        : (Number(tokenPriceInDollar) / ethPrice) * 1e10 * amountValue;
 
       if (!isNaN(value)) {
-        // const formattedEther = "1";
-        const formattedEther = formatEther(parseUnits(value.toString(), 18));
-        setValue(fromEth ? value.toString() : formattedEther);
+        const formattedValue = value / 1e18;
+        setValue(fromEth ? value.toString() : formattedValue.toString());
       } else {
         setValue("");
       }
