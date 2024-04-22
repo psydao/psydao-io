@@ -18,6 +18,8 @@ export const useSendTokenSale = () => {
 
   const sendTokenSale = useCallback(
     async (amountOfPsyTokens: number, ethToSpent: string) => {
+      console.log("amountOfPsyTokens", amountOfPsyTokens);
+      console.log("ethToSpent", ethToSpent);
       const psyGwei = parseUnits(amountOfPsyTokens.toString(), 18);
       const ethGwei = parseUnits(ethToSpent, 18);
       return writeContract({
@@ -36,6 +38,8 @@ export const useSendTokenSale = () => {
     },
     [writeContract]
   );
+
+  console.log("error", error);
 
   return {
     data,
