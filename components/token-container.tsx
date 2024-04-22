@@ -110,6 +110,7 @@ export const TokenContainer = (props: TokenContainerProps) => {
             fontWeight={600}
             color={"#97929e"}
             value={ethCard ? props.amount : parseInt(props.amount)}
+            onWheel={(e) => (e.target as HTMLElement).blur()}
             fontSize={{ base: "12px", sm: "16px" }}
             fontFamily="'Public Sans'"
             onFocus={() => props.setFocused(props.symbol)}
