@@ -170,7 +170,7 @@ export const ConnectWalletButton = ({
                   onClick={sendTransactionHandler}
                   isConfirming={isConfirming}
                 >
-                  {isConfirming ? "Transaction in progress..." : "Buy"}
+                  {isConfirming ? "Transaction in progress..." : "Swap"}
                 </LinearButton>
               );
             })()}

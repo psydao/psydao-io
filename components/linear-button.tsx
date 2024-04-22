@@ -33,6 +33,9 @@ const LinearButton: React.FC<LinearButtonProps> = ({
       _hover={{
         opacity: "0.8"
       }}
+      fontFamily={"Poppins"}
+      fontSize={16}
+      fontWeight={600}
       {...customStyle}
     >
       {children}
