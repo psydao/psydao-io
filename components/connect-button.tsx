@@ -11,11 +11,15 @@ import { customToast } from "./toasts/SwapSuccess";
 interface ConnectWalletButtonProps {
   tokenAmount: string;
   ethToSend: number;
+  walletBalance: string;
+  totalTokensForSaleValue?: string;
 }
 
 export const ConnectWalletButton = ({
   tokenAmount,
-  ethToSend
+  ethToSend,
+  walletBalance,
+  totalTokensForSaleValue
 }: ConnectWalletButtonProps) => {
   const { buyToken, isBlackListWallet, error, isConfirmed, isConfirming } =
     useBuyToken();
@@ -74,12 +78,41 @@ export const ConnectWalletButton = ({
     }
   }, [error, isConfirmed]);
 
+  const invalidAmountMoreEthThanWallet =
+    Number(formatEther(BigInt(!isNaN(ethToSend) ? ethToSend : 0))) >
+    Number(walletBalance);
+
   return (
     <ConnectButton.Custom>
       {({ account, chain, openConnectModal, mounted }) => {
         const connected = mounted && account && chain;
 
         const sendTransactionHandler = async () => {
+          if (invalidAmountMoreEthThanWallet) {
+            customToast(
+              {
+                mainText: "Not enough ETH for the transaction"
+              },
+              {
+                type: "error"
+              }
+            );
+            return;
+          }
+          if (
+            totalTokensForSaleValue &&
+            Number(tokenAmount) > Number(totalTokensForSaleValue)
+          ) {
+            customToast(
+              {
+                mainText: "Amount requested exclude token sale value"
+              },
+              {
+                type: "error"
+              }
+            );
+            return;
+          }
           await buyToken(
             Number(tokenAmount),
             formatEther(BigInt(!isNaN(ethToSend) ? ethToSend : 0))
