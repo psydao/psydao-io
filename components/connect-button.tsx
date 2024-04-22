@@ -3,7 +3,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import LinearButton from "./linear-button";
 import { useBuyToken } from "hooks/useBuyToken";
 import { useSignInWallet } from "hooks/useSignInWallet";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { formatEther } from "viem";
 import { customToast } from "./toasts/SwapSuccess";
@@ -25,6 +25,20 @@ export const ConnectWalletButton = ({
     useBuyToken();
   const signIn = useSignInWallet();
 
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   useEffect(() => {
     if (!isBlackListWallet && typeof isBlackListWallet === "boolean") {
       void signIn();
@@ -39,7 +53,8 @@ export const ConnectWalletButton = ({
         },
         {
           type: "error"
-        }
+        },
+        width <= 768
       );
     } else if (
       error &&
@@ -51,29 +66,34 @@ export const ConnectWalletButton = ({
         },
         {
           type: "error"
-        }
+        },
+        width <= 768
       );
     } else if (
       error &&
       !error.message.includes("user rejected request") &&
       !error.message.includes("Amount Must Be Bigger Than 0")
     ) {
+      console.log(error);
       customToast(
         {
           mainText: "An error occurred. Please try again later"
         },
         {
           type: "error"
-        }
+        },
+        width <= 768
       );
     } else if (isConfirmed) {
       customToast(
         {
-          mainText: "You’ve successfully converted ETH to PSY"
+          mainText:
+            "Your transaction is successful. You will receive your PsyDao token once the sale is closed"
         },
         {
           type: "success"
-        }
+        },
+        width <= 768
       );
     }
   }, [error, isConfirmed]);
@@ -151,7 +171,7 @@ export const ConnectWalletButton = ({
                   onClick={sendTransactionHandler}
                   isConfirming={isConfirming}
                 >
-                  {isConfirming ? "PSY incoming..." : "Buy"}
+                  {isConfirming ? "Transaction in progress..." : "Buy"}
                 </LinearButton>
               );
             })()}
