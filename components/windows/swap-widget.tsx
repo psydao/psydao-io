@@ -158,7 +158,6 @@ export const SwapWidget = () => {
                 textDecoration={"underline"}
                 textColor="#269200"
                 fontWeight="400"
-                fontStyle="italic"
                 fontSize={{ base: "18px", md: "24px" }}
                 textUnderlineOffset={"12px"}
                 fontFamily={"Amiri"}
@@ -224,7 +223,7 @@ export const SwapWidget = () => {
                     amount={tokenAmount}
                     setAmount={setTokenAmount}
                     header="Receive"
-                    name="psyDAO"
+                    name="PsyDAO"
                     symbol="PSY"
                     image="/windows/swap/PSY.svg"
                     maxBalance={formattedEthBalance}
