@@ -186,7 +186,7 @@ export const SwapWidget = () => {
                 <Text
                   fontFamily={"Amiri"}
                   fontSize={{ base: "10px", sm: "16px" }}
-                  color={"#f3c1c1"}
+                  color={"#C3767F"}
                   fontStyle={"italic"}
                 >
                   {`$${psyDAOTokenPrice} per PSY`}
@@ -194,11 +194,14 @@ export const SwapWidget = () => {
                 <Text
                   fontFamily={"Amiri"}
                   fontSize={{ base: "10px", sm: "16px" }}
-                  color={"#f3c1c1"}
+                  color={"#C3767F"}
                   fontStyle={"italic"}
                 >
                   PSY remaining for sale:{" "}
-                  {`${((Number(totalTokensForSaleValue) / 20466831) * 100).toFixed(2)}%`}
+                  {`${(
+                    (Number(totalTokensForSaleValue) / 20466831) *
+                    100
+                  ).toFixed(2)}%`}
                 </Text>
                 <Flex
                   direction={"column"}
