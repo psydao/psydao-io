@@ -52,7 +52,7 @@ export const ConnectWalletButton = ({
     if (error && error.message.includes("User rejected")) {
       customToast(
         {
-          mainText: "Request rejected by user. Please try again"
+          mainText: "Request rejected by user. Please try again."
         },
         {
           type: "error",
@@ -66,7 +66,7 @@ export const ConnectWalletButton = ({
     ) {
       customToast(
         {
-          mainText: "Please enter an amount greater than 0"
+          mainText: "Please enter an amount greater than 0."
         },
         {
           type: "error",
@@ -81,7 +81,7 @@ export const ConnectWalletButton = ({
     ) {
       customToast(
         {
-          mainText: "An error occurred. Please try again later"
+          mainText: "An error occurred. Please try again later."
         },
         {
           type: "error",
@@ -93,7 +93,7 @@ export const ConnectWalletButton = ({
       customToast(
         {
           mainText:
-            "Your transaction is successful. You will receive your PsyDao token once the sale is closed"
+            "Your transaction was successful. You will receive your PsyDao tokens once the sale is closed."
         },
         {
           type: "success",
@@ -118,7 +118,7 @@ export const ConnectWalletButton = ({
           if (invalidAmountMoreEthThanWallet) {
             customToast(
               {
-                mainText: "Not enough ETH for the transaction"
+                mainText: "Not enough ETH for the transaction."
               },
               {
                 type: "error",
@@ -133,7 +133,7 @@ export const ConnectWalletButton = ({
           ) {
             customToast(
               {
-                mainText: "Amount requested exclude token sale value"
+                mainText: "Amount requested exceeds token sale value."
               },
               {
                 type: "error",

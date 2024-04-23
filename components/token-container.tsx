@@ -40,17 +40,13 @@ export const TokenContainer = (props: TokenContainerProps) => {
           fontSize={"16px"}
           fontWeight={700}
           textAlign={"start"}
-          fontFamily="'Public Sans'"
+          fontFamily="Poppins Semibold"
         >
           {props.header}
         </Text>
         {props.header === "Send" && (
           <Flex alignItems={"center"} gap={1}>
-            <Text
-              fontSize={"10px"}
-              color={"#656075"}
-              fontFamily="'Public Sans'"
-            >
+            <Text fontSize={"10px"} color={"#656075"} fontFamily="Poppins">
               {`Balance: ${props.maxBalance} ETH`}{" "}
             </Text>
             <Button
@@ -72,7 +68,7 @@ export const TokenContainer = (props: TokenContainerProps) => {
                 fontSize={"10px"}
                 bgGradient={"linear(to-r, #B14CE7, #E09CA4)"}
                 bgClip="text"
-                fontFamily="'Public Sans'"
+                fontFamily="Poppins Semibold"
               >
                 MAX
               </Text>
@@ -99,6 +95,7 @@ export const TokenContainer = (props: TokenContainerProps) => {
               color={"black"}
               fontFamily={"Poppins Semibold"}
               fontSize={{ base: 10, sm: 12 }}
+              fontWeight={600}
             >
               {props.name}
             </Text>
@@ -116,7 +113,7 @@ export const TokenContainer = (props: TokenContainerProps) => {
             value={ethCard ? props.amount : parseInt(props.amount)}
             onWheel={(e) => (e.target as HTMLElement).blur()}
             fontSize={{ base: "12px", sm: "16px" }}
-            fontFamily="'Public Sans'"
+            fontFamily="Poppins"
             onFocus={() => props.setFocused(props.symbol)}
             onChange={(e) => {
               const value = ethCard
@@ -131,7 +128,7 @@ export const TokenContainer = (props: TokenContainerProps) => {
             fontWeight={700}
             color={"black"}
             fontSize={{ base: "12px", sm: "16px" }}
-            fontFamily="'Public Sans'"
+            fontFamily="Poppins Semibold"
           >
             {props.symbol}
           </Text>
