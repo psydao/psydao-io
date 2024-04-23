@@ -41,7 +41,7 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
             fontFamily={"Amiri"}
             fontStyle={"italic"}
           >
-            Please read and accept our{" "}
+            please read and accept our{" "}
             <Link
               cursor={"pointer"}
               href="/documents/psydao-terms-and-conditions.pdf"
