@@ -34,7 +34,7 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
             fontFamily={"Amiri"}
             fontStyle={"italic"}
           >
-            Before you start
+            To participate in our token sale,
           </Text>
           <Text
             fontSize={{ base: "16px", md: "24px" }}
