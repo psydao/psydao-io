@@ -4,7 +4,7 @@ import {
   tokenSaleContract,
   tokenSaleContractSepolia
 } from "constants/contracts";
-import { parseEther, parseUnits } from "viem";
+import { parseUnits } from "viem";
 import tokenSaleAbi from "@/abis/tokenSaleAbi.json";
 import tokenSaleAbiSepolia from "@/abis/tokenSaleAbiSepolia.json";
 
