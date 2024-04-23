@@ -178,9 +178,7 @@ export const SwapWidget = () => {
                     fontSize={{ base: "14px", sm: "24px" }}
                     fontFamily={"Amiri"}
                   >
-                    {`Please switch to ${
-                      isProduction ? "Ethereum mainnet" : "Sepolia"
-                    }`}
+                    Please switch to Ethereum mainnet
                   </Text>
                   <Image
                     src="/windows/swap/restricted-countries.png"
