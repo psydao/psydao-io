@@ -158,7 +158,6 @@ export const SwapWidget = () => {
                 textDecoration={"underline"}
                 textColor="#269200"
                 fontWeight="400"
-                fontStyle="italic"
                 fontSize={{ base: "18px", md: "24px" }}
                 textUnderlineOffset={"12px"}
                 fontFamily={"Amiri"}
@@ -186,7 +185,7 @@ export const SwapWidget = () => {
                 <Text
                   fontFamily={"Amiri"}
                   fontSize={{ base: "10px", sm: "16px" }}
-                  color={"#f3c1c1"}
+                  color={"#C3767F"}
                   fontStyle={"italic"}
                 >
                   {`$${psyDAOTokenPrice} per PSY`}
@@ -194,11 +193,14 @@ export const SwapWidget = () => {
                 <Text
                   fontFamily={"Amiri"}
                   fontSize={{ base: "10px", sm: "16px" }}
-                  color={"#f3c1c1"}
+                  color={"#C3767F"}
                   fontStyle={"italic"}
                 >
                   PSY remaining for sale:{" "}
-                  {`${((Number(totalTokensForSaleValue) / 20466831) * 100).toFixed(2)}%`}
+                  {`${(
+                    (Number(totalTokensForSaleValue) / 20466831) *
+                    100
+                  ).toFixed(2)}%`}
                 </Text>
                 <Flex
                   direction={"column"}
@@ -221,7 +223,7 @@ export const SwapWidget = () => {
                     amount={tokenAmount}
                     setAmount={setTokenAmount}
                     header="Receive"
-                    name="psyDAO"
+                    name="PsyDAO"
                     symbol="PSY"
                     image="/windows/swap/PSY.svg"
                     maxBalance={formattedEthBalance}

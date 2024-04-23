@@ -80,24 +80,29 @@ export const TokenContainer = (props: TokenContainerProps) => {
           </Flex>
         )}
       </Flex>
-      <Flex w={"full"} justifyContent={"space-between"} alignItems={"center"}>
+      <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
         <Box
           borderRadius={"full"}
           bg={"white"}
           paddingY={{ base: 1, sm: 2 }}
           paddingX={{ base: 2, sm: 4 }}
+          width={"fit-content"}
         >
-          <Flex
-            gap={1}
-            position={"relative"}
-            height={{ base: "28px", sm: "28px" }}
-            width={{ base: "76px", sm: "96px" }}
-          >
+          <Flex gap={2} position={"relative"} alignItems={"center"} w={"100%"}>
             <Image
               src={props.image}
               alt={`${props.symbol} icon`}
-              layout="fill"
+              height={16}
+              width={16}
             />
+            <Text
+              color={"black"}
+              fontFamily={"Poppins"}
+              fontSize={{ base: 10, sm: 12 }}
+              fontWeight={600}
+            >
+              {props.name}
+            </Text>
           </Flex>
         </Box>
         <Flex gap={2} alignItems={"center"}>
@@ -123,6 +128,7 @@ export const TokenContainer = (props: TokenContainerProps) => {
               props.setAmount(e.target.value);
             }}
             step={1}
+            maxWidth={{ base: 20, md: "100%" }}
           />
           <Text
             fontWeight={700}
