@@ -1,4 +1,4 @@
-import { Flex, Image, Link, Text } from "@chakra-ui/react";
+import { Flex, Image, Link, Show, Text } from "@chakra-ui/react";
 import LinearButton from "components/linear-button";
 import React, { type Dispatch, type SetStateAction, useState } from "react";
 
@@ -30,18 +30,22 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
           color={"#269200"}
         >
           <Text
-            fontSize={{ base: "20px", md: "48px" }}
+            fontSize={{ base: "18px", sm: "30px", md: "48px" }}
             fontFamily={"Amiri"}
             fontStyle={"italic"}
           >
-            To participate in our token sale,
+            To Participate in our Token Sale,
           </Text>
           <Text
-            fontSize={{ base: "16px", md: "24px" }}
+            fontSize={{ base: "14px", sm: "18px", md: "24px" }}
             fontFamily={"Amiri"}
             fontStyle={"italic"}
+            textAlign={"center"}
           >
-            please read and accept our{" "}
+            Please Read and Accept our{" "}
+            <Show breakpoint="(max-width: 380px)">
+              <br />
+            </Show>
             <Link
               cursor={"pointer"}
               href="/documents/psydao-terms-and-conditions.pdf"
@@ -52,16 +56,21 @@ export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
               onClick={() => setUserHasClicked(true)}
             >
               Terms and Conditions
-            </Link>{" "}
-            to proceed.
+            </Link>
+            .
           </Text>
         </Flex>
         <LinearButton
-          customStyle={{ width: "fit-content", padding: "20px" }}
+          customStyle={{ width: "fit-content" }}
           onClick={handleAccept}
           isDisabled={!userHasClicked}
         >
-          <Text fontSize={{ base: "14px", md: "18px" }}>I Accept</Text>
+          <Text
+            fontSize={{ base: "10px", sm: "18px" }}
+            padding={{ base: "8px 16px", sm: "20px" }}
+          >
+            I Accept
+          </Text>
         </LinearButton>
       </Flex>
       <Image
