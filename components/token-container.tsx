@@ -97,9 +97,8 @@ export const TokenContainer = (props: TokenContainerProps) => {
             />
             <Text
               color={"black"}
-              fontFamily={"Poppins"}
+              fontFamily={"Poppins Semibold"}
               fontSize={{ base: 10, sm: 12 }}
-              fontWeight={600}
             >
               {props.name}
             </Text>
