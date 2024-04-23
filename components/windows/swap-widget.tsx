@@ -89,7 +89,7 @@ export const SwapWidget = () => {
           1e18;
 
       if (!isNaN(value)) {
-        setValue(value.toFixed(6));
+        setValue(fromEth ? value.toFixed(2) : value.toFixed(6));
       } else {
         setValue("");
       }
