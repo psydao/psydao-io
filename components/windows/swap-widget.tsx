@@ -100,25 +100,13 @@ export const SwapWidget = () => {
     if (ethPrice?.data && tokenPriceInDollar && focused === "PSY") {
       calculatePriceAndToken(tokenAmount, setEthAmount, ethPrice?.data);
     }
-  }, [
-    calculatePriceAndToken,
-    ethPrice?.data,
-    focused,
-    tokenAmount,
-    tokenPriceInDollar
-  ]);
+  }, [calculatePriceAndToken, ethPrice?.data, tokenAmount, tokenPriceInDollar]);
 
   useEffect(() => {
     if (ethPrice?.data && tokenPriceInDollar && focused === "ETH") {
       calculatePriceAndToken(ethAmount, setTokenAmount, ethPrice?.data, true);
     }
-  }, [
-    calculatePriceAndToken,
-    ethAmount,
-    ethPrice?.data,
-    focused,
-    tokenPriceInDollar
-  ]);
+  }, [calculatePriceAndToken, ethAmount, ethPrice?.data, tokenPriceInDollar]);
 
   const [currentDomain, setCurrentDomain] = useState("");
   const handleGetDomain = () => {
