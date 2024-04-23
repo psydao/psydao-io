@@ -40,17 +40,13 @@ export const TokenContainer = (props: TokenContainerProps) => {
           fontSize={"16px"}
           fontWeight={700}
           textAlign={"start"}
-          fontFamily="'Public Sans'"
+          fontFamily="Poppins Semibold"
         >
           {props.header}
         </Text>
         {props.header === "Send" && (
           <Flex alignItems={"center"} gap={1}>
-            <Text
-              fontSize={"10px"}
-              color={"#656075"}
-              fontFamily="'Public Sans'"
-            >
+            <Text fontSize={"10px"} color={"#656075"} fontFamily="Poppins">
               {`Balance: ${props.maxBalance} ETH`}{" "}
             </Text>
             <Button
@@ -72,7 +68,7 @@ export const TokenContainer = (props: TokenContainerProps) => {
                 fontSize={"10px"}
                 bgGradient={"linear(to-r, #B14CE7, #E09CA4)"}
                 bgClip="text"
-                fontFamily="'Public Sans'"
+                fontFamily="Poppins Semibold"
               >
                 MAX
               </Text>
@@ -80,24 +76,29 @@ export const TokenContainer = (props: TokenContainerProps) => {
           </Flex>
         )}
       </Flex>
-      <Flex w={"full"} justifyContent={"space-between"} alignItems={"center"}>
+      <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
         <Box
           borderRadius={"full"}
           bg={"white"}
           paddingY={{ base: 1, sm: 2 }}
           paddingX={{ base: 2, sm: 4 }}
+          width={"fit-content"}
         >
-          <Flex
-            gap={1}
-            position={"relative"}
-            height={{ base: "28px", sm: "28px" }}
-            width={{ base: "76px", sm: "96px" }}
-          >
+          <Flex gap={2} position={"relative"} alignItems={"center"} w={"100%"}>
             <Image
               src={props.image}
               alt={`${props.symbol} icon`}
-              layout="fill"
+              height={16}
+              width={16}
             />
+            <Text
+              color={"black"}
+              fontFamily={"Poppins Semibold"}
+              fontSize={{ base: 10, sm: 12 }}
+              fontWeight={600}
+            >
+              {props.name}
+            </Text>
           </Flex>
         </Box>
         <Flex gap={2} alignItems={"center"}>
@@ -110,8 +111,9 @@ export const TokenContainer = (props: TokenContainerProps) => {
             fontWeight={600}
             color={"#97929e"}
             value={ethCard ? props.amount : parseInt(props.amount)}
+            onWheel={(e) => (e.target as HTMLElement).blur()}
             fontSize={{ base: "12px", sm: "16px" }}
-            fontFamily="'Public Sans'"
+            fontFamily="Poppins"
             onFocus={() => props.setFocused(props.symbol)}
             onChange={(e) => {
               const value = ethCard
@@ -120,12 +122,13 @@ export const TokenContainer = (props: TokenContainerProps) => {
               props.setAmount(value);
             }}
             step={1}
+            maxWidth={{ base: 20, md: "100%" }}
           />
           <Text
             fontWeight={700}
             color={"black"}
             fontSize={{ base: "12px", sm: "16px" }}
-            fontFamily="'Public Sans'"
+            fontFamily="Poppins Semibold"
           >
             {props.symbol}
           </Text>

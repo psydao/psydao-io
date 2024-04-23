@@ -1,29 +1,46 @@
 import { Box } from "@chakra-ui/react";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { ConnectButton, useChainModal } from "@rainbow-me/rainbowkit";
 import LinearButton from "./linear-button";
 import { useBuyToken } from "hooks/useBuyToken";
 import { useSignInWallet } from "hooks/useSignInWallet";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { formatEther } from "viem";
 import { customToast } from "./toasts/SwapSuccess";
+import { Zoom } from "react-toastify";
 
 interface ConnectWalletButtonProps {
   tokenAmount: string;
   ethToSend: number;
   walletBalance: string;
   totalTokensForSaleValue?: string;
+  isWrongNetwork?: boolean;
 }
 
 export const ConnectWalletButton = ({
   tokenAmount,
   ethToSend,
   walletBalance,
-  totalTokensForSaleValue
+  totalTokensForSaleValue,
+  isWrongNetwork
 }: ConnectWalletButtonProps) => {
   const { buyToken, isBlackListWallet, error, isConfirmed, isConfirming } =
     useBuyToken();
   const signIn = useSignInWallet();
+
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     if (!isBlackListWallet && typeof isBlackListWallet === "boolean") {
@@ -35,11 +52,13 @@ export const ConnectWalletButton = ({
     if (error && error.message.includes("User rejected")) {
       customToast(
         {
-          mainText: "Request rejected by user. Please try again"
+          mainText: "Request rejected by user. Please try again."
         },
         {
-          type: "error"
-        }
+          type: "error",
+          transition: Zoom
+        },
+        width <= 768
       );
     } else if (
       error &&
@@ -47,11 +66,13 @@ export const ConnectWalletButton = ({
     ) {
       customToast(
         {
-          mainText: "Please enter an amount greater than 0"
+          mainText: "Please enter an amount greater than 0."
         },
         {
-          type: "error"
-        }
+          type: "error",
+          transition: Zoom
+        },
+        width <= 768
       );
     } else if (
       error &&
@@ -60,20 +81,25 @@ export const ConnectWalletButton = ({
     ) {
       customToast(
         {
-          mainText: "An error occurred. Please try again later"
+          mainText: "An error occurred. Please try again later."
         },
         {
-          type: "error"
-        }
+          type: "error",
+          transition: Zoom
+        },
+        width <= 768
       );
     } else if (isConfirmed) {
       customToast(
         {
-          mainText: "You’ve successfully converted ETH to PSY"
+          mainText:
+            "Your transaction was successful. You will receive your PsyDao tokens once the sale is closed."
         },
         {
-          type: "success"
-        }
+          type: "success",
+          transition: Zoom
+        },
+        width <= 768
       );
     }
   }, [error, isConfirmed]);
@@ -81,6 +107,7 @@ export const ConnectWalletButton = ({
   const invalidAmountMoreEthThanWallet =
     Number(formatEther(BigInt(!isNaN(ethToSend) ? ethToSend : 0))) >
     Number(walletBalance);
+  const { openChainModal } = useChainModal();
 
   return (
     <ConnectButton.Custom>
@@ -91,10 +118,11 @@ export const ConnectWalletButton = ({
           if (invalidAmountMoreEthThanWallet) {
             customToast(
               {
-                mainText: "Not enough ETH for the transaction"
+                mainText: "Not enough ETH for the transaction."
               },
               {
-                type: "error"
+                type: "error",
+                transition: Zoom
               }
             );
             return;
@@ -105,10 +133,11 @@ export const ConnectWalletButton = ({
           ) {
             customToast(
               {
-                mainText: "Amount requested exclude token sale value"
+                mainText: "Amount requested exceeds token sale value."
               },
               {
-                type: "error"
+                type: "error",
+                transition: Zoom
               }
             );
             return;
@@ -132,13 +161,22 @@ export const ConnectWalletButton = ({
                   </LinearButton>
                 );
               }
-              if (chain.unsupported) {
+              if (isWrongNetwork ?? chain.unsupported) {
                 return (
                   <LinearButton
-                    customStyle={{ width: "100%", mb: 9 }}
-                    onClick={openConnectModal}
+                    customStyle={{
+                      width: "100%",
+                      mb: 9
+                    }}
+                    onClick={
+                      openChainModal
+                        ? openChainModal
+                        : () => {
+                            console.error("Cannot open chain modal");
+                          }
+                    }
                   >
-                    Wrong network
+                    Change network
                   </LinearButton>
                 );
               }
@@ -151,7 +189,7 @@ export const ConnectWalletButton = ({
                   onClick={sendTransactionHandler}
                   isConfirming={isConfirming}
                 >
-                  {isConfirming ? "PSY incoming..." : "Buy"}
+                  {isConfirming ? "Transaction in progress..." : "Buy"}
                 </LinearButton>
               );
             })()}
