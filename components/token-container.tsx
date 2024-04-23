@@ -108,7 +108,7 @@ export const TokenContainer = (props: TokenContainerProps) => {
           <Input
             variant="flushed"
             focusBorderColor="#f2bebe"
-            placeholder={ethCard ? "0.00" : "0"}
+            placeholder={"0.00"}
             textAlign={"right"}
             type="number"
             fontWeight={600}

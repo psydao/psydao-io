@@ -54,18 +54,15 @@ export const SwapWidget = () => {
   const calculateTokenAmount = useCallback(
     (amountOfEth: string) => {
       if (ethPrice?.data && tokenPriceInDollar) {
-        const ethPriceBigInt = BigInt(Number(ethPrice?.data));
-        const tokenPriceInDollarBigInt = BigInt(Number(tokenPriceInDollar));
+        const ethPriceBigInt = BigInt(ethPrice?.data);
+        const tokenPriceInDollarBigInt = BigInt(tokenPriceInDollar.toString());
         const amountOfEthBigInt = parseEther(amountOfEth);
 
-        const tokenAmount =
-          ((Number(amountOfEthBigInt) /
-            (Number(tokenPriceInDollarBigInt) / Number(ethPriceBigInt) + 1)) *
-            1e18) /
-          1e10 /
-          1e18;
+        let tokenAmount =
+          amountOfEthBigInt /
+          (tokenPriceInDollarBigInt / ethPriceBigInt + BigInt(1));
 
-        return tokenAmount;
+        return formatUnits(tokenAmount, 10);
       }
 
       return 0;
@@ -80,17 +77,30 @@ export const SwapWidget = () => {
       ethPrice: any,
       fromEth?: boolean
     ) => {
-      const amountValue = amount.length ? Number(amount) : 0;
+      if (tokenPriceInDollar) {
+        const amountFormatted = amount.includes(",")
+          ? amount.replace(",", "")
+          : amount.replace(".", "");
 
-      const value = fromEth
-        ? calculateTokenAmount(amount)
-        : ((Number(tokenPriceInDollar) / ethPrice + 1) * 1e10 * amountValue) /
-          1e18;
+        const decimalPlaces = amount.includes(".")
+          ? amount.split(".")[1]?.length
+          : amount.split(",")[1]?.length;
 
-      if (!isNaN(value)) {
-        setValue(fromEth ? value.toFixed(2) : value.toFixed(6));
-      } else {
-        setValue("");
+        const amountValue = amount.length ? BigInt(amountFormatted) : BigInt(0);
+        const tokenPriceInDollarBigInt = BigInt(tokenPriceInDollar.toString());
+
+        const value = fromEth
+          ? calculateTokenAmount(amount)
+          : formatUnits(
+              amountValue *
+                (tokenPriceInDollarBigInt / BigInt(ethPrice) + BigInt(1)),
+              8 + (decimalPlaces ?? 0)
+            );
+        if (value) {
+          setValue(Number(value).toFixed(6));
+        } else {
+          setValue("0,00");
+        }
       }
     },
     [calculateTokenAmount, tokenPriceInDollar]
