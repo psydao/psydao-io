@@ -60,9 +60,11 @@ export const SwapWidget = () => {
         const amountOfEthBigInt = parseEther(amountOfEth);
 
         const tokenAmount =
-          Number(
-            (amountOfEthBigInt * ethPriceBigInt) / tokenPriceInDollarBigInt
-          ) / 1e10;
+          ((Number(amountOfEthBigInt) /
+            (Number(tokenPriceInDollarBigInt) / Number(ethPriceBigInt) + 1)) *
+            1e18) /
+          1e10 /
+          1e18;
 
         return tokenAmount;
       }
@@ -83,11 +85,11 @@ export const SwapWidget = () => {
 
       const value = fromEth
         ? calculateTokenAmount(amount)
-        : (Number(tokenPriceInDollar) / ethPrice) * 1e10 * amountValue;
+        : ((Number(tokenPriceInDollar) / ethPrice + 1) * 1e10 * amountValue) /
+          1e18;
 
       if (!isNaN(value)) {
-        const formattedValue = value / 1e18;
-        setValue(fromEth ? value.toString() : formattedValue.toString());
+        setValue(value.toFixed(6));
       } else {
         setValue("");
       }
@@ -232,10 +234,12 @@ export const SwapWidget = () => {
                     walletBalance={formattedEthBalance}
                     totalTokensForSaleValue={totalTokensForSaleValue}
                     ethToSend={
-                      (Math.floor(Number(tokenPriceInDollar) / ethPrice?.data) +
-                        1) *
-                      1e10 *
-                      Number(tokenAmount)
+                      (Math.floor(
+                        Number(tokenPriceInDollar) / ethPrice?.data + 1
+                      ) *
+                        1e10 *
+                        Number(tokenAmount)) /
+                      1e18
                     }
                   />
                 </Flex>
