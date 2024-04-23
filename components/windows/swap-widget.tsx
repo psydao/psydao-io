@@ -285,11 +285,11 @@ export const SwapWidget = () => {
                         totalTokensForSaleValue={totalTokensForSaleValue}
                         ethToSend={
                           (Math.floor(
-                            Number(tokenPriceInDollar) / ethPrice?.data
-                          ) +
-                            1) *
-                          1e10 *
-                          Number(tokenAmount)
+                            Number(tokenPriceInDollar) / ethPrice?.data + 1
+                          ) *
+                            1e10 *
+                            Number(tokenAmount)) /
+                          1e18
                         }
                         isWrongNetwork={isWrongNetwork}
                       />
