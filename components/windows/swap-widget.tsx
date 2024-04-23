@@ -129,11 +129,8 @@ export const SwapWidget = () => {
     handleGetDomain();
   }, [currentDomain]);
 
-  const isProduction = currentDomain === "https://www.psydao.io";
-
   const isWrongNetwork =
-    (isProduction && chainId !== 1) ||
-    (!isProduction && chainId !== 1 && chainId !== 11155111);
+    chainId !== 1 || (chainId !== 1 && chainId !== 11155111);
 
   return (
     <Window
