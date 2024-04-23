@@ -12,7 +12,7 @@ import {
   trustWallet
 } from "@rainbow-me/rainbowkit/wallets";
 import { WagmiProvider, http } from "wagmi";
-import { mainnet, sepolia } from "wagmi/chains";
+import { mainnet } from "wagmi/chains";
 import { useColorMode } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -28,10 +28,9 @@ const wagmiConfig = getDefaultConfig({
       wallets: [argentWallet, trustWallet, ledgerWallet]
     }
   ],
-  chains: [mainnet, sepolia],
+  chains: [mainnet],
   transports: {
-    [mainnet.id]: http(),
-    [sepolia.id]: http()
+    [mainnet.id]: http()
   },
   ssr: true
 });

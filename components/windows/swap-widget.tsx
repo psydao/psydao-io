@@ -1,5 +1,4 @@
 import { Box, Flex, Image, Link, Text, useMediaQuery } from "@chakra-ui/react";
-
 import { Window } from "components/window";
 import { TokenContainer } from "components/token-container";
 import { ConnectWalletButton } from "components/connect-button";
@@ -34,7 +33,7 @@ export const SwapWidget = () => {
     localStorage.getItem("acceptedTermsAndConditions") === "true"
   );
 
-  const { address } = useAccount();
+  const { address, chainId, chain } = useAccount();
   const ethBalance = useBalance({
     address: address
   });
@@ -121,6 +120,18 @@ export const SwapWidget = () => {
     tokenPriceInDollar
   ]);
 
+  const [currentDomain, setCurrentDomain] = useState("");
+  const handleGetDomain = () => {
+    setCurrentDomain(window.location.origin);
+  };
+
+  useEffect(() => {
+    handleGetDomain();
+  }, [currentDomain]);
+
+  const isWrongNetwork =
+    chainId !== 1 || (chainId !== 1 && chainId !== 11155111);
+
   return (
     <Window
       id="swap"
@@ -143,90 +154,34 @@ export const SwapWidget = () => {
           <SwapTsAndCs setTermsAndConditions={setTermsAndConditions} />
         ) : (
           <>
-            <Box p={6} pb={8}>
-              <Text
-                textColor="#269200"
-                fontWeight="500"
-                fontStyle="italic"
-                mt="1"
-                fontSize={{ base: "20px", sm: "36px" }}
-                fontFamily={"Amiri"}
-              >
-                PSY token sale now open
-              </Text>
-              <Link
-                textDecoration={"underline"}
-                textColor="#269200"
-                fontWeight="400"
-                fontStyle="italic"
-                fontSize={{ base: "18px", md: "24px" }}
-                textUnderlineOffset={"12px"}
-                fontFamily={"Amiri"}
-                href="/documents/psydao-whitepaper.pdf"
-                target="_blank"
-                rel="noreferrer noopener"
-              >
-                Whitepaper
-              </Link>
-            </Box>
-            <Flex w={"full"} alignItems={"center"} direction={"column"}>
-              <Flex
-                direction={"column"}
-                alignItems={"start"}
-                textAlign={"center"}
-                w={"fit-content"}
-                gap={2}
-              >
-                <Image
-                  src="/windows/swap/swap-banner-image.png"
-                  alt=""
-                  margin="0 auto"
-                  maxW={{ base: "220px", sm: "390px" }}
-                />
-                <Text
-                  fontFamily={"Amiri"}
-                  fontSize={{ base: "10px", sm: "16px" }}
-                  color={"#f3c1c1"}
-                  fontStyle={"italic"}
-                >
-                  {`$${psyDAOTokenPrice} per PSY`}
-                </Text>
-                <Text
-                  fontFamily={"Amiri"}
-                  fontSize={{ base: "10px", sm: "16px" }}
-                  color={"#f3c1c1"}
-                  fontStyle={"italic"}
-                >
-                  PSY remaining for sale:{" "}
-                  {`${((Number(totalTokensForSaleValue) / 20466831) * 100).toFixed(2)}%`}
-                </Text>
-                <Flex
-                  direction={"column"}
-                  alignItems={"center"}
-                  w={"full"}
-                  gap={4}
-                >
-                  <TokenContainer
-                    amount={ethAmount}
-                    setAmount={setEthAmount}
-                    header="Send"
-                    name="Ethereum"
-                    symbol="ETH"
-                    image="/windows/swap/ETH.svg"
-                    maxBalance={formattedEthBalance}
-                    setFocused={setFocused}
+            {address && isWrongNetwork ? (
+              <>
+                <Flex p={3} pb={5} direction={"column"} gap={5}>
+                  <Text
+                    textColor="#269200"
+                    fontWeight="500"
+                    fontStyle="italic"
+                    mt="1"
+                    fontSize={{ base: "20px", sm: "36px" }}
+                    fontFamily={"Amiri"}
+                  >
+                    Wrong network!
+                  </Text>
+                  <Text
+                    textColor="#269200"
+                    fontWeight="500"
+                    fontStyle="italic"
+                    mt="1"
+                    fontSize={{ base: "14px", sm: "24px" }}
+                    fontFamily={"Amiri"}
+                  >
+                    Please switch to Ethereum mainnet
+                  </Text>
+                  <Image
+                    src="/windows/swap/restricted-countries.png"
+                    alt="Wrong network background"
                   />
-                  <ArrowDownIcon />
-                  <TokenContainer
-                    amount={tokenAmount}
-                    setAmount={setTokenAmount}
-                    header="Receive"
-                    name="psyDAO"
-                    symbol="PSY"
-                    image="/windows/swap/PSY.svg"
-                    maxBalance={formattedEthBalance}
-                    setFocused={setFocused}
-                  />
+
                   <ConnectWalletButton
                     tokenAmount={tokenAmount}
                     walletBalance={formattedEthBalance}
@@ -237,10 +192,122 @@ export const SwapWidget = () => {
                       1e10 *
                       Number(tokenAmount)
                     }
+                    isWrongNetwork={isWrongNetwork}
                   />
                 </Flex>
-              </Flex>
-            </Flex>
+              </>
+            ) : (
+              <>
+                {" "}
+                <Box p={6} pb={8}>
+                  <Text
+                    textColor="#269200"
+                    fontWeight="500"
+                    fontStyle="italic"
+                    mt="1"
+                    fontSize={{ base: "20px", sm: "36px" }}
+                    fontFamily={"Amiri"}
+                  >
+                    PSY token sale now open
+                  </Text>
+                  <Link
+                    textDecoration={"underline"}
+                    textColor="#269200"
+                    fontWeight="400"
+                    fontSize={{ base: "18px", md: "24px" }}
+                    textUnderlineOffset={"12px"}
+                    fontFamily={"Amiri"}
+                    href="/documents/psydao-whitepaper.pdf"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    Whitepaper
+                  </Link>
+                </Box>
+                <Flex w={"full"} alignItems={"center"} direction={"column"}>
+                  <Flex
+                    direction={"column"}
+                    alignItems={"start"}
+                    textAlign={"center"}
+                    w={"fit-content"}
+                    gap={2}
+                  >
+                    <Image
+                      src="/windows/swap/swap-banner-image.png"
+                      alt=""
+                      margin="0 auto"
+                      maxW={{ base: "220px", sm: "390px" }}
+                    />
+                    <Text
+                      fontFamily={"Amiri"}
+                      fontSize={{ base: "10px", sm: "16px" }}
+                      color={"#C3767F"}
+                      fontStyle={"italic"}
+                    >
+                      {`$${psyDAOTokenPrice} per PSY`}
+                    </Text>
+                    <Text
+                      fontFamily={"Amiri"}
+                      fontSize={{ base: "10px", sm: "16px" }}
+                      color={"#C3767F"}
+                      fontStyle={"italic"}
+                    >
+                      PSY remaining for sale:{" "}
+                      {`${
+                        totalTokensForSaleValue
+                          ? (
+                              (Number(totalTokensForSaleValue) / 20466831) *
+                              100
+                            ).toFixed(2)
+                          : "0"
+                      }%`}
+                    </Text>
+                    <Flex
+                      direction={"column"}
+                      alignItems={"center"}
+                      w={"full"}
+                      gap={4}
+                    >
+                      <TokenContainer
+                        amount={ethAmount}
+                        setAmount={setEthAmount}
+                        header="Send"
+                        name="Ethereum"
+                        symbol="ETH"
+                        image="/windows/swap/ETH.svg"
+                        maxBalance={formattedEthBalance}
+                        setFocused={setFocused}
+                      />
+                      <ArrowDownIcon />
+                      <TokenContainer
+                        amount={tokenAmount}
+                        setAmount={setTokenAmount}
+                        header="Receive"
+                        name="PsyDAO"
+                        symbol="PSY"
+                        image="/windows/swap/PSY.svg"
+                        maxBalance={formattedEthBalance}
+                        setFocused={setFocused}
+                      />
+                      <ConnectWalletButton
+                        tokenAmount={tokenAmount}
+                        walletBalance={formattedEthBalance}
+                        totalTokensForSaleValue={totalTokensForSaleValue}
+                        ethToSend={
+                          (Math.floor(
+                            Number(tokenPriceInDollar) / ethPrice?.data
+                          ) +
+                            1) *
+                          1e10 *
+                          Number(tokenAmount)
+                        }
+                        isWrongNetwork={isWrongNetwork}
+                      />
+                    </Flex>
+                  </Flex>
+                </Flex>
+              </>
+            )}
           </>
         )}
         <Image
