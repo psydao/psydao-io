@@ -117,8 +117,8 @@ export const SwapWidget = () => {
     handleGetDomain();
   }, [currentDomain]);
 
-  const isWrongNetwork =
-    chainId !== 1 || (chainId !== 1 && chainId !== 11155111);
+  // TODO CHANGE BEFORE DEPLOYING ON MAINNET
+  const isWrongNetwork = chainId !== 1 && chainId !== 11155111;
 
   return (
     <Window
