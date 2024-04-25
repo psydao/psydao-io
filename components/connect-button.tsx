@@ -126,7 +126,8 @@ export const ConnectWalletButton = ({
               {
                 type: "error",
                 transition: Zoom
-              }
+              },
+              width <= 768
             );
             return;
           }
@@ -141,7 +142,8 @@ export const ConnectWalletButton = ({
               {
                 type: "error",
                 transition: Zoom
-              }
+              },
+              width <= 768
             );
             return;
           }
