@@ -5,14 +5,14 @@ import { useBuyToken } from "hooks/useBuyToken";
 import { useSignInWallet } from "hooks/useSignInWallet";
 import { useEffect, useState } from "react";
 
-import { formatEther } from "viem";
 import { customToast } from "./toasts/SwapSuccess";
 import { Zoom } from "react-toastify";
 
 interface ConnectWalletButtonProps {
   tokenAmount: string;
-  ethToSend: number;
+  ethToSend: string;
   walletBalance: string;
+  clearAmounts?: () => void;
   totalTokensForSaleValue?: string;
   isWrongNetwork?: boolean;
 }
@@ -21,6 +21,7 @@ export const ConnectWalletButton = ({
   tokenAmount,
   ethToSend,
   walletBalance,
+  clearAmounts,
   totalTokensForSaleValue,
   isWrongNetwork
 }: ConnectWalletButtonProps) => {
@@ -101,12 +102,14 @@ export const ConnectWalletButton = ({
         },
         width <= 768
       );
+      if (clearAmounts) {
+        clearAmounts();
+      }
     }
   }, [error, isConfirmed]);
 
   const invalidAmountMoreEthThanWallet =
-    Number(formatEther(BigInt(!isNaN(ethToSend) ? ethToSend : 0))) >
-    Number(walletBalance);
+    Number(ethToSend) > Number(walletBalance);
   const { openChainModal } = useChainModal();
 
   return (
@@ -142,10 +145,7 @@ export const ConnectWalletButton = ({
             );
             return;
           }
-          await buyToken(
-            Number(tokenAmount),
-            formatEther(BigInt(!isNaN(ethToSend) ? ethToSend : 0))
-          );
+          await buyToken(Number(tokenAmount), ethToSend.toString());
         };
 
         return (
