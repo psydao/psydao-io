@@ -27,7 +27,7 @@ type TokenContainerProps = FlexProps & {
 export const TokenContainer = (props: TokenContainerProps) => {
   const ethCard = props.symbol === "ETH";
 
-  const estimateGas = async () => {
+  const maxValueWithGas = async () => {
     if (!props.maxBalance || parseFloat(props.maxBalance) === 0) return "0";
 
     const defaultGasEstimate = parseEther("0.0045");
@@ -42,20 +42,21 @@ export const TokenContainer = (props: TokenContainerProps) => {
           const maxFee = formatEther(feeData.maxFeePerGas);
           const gasPriceEther = parseFloat(maxFee);
           if (!isNaN(gasPriceEther)) {
-            const gasCost = parseEther(
-              (gasPriceEther * maxGasUsage).toString()
-            );
-            if (valueAsBigNumber - gasCost <= 0n) return "0.0045";
-            return Number(formatEther(valueAsBigNumber - gasCost)).toFixed(8);
+            let gasCost = parseEther((gasPriceEther * maxGasUsage).toString());
+            if (gasCost < defaultGasEstimate) {
+              gasCost = defaultGasEstimate;
+            }
+            const valMinusGas = valueAsBigNumber - gasCost;
+            if (valMinusGas <= 0n) return "0";
+            return formatEther(valMinusGas);
           }
         }
-      } else return "0.0045";
+      }
     } catch (error) {}
 
     const valMinusGas = valueAsBigNumber - defaultGasEstimate;
-    if (valMinusGas <= 0n) return "0.0045";
-
-    return Number(formatEther(valMinusGas)).toFixed(8);
+    if (valMinusGas <= 0n) return "0";
+    return formatEther(valMinusGas);
   };
 
   return (
@@ -92,11 +93,9 @@ export const TokenContainer = (props: TokenContainerProps) => {
               h={"fit-content"}
               p={"2px 6px"}
               onClick={async () => {
-                const gas = await estimateGas();
-                if (gas && Number(props.maxBalance) > Number(gas)) {
-                  props.setAmount(
-                    (Number(props.maxBalance) - Number(gas)).toFixed(8)
-                  );
+                const valueWithGas = await maxValueWithGas();
+                if (valueWithGas) {
+                  props.setAmount(Number(valueWithGas).toFixed(8));
                   props.setFocused(props.symbol);
                   props.calculatePriceAndToken &&
                     props.calculatePriceAndToken();
