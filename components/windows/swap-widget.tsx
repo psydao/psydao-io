@@ -75,7 +75,6 @@ export const SwapWidget = () => {
     (
       amount: string,
       setValue: Dispatch<SetStateAction<string>>,
-      ethPrice: any,
       fromEth?: boolean
     ) => {
       if (tokenPriceInDollar) {
@@ -113,13 +112,13 @@ export const SwapWidget = () => {
 
   useEffect(() => {
     if (ethPrice?.data && tokenPriceInDollar && focused === "PSY") {
-      calculatePriceAndToken(tokenAmount, setEthAmount, ethPrice?.data);
+      calculatePriceAndToken(tokenAmount, setEthAmount);
     }
   }, [calculatePriceAndToken, ethPrice?.data, tokenAmount, tokenPriceInDollar]);
 
   useEffect(() => {
     if (ethPrice?.data && tokenPriceInDollar && focused === "ETH") {
-      calculatePriceAndToken(ethAmount, setTokenAmount, ethPrice?.data, true);
+      calculatePriceAndToken(ethAmount, setTokenAmount, true);
     }
   }, [calculatePriceAndToken, ethAmount, ethPrice?.data, tokenPriceInDollar]);
 
@@ -136,6 +135,10 @@ export const SwapWidget = () => {
   useEffect(() => {
     handleGetDomain();
   }, [currentDomain]);
+
+  const handleCalculatePriceAndToken = () => {
+    calculatePriceAndToken(ethAmount, setTokenAmount, true);
+  };
 
   const isWrongNetwork = chainId !== 1;
 
@@ -279,14 +282,7 @@ export const SwapWidget = () => {
                         image="/windows/swap/ETH.svg"
                         maxBalance={formattedEthBalance}
                         setFocused={setFocused}
-                        calculatePriceAndToken={() =>
-                          calculatePriceAndToken(
-                            ethAmount,
-                            setTokenAmount,
-                            ethPrice?.data,
-                            true
-                          )
-                        }
+                        calculatePriceAndToken={handleCalculatePriceAndToken}
                       />
                       <ArrowDownIcon />
                       <TokenContainer
