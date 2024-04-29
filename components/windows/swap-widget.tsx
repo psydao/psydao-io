@@ -146,7 +146,7 @@ export const SwapWidget = () => {
     <Window
       id="swap"
       height="80%"
-      maxHeight="640px"
+      maxHeight={"640px"}
       minHeight={isLargerThanMd ? "552px" : "350px"}
       width="95%"
       maxWidth="655px"
@@ -161,12 +161,14 @@ export const SwapWidget = () => {
         {isRescricted ? (
           <RestrictedCountries />
         ) : !termsAndConditions ? (
-          <SwapTsAndCs setTermsAndConditions={setTermsAndConditions} />
+          <Box pt={{ base: 0, sm: 2 }} h={"100%"}>
+            <SwapTsAndCs setTermsAndConditions={setTermsAndConditions} />
+          </Box>
         ) : (
           <>
             {address && isWrongNetwork ? (
               <>
-                <Flex p={3} pb={5} direction={"column"} gap={5}>
+                <Flex p={2} pb={5} direction={"column"} gap={4}>
                   <Text
                     textColor="#269200"
                     fontWeight="500"
@@ -204,13 +206,14 @@ export const SwapWidget = () => {
             ) : (
               <>
                 {" "}
-                <Box p={6} pb={8}>
+                <Box p={4} pb={6}>
                   <Text
                     textColor="#269200"
                     fontWeight="500"
                     fontStyle="italic"
                     mt="1"
                     fontSize={{ base: "20px", sm: "36px" }}
+                    lineHeight={{ base: "20px", sm: "36px" }}
                     fontFamily={"Amiri"}
                   >
                     PSY token sale now open
@@ -220,6 +223,7 @@ export const SwapWidget = () => {
                     textColor="#269200"
                     fontWeight="400"
                     fontSize={{ base: "18px", md: "24px" }}
+                    lineHeight={{ base: "18px", md: "24px" }}
                     textUnderlineOffset={"12px"}
                     fontFamily={"Amiri"}
                     href="/documents/psydao-whitepaper.pdf"
