@@ -13,7 +13,7 @@ import {
   useMemo
 } from "react";
 import { useAccount, useBalance } from "wagmi";
-import { formatEther, formatUnits, parseEther, parseUnits } from "viem";
+import { formatUnits, parseEther } from "viem";
 import { SwapTsAndCs } from "components/swap-widget/SwapTsAndCs";
 import { psyDAOTokenPrice } from "constants/psyTokenPrice";
 import { useReadEthPrice } from "services/web3/useReadEthPrice";
@@ -33,13 +33,14 @@ export const SwapWidget = () => {
     localStorage.getItem("acceptedTermsAndConditions") === "true"
   );
 
-  const { address, chainId, chain } = useAccount();
+  const { address, chainId } = useAccount();
   const ethBalance = useBalance({
     address: address
   });
-  const formattedEthBalance = parseFloat(
-    formatUnits(ethBalance.data ? ethBalance.data.value : BigInt(0), 18)
-  ).toPrecision(4);
+  const formattedEthBalance = formatUnits(
+    ethBalance.data ? ethBalance.data.value : BigInt(0),
+    18
+  );
 
   const ethPrice = useReadEthPrice();
   const { data: tokenPriceInDollar } = useReadTokenPriceInDollar();
@@ -52,18 +53,17 @@ export const SwapWidget = () => {
   }, [totalTokensForSale]);
 
   const calculateTokenAmount = useCallback(
-    (amountOfEth: number) => {
+    (amountOfEth: string) => {
       if (ethPrice?.data && tokenPriceInDollar) {
         const ethPriceBigInt = BigInt(Number(ethPrice?.data));
         const tokenPriceInDollarBigInt = BigInt(Number(tokenPriceInDollar));
-        const amountOfEthBigInt = parseEther(amountOfEth.toString());
+        const amountOfEthBigInt = parseEther(amountOfEth);
 
         const tokenAmount =
-          Number(
-            (amountOfEthBigInt * ethPriceBigInt) / tokenPriceInDollarBigInt
-          ) / 1e10;
+          amountOfEthBigInt /
+          (tokenPriceInDollarBigInt / ethPriceBigInt + BigInt(1));
 
-        return Math.round(tokenAmount);
+        return formatUnits(tokenAmount, 10);
       }
 
       return 0;
@@ -75,50 +75,57 @@ export const SwapWidget = () => {
     (
       amount: string,
       setValue: Dispatch<SetStateAction<string>>,
-      ethPrice: any,
       fromEth?: boolean
     ) => {
-      const amountValue = amount.length ? Number(amount) : 0;
-
-      const value = fromEth
-        ? calculateTokenAmount(amountValue)
-        : (Math.floor(Number(tokenPriceInDollar) / ethPrice) + 1) *
-          1e10 *
-          amountValue;
-
-      if (!isNaN(value)) {
-        const formattedEther = formatEther(BigInt(value));
-        setValue(fromEth ? value.toString() : formattedEther);
-      } else {
-        setValue("");
+      if (tokenPriceInDollar) {
+        const value = fromEth
+          ? calculateTokenAmount(amount)
+          : calculateEthAmount(amount);
+        if (value) {
+          setValue(Number(value).toFixed(8));
+        } else {
+          setValue("0,00");
+        }
       }
     },
     [calculateTokenAmount, tokenPriceInDollar]
   );
 
+  const calculateEthAmount = (amount: string): string => {
+    if (ethPrice?.data && tokenPriceInDollar && Number(amount) > 0) {
+      const amountFormatted = amount.includes(",")
+        ? amount.replace(",", "")
+        : amount.replace(".", "");
+
+      const decimalPlaces = amount.includes(".")
+        ? amount.split(".")[1]?.length
+        : amount.split(",")[1]?.length;
+      const amountValue = amount.length ? BigInt(amountFormatted) : BigInt(0);
+      const tokenPriceInDollarBigInt = BigInt(Number(tokenPriceInDollar));
+      const formula =
+        tokenPriceInDollarBigInt / BigInt(Number(ethPrice?.data)) + BigInt(1);
+
+      return formatUnits(formula * amountValue, 8 + (decimalPlaces ?? 0));
+    }
+    return "0";
+  };
+
   useEffect(() => {
     if (ethPrice?.data && tokenPriceInDollar && focused === "PSY") {
-      calculatePriceAndToken(tokenAmount, setEthAmount, ethPrice?.data);
+      calculatePriceAndToken(tokenAmount, setEthAmount);
     }
-  }, [
-    calculatePriceAndToken,
-    ethPrice?.data,
-    focused,
-    tokenAmount,
-    tokenPriceInDollar
-  ]);
+  }, [calculatePriceAndToken, ethPrice?.data, tokenAmount, tokenPriceInDollar]);
 
   useEffect(() => {
     if (ethPrice?.data && tokenPriceInDollar && focused === "ETH") {
-      calculatePriceAndToken(ethAmount, setTokenAmount, ethPrice?.data, true);
+      calculatePriceAndToken(ethAmount, setTokenAmount, true);
     }
-  }, [
-    calculatePriceAndToken,
-    ethAmount,
-    ethPrice?.data,
-    focused,
-    tokenPriceInDollar
-  ]);
+  }, [calculatePriceAndToken, ethAmount, ethPrice?.data, tokenPriceInDollar]);
+
+  const clearAmounts = () => {
+    setTokenAmount("");
+    setEthAmount("");
+  };
 
   const [currentDomain, setCurrentDomain] = useState("");
   const handleGetDomain = () => {
@@ -129,8 +136,11 @@ export const SwapWidget = () => {
     handleGetDomain();
   }, [currentDomain]);
 
-  const isWrongNetwork =
-    chainId !== 1 || (chainId !== 1 && chainId !== 11155111);
+  const handleCalculatePriceAndToken = () => {
+    calculatePriceAndToken(ethAmount, setTokenAmount, true);
+  };
+
+  const isWrongNetwork = chainId !== 1;
 
   return (
     <Window
@@ -186,12 +196,7 @@ export const SwapWidget = () => {
                     tokenAmount={tokenAmount}
                     walletBalance={formattedEthBalance}
                     totalTokensForSaleValue={totalTokensForSaleValue}
-                    ethToSend={
-                      (Math.floor(Number(tokenPriceInDollar) / ethPrice?.data) +
-                        1) *
-                      1e10 *
-                      Number(tokenAmount)
-                    }
+                    ethToSend={calculateEthAmount(tokenAmount)}
                     isWrongNetwork={isWrongNetwork}
                   />
                 </Flex>
@@ -277,6 +282,7 @@ export const SwapWidget = () => {
                         image="/windows/swap/ETH.svg"
                         maxBalance={formattedEthBalance}
                         setFocused={setFocused}
+                        calculatePriceAndToken={handleCalculatePriceAndToken}
                       />
                       <ArrowDownIcon />
                       <TokenContainer
@@ -293,15 +299,9 @@ export const SwapWidget = () => {
                         tokenAmount={tokenAmount}
                         walletBalance={formattedEthBalance}
                         totalTokensForSaleValue={totalTokensForSaleValue}
-                        ethToSend={
-                          (Math.floor(
-                            Number(tokenPriceInDollar) / ethPrice?.data
-                          ) +
-                            1) *
-                          1e10 *
-                          Number(tokenAmount)
-                        }
+                        ethToSend={calculateEthAmount(tokenAmount)}
                         isWrongNetwork={isWrongNetwork}
+                        clearAmounts={clearAmounts}
                       />
                     </Flex>
                   </Flex>

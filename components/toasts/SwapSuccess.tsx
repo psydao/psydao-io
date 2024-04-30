@@ -4,8 +4,7 @@ import {
   type Id,
   toast,
   type ToastOptions,
-  type TypeOptions,
-  ToastContainer
+  type TypeOptions
 } from "react-toastify";
 import CheckIcon from "public/icons/check.svg";
 

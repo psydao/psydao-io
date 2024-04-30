@@ -1,4 +1,9 @@
 import {
+  defaultGasEstimate,
+  maxGasUsage
+} from "@/constants/ethMaxValueWithGas";
+import { mainnetClient } from "@/constants/publicClient";
+import {
   Box,
   Button,
   Flex,
@@ -8,6 +13,8 @@ import {
 } from "@chakra-ui/react";
 import Image from "next/image";
 import { type Dispatch, type SetStateAction } from "react";
+import { formatEther, parseEther } from "viem";
+import { estimateFeesPerGas } from "viem/actions";
 
 type TokenContainerProps = FlexProps & {
   image: string;
@@ -18,10 +25,62 @@ type TokenContainerProps = FlexProps & {
   setAmount: Dispatch<SetStateAction<string>>;
   setFocused: Dispatch<SetStateAction<string>>;
   maxBalance?: string;
+  calculatePriceAndToken?: () => void;
 };
 
-export const TokenContainer = (props: TokenContainerProps) => {
-  const ethCard = props.symbol === "ETH";
+export const TokenContainer = ({
+  image,
+  name,
+  symbol,
+  header,
+  amount,
+  setAmount,
+  setFocused,
+  maxBalance,
+  calculatePriceAndToken
+}: TokenContainerProps) => {
+  const ethCard = symbol === "ETH";
+
+  const maxValueWithGas = async () => {
+    if (!maxBalance || parseFloat(maxBalance) === 0) return "0";
+
+    const valueAsBigNumber = parseEther(maxBalance);
+
+    try {
+      const feeData = await estimateFeesPerGas(mainnetClient);
+
+      if (feeData?.maxFeePerGas) {
+        const maxFee = formatEther(feeData.maxFeePerGas);
+        const gasPriceEther = parseFloat(maxFee);
+        if (!isNaN(gasPriceEther)) {
+          let gasCost = parseEther((gasPriceEther * maxGasUsage).toString());
+          if (gasCost < defaultGasEstimate) {
+            gasCost = defaultGasEstimate;
+          }
+          const valMinusGas = valueAsBigNumber - gasCost;
+          if (valMinusGas <= 0n) return "0";
+          return formatEther(valMinusGas);
+        }
+      }
+    } catch (error) {
+      console.log("error estimateFeesPerGas", error);
+    }
+
+    const valMinusGas = valueAsBigNumber - defaultGasEstimate;
+    if (valMinusGas <= 0n) return "0";
+    return formatEther(valMinusGas);
+  };
+
+  const handleMaxBalance = async () => {
+    const valueWithGas = await maxValueWithGas();
+    if (valueWithGas) {
+      setAmount(Number(valueWithGas).toFixed(8));
+    } else {
+      setAmount("0.00");
+    }
+    setFocused(symbol);
+    calculatePriceAndToken && calculatePriceAndToken();
+  };
 
   return (
     <Flex
@@ -42,12 +101,12 @@ export const TokenContainer = (props: TokenContainerProps) => {
           textAlign={"start"}
           fontFamily="Poppins Semibold"
         >
-          {props.header}
+          {header}
         </Text>
-        {props.header === "Send" && (
+        {header === "Send" && (
           <Flex alignItems={"center"} gap={1}>
             <Text fontSize={"10px"} color={"#656075"} fontFamily="Poppins">
-              {`Balance: ${props.maxBalance} ETH`}{" "}
+              {`Balance: ${Number(maxBalance).toFixed(4)} ETH`}{" "}
             </Text>
             <Button
               variant={"unstyled"}
@@ -56,11 +115,7 @@ export const TokenContainer = (props: TokenContainerProps) => {
               display={"flex"}
               h={"fit-content"}
               p={"2px 6px"}
-              onClick={() => {
-                if (props.maxBalance) {
-                  props.setAmount(props.maxBalance);
-                }
-              }}
+              onClick={handleMaxBalance}
             >
               <Text
                 textAlign={"center"}
@@ -85,19 +140,14 @@ export const TokenContainer = (props: TokenContainerProps) => {
           width={"fit-content"}
         >
           <Flex gap={2} position={"relative"} alignItems={"center"} w={"100%"}>
-            <Image
-              src={props.image}
-              alt={`${props.symbol} icon`}
-              height={16}
-              width={16}
-            />
+            <Image src={image} alt={`${symbol} icon`} height={16} width={16} />
             <Text
               color={"black"}
               fontFamily={"Poppins Semibold"}
               fontSize={{ base: 10, sm: 12 }}
               fontWeight={600}
             >
-              {props.name}
+              {name}
             </Text>
           </Flex>
         </Box>
@@ -110,16 +160,16 @@ export const TokenContainer = (props: TokenContainerProps) => {
             type="number"
             fontWeight={600}
             color={"#97929e"}
-            value={ethCard ? props.amount : parseInt(props.amount)}
+            value={ethCard ? amount : parseInt(amount)}
             onWheel={(e) => (e.target as HTMLElement).blur()}
             fontSize={{ base: "12px", sm: "16px" }}
             fontFamily="Poppins"
-            onFocus={() => props.setFocused(props.symbol)}
+            onFocus={() => setFocused(symbol)}
             onChange={(e) => {
               const value = ethCard
                 ? e.target.value
                 : e.target.value.replace(/[^\d]/, "");
-              props.setAmount(value);
+              setAmount(value);
             }}
             step={1}
             maxWidth={{ base: 20, md: "100%" }}
@@ -130,7 +180,7 @@ export const TokenContainer = (props: TokenContainerProps) => {
             fontSize={{ base: "12px", sm: "16px" }}
             fontFamily="Poppins Semibold"
           >
-            {props.symbol}
+            {symbol}
           </Text>
         </Flex>
       </Flex>
