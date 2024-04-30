@@ -6,21 +6,13 @@ import TsCsPartThree from "./TsCsPartThree";
 const TermsAndConditionsContent = () => {
   return (
     <Box
-      p={{ base: "8px", md: "16px" }}
+      overflowY={"auto"}
       background={"#FBE7E8"}
+      p={{ base: "8px", md: "16px" }}
       borderRadius={"16px"}
-      maxH={"50%"}
     >
       <Flex
-        h={"100%"}
-        direction={"column"}
-        maxH={{ base: "300px", md: "260px", lg: "280px" }}
-        color={"#591D6D"}
-        overflowY={"scroll"}
-        justifyContent={"flex-start"}
-        textAlign={"start"}
-        paddingRight={{ base: "8px", md: "16px" }}
-        gap={{ base: "8px", md: "16px" }}
+        overflowY={"auto"}
         css={{
           "&::-webkit-scrollbar": {
             width: "11px"
@@ -44,6 +36,11 @@ const TermsAndConditionsContent = () => {
               maxHeight: "320px"
             }
         }}
+        h={"100%"}
+        direction={"column"}
+        color={"#591D6D"}
+        justifyContent={"flex-start"}
+        textAlign={"start"}
       >
         <TsCsPartOne />
         <TsCsPartTwo />
