@@ -146,12 +146,12 @@ export const SwapWidget = () => {
     <Window
       id="swap"
       height="80%"
-      maxHeight={"640px"}
-      minHeight={isLargerThanMd ? "552px" : "350px"}
+      maxHeight="640px"
+      minHeight={isLargerThanMd ? "500px" : "350px"}
       width="95%"
       maxWidth="655px"
       minWidth="240px"
-      top="50%"
+      top={{ base: "60%", sm: "58%", md: "56%" }}
       left="50%"
       transform="translate(-50%, -50%)"
       defaultIsOpen={true}
