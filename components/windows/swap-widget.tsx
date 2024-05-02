@@ -20,6 +20,7 @@ import { useReadEthPrice } from "services/web3/useReadEthPrice";
 import { useReadTokenPriceInDollar } from "services/web3/useReadTokenPriceInDollar";
 import { ArrowDownIcon } from "@chakra-ui/icons";
 import { useReadTotalTokensForSale } from "@/services/web3/useReadTotalTokensForSale";
+import ImageNext from "next/image";
 
 export const SwapWidget = () => {
   const isRescricted = useRescrictedCountries();
@@ -241,11 +242,11 @@ export const SwapWidget = () => {
                     w={"fit-content"}
                     gap={2}
                   >
-                    <Image
+                    <ImageNext
                       src="/windows/swap/swap-banner-image.png"
-                      alt=""
-                      margin="0 auto"
-                      maxW={{ base: "220px", sm: "390px" }}
+                      alt="Swap banner"
+                      width={390}
+                      height={172}
                     />
                     <Text
                       fontFamily={"Amiri"}
