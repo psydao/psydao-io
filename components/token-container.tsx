@@ -85,8 +85,8 @@ export const TokenContainer = ({
   return (
     <Flex
       bgColor={"#fbf6f8"}
-      px={4}
-      py={6}
+      px={3}
+      py={4}
       w={"full"}
       borderRadius={"3xl"}
       direction={"column"}
@@ -96,7 +96,7 @@ export const TokenContainer = ({
       <Flex w={"full"} justifyContent={"space-between"}>
         <Text
           color={"#686478"}
-          fontSize={"16px"}
+          fontSize={"14px"}
           fontWeight={700}
           textAlign={"start"}
           fontFamily="Poppins Semibold"
@@ -105,7 +105,7 @@ export const TokenContainer = ({
         </Text>
         {header === "Send" && (
           <Flex alignItems={"center"} gap={1}>
-            <Text fontSize={"10px"} color={"#656075"} fontFamily="Poppins">
+            <Text fontSize={"12px"} color={"#656075"} fontFamily="Poppins">
               {`Balance: ${Number(maxBalance).toFixed(4)} ETH`}{" "}
             </Text>
             <Button
@@ -120,7 +120,7 @@ export const TokenContainer = ({
               <Text
                 textAlign={"center"}
                 fontWeight="600"
-                fontSize={"10px"}
+                fontSize={"12px"}
                 bgGradient={"linear(to-r, #B14CE7, #E09CA4)"}
                 bgClip="text"
                 fontFamily="Poppins Semibold"
