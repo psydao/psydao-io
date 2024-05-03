@@ -20,6 +20,7 @@ import { useReadEthPrice } from "services/web3/useReadEthPrice";
 import { useReadTokenPriceInDollar } from "services/web3/useReadTokenPriceInDollar";
 import { ArrowDownIcon } from "@chakra-ui/icons";
 import { useReadTotalTokensForSale } from "@/services/web3/useReadTotalTokensForSale";
+import ImageNext from "next/image";
 
 export const SwapWidget = () => {
   const isRescricted = useRescrictedCountries();
@@ -147,11 +148,11 @@ export const SwapWidget = () => {
       id="swap"
       height="80%"
       maxHeight="640px"
-      minHeight={isLargerThanMd ? "552px" : "350px"}
+      minHeight={isLargerThanMd ? "500px" : "350px"}
       width="95%"
       maxWidth="655px"
       minWidth="240px"
-      top="50%"
+      top={{ base: "60%", sm: "58%", md: "56%" }}
       left="50%"
       transform="translate(-50%, -50%)"
       defaultIsOpen={true}
@@ -161,12 +162,14 @@ export const SwapWidget = () => {
         {isRescricted ? (
           <RestrictedCountries />
         ) : !termsAndConditions ? (
-          <SwapTsAndCs setTermsAndConditions={setTermsAndConditions} />
+          <Box pt={{ base: 0, sm: 2 }} h={"100%"}>
+            <SwapTsAndCs setTermsAndConditions={setTermsAndConditions} />
+          </Box>
         ) : (
           <>
             {address && isWrongNetwork ? (
               <>
-                <Flex p={3} pb={5} direction={"column"} gap={5}>
+                <Flex p={2} pb={5} direction={"column"} gap={4}>
                   <Text
                     textColor="#269200"
                     fontWeight="500"
@@ -204,13 +207,14 @@ export const SwapWidget = () => {
             ) : (
               <>
                 {" "}
-                <Box p={6} pb={8}>
+                <Box p={4} pb={6}>
                   <Text
                     textColor="#269200"
                     fontWeight="500"
                     fontStyle="italic"
                     mt="1"
                     fontSize={{ base: "20px", sm: "36px" }}
+                    lineHeight={{ base: "20px", sm: "36px" }}
                     fontFamily={"Amiri"}
                   >
                     PSY token sale now open
@@ -220,6 +224,7 @@ export const SwapWidget = () => {
                     textColor="#269200"
                     fontWeight="400"
                     fontSize={{ base: "18px", md: "24px" }}
+                    lineHeight={{ base: "18px", md: "24px" }}
                     textUnderlineOffset={"12px"}
                     fontFamily={"Amiri"}
                     href="/documents/psydao-whitepaper.pdf"
@@ -237,11 +242,11 @@ export const SwapWidget = () => {
                     w={"fit-content"}
                     gap={2}
                   >
-                    <Image
+                    <ImageNext
                       src="/windows/swap/swap-banner-image.png"
-                      alt=""
-                      margin="0 auto"
-                      maxW={{ base: "220px", sm: "390px" }}
+                      alt="Swap banner"
+                      width={390}
+                      height={172}
                     />
                     <Text
                       fontFamily={"Amiri"}

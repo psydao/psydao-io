@@ -26,6 +26,7 @@ import { MixpanelTracking } from "../services/mixpanel";
 import { SwapWidget } from "components/windows/swap-widget";
 import { useRescrictedCountries } from "hooks/restrictedCountries";
 import { ToastContainer } from "react-toastify";
+import { Blog } from "@/components/windows/blog";
 import "react-toastify/dist/ReactToastify.css";
 
 // TODO Extract Pill component since it seems it will become a basic primitive
@@ -182,6 +183,7 @@ const Homepage: NextPage = () => {
                     pointerEvents="none"
                     overflow="hidden"
                   >
+                    <Blog />
                     <SwapWidget />
                     <Radio />
                     <Manifesto />

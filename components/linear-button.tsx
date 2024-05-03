@@ -11,6 +11,7 @@ interface LinearButtonProps {
   children: React.ReactNode;
   customStyle?: CustomStyle;
   isConfirming?: boolean;
+  isAccept?: boolean;
 }
 
 const LinearButton: React.FC<LinearButtonProps> = ({
@@ -18,7 +19,8 @@ const LinearButton: React.FC<LinearButtonProps> = ({
   children,
   customStyle,
   isConfirming,
-  isDisabled
+  isDisabled,
+  isAccept
 }) => {
   return (
     <Button
@@ -31,11 +33,15 @@ const LinearButton: React.FC<LinearButtonProps> = ({
       display={"flex"}
       isDisabled={isConfirming ?? isDisabled}
       _hover={{
-        opacity: "0.8"
+        opacity: isDisabled ? "" : "0.8"
       }}
       fontFamily={"Poppins Semibold"}
       fontSize={16}
       fontWeight={600}
+      maxWidth={{
+        base: isAccept ? "100px" : "auto",
+        md: isAccept ? "274px" : "auto"
+      }}
       {...customStyle}
     >
       {children}
