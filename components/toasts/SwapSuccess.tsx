@@ -1,5 +1,5 @@
 import { CloseIcon, WarningIcon } from "@chakra-ui/icons";
-import { Button, Flex, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import {
   type Id,
   toast,
@@ -32,10 +32,10 @@ const CustomCloseButton = (props: {
 
 const getIcon = (type: TypeOptions | null | undefined) => {
   if (type === "success") {
-    return <CheckIcon w={{ base: "fit-content", md: "20px" }} />;
+    return <CheckIcon w={{ base: "12px", md: "20px" }} />;
   }
   if (type === "error") {
-    return <WarningIcon color="red" w={{ base: "fit-content", md: "20px" }} />;
+    return <WarningIcon color="red" w={{ base: "12px", md: "20px" }} />;
   }
 };
 
@@ -59,6 +59,7 @@ const ToastBody = (props: BodyProps) => {
             fontSize={{ base: "12px", md: "24px" }}
             fontStyle={"italic"}
             fontFamily={"Amiri"}
+            mt={"2px"}
             maxW={{ base: props.type === "error" ? "100%" : "80%", md: "90%" }}
             whiteSpace={{
               base: "normal",
