@@ -1,8 +1,16 @@
-import { Box, Icon, Image, Text, type BoxProps } from "@chakra-ui/react";
+import {
+  Box,
+  Icon,
+  Image,
+  Text,
+  useMediaQuery,
+  type BoxProps
+} from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { Window } from "components/window";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { RiArrowLeftLine } from "react-icons/ri";
+import { useWindowManager } from "../window-manager";
 
 const spotifyBaseUrl =
   "https://open.spotify.com/oembed?url=https://open.spotify.com/playlist/";
@@ -179,18 +187,26 @@ const RadioContent = () => {
 };
 
 export const Radio = () => {
+  const { state } = useWindowManager();
+  const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
+
+  const fullScreenWindow = useMemo(() => {
+    if (state.fullScreen === "radio") {
+      return true;
+    }
+
+    return false;
+  }, [state]);
+
   return (
     <Window
       id="radio"
-      height="80%"
-      maxHeight="630px"
-      minHeight="350px"
-      width="95%"
-      maxWidth="500px"
-      minWidth="240px"
-      top="50%"
-      left="50%"
-      transform="translate(-50%, -50%)"
+      height={fullScreenWindow ? "100%" : isLargerThanMd ? "500px" : "80%"}
+      width={fullScreenWindow ? "100%" : isLargerThanMd ? "655px" : "95%"}
+      top={fullScreenWindow ? "0" : "50%"}
+      left={fullScreenWindow ? "0" : "50%"}
+      transform={fullScreenWindow ? "translate(0, 0)" : "translate(-50%, -50%)"}
+      fullScreenWindow={fullScreenWindow}
     >
       <Window.TitleBar />
       <Window.Content p="0">

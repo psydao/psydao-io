@@ -2,25 +2,37 @@ import { Window } from "components/window";
 import Iframe from "../iframe";
 import { useWindowManager } from "../window-manager";
 import { useMediaQuery } from "@chakra-ui/react";
+import { useMemo } from "react";
 
 export const Blog = () => {
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
 
-  const { dispatch } = useWindowManager();
+  const { dispatch, state } = useWindowManager();
   const id = "blog";
+
+  const fullScreenWindow = useMemo(() => {
+    if (state.fullScreen === id) {
+      return true;
+    }
+
+    return false;
+  }, [state]);
 
   return (
     <Window
       id={id}
-      height="80%"
-      maxHeight="640px"
-      minHeight={isLargerThanMd ? "500px" : "350px"}
-      width="95%"
-      maxWidth="655px"
-      minWidth="240px"
-      top={{ base: "46%", md: "42%" }}
-      left={{ base: "50%", lg: "40%" }}
-      transform="translate(-50%, -50%)"
+      height={fullScreenWindow ? "100%" : isLargerThanMd ? "500px" : "80%"}
+      width={fullScreenWindow ? "100%" : isLargerThanMd ? "655px" : "95%"}
+      transform={fullScreenWindow ? "translate(0, 0)" : "translate(-50%, -50%)"}
+      top={{
+        base: fullScreenWindow ? "0" : "46%",
+        md: fullScreenWindow ? "0" : "42%"
+      }}
+      left={{
+        base: fullScreenWindow ? "0" : "50%",
+        lg: fullScreenWindow ? "0" : "40%"
+      }}
+      fullScreenWindow={fullScreenWindow}
       defaultIsOpen
     >
       <Window.TitleBar />

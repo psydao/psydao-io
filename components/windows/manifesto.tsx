@@ -1,20 +1,35 @@
-import { Box, Image, Link, Text } from "@chakra-ui/react";
+import { Box, Image, Link, Text, useMediaQuery } from "@chakra-ui/react";
 
 import { Window } from "components/window";
+import { useWindowManager } from "../window-manager";
+import { useMemo } from "react";
 
 export const Manifesto = () => {
+  const { state } = useWindowManager();
+  const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
+
+  const fullScreenWindow = useMemo(() => {
+    if (state.fullScreen === "manifesto") {
+      return true;
+    }
+
+    return false;
+  }, [state]);
+
   return (
     <Window
       id="manifesto"
-      height={{ base: "80%", md: "70%" }}
-      maxHeight="1000px"
-      minHeight="350px"
-      width="95%"
-      maxWidth="650px"
-      minWidth="240px"
-      top="50%"
-      left="50%"
-      transform="translate(-50%, -50%)"
+      height={{
+        base: fullScreenWindow ? "100%" : isLargerThanMd ? "500px" : "80%",
+        md: fullScreenWindow ? "100%" : isLargerThanMd ? "500px" : "70%"
+      }}
+      width={isLargerThanMd ? "655px" : "95%"}
+      top={fullScreenWindow ? "0" : "50%"}
+      left={"50%"}
+      transform={
+        fullScreenWindow ? "translate(-50%, 0)" : "translate(-50%, -50%)"
+      }
+      fullScreenWindow={fullScreenWindow}
     >
       <Window.TitleBar />
       <Window.Content layerStyle="window" position="relative" zIndex="0" p={0}>
@@ -23,7 +38,7 @@ export const Manifesto = () => {
           pb="32"
           background="no-repeat bottom -100px left 0px / 100% 369px linear-gradient(to top, #f2bebe 100px, transparent)"
         >
-          <Text color="#269200" fontSize="24px" mt="20">
+          <Text color="#269200" fontSize="24px" mt="7">
             The PsyDAO Manifesto
           </Text>
           <Text as="h1" mb="6">

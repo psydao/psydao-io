@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import type { BoxProps } from "@chakra-ui/react";
 import { Box, chakra } from "@chakra-ui/react";
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { Rnd } from "react-rnd";
 
 import { Cross, Drag } from "components/icons";
@@ -24,7 +25,7 @@ interface TitleBarProps extends BoxProps {
 
 const TitleBar = ({ hasBorder = true, ...rest }: TitleBarProps) => {
   const { border, id, padding } = useWindowContext();
-  const { dispatch } = useWindowManager();
+  const { dispatch, state } = useWindowManager();
 
   return (
     <Box
@@ -33,6 +34,16 @@ const TitleBar = ({ hasBorder = true, ...rest }: TitleBarProps) => {
       justifyContent="space-between"
       borderBottom={hasBorder ? border : "none"}
       background="#FFF5F5"
+      onDoubleClick={() => {
+        const window = state.windows.find((item) => item.id === id);
+        if (window) {
+          if (state.fullScreen !== id) {
+            dispatch({ type: "fullScreen", id });
+          } else {
+            dispatch({ type: "fullScreen", id: "" });
+          }
+        }
+      }}
       {...rest}
     >
       <Box
@@ -109,6 +120,7 @@ interface WindowProps extends BoxProps {
   resizable?: boolean;
   lockAspectRatio?: number;
   lockAspectRatioExtraHeight?: number;
+  fullScreenWindow?: boolean;
 }
 
 // TODO the current approach to picking up border and padding is a bit limited
@@ -121,11 +133,14 @@ export const Window = ({
   border = "2px solid #f2bebe",
   padding = "2",
   resizable,
+  fullScreenWindow,
   lockAspectRatio,
   lockAspectRatioExtraHeight,
   ...rest
 }: WindowProps) => {
   const { dispatch, state } = useWindowManager();
+
+  const rndRef = useRef<any>();
 
   const index = state.windows.findIndex((cur) => cur.id === id);
   const window = state.windows[index];
@@ -142,10 +157,22 @@ export const Window = ({
   };
 
   const handleEnd = () => {
+    dispatch({ type: "fullScreen", id: "" });
     dispatch({ type: "stopDrag" });
   };
 
   if (window) {
+    if (fullScreenWindow) {
+      if (rndRef?.current?.draggable?.state) {
+        rndRef.current.draggable.state.x = 0;
+        rndRef.current.draggable.state.y = 0;
+      }
+
+      if (rndRef?.current?.resizable?.state) {
+        rndRef.current.resizable.state.width = "100%";
+        rndRef.current.resizable.state.height = "100%";
+      }
+    }
     return (
       <WindowContextProvider
         value={{
@@ -165,6 +192,7 @@ export const Window = ({
               {...rest}
             >
               <Resizable
+                ref={rndRef}
                 default={{ x: 0, y: 0, height: "100%", width: "100%" }}
                 dragHandleClassName="drag-handle"
                 lockAspectRatio={lockAspectRatio}
