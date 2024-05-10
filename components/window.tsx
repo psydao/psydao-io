@@ -27,6 +27,21 @@ const TitleBar = ({ hasBorder = true, ...rest }: TitleBarProps) => {
   const { border, id, padding } = useWindowContext();
   const { dispatch, state } = useWindowManager();
 
+  const handleDoubleClick = () => {
+    const window = state.windows.find((item) => item.id === id);
+    if (window) {
+      if (state.fullScreen !== id) {
+        dispatch({ type: "fullScreen", id });
+      } else {
+        dispatch({ type: "fullScreen", id: "" });
+      }
+    }
+  };
+
+  const handleCloseClick = () => {
+    dispatch({ type: "close", id });
+  };
+
   return (
     <Box
       display="flex"
@@ -34,16 +49,7 @@ const TitleBar = ({ hasBorder = true, ...rest }: TitleBarProps) => {
       justifyContent="space-between"
       borderBottom={hasBorder ? border : "none"}
       background="#FFF5F5"
-      onDoubleClick={() => {
-        const window = state.windows.find((item) => item.id === id);
-        if (window) {
-          if (state.fullScreen !== id) {
-            dispatch({ type: "fullScreen", id });
-          } else {
-            dispatch({ type: "fullScreen", id: "" });
-          }
-        }
-      }}
+      onDoubleClick={handleDoubleClick}
       {...rest}
     >
       <Box
@@ -58,7 +64,7 @@ const TitleBar = ({ hasBorder = true, ...rest }: TitleBarProps) => {
       <Box
         p={padding}
         flex="0 0 auto"
-        onClick={() => dispatch({ type: "close", id })}
+        onClick={handleCloseClick}
         cursor="pointer"
         pointerEvents="all"
       >
