@@ -1,8 +1,8 @@
+import { useState } from "react";
 import { useAccount } from "wagmi";
 import { useToast } from "@chakra-ui/react";
 import { useBlackListWallets } from "./useBlackListWallets";
-import { useState } from "react";
-import { useSendTokenSale } from "services/web3/useSendTokenSale";
+import { useSendTokenSale } from "@/services/web3/useSendTokenSale";
 
 export const useBuyToken = () => {
   const { address } = useAccount();

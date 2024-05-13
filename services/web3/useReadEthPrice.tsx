@@ -1,5 +1,5 @@
 import { useReadContract } from "wagmi";
-import { chainLinkMainnet, chainLinkSepolia } from "constants/contracts";
+import { chainLinkMainnet, chainLinkSepolia } from "@/constants/contracts";
 import chainLinkAbi from "@/abis/chainLinkAbi.json";
 import chainLinkAbiSepolia from "@/abis/chainLinkAbiSepolia.json";
 

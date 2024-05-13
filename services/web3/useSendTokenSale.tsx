@@ -1,10 +1,10 @@
 import { useCallback } from "react";
+import { parseUnits } from "viem";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import {
   tokenSaleContract,
   tokenSaleContractSepolia
-} from "constants/contracts";
-import { parseUnits } from "viem";
+} from "@/constants/contracts";
 import tokenSaleAbi from "@/abis/tokenSaleAbi.json";
 import tokenSaleAbiSepolia from "@/abis/tokenSaleAbiSepolia.json";
 

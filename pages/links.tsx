@@ -11,13 +11,13 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { FaDiscord, FaTwitter, FaYoutube } from "react-icons/fa";
 import { RiInstagramFill } from "react-icons/ri";
-
-import { Head } from "components/head";
-import { MotionBox } from "components/motion-box";
-import linksPageData from "data/links-page-data.json";
 import Link from "next/link";
-import backgroundImage from "../public/links/background.png";
-import logo from "../public/links/wordmark-purple-h.svg";
+
+import { Head } from "@/components/head";
+import { MotionBox } from "@/components/motion-box";
+import linksPageData from "@/data/links-page-data.json";
+import backgroundImage from "@/public/links/background.png";
+import logo from "@/public/links/wordmark-purple-h.svg";
 
 interface LinkSpec {
   color?: string;

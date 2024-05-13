@@ -1,12 +1,12 @@
+import { useEffect, useState } from "react";
+import { Zoom } from "react-toastify";
 import { Box } from "@chakra-ui/react";
 import { ConnectButton, useChainModal } from "@rainbow-me/rainbowkit";
-import LinearButton from "./linear-button";
-import { useBuyToken } from "hooks/useBuyToken";
-import { useSignInWallet } from "hooks/useSignInWallet";
-import { useEffect, useState } from "react";
+import { useBuyToken } from "@/hooks/useBuyToken";
+import { useSignInWallet } from "@/hooks/useSignInWallet";
 
+import LinearButton from "./linear-button";
 import { customToast } from "./toasts/SwapSuccess";
-import { Zoom } from "react-toastify";
 
 interface ConnectWalletButtonProps {
   tokenAmount: string;

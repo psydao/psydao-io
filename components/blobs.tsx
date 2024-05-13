@@ -1,6 +1,5 @@
-import type { BoxProps } from "@chakra-ui/react";
-import { Box } from "@chakra-ui/react";
 import { useCallback } from "react";
+import { Box, type BoxProps } from "@chakra-ui/react";
 
 // https://codepen.io/rojo2/pen/NWRKMEe
 
