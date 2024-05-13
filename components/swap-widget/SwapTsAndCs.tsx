@@ -2,16 +2,21 @@ import { Box, Checkbox, Flex, Show, Text } from "@chakra-ui/react";
 import LinearButton from "components/linear-button";
 import React, { type Dispatch, type SetStateAction, useState } from "react";
 import TermsAndConditionsContent from "../terms-and-conditions/TermsAndConditionsContent";
+import { useWindowManager } from "components/window-manager";
 
 interface SwapTsAndCsType {
   setTermsAndConditions: Dispatch<SetStateAction<boolean>>;
 }
 
 export const SwapTsAndCs = ({ setTermsAndConditions }: SwapTsAndCsType) => {
+  const { dispatch } = useWindowManager();
+
   const [userHasAccepted, setUserHasAccepted] = useState(false);
+
   const handleAccept = () => {
     setTermsAndConditions(true);
     localStorage.setItem("acceptedTermsAndConditions", "true");
+    dispatch({ type: "fullScreen", id: "" });
   };
 
   return (
