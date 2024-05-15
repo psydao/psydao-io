@@ -1,8 +1,8 @@
+import { useMemo } from "react";
 import { Box, Image, Link, Text, useMediaQuery } from "@chakra-ui/react";
 
-import { Window } from "components/window";
-import { useWindowManager } from "../window-manager";
-import { useMemo } from "react";
+import { Window } from "@/components/window";
+import { useWindowManager } from "@/components/window-manager";
 
 export const Manifesto = () => {
   const { state } = useWindowManager();

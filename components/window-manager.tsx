@@ -1,7 +1,7 @@
-import { Box, type BoxProps } from "@chakra-ui/react";
 import { useReducer, type Dispatch } from "react";
+import { Box, type BoxProps } from "@chakra-ui/react";
 
-import { createCtx } from "lib/context";
+import { createCtx } from "@/lib/context";
 
 export interface Window {
   id: string;

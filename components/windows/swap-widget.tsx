@@ -1,9 +1,3 @@
-import { Box, Flex, Image, Link, Text, useMediaQuery } from "@chakra-ui/react";
-import { Window } from "components/window";
-import { TokenContainer } from "components/token-container";
-import { ConnectWalletButton } from "components/connect-button";
-import { useRescrictedCountries } from "hooks/restrictedCountries";
-import { RestrictedCountries } from "components/swap-widget/RestrictedCountries";
 import {
   type Dispatch,
   type SetStateAction,
@@ -14,14 +8,20 @@ import {
 } from "react";
 import { useAccount, useBalance } from "wagmi";
 import { formatUnits, parseEther } from "viem";
-import { SwapTsAndCs } from "components/swap-widget/SwapTsAndCs";
-import { psyDAOTokenPrice } from "constants/psyTokenPrice";
-import { useReadEthPrice } from "services/web3/useReadEthPrice";
-import { useReadTokenPriceInDollar } from "services/web3/useReadTokenPriceInDollar";
-import { ArrowDownIcon } from "@chakra-ui/icons";
-import { useReadTotalTokensForSale } from "@/services/web3/useReadTotalTokensForSale";
 import ImageNext from "next/image";
-import { useWindowManager } from "../window-manager";
+import { ArrowDownIcon } from "@chakra-ui/icons";
+import { Box, Flex, Image, Link, Text, useMediaQuery } from "@chakra-ui/react";
+import { Window } from "@/components/window";
+import { TokenContainer } from "@/components/token-container";
+import { ConnectWalletButton } from "@/components/connect-button";
+import { useRescrictedCountries } from "hooks/restrictedCountries";
+import { RestrictedCountries } from "@/components/swap-widget/RestrictedCountries";
+import { SwapTsAndCs } from "@/components/swap-widget/SwapTsAndCs";
+import { psyDAOTokenPrice } from "@/constants/psyTokenPrice";
+import { useReadEthPrice } from "@/services/web3/useReadEthPrice";
+import { useReadTokenPriceInDollar } from "@/services/web3/useReadTokenPriceInDollar";
+import { useReadTotalTokensForSale } from "@/services/web3/useReadTotalTokensForSale";
+import { useWindowManager } from "@/components/window-manager";
 
 const SwapWidgetTitle = () => (
   <Box p={4} pb={8}>

@@ -1,9 +1,8 @@
-import type { BoxProps } from "@chakra-ui/react";
-import { Box, keyframes, Text } from "@chakra-ui/react";
 import { Fragment } from "react";
+import { Box, type BoxProps, keyframes, Text } from "@chakra-ui/react";
 
-import { Logo } from "components/icons";
-import { useDimensions } from "lib/hooks";
+import { Logo } from "@/components/icons";
+import { useDimensions } from "@/lib/hooks";
 
 const scroll = keyframes`
   0% {transform: translateX(0%);}

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   Box,
   Center,
@@ -8,24 +9,23 @@ import {
   keyframes
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
-import { useEffect } from "react";
 import { FaDiscord, FaTwitter, FaYoutube } from "react-icons/fa";
-
-import { BackgroundGrid } from "components/background-grid";
-import { Blobs } from "components/blobs";
-import { Csr } from "components/csr";
-import { Grid } from "components/grid";
-import { GridProvider } from "components/grid-context";
-import { Head } from "components/head";
-import { Marquee } from "components/marquee";
-import { Menu } from "components/menu";
-import { Open, WindowManager } from "components/window-manager";
-import { Manifesto } from "components/windows/manifesto";
-import { Radio } from "components/windows/radio";
-import { MixpanelTracking } from "../services/mixpanel";
-import { SwapWidget } from "components/windows/swap-widget";
-import { useRescrictedCountries } from "hooks/restrictedCountries";
 import { ToastContainer } from "react-toastify";
+
+import { BackgroundGrid } from "@/components/background-grid";
+import { Blobs } from "@/components/blobs";
+import { Csr } from "@/components/csr";
+import { Grid } from "@/components/grid";
+import { GridProvider } from "@/components/grid-context";
+import { Head } from "@/components/head";
+import { Marquee } from "@/components/marquee";
+import { Menu } from "@/components/menu";
+import { Open, WindowManager } from "@/components/window-manager";
+import { Manifesto } from "@/components/windows/manifesto";
+import { Radio } from "@/components/windows/radio";
+import { MixpanelTracking } from "@/services/mixpanel";
+import { SwapWidget } from "@/components/windows/swap-widget";
+import { useRescrictedCountries } from "@/hooks/restrictedCountries";
 import { Blog } from "@/components/windows/blog";
 import "react-toastify/dist/ReactToastify.css";
 

@@ -9,9 +9,9 @@ import {
   useDisclosure
 } from "@chakra-ui/react";
 import { RiCloseLine, RiMenuLine } from "react-icons/ri";
-import { Logo } from "components/icons";
-import { Open } from "components/window-manager";
-import { MixpanelTracking } from "../services/mixpanel";
+import { Logo } from "@/components/icons";
+import { Open } from "@/components/window-manager";
+import { MixpanelTracking } from "@/services/mixpanel";
 
 export const Menu = () => {
   const disclosure = useDisclosure();

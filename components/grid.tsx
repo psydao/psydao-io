@@ -1,7 +1,7 @@
 import type { GridProps as ChakraGridProps } from "@chakra-ui/react";
 import { Box, Grid as ChakraGrid } from "@chakra-ui/react";
 
-import { useGrid } from "components/grid-context";
+import { useGrid } from "@/components/grid-context";
 
 interface GridProps extends ChakraGridProps {
   getNumberOfFillers?: (cols: number, rows: number) => number;

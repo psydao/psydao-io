@@ -1,5 +1,5 @@
 import { CloseIcon, WarningIcon } from "@chakra-ui/icons";
-import { Box, Button, Flex, Text } from "@chakra-ui/react";
+import { Button, Flex, Text } from "@chakra-ui/react";
 import {
   type Id,
   toast,
