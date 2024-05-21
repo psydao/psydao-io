@@ -4,7 +4,7 @@ import tokenSaleAbiSepolia from "@/abis/tokenSaleAbiSepolia.json";
 import {
   tokenSaleContract,
   tokenSaleContractSepolia
-} from "constants/contracts";
+} from "@/constants/contracts";
 
 export const useReadTotalTokensForSale = () => {
   const { data, isPending, error } = useReadContract({

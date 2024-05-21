@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import {
   Box,
   Icon,
@@ -7,10 +8,9 @@ import {
   type BoxProps
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { Window } from "components/window";
-import { useMemo, useState } from "react";
+import { Window } from "@/components/window";
 import { RiArrowLeftLine } from "react-icons/ri";
-import { useWindowManager } from "../window-manager";
+import { useWindowManager } from "@/components/window-manager";
 
 const spotifyBaseUrl =
   "https://open.spotify.com/oembed?url=https://open.spotify.com/playlist/";

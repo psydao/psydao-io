@@ -1,7 +1,7 @@
 import { Box, Image, Link, Text } from "@chakra-ui/react";
 
-import { Window } from "components/window";
-import { MixpanelTracking } from "../../services/mixpanel";
+import { Window } from "@/components/window";
+import { MixpanelTracking } from "@/services/mixpanel";
 
 export const Highlight = () => {
   return (

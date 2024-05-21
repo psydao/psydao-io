@@ -1,4 +1,4 @@
-import { SanctionIdentificationResponse } from "pages/api/blacklist/[address]";
+import { type SanctionIdentificationResponse } from "pages/api/blacklist/[address]";
 import useSWR from "swr";
 
 export const fetcher: (

@@ -1,7 +1,7 @@
-import { createCtx } from "lib/context";
-
-import { useBreakpointValue } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { useBreakpointValue } from "@chakra-ui/react";
+
+import { createCtx } from "@/lib/context";
 
 interface GridParameters {
   borderWidth: number;

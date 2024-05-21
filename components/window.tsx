@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import type { BoxProps } from "@chakra-ui/react";
-import { Box, chakra } from "@chakra-ui/react";
 import { useLayoutEffect, useRef } from "react";
 import { Rnd } from "react-rnd";
-
-import { Cross, Drag } from "components/icons";
-import { MotionBox } from "components/motion-box";
-import { useWindowManager } from "components/window-manager";
 import { AnimatePresence } from "framer-motion";
-import { createCtx } from "lib/context";
+import type { BoxProps } from "@chakra-ui/react";
+import { Box, chakra } from "@chakra-ui/react";
+
+import { Cross, Drag } from "@/components/icons";
+import { MotionBox } from "@/components/motion-box";
+import { useWindowManager } from "@/components/window-manager";
+import { createCtx } from "@/lib/context";
 
 // TODO fix types
 interface WindowContext {

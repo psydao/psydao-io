@@ -5,8 +5,8 @@ import {
   createStandaloneToast
 } from "@chakra-ui/react";
 import { Global } from "@emotion/react";
-import { fontFaces } from "lib/constants";
-import { Web3Provider } from "providers/Web3Provider";
+import { fontFaces } from "@/lib/constants";
+import { Web3Provider } from "@/providers/Web3Provider";
 
 const { ToastContainer } = createStandaloneToast();
 

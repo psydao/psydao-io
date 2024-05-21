@@ -1,5 +1,4 @@
-import type { IconProps } from "@chakra-ui/react";
-import { Box, Icon } from "@chakra-ui/react";
+import { Box, Icon, type IconProps } from "@chakra-ui/react";
 
 export const Cross = (props: IconProps) => {
   return (
