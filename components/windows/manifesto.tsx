@@ -14,6 +14,7 @@ import { useWindowManager } from "@/components/window-manager";
 import { useMemo } from "react";
 import { MotionBox } from "@/components/motion-box";
 import { useAudio } from "@/hooks/useAudio";
+import { manifestoPlayer } from "@/constants/manifestoPlayer";
 
 const ManifestoSectionTitle = ({
   title,
@@ -41,10 +42,7 @@ export const Manifesto = () => {
   const { state } = useWindowManager();
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
 
-  const { playing, toggle } = useAudio(
-    // Replace with correct mp3
-    "https://peregrine-results.s3.amazonaws.com/pigeon/2B2MyyJyjs9pFJYtuA_0.mp3"
-  );
+  const { playing, toggle } = useAudio(manifestoPlayer);
 
   const fullScreenWindow = useMemo(() => {
     if (state.fullScreen === "manifesto") {
@@ -102,10 +100,9 @@ export const Manifesto = () => {
                 An Industrial Ego Death
               </Text>
             </Flex>
-            {/* TODO: Enable commented section when AI voice is set */}
-            {/* <Box position={"relative"}>
+            <Box position={"relative"}>
               <Box position={"fixed"} right={"50px"} top={"55px"} zIndex={1}>
-                <Image src="/terence_mckenn.svg" />
+                <Image src="/alan_watts.svg" />
                 {playing && (
                   <Box
                     w={"64px"}
@@ -175,7 +172,7 @@ export const Manifesto = () => {
                   color="gray.700"
                 />
               </Box>
-            </Box> */}
+            </Box>
           </Flex>
           <Box position="relative" width="100%" paddingBottom="56.25%" mb={8}>
             <Box
