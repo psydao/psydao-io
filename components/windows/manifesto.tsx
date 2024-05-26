@@ -60,12 +60,17 @@ export const Manifesto = () => {
         md: fullScreenWindow ? "100%" : isLargerThanMd ? "500px" : "70%"
       }}
       width={isLargerThanMd ? "655px" : "95%"}
-      top={fullScreenWindow ? "0" : "50%"}
+      top={{
+        base: fullScreenWindow ? "0" : "60%",
+        sm: fullScreenWindow ? "0" : "58%",
+        md: fullScreenWindow ? "0" : "56%"
+      }}
       left={"50%"}
       transform={
         fullScreenWindow ? "translate(-50%, 0)" : "translate(-50%, -50%)"
       }
       fullScreenWindow={fullScreenWindow}
+      defaultIsOpen
     >
       <Window.TitleBar />
       <Window.Content
