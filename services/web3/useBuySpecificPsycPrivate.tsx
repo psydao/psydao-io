@@ -1,9 +1,10 @@
+import { psycSaleSepolia } from "@/constants/contracts";
 import { useCallback } from "react";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
-import { psycSaleSepolia } from "@/constants/contracts";
-import { parseUnits } from "viem";
 import psycSaleAbiSepolia from "@/abis/psycSaleAbiSepolia.json";
-export const useBuyRandomPsycPrivate = () => {
+import { parseUnits } from "viem";
+
+export const useBuySpecificPsycPrivate = () => {
   const { data, writeContract, isPending, error } = useWriteContract();
 
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
@@ -11,22 +12,27 @@ export const useBuyRandomPsycPrivate = () => {
       hash: data
     });
 
-  const buyRandomPsycPrivate = useCallback(
-    async (buyRandomFromBatch: string, batchId: number, proof: string) => {
-      const randomNftAmount = parseUnits(buyRandomFromBatch, 18);
+  const buySpecificPsycPrivate = useCallback(
+    async (
+      buyFromBatch: string,
+      batchId: number,
+      tokenId: number,
+      proof: string
+    ) => {
+      const nftAmount = parseUnits(buyFromBatch, 18);
       return writeContract({
         address: psycSaleSepolia,
-        functionName: "buyRandomFromBatch",
+        functionName: "buyFromBatch",
         abi: psycSaleAbiSepolia,
-        args: [batchId, proof],
-        value: randomNftAmount
+        args: [batchId, tokenId, proof],
+        value: nftAmount
       });
     },
     [writeContract]
   );
 
   return {
-    buyRandomPsycPrivate,
+    buySpecificPsycPrivate,
     isConfirmed,
     isConfirming,
     isPending,

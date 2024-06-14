@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
-import { tokenSaleContractSepolia } from "@/constants/contracts";
-import tokenSaleAbiSepolia from "@/abis/tokenSaleAbiSepolia.json";
+import { psycSaleSepolia } from "@/constants/contracts";
+import psycSaleAbiSepolia from "@/abis/psycSaleAbiSepolia.json";
 
 export const useCreatePsycSale = () => {
   const { data, writeContract, isPending, error } = useWriteContract();
@@ -21,9 +21,9 @@ export const useCreatePsycSale = () => {
       ipfsHash: string
     ) => {
       return writeContract({
-        address: tokenSaleContractSepolia,
+        address: psycSaleSepolia,
         functionName: "createSaleBatch",
-        abi: tokenSaleAbiSepolia,
+        abi: psycSaleAbiSepolia,
         args: [
           tokenIds,
           saleStartTime,
