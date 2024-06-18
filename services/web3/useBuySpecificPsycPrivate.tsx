@@ -19,13 +19,13 @@ export const useBuySpecificPsycPrivate = () => {
       tokenId: number,
       proof: string
     ) => {
-      const nftAmount = parseUnits(buyFromBatch, 18);
+      const buyFromBatchBigInt = parseUnits(buyFromBatch, 18);
       return writeContract({
         address: psycSaleSepolia,
         functionName: "buyFromBatch",
         abi: psycSaleAbiSepolia,
         args: [batchId, tokenId, proof],
-        value: nftAmount
+        value: buyFromBatchBigInt
       });
     },
     [writeContract]

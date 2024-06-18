@@ -21,8 +21,8 @@ export const useCreateSale = () => {
   const createSaleBatch = async (
     tokenIds: number[],
     saleStartTime: number,
-    floorPrice: number,
-    ceilingPrice: number,
+    floorPrice: string,
+    ceilingPrice: string,
     merkleRoot: string,
     ipfsHash: string
   ) => {

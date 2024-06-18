@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { psycSaleSepolia } from "@/constants/contracts";
 import psycSaleAbiSepolia from "@/abis/psycSaleAbiSepolia.json";
+import { parseUnits } from "viem";
 
 export const useCreatePsycSale = () => {
   const { data, writeContract, isPending, error } = useWriteContract();
@@ -15,11 +16,13 @@ export const useCreatePsycSale = () => {
     async (
       tokenIds: number[],
       saleStartTime: number,
-      floorPrice: number,
-      ceilingPrice: number,
+      floorPrice: string,
+      ceilingPrice: string,
       merkleRoot: string,
       ipfsHash: string
     ) => {
+      const floorPriceGwei = parseUnits(floorPrice, 18);
+      const ceilingPriceGwei = parseUnits(ceilingPrice, 18);
       return writeContract({
         address: psycSaleSepolia,
         functionName: "createSaleBatch",
@@ -27,8 +30,8 @@ export const useCreatePsycSale = () => {
         args: [
           tokenIds,
           saleStartTime,
-          floorPrice,
-          ceilingPrice,
+          floorPriceGwei,
+          ceilingPriceGwei,
           merkleRoot,
           ipfsHash
         ]
