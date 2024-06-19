@@ -12,8 +12,8 @@ export const useBuyRandomPsycPrivate = () => {
     });
 
   const buyRandomPsycPrivate = useCallback(
-    async (buyRandomFromBatch: string, batchId: number, proof: string) => {
-      const randomNftAmount = parseUnits(buyRandomFromBatch, 18);
+    async (randomFromBatchPrice: string, batchId: number, proof: string) => {
+      const randomNftAmount = parseUnits(randomFromBatchPrice, 18);
       return writeContract({
         address: psycSaleSepolia,
         functionName: "buyRandomFromBatch",

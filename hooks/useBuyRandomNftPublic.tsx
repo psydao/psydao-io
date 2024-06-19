@@ -1,4 +1,4 @@
-import { useBuyRandomPsycPublic } from "@/services/web3/useBuyRandomPsycPublic";
+import { useBuyRandomPsycCopyPublic } from "@/services/web3/useBuyRandomPsycPublic";
 import { useToast } from "@chakra-ui/react";
 
 import { useAccount } from "wagmi";
@@ -6,8 +6,13 @@ import { useAccount } from "wagmi";
 const useBuyRandomNftPublic = () => {
   const { address } = useAccount();
   const toast = useToast();
-  const { buyRandomPsycPublic, isConfirmed, isConfirming, isPending, error } =
-    useBuyRandomPsycPublic();
+  const {
+    buyRandomPsycCopyPublic,
+    isConfirmed,
+    isConfirming,
+    isPending,
+    error
+  } = useBuyRandomPsycCopyPublic();
 
   const buyRandomPublic = async (
     buyRandomNftCopyFromBatch: string,
@@ -23,7 +28,7 @@ const useBuyRandomNftPublic = () => {
         });
         return;
       }
-      await buyRandomPsycPublic(buyRandomNftCopyFromBatch, batchId);
+      await buyRandomPsycCopyPublic(buyRandomNftCopyFromBatch, batchId);
     } catch (error) {
       toast({
         title: "Something went wrong!",
