@@ -13,7 +13,8 @@ const NFTPrice = ({ price }: NFTPriceProps) => {
       bottom="10px"
       left="10px"
       bg="white"
-      p={2}
+      px={2}
+      py={1}
       borderRadius="10px"
       fontWeight="bold"
     >
