@@ -1,6 +1,9 @@
 import { Image } from "@chakra-ui/react";
 
-const DecorationFrame = ({ position }) => (
+interface DecorationFrameProps {
+  position: "left" | "right";
+}
+const DecorationFrame = ({ position }: DecorationFrameProps) => (
   <Image
     src="/decoration-frame.svg"
     alt={`${position.charAt(0).toUpperCase() + position.slice(1)} Decoration Frame`}

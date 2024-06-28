@@ -1,6 +1,9 @@
 import { Image } from "@chakra-ui/react";
 
-const DiagonalRectangle = ({ position }) => (
+interface DiagonalRectangleProps {
+  position: "left" | "right";
+}
+const DiagonalRectangle = ({ position }: DiagonalRectangleProps) => (
   <Image
     src="/diagonal-rectangle.svg"
     alt={`${position.charAt(0).toUpperCase() + position.slice(1)} Diagonal Rect`}
