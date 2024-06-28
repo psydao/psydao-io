@@ -1,5 +1,5 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
-import { WhitepaperLink } from "../commons/whitepapper-link";
+import { WhitepaperLink } from "../commons/whitepaper-link";
 import { PrivateSaleSwitch } from "../commons/privatesale-switch";
 
 export const MintPsycHeader = () => {
@@ -9,7 +9,7 @@ export const MintPsycHeader = () => {
   return (
     <Box px={{ base: 2, md: 4 }} py={2}>
       <Flex
-        alignItems={"center"}
+        alignItems={{ base: "start", md: "center" }}
         justifyContent={"space-between"}
         flexWrap={"wrap"}
         gap={2}
