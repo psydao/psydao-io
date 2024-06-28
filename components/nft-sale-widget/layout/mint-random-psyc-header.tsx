@@ -1,4 +1,6 @@
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
+import DecorationFrame from "../commons/decoration-frame";
+import DiagonalRectangle from "../commons/diagonal-rectangle";
 
 export const MintRandomPSYCHeader = () => {
   return (
@@ -9,16 +11,7 @@ export const MintRandomPSYCHeader = () => {
         justifyContent="center"
         width="100%"
       >
-        <Image
-          src="/decoration-frame.svg"
-          alt="Left Decoration Frame"
-          position="absolute"
-          left={{ base: "5px", sm: "20px", md: "40px" }}
-          top="50%"
-          width={{ base: "50px", sm: "100px", md: "200px" }}
-          transform="translateY(-50%)"
-          zIndex="0"
-        />
+        <DecorationFrame position="left" />
         <Box
           display="inline-flex"
           alignItems="center"
@@ -31,44 +24,19 @@ export const MintRandomPSYCHeader = () => {
           py={1}
           zIndex="1"
         >
-          <Image
-            src="/diagonal-rectangle.svg"
-            alt="Left Diagonal Rect"
-            position="absolute"
-            left="10px"
-            zIndex="1"
-            width="12px"
-            height="12px"
-          />
+          <DiagonalRectangle position="left" />
           <Text
             color="black"
-            fontSize={{ base: "12px", sm: "18px" }}
-            lineHeight={{ base: "20px", sm: "25px" }}
+            fontSize={{ base: "12px", sm: "16px", md: "18px" }}
+            lineHeight={{ base: "20px", sm: "22px", md: "25px" }}
             fontFamily={"Amiri"}
             px={6}
           >
             Mint Random PSYC
           </Text>
-          <Image
-            src="/diagonal-rectangle.svg"
-            alt="Right Diagonal Rect"
-            position="absolute"
-            right="10px"
-            zIndex="1"
-            width="12px"
-            height="12px"
-          />
+          <DiagonalRectangle position="right" />
         </Box>
-        <Image
-          src="/decoration-frame.svg"
-          alt="Right Decoration Frame"
-          position="absolute"
-          right={{ base: "5px", sm: "20px", md: "40px" }}
-          width={{ base: "50px", sm: "100px", md: "200px" }}
-          top="50%"
-          transform="translateY(-50%)"
-          zIndex="0"
-        />
+        <DecorationFrame position="right" />
       </Flex>
     </Box>
   );
