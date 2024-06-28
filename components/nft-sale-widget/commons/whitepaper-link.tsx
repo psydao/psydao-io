@@ -3,8 +3,8 @@ import { Link } from "@chakra-ui/react";
 export const WhitepaperLink = () => (
   <Link
     h={"100%"}
-    py={2}
-    px={{ base: 2, md: 3.5 }}
+    py={{ base: 2, md: 3 }}
+    px={{ base: 2, md: 4 }}
     cursor={"pointer"}
     href="/documents/psydao-whitepaper.pdf"
     target="_blank"
