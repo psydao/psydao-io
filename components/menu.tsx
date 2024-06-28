@@ -148,6 +148,17 @@ export const Menu = () => {
               Buy PSY
             </MenuItem>
           </Open>
+          {/* Visible by default until we wire up the private sale + whitelist functionalities */}
+          <Open id="nft-sale">
+            <MenuItem
+              fontStyle="italic"
+              onClick={() =>
+                MixpanelTracking.getInstance().menuLinkClicked("nft-sale")
+              }
+            >
+              Mint PSYC
+            </MenuItem>
+          </Open>
         </MenuList>
       </ChakraMenu>
     </Box>
