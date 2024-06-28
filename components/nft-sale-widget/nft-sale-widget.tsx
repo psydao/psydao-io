@@ -16,6 +16,10 @@ import { useWindowManager } from "@/components/window-manager";
 const SwapWidgetTitle = () => {
   const [isPrivateSale, setIsPrivateSale] = useState(false);
 
+  // TODO: Hide toggle if user is not whitelisted
+
+  const IS_WHITELISTED = true;
+
   return (
     <Box px={{ base: 2, md: 4 }} py={2}>
       <Flex
@@ -39,27 +43,29 @@ const SwapWidgetTitle = () => {
           >
             Mint PSYC
           </Text>
-          <Flex alignItems={"center"} gap={2} mb={1}>
-            <Switch
-              isChecked={isPrivateSale}
-              onChange={() => setIsPrivateSale((prev) => !prev)}
-              sx={{
-                "span.chakra-switch__track:not([data-checked])": {
-                  backgroundColor: "#E9E9EA"
-                },
-                "span.chakra-switch__track": {
-                  backgroundColor: "#AF52DE"
-                }
-              }}
-            />
-            <Text
-              fontFamily={"Inter Medium"}
-              fontSize={{ base: 12, md: 14 }}
-              color={"#585858"}
-            >
-              Private Sale
-            </Text>
-          </Flex>
+          {IS_WHITELISTED && (
+            <Flex alignItems={"center"} gap={2} mb={1}>
+              <Switch
+                isChecked={isPrivateSale}
+                onChange={() => setIsPrivateSale((prev) => !prev)}
+                sx={{
+                  "span.chakra-switch__track:not([data-checked])": {
+                    backgroundColor: "#E9E9EA"
+                  },
+                  "span.chakra-switch__track": {
+                    backgroundColor: "#AF52DE"
+                  }
+                }}
+              />
+              <Text
+                fontFamily={"Inter Medium"}
+                fontSize={{ base: 12, md: 14 }}
+                color={"#585858"}
+              >
+                Private Sale
+              </Text>
+            </Flex>
+          )}
         </Flex>
         <Link
           h={"100%"}
