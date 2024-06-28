@@ -1,4 +1,5 @@
 import NFTPrice from "@/components/commons/nftprice";
+import Divider from "@/components/divider";
 import MintButton from "@/components/mint-button";
 import { Box, Flex, Image } from "@chakra-ui/react";
 
@@ -27,6 +28,7 @@ export const MintSection = () => {
           Mint
         </MintButton>
       </Flex>
+      <Divider />
     </Box>
   );
 };
