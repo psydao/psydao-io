@@ -28,6 +28,7 @@ import { SwapWidget } from "@/components/windows/swap-widget";
 import { useRescrictedCountries } from "@/hooks/restrictedCountries";
 import { Blog } from "@/components/windows/blog";
 import "react-toastify/dist/ReactToastify.css";
+import { NftSaleWidget } from "@/components/nft-sale-widget/nft-sale-widget";
 
 // TODO Extract Pill component since it seems it will become a basic primitive
 // in our design
@@ -185,6 +186,7 @@ const Homepage: NextPage = () => {
                   >
                     <Blog />
                     <SwapWidget />
+                    <NftSaleWidget />
                     <Radio />
                     <Manifesto />
                   </Box>
