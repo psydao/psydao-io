@@ -12,6 +12,8 @@ import {
 import { Window } from "@/components/window";
 
 import { useWindowManager } from "@/components/window-manager";
+import { useQuery } from "@apollo/client";
+import { getSaleById } from "@/services/graph";
 
 const SwapWidgetTitle = () => {
   const [isPrivateSale, setIsPrivateSale] = useState(false);
@@ -19,6 +21,19 @@ const SwapWidgetTitle = () => {
   // TODO: Hide toggle if user is not whitelisted
 
   const IS_WHITELISTED = true;
+
+  const {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    data,
+    loading,
+    error
+  } = useQuery(getSaleById, {
+    variables: {
+      id: "1"
+    }
+  });
+
+  console.log(data, loading, error?.message);
 
   return (
     <Box px={{ base: 2, md: 4 }} py={2}>
