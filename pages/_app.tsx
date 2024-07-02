@@ -7,6 +7,8 @@ import {
 import { Global } from "@emotion/react";
 import { fontFaces } from "@/lib/constants";
 import { Web3Provider } from "@/providers/Web3Provider";
+import { ApolloProvider } from "@apollo/client";
+import graphClient from "@/config/graphql";
 
 const { ToastContainer } = createStandaloneToast();
 
@@ -23,11 +25,13 @@ export const theme = extendTheme({
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <ChakraProvider theme={theme}>
-      <Global styles={fontFaces} />
-      <Web3Provider>
-        <Component {...pageProps} />
-        <ToastContainer />
-      </Web3Provider>
+      <ApolloProvider client={graphClient}>
+        <Global styles={fontFaces} />
+        <Web3Provider>
+          <Component {...pageProps} />
+          <ToastContainer />
+        </Web3Provider>
+      </ApolloProvider>
     </ChakraProvider>
   );
 };
