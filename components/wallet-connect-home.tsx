@@ -13,7 +13,7 @@ const WalletConnectHome = () => {
       display={"flex"}
       top="0"
       gridArea={{
-        base: "2 / -4 / span 1 / span 3",
+        base: "2 / -4 / span 1 / -1",
         md: "1 / -8 / span 2 / span 3"
       }}
       width="100%"

@@ -22,7 +22,7 @@ export const Menu = () => {
       top="0"
       left="-2px"
       gridArea={{
-        base: "1 / -4 / span 1 / span 3",
+        base: "1 / -4 / span 1 / -1",
         md: "1 / -5 / span 1 / -1"
       }}
       width="calc(100% + 2px)"
