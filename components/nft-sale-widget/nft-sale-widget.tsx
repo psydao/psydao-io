@@ -22,19 +22,6 @@ const SwapWidgetTitle = () => {
 
   const IS_WHITELISTED = true;
 
-  const {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    data,
-    loading,
-    error
-  } = useQuery(getSaleById, {
-    variables: {
-      id: "1"
-    }
-  });
-
-  console.log(data, loading, error?.message);
-
   return (
     <Box px={{ base: 2, md: 4 }} py={2}>
       <Flex
