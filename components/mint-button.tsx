@@ -26,8 +26,12 @@ export const MintButton: React.FC<MintButtonProps> = ({
     <Button
       onClick={onClick}
       variant={"unstyled"}
-      bg={"linear-gradient(90deg, #B14CE7 0%, #E09CA4 100%)"}
-      color={"white"}
+      bg={
+        isDisabled
+          ? "gray.500"
+          : "linear-gradient(90deg, #B14CE7 0%, #E09CA4 100%)"
+      }
+      color={isDisabled ? "black" : "white"}
       borderRadius={"full"}
       paddingX={12}
       paddingY={3}

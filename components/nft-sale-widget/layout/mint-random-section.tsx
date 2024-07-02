@@ -3,7 +3,7 @@ import Divider from "@/components/divider";
 import MintButton from "@/components/mint-button";
 import { Box, Flex, Image } from "@chakra-ui/react";
 
-export const MintSection = () => {
+export const MintRandomSection = () => {
   return (
     <Box textAlign="center" py={4}>
       <Flex justifyContent="center">
