@@ -12,8 +12,6 @@ import {
 import { Window } from "@/components/window";
 
 import { useWindowManager } from "@/components/window-manager";
-import { useQuery } from "@apollo/client";
-import { getSaleById } from "@/services/graph";
 
 const SwapWidgetTitle = () => {
   const [isPrivateSale, setIsPrivateSale] = useState(false);
