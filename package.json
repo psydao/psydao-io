@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "codegen": "graphql-codegen-esm --config ./codegen.ts",
     "start": "next start",
     "lint": "next lint && npm run lint:types",
     "lint:types": "tsc --noemit",
@@ -13,6 +14,7 @@
     "prettier:fix": "prettier --write \"**/*.{js,jsx,ts,tsx,md,mdx,css}\""
   },
   "dependencies": {
+    "@apollo/client": "^3.10.4",
     "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/react": "^2.3.4",
     "@emotion/react": "^11.10.4",
@@ -28,6 +30,7 @@
     "cors": "^2.8.5",
     "ethers": "^6.11.1",
     "framer-motion": "^6.5.1",
+    "graphql": "^16.9.0",
     "mixpanel-browser": "^2.47.0",
     "next": "^14.1.3",
     "react": "^18.2.0",
@@ -54,9 +57,9 @@
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",
-    "prettier": "^3.1.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
+    "prettier": "^3.1.1",
     "typescript": "^5.4.5"
   }
 }

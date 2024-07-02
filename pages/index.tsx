@@ -28,6 +28,8 @@ import { SwapWidget } from "@/components/windows/swap-widget";
 import { useRescrictedCountries } from "@/hooks/restrictedCountries";
 import { Blog } from "@/components/windows/blog";
 import "react-toastify/dist/ReactToastify.css";
+import { NftSaleWidget } from "@/components/nft-sale-widget";
+import WalletConnectHome from "@/components/connectWalletHome";
 
 // TODO Extract Pill component since it seems it will become a basic primitive
 // in our design
@@ -159,7 +161,7 @@ const Homepage: NextPage = () => {
                       ]}
                     />
                   </Box>
-
+                  <WalletConnectHome />
                   <Menu />
                   <Open id="radio" gridArea="-4 / 1 / span 2 / span 2" p="3">
                     <Image
@@ -185,6 +187,7 @@ const Homepage: NextPage = () => {
                   >
                     <Blog />
                     <SwapWidget />
+                    <NftSaleWidget />
                     <Radio />
                     <Manifesto />
                   </Box>

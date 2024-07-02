@@ -21,9 +21,13 @@ export const Menu = () => {
       position="absolute"
       top="0"
       left="-2px"
-      gridArea="1 / -5 / span 1 / -1"
+      gridArea={{
+        base: "1 / -4 / span 1 / -1",
+        md: "1 / -5 / span 1 / -1"
+      }}
       width="calc(100% + 2px)"
       zIndex={disclosure.isOpen ? 10 : "unset"}
+      h={{ base: "100%", md: "auto" }}
     >
       <ChakraMenu {...disclosure} gutter={0} matchWidth={true}>
         <MenuButton
@@ -34,6 +38,7 @@ export const Menu = () => {
           backgroundColor="#FFFAF9"
           width="100%"
           borderLeft="2px solid #f2bebe"
+          h={{ base: "100%", md: "auto" }}
         >
           <Box
             display="flex"
@@ -146,6 +151,17 @@ export const Menu = () => {
               }
             >
               Buy PSY
+            </MenuItem>
+          </Open>
+          {/* Visible by default until we wire up the private sale + whitelist functionalities */}
+          <Open id="nft-sale">
+            <MenuItem
+              fontStyle="italic"
+              onClick={() =>
+                MixpanelTracking.getInstance().menuLinkClicked("nft-sale")
+              }
+            >
+              Mint PSYC
             </MenuItem>
           </Open>
         </MenuList>
