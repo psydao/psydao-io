@@ -21,9 +21,9 @@ export const Blog = () => {
   return (
     <Window
       id={id}
-      height={fullScreenWindow ? "100%" : isLargerThanMd ? "500px" : "80%"}
+      height={fullScreenWindow ? "100%" : isLargerThanMd ? "500px" : "65%"}
       width={fullScreenWindow ? "100%" : isLargerThanMd ? "655px" : "95%"}
-      transform={fullScreenWindow ? "translate(0, 0)" : "translate(-50%, -50%)"}
+      transform={fullScreenWindow ? "translate(0, 0)" : "translate(-50%, -40%)"}
       top={{
         base: fullScreenWindow ? "0" : "46%",
         md: fullScreenWindow ? "0" : "42%"

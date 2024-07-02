@@ -21,9 +21,13 @@ export const Menu = () => {
       position="absolute"
       top="0"
       left="-2px"
-      gridArea="1 / -5 / span 1 / -1"
+      gridArea={{
+        base: "1 / -4 / span 1 / -1",
+        md: "1 / -5 / span 1 / -1"
+      }}
       width="calc(100% + 2px)"
       zIndex={disclosure.isOpen ? 10 : "unset"}
+      h={{ base: "100%", md: "auto" }}
     >
       <ChakraMenu {...disclosure} gutter={0} matchWidth={true}>
         <MenuButton
@@ -34,6 +38,7 @@ export const Menu = () => {
           backgroundColor="#FFFAF9"
           width="100%"
           borderLeft="2px solid #f2bebe"
+          h={{ base: "100%", md: "auto" }}
         >
           <Box
             display="flex"
