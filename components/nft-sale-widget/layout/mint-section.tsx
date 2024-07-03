@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Grid, Flex } from "@chakra-ui/react";
+import { Box, Grid } from "@chakra-ui/react";
 import { useQuery } from "@apollo/client";
 import { getAllSalesWithTokens } from "@/services/graph";
 import { type GetAllSalesWithTokensData } from "@/services/types";

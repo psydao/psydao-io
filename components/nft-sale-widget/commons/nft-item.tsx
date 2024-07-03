@@ -1,7 +1,6 @@
 import { Box, Image, Text } from "@chakra-ui/react";
 import NFTPrice from "@/components/commons/nftprice";
 import MintButton from "@/components/mint-button";
-import useBuySpecificNftCopy from "@/hooks/useBuySpecificNftCopy";
 
 interface NFTItemProps {
   item: {
@@ -16,21 +15,8 @@ interface NFTItemProps {
 }
 
 const NFTItem = ({ item, index, isRandom }: NFTItemProps) => {
-  // const { buySpecificCopy, isPending, isConfirming, isMinting } =
-  //   useBuySpecificNftCopy();
-
   const handleMint = async () => {
     console.log("Minting NFT");
-    // if (!item.isSold) {
-    //   try {
-    //     await buySpecificCopy(
-    //       parseInt(item.batchId, 10),
-    //       parseInt(item.tokenId, 10)
-    //     );
-    //   } catch (error) {
-    //     console.error("Failed to mint NFT:", error);
-    //   }
-    // }
   };
 
   return (
@@ -51,9 +37,8 @@ const NFTItem = ({ item, index, isRandom }: NFTItemProps) => {
           h="100%"
           objectFit="cover"
         />
-        <Box p={isRandom ? 0 : 2}>
-          <NFTPrice price={item.price} />
-        </Box>
+
+        <NFTPrice price={item.price} />
       </Box>
       <Box mt={2}>
         <MintButton
