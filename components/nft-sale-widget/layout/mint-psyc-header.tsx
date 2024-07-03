@@ -2,7 +2,7 @@ import { Box, Flex, Text } from "@chakra-ui/react";
 import { WhitepaperLink } from "../commons/whitepaper-link";
 import { PrivateSaleSwitch } from "../commons/privatesale-switch";
 
-export const MintPsycHeader = () => {
+const MintPsycHeader = () => {
   // TODO: Hide toggle if user is not whitelisted
   const IS_WHITELISTED = true;
 
@@ -36,3 +36,5 @@ export const MintPsycHeader = () => {
     </Box>
   );
 };
+
+export default MintPsycHeader;

@@ -2,7 +2,7 @@ import { Box, Flex, Text } from "@chakra-ui/react";
 import DecorationFrame from "../commons/decoration-frame";
 import DiagonalRectangle from "../commons/diagonal-rectangle";
 
-export const MintRandomPSYCHeader = () => {
+const MintRandomPsycHeader = () => {
   return (
     <Box position="relative" textAlign="center" py={4}>
       <Flex
@@ -41,3 +41,5 @@ export const MintRandomPSYCHeader = () => {
     </Box>
   );
 };
+
+export default MintRandomPsycHeader;
