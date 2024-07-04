@@ -3,23 +3,35 @@ import { Box, Image, Text, Spinner } from "@chakra-ui/react";
 import NFTPrice from "@/components/commons/nftprice";
 import MintButton from "@/components/mint-button";
 import useBuyNft from "@/hooks/useBuyNft";
-import { type TokenItem } from "./layout/mint-section";
+import { type TokenItem } from "@/lib/types";
 
 interface PsycItemProps {
   item: TokenItem;
   index: number;
   isRandom: boolean;
   isPrivateSale: boolean;
+  tokenIdsForActivation: number[];
 }
 
-const PsycItem = ({ item, index, isRandom, isPrivateSale }: PsycItemProps) => {
+const PsycItem = ({
+  item,
+  index,
+  isRandom,
+  isPrivateSale,
+  tokenIdsForActivation
+}: PsycItemProps) => {
   const { buyNft, isPending, isConfirming, isMinting, isConfirmed } = useBuyNft(
     isPrivateSale,
     isRandom
   );
 
   const handleMint = async () => {
-    await buyNft(parseInt(item.batchId), parseInt(item.tokenId), item.price);
+    await buyNft(
+      parseInt(item.batchId),
+      parseInt(item.tokenId),
+      tokenIdsForActivation,
+      item.price
+    );
   };
 
   return (
@@ -46,17 +58,15 @@ const PsycItem = ({ item, index, isRandom, isPrivateSale }: PsycItemProps) => {
         <MintButton
           customStyle={{ width: "100%" }}
           onClick={handleMint}
-          isDisabled={
-            isRandom || item.isSold || isPending || isConfirming || isMinting
-          }
+          isDisabled={item.isSold || isPending || isConfirming || isMinting}
         >
-          {isConfirmed ? (
-            <Text color="black">Minted</Text>
-          ) : isMinting ? (
+          {isMinting ? (
             <>
               <Spinner size="sm" mr={2} />
               Minting
             </>
+          ) : isConfirmed ? (
+            <Text color="black">Minted</Text>
           ) : item.isSold ? (
             <Text color="black">Sold</Text>
           ) : (

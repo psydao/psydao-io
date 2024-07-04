@@ -8,7 +8,6 @@ import {
 import { useToast } from "@chakra-ui/react";
 import psycSaleAbiSepolia from "../abis/psycSaleAbiSepolia.json";
 import { psycSaleSepolia } from "../constants/contracts";
-// import { parseUnits } from "viem";
 
 type ArgsType =
   | [number, string[]]
@@ -23,6 +22,8 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
   const [isMinting, setIsMinting] = useState(false);
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSalesActive, setIsSalesActive] = useState(false);
+  const [activationInProgress, setActivationInProgress] = useState(false);
 
   const { data: hash, writeContract, isPending, error } = useWriteContract();
 
@@ -30,10 +31,39 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
     hash
   });
 
+  const handleActivateSale = useCallback(
+    async (tokenIds: number[]) => {
+      try {
+        setActivationInProgress(true);
+        writeContract({
+          address: psycSaleSepolia,
+          abi: psycSaleAbiSepolia,
+          functionName: "setSalesActive",
+          args: [tokenIds]
+        });
+        setIsSalesActive(true);
+      } catch (error: unknown) {
+        const message =
+          error instanceof Error ? error.message : "Unknown error";
+        toast({
+          title: "Something went wrong!",
+          description: message,
+          position: "top-right",
+          status: "error",
+          isClosable: true
+        });
+      } finally {
+        setActivationInProgress(false);
+      }
+    },
+    [writeContract, toast]
+  );
+
   const buyNft = useCallback(
     async (
       batchId: number,
       erc721TokenId: number,
+      tokenIdsForActivation: number[],
       price: string,
       proof: string[] = []
     ) => {
@@ -49,6 +79,12 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
         }
         return;
       }
+
+      if (!isSalesActive && !activationInProgress) {
+        await handleActivateSale(tokenIdsForActivation);
+      }
+
+      if (isRandom && !isSalesActive) return;
 
       try {
         setIsMinting(true);
@@ -68,14 +104,12 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
           functionName = "buyNftCopyFromBatch";
           args = [batchId, erc721TokenId];
         }
-        // const priceInWei = parseUnits(price?.split(" ")[0] ?? "0", 18);
 
         writeContract({
           address: psycSaleSepolia,
           abi: psycSaleAbiSepolia,
           functionName: functionName,
           args: args
-          // value: priceInWei
         });
       } catch (error: unknown) {
         const message =
@@ -97,7 +131,10 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
       toast,
       connectors,
       isPrivateSale,
-      isRandom
+      isRandom,
+      handleActivateSale,
+      isSalesActive,
+      activationInProgress
     ]
   );
 
@@ -136,7 +173,7 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
       setIsModalOpen(false);
       setIsConfirmed(true);
     }
-  }, [error, hash, isSuccess, toast]);
+  }, [error, hash, isSuccess, toast, isPending]);
 
   return {
     buyNft,
