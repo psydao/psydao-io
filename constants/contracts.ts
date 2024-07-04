@@ -9,6 +9,10 @@ export const chainLinkSepolia = "0x694AA1769357215DE4FAC081bf1f309aDC325306";
 // psyNFT
 export const psyNFTSepolia = "0x52142695efB864A5e6E55c25ab7B5467756D9eb3";
 
+//psyNFTCopies
+export const psycNFTCopiesSepolia =
+  "0xCEF8d86C4Ce1899884D1821206A532f85d3D9f68";
+
 // ERC1155
 export const ERC1155Sepolia = "0xCEF8d86C4Ce1899884D1821206A532f85d3D9f68";
 

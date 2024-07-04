@@ -96,7 +96,7 @@ export function customToast(
     },
     closeButton: CustomCloseButton,
     position: "top-center",
-    autoClose: 3000,
+    autoClose: options && options.type === "default" ? 6000 : 3000,
     ...options
   });
 }

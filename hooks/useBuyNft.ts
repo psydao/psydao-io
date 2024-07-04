@@ -149,7 +149,7 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
         width <= 768
       );
     }
-    if (hash) {
+    if (isSuccess) {
       customToast(
         {
           mainText: "Success! Your NFT has been minted.",
@@ -165,7 +165,7 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
       setIsModalOpen(false);
       setIsConfirmed(true);
     }
-  }, [error, hash, isSuccess, isPending]);
+  }, [error, isSuccess, isPending]);
 
   return {
     buyNft,
