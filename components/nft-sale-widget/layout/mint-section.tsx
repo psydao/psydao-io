@@ -3,7 +3,7 @@ import { Box, Flex, Grid } from "@chakra-ui/react";
 import { useQuery } from "@apollo/client";
 import { getAllSalesWithTokens } from "@/services/graph";
 import { type GetAllSalesWithTokensData } from "@/services/types";
-import NFTItem from "../psyc-item";
+import PsycItem from "../psyc-item";
 import useRandomImage from "@/hooks/useRandomImage";
 
 interface MintSectionProps {
@@ -28,38 +28,35 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
   const tokensRef = useRef<TokenItem[]>([]);
   const [randomToken, setRandomToken] = useState<TokenItem | null>(null);
 
-  useEffect(() => {
-    if (isRandom && tokensRef.current.length > 0) {
-      setRandomToken(
-        tokensRef.current[currentImageIndex % tokensRef.current.length] ?? null
-      );
-    }
-  }, [currentImageIndex, isRandom]);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error loading data</p>;
-
-  const tokens = useMemo(
-    () =>
+  const tokens = useMemo(() => {
+    return (
       data?.sales.flatMap((sale) =>
         sale.tokensOnSale.map((token) => ({
           src: images[currentImageIndex % images.length] ?? "",
-          price: `${parseFloat(sale.ceilingPrice) / 10 ** 18} ETH`,
+          price: `${parseFloat(sale.floorPrice) / 10 ** 18} ETH`,
           isSold: false,
           batchId: sale.batchID,
           tokenId: token.tokenID
         }))
-      ) ?? [],
-    [data, currentImageIndex]
-  );
+      ) ?? []
+    );
+  }, [data, currentImageIndex]);
 
-  tokensRef.current = tokens;
+  useEffect(() => {
+    if (isRandom && tokens.length > 0) {
+      tokensRef.current = tokens;
+      setRandomToken(tokens[currentImageIndex % tokens.length] ?? null);
+    }
+  }, [tokens, currentImageIndex, isRandom]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error loading data</p>;
 
   if (isRandom && randomToken) {
     return (
       <Box textAlign="center" py={4}>
         <Flex justifyContent="center">
-          <NFTItem
+          <PsycItem
             item={randomToken}
             index={currentImageIndex}
             isRandom={true}
@@ -80,7 +77,7 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
         >
           {data?.sales.map((sale, saleIndex) =>
             sale.tokensOnSale.map((token) => (
-              <NFTItem
+              <PsycItem
                 isPrivateSale={false}
                 key={token.id}
                 item={{

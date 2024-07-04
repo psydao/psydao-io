@@ -68,7 +68,6 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
           functionName = "buyNftCopyFromBatch";
           args = [batchId, erc721TokenId];
         }
-
         // const priceInWei = parseUnits(price?.split(" ")[0] ?? "0", 18);
 
         writeContract({
@@ -76,6 +75,7 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
           abi: psycSaleAbiSepolia,
           functionName: functionName,
           args: args
+          // value: priceInWei
         });
       } catch (error: unknown) {
         const message =
@@ -113,16 +113,7 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
       setIsMinting(false);
       setIsModalOpen(false);
     }
-    if (hash) {
-      toast({
-        title: "Success",
-        description: `Tx hash: ${hash}`,
-        position: "top-right",
-        status: "success",
-        isClosable: true
-      });
-    }
-    if (isConfirming) {
+    if (isPending) {
       toast({
         title: "Pending",
         description:
@@ -132,7 +123,7 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
         isClosable: true
       });
     }
-    if (isSuccess) {
+    if (hash) {
       toast({
         title: "Confirmed",
         description: "Transaction confirmed: Your NFT has been minted.",
@@ -144,7 +135,7 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
       setIsModalOpen(false);
       setIsConfirmed(true);
     }
-  }, [hash, isConfirming, isSuccess, error, toast]);
+  }, [error, hash, isSuccess, toast]);
 
   return {
     buyNft,
