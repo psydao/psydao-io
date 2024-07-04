@@ -1,22 +1,25 @@
+import React from "react";
 import { Box, Image, Text } from "@chakra-ui/react";
 import NFTPrice from "@/components/commons/nftprice";
 import MintButton from "@/components/mint-button";
+import useBuyNft from "@/hooks/useBuyNft";
+import { type TokenItem } from "./layout/mint-section";
 
 interface NFTItemProps {
-  item: {
-    src: string;
-    price: string;
-    isSold: boolean;
-    batchId: string;
-    tokenId: string;
-  };
+  item: TokenItem;
   index: number;
   isRandom: boolean;
+  isPrivateSale: boolean;
 }
 
-const NFTItem = ({ item, index, isRandom }: NFTItemProps) => {
+const NFTItem = ({ item, index, isRandom, isPrivateSale }: NFTItemProps) => {
+  const { buyNft, isPending, isConfirming, isMinting } = useBuyNft(
+    isPrivateSale,
+    isRandom
+  );
+
   const handleMint = async () => {
-    console.log("Minting NFT");
+    await buyNft(parseInt(item.batchId), parseInt(item.tokenId), item.price);
   };
 
   return (
@@ -37,14 +40,13 @@ const NFTItem = ({ item, index, isRandom }: NFTItemProps) => {
           h="100%"
           objectFit="cover"
         />
-
         <NFTPrice price={item.price} />
       </Box>
       <Box mt={2}>
         <MintButton
           customStyle={{ width: "100%" }}
           onClick={handleMint}
-          // isDisabled={item.isSold || isPending || isConfirming || isMinting}
+          isDisabled={item.isSold || isPending || isConfirming || isMinting}
         >
           {item.isSold ? <Text color="black">Sold</Text> : "Mint"}
         </MintButton>
@@ -53,4 +55,4 @@ const NFTItem = ({ item, index, isRandom }: NFTItemProps) => {
   );
 };
 
-export default NFTItem;
+export default React.memo(NFTItem);

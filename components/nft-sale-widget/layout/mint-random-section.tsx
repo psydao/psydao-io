@@ -1,5 +1,5 @@
 import { Box, Flex } from "@chakra-ui/react";
-import NFTItem from "../commons/nft-item";
+import NFTItem from "../psyc-item";
 
 interface MintRandomSectionProps {
   tokens: {
@@ -25,7 +25,12 @@ export const MintRandomSection = ({
   return (
     <Box textAlign="center" py={4}>
       <Flex justifyContent="center">
-        <NFTItem item={currentItem} index={currentImageIndex} isRandom={true} />
+        <NFTItem
+          item={currentItem}
+          index={currentImageIndex}
+          isRandom={true}
+          isPrivateSale={false}
+        />
       </Flex>
     </Box>
   );
