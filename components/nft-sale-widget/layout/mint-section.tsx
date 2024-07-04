@@ -49,6 +49,10 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
     }
   }, [tokens, currentImageIndex, isRandom]);
 
+  useEffect(() => {
+    console.log(data, "data");
+  }, [data]);
+
   if (loading) return <Box textAlign="center">Loading...</Box>;
   if (error) return <Box textAlign="center">Error loading data</Box>;
 
