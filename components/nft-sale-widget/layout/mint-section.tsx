@@ -75,7 +75,7 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
         <Grid
           templateColumns={{
             base: "1fr",
-            sm: "repeat(auto-fit, minmax(130px, 1fr))"
+            sm: "repeat(auto-fit, minmax(170px, 1fr))"
           }}
           gap={6}
         >
