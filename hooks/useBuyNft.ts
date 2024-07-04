@@ -126,7 +126,8 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
     if (hash) {
       toast({
         title: "Confirmed",
-        description: "Transaction confirmed: Your NFT has been minted.",
+        description:
+          "Transaction confirmed: Your NFT has been minted. Tx Hash: " + hash,
         position: "top-right",
         status: "success",
         isClosable: true
