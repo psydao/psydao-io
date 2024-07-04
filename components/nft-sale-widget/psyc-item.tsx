@@ -1,9 +1,10 @@
 import React from "react";
-import { Box, Image, Text, Spinner } from "@chakra-ui/react";
+import { Box, Image, Text, Spinner, Tooltip } from "@chakra-ui/react";
 import NFTPrice from "@/components/commons/nftprice";
 import MintButton from "@/components/mint-button";
 import useBuyNft from "@/hooks/useBuyNft";
 import { type TokenItem } from "./layout/mint-section";
+import { useAccount } from "wagmi";
 
 interface PsycItemProps {
   item: TokenItem;
@@ -17,6 +18,8 @@ const PsycItem = ({ item, index, isRandom, isPrivateSale }: PsycItemProps) => {
     isPrivateSale,
     isRandom
   );
+
+  const { address } = useAccount();
 
   const handleMint = async () => {
     await buyNft(parseInt(item.batchId), parseInt(item.tokenId), item.price);
@@ -42,28 +45,48 @@ const PsycItem = ({ item, index, isRandom, isPrivateSale }: PsycItemProps) => {
         />
         <NFTPrice price={item.price} />
       </Box>
-      <Box mt={2}>
-        <MintButton
-          customStyle={{ width: "100%" }}
-          onClick={handleMint}
-          isDisabled={
-            isRandom || item.isSold || isPending || isConfirming || isMinting
-          }
-        >
-          {isConfirmed ? (
-            <Text color="black">Minted</Text>
-          ) : isMinting ? (
-            <>
-              <Spinner size="sm" mr={2} />
-              Minting
-            </>
-          ) : item.isSold ? (
-            <Text color="black">Sold</Text>
-          ) : (
-            "Mint"
-          )}
-        </MintButton>
-      </Box>
+      <Tooltip
+        isDisabled={!!address}
+        label="To mint PSYC NFTs, you need to connect your wallet first."
+        placement="top"
+        bg={"white"}
+        py={4}
+        px={6}
+        color={"#1A202C"}
+        fontSize={18}
+        maxW={"300px"}
+        whiteSpace={"wrap"}
+        borderRadius={"16px"}
+        border={"2px solid #F2BEBE73"}
+      >
+        <Box mt={2}>
+          <MintButton
+            customStyle={{ width: "100%" }}
+            onClick={handleMint}
+            isDisabled={
+              !address ||
+              isRandom ||
+              item.isSold ||
+              isPending ||
+              isConfirming ||
+              isMinting
+            }
+          >
+            {isConfirmed ? (
+              <Text color="black">Minted</Text>
+            ) : isMinting ? (
+              <>
+                <Spinner size="sm" mr={2} />
+                Minting
+              </>
+            ) : item.isSold ? (
+              <Text color="black">Sold</Text>
+            ) : (
+              "Mint"
+            )}
+          </MintButton>
+        </Box>
+      </Tooltip>
     </Box>
   );
 };
