@@ -49,8 +49,8 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
     }
   }, [tokens, currentImageIndex, isRandom]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error loading data</p>;
+  if (loading) return <Box textAlign="center">Loading...</Box>;
+  if (error) return <Box textAlign="center">Error loading data</Box>;
 
   if (isRandom && randomToken) {
     return (
