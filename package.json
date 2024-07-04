@@ -41,6 +41,7 @@
     "react-icons": "^4.4.0",
     "react-rnd": "^10.3.7",
     "react-toastify": "^10.0.5",
+    "sharp": "^0.33.4",
     "siwe": "^2.1.4",
     "swr": "^2.2.5",
     "three": "^0.142.0",

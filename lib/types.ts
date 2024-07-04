@@ -15,3 +15,11 @@ interface Sale {
 export interface GetAllSalesWithTokensData {
   sales: Sale[];
 }
+
+export interface TokenItem {
+  src: string;
+  price: string;
+  isSold: boolean;
+  batchId: string;
+  tokenId: string;
+}

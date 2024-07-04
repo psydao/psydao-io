@@ -28,10 +28,10 @@ const wagmiConfig = getDefaultConfig({
       wallets: [argentWallet, trustWallet, ledgerWallet]
     }
   ],
-  chains: [mainnet, sepolia],
+  chains: [sepolia, mainnet],
   transports: {
-    [mainnet.id]: http(),
-    [sepolia.id]: http()
+    [sepolia.id]: http("https://sepolia.gateway.tenderly.co"),
+    [mainnet.id]: http()
   },
   ssr: true
 });

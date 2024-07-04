@@ -3,17 +3,24 @@ import { Box, Image, Text, Spinner, Tooltip } from "@chakra-ui/react";
 import NFTPrice from "@/components/commons/nftprice";
 import MintButton from "@/components/mint-button";
 import useBuyNft from "@/hooks/useBuyNft";
-import { type TokenItem } from "./layout/mint-section";
 import { useAccount } from "wagmi";
+import { type TokenItem } from "@/lib/types";
 
 interface PsycItemProps {
   item: TokenItem;
   index: number;
   isRandom: boolean;
   isPrivateSale: boolean;
+  tokenIdsForActivation: number[];
 }
 
-const PsycItem = ({ item, index, isRandom, isPrivateSale }: PsycItemProps) => {
+const PsycItem = ({
+  item,
+  index,
+  isRandom,
+  isPrivateSale,
+  tokenIdsForActivation
+}: PsycItemProps) => {
   const { buyNft, isPending, isConfirming, isMinting, isConfirmed } = useBuyNft(
     isPrivateSale,
     isRandom
@@ -22,7 +29,12 @@ const PsycItem = ({ item, index, isRandom, isPrivateSale }: PsycItemProps) => {
   const { address } = useAccount();
 
   const handleMint = async () => {
-    await buyNft(parseInt(item.batchId), parseInt(item.tokenId), item.price);
+    await buyNft(
+      parseInt(item.batchId),
+      parseInt(item.tokenId),
+      tokenIdsForActivation,
+      item.price
+    );
   };
 
   return (
@@ -73,12 +85,7 @@ const PsycItem = ({ item, index, isRandom, isPrivateSale }: PsycItemProps) => {
             customStyle={{ width: "100%" }}
             onClick={handleMint}
             isDisabled={
-              !address ||
-              isRandom ||
-              item.isSold ||
-              isPending ||
-              isConfirming ||
-              isMinting
+              !address || item.isSold || isPending || isConfirming || isMinting
             }
           >
             {isConfirmed ? (
