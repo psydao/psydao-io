@@ -43,6 +43,15 @@ const PsycItem = ({ item, index, isRandom, isPrivateSale }: PsycItemProps) => {
           h="100%"
           objectFit="cover"
         />
+        <Box
+          position="absolute"
+          top="0"
+          left="0"
+          width="100%"
+          height="100%"
+          bg={"#00000066"}
+          display={item.isSold ? "block" : "none"}
+        />
         <NFTPrice price={item.price} />
       </Box>
       <Tooltip

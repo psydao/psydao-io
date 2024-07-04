@@ -5,9 +5,10 @@ import {
   useWriteContract,
   useAccount
 } from "wagmi";
-import { useToast } from "@chakra-ui/react";
 import psycSaleAbiSepolia from "../abis/psycSaleAbiSepolia.json";
 import { psycSaleSepolia } from "../constants/contracts";
+import { customToast } from "@/components/toasts/SwapSuccess";
+import { Zoom } from "react-toastify";
 // import { parseUnits } from "viem";
 
 type ArgsType =
@@ -19,10 +20,22 @@ type ArgsType =
 const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
   const { isConnected } = useAccount();
   const { connect, connectors } = useConnect();
-  const toast = useToast();
   const [isMinting, setIsMinting] = useState(false);
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const { data: hash, writeContract, isPending, error } = useWriteContract();
 
@@ -38,12 +51,13 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
       proof: string[] = []
     ) => {
       if (!isConnected) {
-        toast({
-          title: "Please connect your wallet first",
-          position: "top-right",
-          status: "error",
-          isClosable: true
-        });
+        customToast(
+          {
+            mainText: "Please connect your wallet first"
+          },
+          { type: "error" },
+          width <= 768
+        );
         if (connectors[0]) {
           connect({ connector: connectors[0] });
         }
@@ -78,65 +92,80 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
           // value: priceInWei
         });
       } catch (error: unknown) {
-        const message =
-          error instanceof Error ? error.message : "Unknown error";
-        toast({
-          title: "Something went wrong!",
-          description: message,
-          position: "top-right",
-          status: "error",
-          isClosable: true
-        });
+        customToast(
+          {
+            mainText: "An error occurred. Please try again later."
+          },
+          {
+            type: "error",
+            transition: Zoom
+          },
+          width <= 768
+        );
         setIsMinting(false);
       }
     },
-    [
-      isConnected,
-      connect,
-      writeContract,
-      toast,
-      connectors,
-      isPrivateSale,
-      isRandom
-    ]
+    [isConnected, connect, writeContract, connectors, isPrivateSale, isRandom]
   );
 
   useEffect(() => {
-    if (error) {
-      toast({
-        title: "Error",
-        description: `Failed to mint NFT: ${error.message || "Unknown error"}`,
-        position: "top-right",
-        status: "error",
-        isClosable: true
-      });
+    if (error && error.message.includes("User rejected")) {
+      customToast(
+        {
+          mainText: "Request rejected by user. Please try again."
+        },
+        {
+          type: "error",
+          transition: Zoom
+        },
+        width <= 768
+      );
+      setIsMinting(false);
+      setIsModalOpen(false);
+    } else if (error && !error.message.includes("User rejected")) {
+      customToast(
+        {
+          mainText: "An error occurred. Please try again later."
+        },
+        {
+          type: "error",
+          transition: Zoom
+        },
+        width <= 768
+      );
       setIsMinting(false);
       setIsModalOpen(false);
     }
     if (isPending) {
-      toast({
-        title: "Pending",
-        description:
-          "Your transaction is processing. Please wait for confirmation...",
-        position: "top-right",
-        status: "info",
-        isClosable: true
-      });
+      customToast(
+        {
+          mainText:
+            "Your transaction is processing. Please wait for confirmation."
+        },
+        {
+          type: "default",
+          transition: Zoom
+        },
+        width <= 768
+      );
     }
     if (hash) {
-      toast({
-        title: "Confirmed",
-        description:
-          "Transaction confirmed: Your NFT has been minted. Tx Hash: " + hash,
-        position: "top-right",
-        status: "success",
-        isClosable: true
-      });
+      customToast(
+        {
+          mainText: "Success! Your NFT has been minted.",
+          isPsyc: true
+        },
+        {
+          type: "success",
+          transition: Zoom
+        },
+        width <= 768
+      );
       setIsMinting(false);
       setIsModalOpen(false);
       setIsConfirmed(true);
     }
-  }, [error, hash, isSuccess, toast]);
+  }, [error, hash, isSuccess, isPending]);
 
   return {
     buyNft,
