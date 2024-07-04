@@ -64,7 +64,7 @@ const PsycItem = ({ item, index, isRandom, isPrivateSale }: PsycItemProps) => {
         color={"#1A202C"}
         fontSize={18}
         maxW={"300px"}
-        whiteSpace={"wrap"}
+        whiteSpace={"normal"}
         borderRadius={"16px"}
         border={"2px solid #F2BEBE73"}
       >
