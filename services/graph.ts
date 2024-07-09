@@ -24,6 +24,7 @@ export const getAllSalesWithTokens = gql`
       blockNumber
       ceilingPrice
       floorPrice
+      ipfsHash
       id
       tokensOnSale {
         id
