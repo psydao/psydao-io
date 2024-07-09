@@ -26,7 +26,7 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
       data?.sales.flatMap((sale) =>
         sale.tokensOnSale.map((token) => ({
           src: images[currentImageIndex % images.length] ?? "",
-          price: `${formatUnits(BigInt(sale.floorPrice), 18)} ETH`,
+          price: `${formatUnits(BigInt(sale.floorPrice), 18)}`,
           isSold: false,
           batchId: sale.batchID,
           tokenId: token.tokenID
@@ -87,7 +87,7 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
                 key={token.id}
                 item={{
                   src: images[saleIndex % images.length] ?? "",
-                  price: `${formatUnits(BigInt(sale.ceilingPrice), 18)} ETH`,
+                  price: `${formatUnits(BigInt(sale.ceilingPrice), 18)}`,
                   isSold: false,
                   batchId: sale.batchID,
                   tokenId: token.tokenID

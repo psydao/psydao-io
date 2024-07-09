@@ -10,6 +10,12 @@ import { psycSaleSepolia } from "../constants/contracts";
 import { customToast } from "@/components/toasts/SwapSuccess";
 import { useToast } from "@chakra-ui/react";
 import { Zoom } from "react-toastify";
+// import { parseUnits } from "viem";
+import {
+  handleTransactionError,
+  handleTransactionSuccess,
+  handleUserRejection
+} from "@/utils/transactionHandlers";
 
 type ArgsType =
   | [number, string[]]
@@ -24,8 +30,6 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
   const [isMinting, setIsMinting] = useState(false);
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isSalesActive, setIsSalesActive] = useState(false);
-  const [activationInProgress, setActivationInProgress] = useState(false);
   const [width, setWidth] = useState(window.innerWidth);
 
   useEffect(() => {
@@ -45,34 +49,6 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
     hash
   });
-
-  const handleActivateSale = useCallback(
-    async (tokenIds: number[]) => {
-      try {
-        setActivationInProgress(true);
-        writeContract({
-          address: psycSaleSepolia,
-          abi: psycSaleAbiSepolia,
-          functionName: "setSalesActive",
-          args: [tokenIds]
-        });
-        setIsSalesActive(true);
-      } catch (error: unknown) {
-        const message =
-          error instanceof Error ? error.message : "Unknown error";
-        toast({
-          title: "Something went wrong!",
-          description: message,
-          position: "top-right",
-          status: "error",
-          isClosable: true
-        });
-      } finally {
-        setActivationInProgress(false);
-      }
-    },
-    [writeContract, toast]
-  );
 
   const buyNft = useCallback(
     async (
@@ -95,13 +71,13 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
         }
         return;
       }
-
-      if (!isSalesActive && !activationInProgress) {
-        await handleActivateSale(tokenIdsForActivation);
-      }
-
-      if (isRandom && !isSalesActive) return;
-
+      console.log({
+        batchId,
+        erc721TokenId,
+        tokenIdsForActivation,
+        price,
+        proof
+      });
       try {
         setIsMinting(true);
         let functionName = "";
@@ -121,23 +97,17 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
           args = [batchId, erc721TokenId];
         }
 
+        // const parsedAmount = parseUnits(price, 18);
+
         writeContract({
           address: psycSaleSepolia,
           abi: psycSaleAbiSepolia,
           functionName: functionName,
           args: args
+          // value: parsedAmount
         });
-      } catch (error: unknown) {
-        customToast(
-          {
-            mainText: "An error occurred. Please try again later."
-          },
-          {
-            type: "error",
-            transition: Zoom
-          },
-          width <= 768
-        );
+      } catch (error) {
+        handleTransactionError(error, width);
         setIsMinting(false);
       }
     },
@@ -148,71 +118,34 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
       toast,
       connectors,
       isPrivateSale,
-      isRandom,
-      handleActivateSale,
-      isSalesActive,
-      activationInProgress
+      isRandom
     ]
   );
-
   useEffect(() => {
-    if (error && error.message.includes("User rejected")) {
-      customToast(
-        {
-          mainText: "Request rejected by user. Please try again."
-        },
-        {
-          type: "error",
-          transition: Zoom
-        },
-        width <= 768
-      );
+    if (error) {
+      if (error.message.includes("User rejected")) {
+        handleUserRejection(width);
+      } else {
+        handleTransactionError(error, width);
+      }
       setIsMinting(false);
       setIsModalOpen(false);
-    } else if (error && !error.message.includes("User rejected")) {
-      customToast(
-        {
-          mainText: "An error occurred. Please try again later."
-        },
-        {
-          type: "error",
-          transition: Zoom
-        },
-        width <= 768
-      );
-      setIsMinting(false);
-      setIsModalOpen(false);
-    }
-    if (isPending) {
+    } else if (isPending) {
       customToast(
         {
           mainText:
             "Your transaction is processing. Please wait for confirmation."
         },
-        {
-          type: "default",
-          transition: Zoom
-        },
+        { type: "default", transition: Zoom },
         width <= 768
       );
-    }
-    if (isSuccess) {
-      customToast(
-        {
-          mainText: "Success! Your NFT has been minted.",
-          isPsyc: true
-        },
-        {
-          type: "success",
-          transition: Zoom
-        },
-        width <= 768
-      );
+    } else if (isSuccess) {
+      handleTransactionSuccess(width);
       setIsMinting(false);
       setIsModalOpen(false);
       setIsConfirmed(true);
     }
-  }, [error, isSuccess, isPending]);
+  }, [error, isSuccess, isPending, width]);
 
   return {
     buyNft,

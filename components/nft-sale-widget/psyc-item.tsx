@@ -5,6 +5,9 @@ import MintButton from "@/components/mint-button";
 import useBuyNft from "@/hooks/useBuyNft";
 import { useAccount } from "wagmi";
 import { type TokenItem } from "@/lib/types";
+import useActivateSale from "@/hooks/useActivateSale";
+import { handleTransactionError } from "@/utils/transactionHandlers";
+import { useResize } from "@/hooks/useResize";
 
 interface PsycItemProps {
   item: TokenItem;
@@ -26,9 +29,21 @@ const PsycItem = ({
     isRandom
   );
 
+  const { width } = useResize();
+  const { isSalesActive, activateSale } = useActivateSale();
   const { address } = useAccount();
 
   const handleMint = async () => {
+    if (!isSalesActive) {
+      try {
+        await activateSale(tokenIdsForActivation, (error) =>
+          handleTransactionError(error, width)
+        );
+      } catch (error) {
+        console.error("Failed to activate sales:", error);
+        return;
+      }
+    }
     await buyNft(
       parseInt(item.batchId),
       parseInt(item.tokenId),
