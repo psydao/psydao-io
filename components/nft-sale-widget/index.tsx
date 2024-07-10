@@ -4,11 +4,11 @@ import { Image, useMediaQuery } from "@chakra-ui/react";
 import { Window } from "@/components/window";
 
 import { useWindowManager } from "@/components/window-manager";
-import { MintPsycHeader } from "./layout/mint-psyc-header";
-import { MintRandomPSYCHeader } from "./layout/mint-random-psyc-header";
-import { MintRandomSection } from "./layout/mint-random-section";
-import { MintSpecificPsycHeader } from "./layout/mint-specific-psyc-header";
-import MintSpecificSection from "./layout/mint-specific-section";
+import MintPsycHeader from "./layout/mint-psyc-header";
+import MintRandomPsycHeader from "./layout/mint-random-psyc-header";
+import MintSpecificPsycHeader from "./layout/mint-specific-psyc-header";
+
+import MintSection from "./layout/mint-section";
 
 export const NftSaleWidget = () => {
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
@@ -40,10 +40,10 @@ export const NftSaleWidget = () => {
       <Window.TitleBar />
       <Window.Content py={2}>
         <MintPsycHeader />
-        <MintRandomPSYCHeader />
-        <MintRandomSection />
+        <MintRandomPsycHeader />
+        <MintSection isRandom />
         <MintSpecificPsycHeader />
-        <MintSpecificSection />
+        <MintSection isRandom={false} />
         <Image
           src="/windows/alchemist/clouds.png"
           alt=""

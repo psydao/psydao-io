@@ -3,7 +3,7 @@ import { WhitepaperLink } from "../commons/whitepaper-link";
 import { PrivateSaleSwitch } from "../commons/privatesale-switch";
 import { Open } from "@/components/window-manager";
 
-export const MintPsycHeader = () => {
+const MintPsycHeader = () => {
   // TODO: Hide toggle if user is not whitelisted
   const IS_WHITELISTED = true;
 
@@ -49,3 +49,5 @@ export const MintPsycHeader = () => {
     </Box>
   );
 };
+
+export default MintPsycHeader;
