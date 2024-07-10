@@ -88,7 +88,7 @@ const PsycItem = ({
           width="100%"
           height="100%"
           bg={"#00000066"}
-          display={item.isSold ? "block" : "none"}
+          display={isSold ? "block" : "none"}
         />
         <NFTPrice price={item.price} />
       </Box>
