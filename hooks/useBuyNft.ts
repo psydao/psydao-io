@@ -16,6 +16,7 @@ import {
   handleTransactionSuccess,
   handleUserRejection
 } from "@/utils/transactionHandlers";
+import { useResize } from "./useResize";
 
 type ArgsType =
   | [number, string[]]
@@ -30,19 +31,7 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
   const [isMinting, setIsMinting] = useState(false);
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [width, setWidth] = useState(window.innerWidth);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWidth(window.innerWidth);
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+  const { width } = useResize();
 
   const { data: hash, writeContract, isPending, error } = useWriteContract();
 

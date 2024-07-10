@@ -1,6 +1,6 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
-import DecorationFrame from "../commons/decoration-frame";
-import DiagonalRectangle from "../commons/diagonal-rectangle";
+import DecorationFrame from "../../commons/decoration-frame";
+import DiagonalRectangle from "../../commons/diagonal-rectangle";
 
 const MintSpecificPsycHeader = () => {
   return (

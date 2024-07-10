@@ -4,7 +4,7 @@ import { useQuery } from "@apollo/client";
 import { getAllSalesWithTokens } from "@/services/graph";
 import { type TokenItem, type GetAllSalesWithTokensData } from "@/lib/types";
 import { formatUnits } from "viem";
-import PsycItem from "../psyc-item";
+import PsycItem from "../../psyc-item";
 import useRandomImage from "@/hooks/useRandomImage";
 
 interface MintSectionProps {

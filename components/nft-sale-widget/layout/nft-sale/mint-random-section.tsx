@@ -1,6 +1,6 @@
 import { Box, Flex } from "@chakra-ui/react";
-import NFTItem from "../psyc-item";
-import PsycItem from "../psyc-item";
+import NFTItem from "../../psyc-item";
+import PsycItem from "../../psyc-item";
 
 interface MintRandomSectionProps {
   tokens: {
