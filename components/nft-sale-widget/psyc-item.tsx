@@ -8,6 +8,7 @@ import { type TokenItem } from "@/lib/types";
 import useActivateSale from "@/hooks/useActivateSale";
 import { handleTransactionError } from "@/utils/transactionHandlers";
 import { useResize } from "@/hooks/useResize";
+import { useTokenSoldState } from "@/hooks/useTokenSoldState";
 
 interface PsycItemProps {
   item: TokenItem;
@@ -32,6 +33,9 @@ const PsycItem = ({
   const { width } = useResize();
   const { isSalesActive, activateSale } = useActivateSale();
   const { address } = useAccount();
+  const { isSold, isLoading: isSoldLoading } = useTokenSoldState(
+    parseInt(item.tokenId)
+  );
 
   const handleMint = async () => {
     if (!isSalesActive) {
@@ -51,6 +55,13 @@ const PsycItem = ({
       item.price
     );
   };
+
+  const isButtonDisabled =
+    !address ||
+    (isSold ?? isPending) ||
+    isConfirming ||
+    isMinting ||
+    isSoldLoading;
 
   return (
     <Box key={index} maxW={isRandom ? "500px" : "170px"} mx="auto">
@@ -97,11 +108,9 @@ const PsycItem = ({
       >
         <Box mt={2}>
           <MintButton
-            customStyle={{ width: "100%" }}
+            customStyle={{ width: "100%", opacity: isButtonDisabled ? 0.5 : 1 }}
             onClick={handleMint}
-            isDisabled={
-              !address || item.isSold || isPending || isConfirming || isMinting
-            }
+            isDisabled={isButtonDisabled}
           >
             {isConfirmed ? (
               <Text color="black">Minted</Text>
@@ -110,7 +119,7 @@ const PsycItem = ({
                 <Spinner size="sm" mr={2} />
                 Minting
               </>
-            ) : item.isSold ? (
+            ) : isSold ? (
               <Text color="black">Sold</Text>
             ) : (
               "Mint"

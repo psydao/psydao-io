@@ -5,8 +5,6 @@ import {
   useWriteContract,
   useAccount
 } from "wagmi";
-import psycSaleAbiSepolia from "../abis/psycSaleAbiSepolia.json";
-import { psycSaleSepolia } from "../constants/contracts";
 import { customToast } from "@/components/toasts/SwapSuccess";
 import { useToast } from "@chakra-ui/react";
 import { Zoom } from "react-toastify";
@@ -17,6 +15,7 @@ import {
   handleUserRejection
 } from "@/utils/transactionHandlers";
 import { useResize } from "./useResize";
+import { psycSaleContractConfig } from "@/lib/contract-config";
 
 type ArgsType =
   | [number, string[]]
@@ -89,8 +88,7 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
         const parsedAmount = parseUnits(price, 18);
 
         writeContract({
-          address: psycSaleSepolia,
-          abi: psycSaleAbiSepolia,
+          ...psycSaleContractConfig,
           functionName: functionName,
           args: args,
           value: parsedAmount
