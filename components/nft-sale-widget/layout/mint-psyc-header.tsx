@@ -1,6 +1,7 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { WhitepaperLink } from "../commons/whitepaper-link";
 import { PrivateSaleSwitch } from "../commons/privatesale-switch";
+import { Open } from "@/components/window-manager";
 
 export const MintPsycHeader = () => {
   // TODO: Hide toggle if user is not whitelisted
@@ -31,7 +32,19 @@ export const MintPsycHeader = () => {
           </Text>
           {IS_WHITELISTED && <PrivateSaleSwitch />}
         </Flex>
-        <WhitepaperLink />
+        <Flex alignItems={"center"} gap={3}>
+          <Open id="admin-dashboard">
+            <Text
+              fontFamily={"Inter Medium"}
+              fontSize={14}
+              color={"#AF52DE"}
+              cursor={"pointer"}
+            >
+              Admin Dashboard
+            </Text>
+          </Open>
+          <WhitepaperLink />
+        </Flex>
       </Flex>
     </Box>
   );

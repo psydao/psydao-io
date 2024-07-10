@@ -1,16 +1,18 @@
 import { useMemo } from "react";
 
-import { Image, useMediaQuery } from "@chakra-ui/react";
+import { Grid, Image, useMediaQuery } from "@chakra-ui/react";
 import { Window } from "@/components/window";
 import { useWindowManager } from "../window-manager";
+import AdminDashboardHeader from "./admin-dashboard-header";
+import AdminDashboardEmptyState from "./admin-dashboard-empty";
 
-const AdminDashboard = () => {
+const AdminDashboardWidget = () => {
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
 
   const { state } = useWindowManager();
 
   const fullScreenWindow = useMemo(() => {
-    if (state.fullScreen === "nft-sale") {
+    if (state.fullScreen === "admin-dashboard") {
       return true;
     }
 
@@ -19,7 +21,7 @@ const AdminDashboard = () => {
 
   return (
     <Window
-      id="nft-sale"
+      id="admin-dashboard"
       height={fullScreenWindow ? "100%" : isLargerThanMd ? "500px" : "80%"}
       width={fullScreenWindow ? "100%" : isLargerThanMd ? "655px" : "95%"}
       top={{
@@ -33,7 +35,16 @@ const AdminDashboard = () => {
     >
       <Window.TitleBar />
       <Window.Content py={2}>
-        {"insert content here boop boop beep beep"}
+        <AdminDashboardHeader />
+        <Grid
+          h={"100%"}
+          w={"100%"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          gridTemplateRows={"1fr"}
+        >
+          <AdminDashboardEmptyState />
+        </Grid>
         <Image
           src="/windows/alchemist/clouds.png"
           alt=""
@@ -48,4 +59,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default AdminDashboardWidget;
