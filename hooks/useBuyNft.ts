@@ -10,7 +10,7 @@ import { psycSaleSepolia } from "../constants/contracts";
 import { customToast } from "@/components/toasts/SwapSuccess";
 import { useToast } from "@chakra-ui/react";
 import { Zoom } from "react-toastify";
-// import { parseUnits } from "viem";
+import { parseUnits } from "viem";
 import {
   handleTransactionError,
   handleTransactionSuccess,
@@ -86,14 +86,14 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
           args = [batchId, erc721TokenId];
         }
 
-        // const parsedAmount = parseUnits(price, 18);
+        const parsedAmount = parseUnits(price, 18);
 
         writeContract({
           address: psycSaleSepolia,
           abi: psycSaleAbiSepolia,
           functionName: functionName,
-          args: args
-          // value: parsedAmount
+          args: args,
+          value: parsedAmount
         });
       } catch (error) {
         handleTransactionError(error, width);
