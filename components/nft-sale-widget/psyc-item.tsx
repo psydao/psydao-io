@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Image, Text, Spinner, Tooltip } from "@chakra-ui/react";
+import { Box, Image, Text, Spinner, Tooltip, Flex } from "@chakra-ui/react";
 import NFTPrice from "@/components/commons/nftprice";
 import MintButton from "@/components/mint-button";
 import useBuyNft from "@/hooks/useBuyNft";
@@ -64,7 +64,14 @@ const PsycItem = ({
     isSoldLoading;
 
   return (
-    <Box key={index} maxW={isRandom ? "500px" : "170px"} mx="auto">
+    <Flex
+      key={index}
+      maxW={isRandom ? "500px" : "170px"}
+      mx="auto"
+      direction={"column"}
+      gap={4}
+      alignItems={"center"}
+    >
       <Box
         w="100%"
         h={isRandom ? "auto" : "208px"}
@@ -106,28 +113,27 @@ const PsycItem = ({
         borderRadius={"16px"}
         border={"2px solid #F2BEBE73"}
       >
-        <Box mt={2}>
-          <MintButton
-            customStyle={{ width: "100%", opacity: isButtonDisabled ? 0.5 : 1 }}
-            onClick={handleMint}
-            isDisabled={isButtonDisabled}
-          >
-            {isConfirmed ? (
-              <Text color="black">Minted</Text>
-            ) : isMinting ? (
-              <>
-                <Spinner size="sm" mr={2} />
-                Minting
-              </>
-            ) : isSold ? (
-              <Text color="black">Sold</Text>
-            ) : (
-              "Mint"
-            )}
-          </MintButton>
-        </Box>
+        <MintButton
+          customStyle={{ width: "100%", opacity: isButtonDisabled ? 0.5 : 1 }}
+          onClick={handleMint}
+          isDisabled={isButtonDisabled}
+          isRandom={isRandom}
+        >
+          {isConfirmed ? (
+            <Text color="black">Minted</Text>
+          ) : isMinting ? (
+            <>
+              <Spinner size="sm" mr={2} />
+              Minting
+            </>
+          ) : isSold ? (
+            <Text color="black">Sold</Text>
+          ) : (
+            "Mint"
+          )}
+        </MintButton>
       </Tooltip>
-    </Box>
+    </Flex>
   );
 };
 

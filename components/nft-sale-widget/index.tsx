@@ -36,13 +36,13 @@ export const NftSaleWidget = () => {
       fullScreenWindow={fullScreenWindow}
     >
       <Window.TitleBar />
-      <Window.Content py={2} height={"100%"} width={"100%"}>
+      <Window.Content py={2} px={0} height={"100%"} width={"100%"}>
         <TokenProvider>
           <Tabs variant={"unstyled"}>
             <MintPsycHeader />
             <TabPanels>
-              <TabPanel>
-                <PsycSaleContent />
+              <TabPanel px={0}>
+                <PsycSaleContent isFullScreen={fullScreenWindow} />
               </TabPanel>
               <TabPanel h="100%" w="100%">
                 <OwnedNftsContent isFullScreen={fullScreenWindow} />

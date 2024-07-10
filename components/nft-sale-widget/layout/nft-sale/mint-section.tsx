@@ -93,7 +93,7 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
                   tokenId: token.tokenID
                 }}
                 index={parseInt(token.id, 10)}
-                isRandom={false}
+                isRandom={isRandom}
                 tokenIdsForActivation={tokenIdsForActivation}
               />
             ));

@@ -12,6 +12,7 @@ interface MintButtonProps {
   customStyle?: CustomStyle;
   isConfirming?: boolean;
   isAccept?: boolean;
+  isRandom?: boolean;
 }
 
 export const MintButton: React.FC<MintButtonProps> = ({
@@ -20,7 +21,8 @@ export const MintButton: React.FC<MintButtonProps> = ({
   customStyle,
   isConfirming,
   isDisabled,
-  isAccept
+  isAccept,
+  isRandom
 }) => {
   return (
     <Button
@@ -48,7 +50,7 @@ export const MintButton: React.FC<MintButtonProps> = ({
       fontWeight={600}
       maxWidth={{
         base: isAccept ? "100px" : "auto",
-        md: isAccept ? "274px" : "auto"
+        md: isAccept ? "274px" : isRandom ? "169px" : "auto"
       }}
       {...customStyle}
     >

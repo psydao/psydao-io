@@ -9,9 +9,8 @@ const NftSaleTabs = (props: NftSaleTabsProps) => {
       <Tab
         textColor={"#5C5C5C"}
         fontWeight="500"
-        fontStyle="italic"
-        fontSize={{ base: "12px", sm: "24px" }}
-        lineHeight={{ base: "12px", sm: "36px" }}
+        fontSize={{ base: "16px", sm: "24px" }}
+        lineHeight={{ base: "30px", sm: "36px" }}
         fontFamily={"Amiri"}
         _selected={{
           textColor: "#269200",
@@ -26,9 +25,8 @@ const NftSaleTabs = (props: NftSaleTabsProps) => {
         <Tab
           textColor={"#5C5C5C"}
           fontWeight="500"
-          fontStyle="italic"
-          fontSize={{ base: "12px", sm: "24px" }}
-          lineHeight={{ base: "12px", sm: "36px" }}
+          fontSize={{ base: "16px", sm: "24px" }}
+          lineHeight={{ base: "30px", sm: "36px" }}
           fontFamily={"Amiri"}
           _selected={{
             textColor: "#269200",

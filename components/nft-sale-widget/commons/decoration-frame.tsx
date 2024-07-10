@@ -1,37 +1,26 @@
-import { Image, useBreakpointValue } from "@chakra-ui/react";
+import { Box, Flex, Image, useBreakpointValue } from "@chakra-ui/react";
 
 interface DecorationFrameProps {
   position: "left" | "right";
+  isFullScreen: boolean;
 }
 
-const DecorationFrame = ({ position }: DecorationFrameProps) => {
-  const positionValue = useBreakpointValue({
-    base: "5%",
-    sm: "10%",
-    md: "15%",
-    lg: "50%",
-    xl: "70%"
+const DecorationFrame = ({ position, isFullScreen }: DecorationFrameProps) => {
+  const imageUrl = useBreakpointValue({
+    base: `/decoration-frame.png`,
+    sm: isFullScreen ? `/decoration-frame-2.png` : "/decoration-frame.svg"
   });
-
-  const frameWidth = useBreakpointValue({
-    base: "40px",
-    sm: "80px",
-    md: "120px",
-    lg: "160px",
-    xl: "170px"
-  });
-
   return (
-    <Image
-      src="/decoration-frame.svg"
-      alt={`${position.charAt(0).toUpperCase() + position.slice(1)} Decoration Frame`}
-      position="absolute"
-      {...{ [position]: positionValue }}
-      top="50%"
-      width={frameWidth}
-      transform="translateY(-50%)"
-      zIndex="0"
-    />
+    <Box w={"100%"} position={"relative"} h={{ base: "13px", sm: "100%" }}>
+      <Image
+        src={imageUrl}
+        alt={`${position.charAt(0).toUpperCase() + position.slice(1)} Decoration Frame`}
+        zIndex="0"
+        objectFit={{ base: "contain", sm: "fill" }}
+        w={"100%"}
+        h={"100%"}
+      />
+    </Box>
   );
 };
 

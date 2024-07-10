@@ -2,16 +2,20 @@ import { Box, Flex, Text } from "@chakra-ui/react";
 import DecorationFrame from "../../commons/decoration-frame";
 import DiagonalRectangle from "../../commons/diagonal-rectangle";
 
-const MintSpecificPsycHeader = () => {
+type MintSpecificPsycHeaderProps = {
+  isFullScreen: boolean;
+};
+const MintSpecificPsycHeader = (props: MintSpecificPsycHeaderProps) => {
   return (
-    <Box position="relative" textAlign="center" py={4}>
+    <Box position="relative" textAlign="center" py={4} px={2}>
       <Flex
         position="relative"
         alignItems="center"
         justifyContent="center"
         width="100%"
+        gap={{ base: 2, sm: 6 }}
       >
-        <DecorationFrame position="left" />
+        <DecorationFrame position="left" isFullScreen={props.isFullScreen} />
         <Box
           display="inline-flex"
           alignItems="center"
@@ -31,12 +35,13 @@ const MintSpecificPsycHeader = () => {
             lineHeight={{ base: "20px", sm: "22px", md: "25px" }}
             fontFamily={"Amiri"}
             px={6}
+            whiteSpace={"nowrap"}
           >
             Mint Specific PSYC
           </Text>
           <DiagonalRectangle position="right" />
         </Box>
-        <DecorationFrame position="right" />
+        <DecorationFrame position="right" isFullScreen={props.isFullScreen} />
       </Flex>
     </Box>
   );
