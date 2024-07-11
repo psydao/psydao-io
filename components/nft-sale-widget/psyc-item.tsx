@@ -1,10 +1,14 @@
 import React from "react";
-import { Box, Image, Text, Spinner, Tooltip } from "@chakra-ui/react";
+import { Box, Image, Text, Spinner, Tooltip, Flex } from "@chakra-ui/react";
 import NFTPrice from "@/components/commons/nftprice";
 import MintButton from "@/components/mint-button";
 import useBuyNft from "@/hooks/useBuyNft";
 import { useAccount } from "wagmi";
 import { type TokenItem } from "@/lib/types";
+import useActivateSale from "@/hooks/useActivateSale";
+import { handleTransactionError } from "@/utils/transactionHandlers";
+import { useResize } from "@/hooks/useResize";
+import { useTokenSoldState } from "@/hooks/useTokenSoldState";
 
 interface PsycItemProps {
   item: TokenItem;
@@ -26,9 +30,24 @@ const PsycItem = ({
     isRandom
   );
 
+  const { width } = useResize();
+  const { isSalesActive, activateSale } = useActivateSale();
   const { address } = useAccount();
+  const { isSold, isLoading: isSoldLoading } = useTokenSoldState(
+    parseInt(item.tokenId)
+  );
 
   const handleMint = async () => {
+    if (!isSalesActive) {
+      try {
+        await activateSale(tokenIdsForActivation, (error) =>
+          handleTransactionError(error, width)
+        );
+      } catch (error) {
+        console.error("Failed to activate sales:", error);
+        return;
+      }
+    }
     await buyNft(
       parseInt(item.batchId),
       parseInt(item.tokenId),
@@ -37,8 +56,22 @@ const PsycItem = ({
     );
   };
 
+  const isButtonDisabled =
+    !address ||
+    (isSold ?? isPending) ||
+    isConfirming ||
+    isMinting ||
+    isSoldLoading;
+
   return (
-    <Box key={index} maxW={isRandom ? "500px" : "170px"} mx="auto">
+    <Flex
+      key={index}
+      maxW={isRandom ? "500px" : "170px"}
+      mx="auto"
+      direction={"column"}
+      gap={4}
+      alignItems={"center"}
+    >
       <Box
         w="100%"
         h={isRandom ? "auto" : "208px"}
@@ -62,7 +95,7 @@ const PsycItem = ({
           width="100%"
           height="100%"
           bg={"#00000066"}
-          display={item.isSold ? "block" : "none"}
+          display={isSold ? "block" : "none"}
         />
         <NFTPrice price={item.price} />
       </Box>
@@ -80,30 +113,27 @@ const PsycItem = ({
         borderRadius={"16px"}
         border={"2px solid #F2BEBE73"}
       >
-        <Box mt={2}>
-          <MintButton
-            customStyle={{ width: "100%" }}
-            onClick={handleMint}
-            isDisabled={
-              !address || item.isSold || isPending || isConfirming || isMinting
-            }
-          >
-            {isConfirmed ? (
-              <Text color="black">Minted</Text>
-            ) : isMinting ? (
-              <>
-                <Spinner size="sm" mr={2} />
-                Minting
-              </>
-            ) : item.isSold ? (
-              <Text color="black">Sold</Text>
-            ) : (
-              "Mint"
-            )}
-          </MintButton>
-        </Box>
+        <MintButton
+          customStyle={{ width: "100%", opacity: isButtonDisabled ? 0.5 : 1 }}
+          onClick={handleMint}
+          isDisabled={isButtonDisabled}
+          isRandom={isRandom}
+        >
+          {isConfirmed ? (
+            <Text color="black">Minted</Text>
+          ) : isMinting ? (
+            <>
+              <Spinner size="sm" mr={2} />
+              Minting
+            </>
+          ) : isSold ? (
+            <Text color="black">Sold</Text>
+          ) : (
+            "Mint"
+          )}
+        </MintButton>
       </Tooltip>
-    </Box>
+    </Flex>
   );
 };
 

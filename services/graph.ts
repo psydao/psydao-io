@@ -65,3 +65,14 @@ export const getTokenById = gql`
     }
   }
 `;
+
+export const getTokensByOwner = gql`
+  query GetTokensByOwner($owner: String!) {
+    tokens(where: { owner: $owner }) {
+      owner
+      tokenId
+      tokenAddress
+      uri
+    }
+  }
+`;

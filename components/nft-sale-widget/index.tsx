@@ -1,26 +1,24 @@
 import { useMemo } from "react";
-
-import { Image, useMediaQuery } from "@chakra-ui/react";
+import {
+  Image,
+  useMediaQuery,
+  TabPanel,
+  TabPanels,
+  Tabs
+} from "@chakra-ui/react";
 import { Window } from "@/components/window";
-
 import { useWindowManager } from "@/components/window-manager";
-import MintPsycHeader from "./layout/mint-psyc-header";
-import MintRandomPsycHeader from "./layout/mint-random-psyc-header";
-import MintSpecificPsycHeader from "./layout/mint-specific-psyc-header";
-
-import MintSection from "./layout/mint-section";
+import MintPsycHeader from "./layout/nft-sale/mint-psyc-header";
+import PsycSaleContent from "./layout/nft-sale/psyc-sale-content";
+import OwnedNftsContent from "./layout/owned-nfts/owned-nfts-section";
+import { TokenProvider } from "@/providers/TokenContext";
 
 export const NftSaleWidget = () => {
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
-
   const { state } = useWindowManager();
 
   const fullScreenWindow = useMemo(() => {
-    if (state.fullScreen === "nft-sale") {
-      return true;
-    }
-
-    return false;
+    return state.fullScreen === "nft-sale";
   }, [state]);
 
   return (
@@ -38,12 +36,20 @@ export const NftSaleWidget = () => {
       fullScreenWindow={fullScreenWindow}
     >
       <Window.TitleBar />
-      <Window.Content py={2}>
-        <MintPsycHeader />
-        <MintRandomPsycHeader />
-        <MintSection isRandom />
-        <MintSpecificPsycHeader />
-        <MintSection isRandom={false} />
+      <Window.Content py={2} px={0} height={"100%"} width={"100%"}>
+        <TokenProvider>
+          <Tabs variant={"unstyled"}>
+            <MintPsycHeader />
+            <TabPanels>
+              <TabPanel px={0}>
+                <PsycSaleContent isFullScreen={fullScreenWindow} />
+              </TabPanel>
+              <TabPanel h="100%" w="100%">
+                <OwnedNftsContent isFullScreen={fullScreenWindow} />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </TokenProvider>
         <Image
           src="/windows/alchemist/clouds.png"
           alt=""
