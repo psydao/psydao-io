@@ -1,6 +1,7 @@
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { Divider, Flex, Text } from "@chakra-ui/react";
 import GeneralDashboardLink from "./general-dashboard-link";
+import { Open } from "../window-manager";
 
 const AdminDashboardHeader = () => {
   return (
@@ -12,7 +13,9 @@ const AdminDashboardHeader = () => {
         width={"100%"}
       >
         <Flex alignItems={"center"} gap={1}>
-          <ArrowBackIcon h={6} w={6} color={"#F2BEBE"} />
+          <Open id="nft-sale">
+            <ArrowBackIcon h={6} w={6} color={"#F2BEBE"} />
+          </Open>
           <Text
             fontSize={{ base: 24, sm: 40 }}
             color={"#269200"}
