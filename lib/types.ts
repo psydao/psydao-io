@@ -23,3 +23,15 @@ export interface TokenItem {
   batchId: string;
   tokenId: string;
 }
+
+export type OwnedTokenItem = {
+  owner: string;
+  tokenAddress: string;
+  tokenId: string;
+  uri: string;
+  __typename: string;
+};
+
+export type GetTokensByOwnerData = {
+  tokens: OwnedTokenItem[];
+};

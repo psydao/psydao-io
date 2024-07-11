@@ -5,6 +5,10 @@ export const WhitepaperLink = () => (
     h={"100%"}
     py={{ base: 2, md: 3 }}
     px={{ base: 2, md: 4 }}
+    w={"100%"}
+    maxW={{ base: "106px", sm: "138px" }}
+    display={"flex"}
+    justifyContent={"center"}
     cursor={"pointer"}
     href="/documents/psydao-whitepaper.pdf"
     target="_blank"

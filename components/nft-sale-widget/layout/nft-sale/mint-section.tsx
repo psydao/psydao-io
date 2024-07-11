@@ -4,7 +4,7 @@ import { useQuery } from "@apollo/client";
 import { getAllSalesWithTokens } from "@/services/graph";
 import { type TokenItem, type GetAllSalesWithTokensData } from "@/lib/types";
 import { formatUnits } from "viem";
-import PsycItem from "../psyc-item";
+import PsycItem from "../../psyc-item";
 import useRandomImage from "@/hooks/useRandomImage";
 
 interface MintSectionProps {
@@ -26,7 +26,7 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
       data?.sales.flatMap((sale) =>
         sale.tokensOnSale.map((token) => ({
           src: images[currentImageIndex % images.length] ?? "",
-          price: `${formatUnits(BigInt(sale.floorPrice), 18)} ETH`,
+          price: `${formatUnits(BigInt(sale.floorPrice), 18)}`,
           isSold: false,
           batchId: sale.batchID,
           tokenId: token.tokenID
@@ -87,13 +87,13 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
                 key={token.id}
                 item={{
                   src: images[saleIndex % images.length] ?? "",
-                  price: `${formatUnits(BigInt(sale.ceilingPrice), 18)} ETH`,
+                  price: `${formatUnits(BigInt(sale.ceilingPrice), 18)}`,
                   isSold: false,
                   batchId: sale.batchID,
                   tokenId: token.tokenID
                 }}
                 index={parseInt(token.id, 10)}
-                isRandom={false}
+                isRandom={isRandom}
                 tokenIdsForActivation={tokenIdsForActivation}
               />
             ));

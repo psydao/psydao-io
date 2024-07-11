@@ -18,7 +18,7 @@ const NFTPrice = ({ price }: NFTPriceProps) => {
       borderRadius="10px"
       fontWeight="bold"
     >
-      <Text>{price}</Text>
+      <Text>{price} ETH</Text>
       <Image src="/windows/swap/ETH.svg" alt="ETH Symbol" ml={1} />
     </Flex>
   );
