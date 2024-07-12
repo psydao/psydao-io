@@ -1,6 +1,5 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
-import NftIdContainer from "./nft-id-container";
-import ValueContainer from "./nft-id-container";
+import { Flex, Text } from "@chakra-ui/react";
+import ValueContainer from "./value-container";
 
 const NftTokensSection = () => {
   return (

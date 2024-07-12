@@ -28,7 +28,13 @@ const ValueContainer = (props: ValueContainerProps) => {
         {props.value}
       </Text>
       {props.isWhitelistedAddress && (
-        <CloseIcon height={"9px"} width={"9px"} color={"#F2BEBE"} />
+        <button
+          onClick={() => {
+            console.log("remove address");
+          }}
+        >
+          <CloseIcon height={"9px"} width={"9px"} color={"#F2BEBE"} />
+        </button>
       )}
     </Flex>
   );

@@ -24,7 +24,9 @@ const SaleStartTimeSection = (props: SaleStartTimeSectionProps) => {
       alignItems="center"
       borderColor="#F2BEBE"
     >
-      <Text fontSize="18">Sale start time</Text>
+      <Text fontSize="18" fontFamily={"Inter"}>
+        Sale start time
+      </Text>
       <Flex gap={2} flexWrap="wrap">
         <Flex
           cursor={"pointer"}

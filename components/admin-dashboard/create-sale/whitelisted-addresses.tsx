@@ -1,5 +1,5 @@
 import { Flex, Input, Text } from "@chakra-ui/react";
-import ValueContainer from "./nft-id-container";
+import ValueContainer from "./value-container";
 import { shortenAddress } from "./utils/shortenAddress";
 
 type WhiteListedAddressesSectionProps = {

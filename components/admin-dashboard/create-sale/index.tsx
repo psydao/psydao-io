@@ -11,6 +11,7 @@ import SetTokenPrice from "./set-token-price";
 import PrivateSaleSection from "./private-sale-section";
 import SaleStartTimeSection from "./start-time-section";
 import WhiteListedAddressesSection from "./whitelisted-addresses";
+import { isAddress } from "viem";
 
 export const CreateSale = ({
   setOpenCreateSale
@@ -50,6 +51,7 @@ export const CreateSale = ({
       return;
     }
     setIsSubmitting(true);
+    let isSuccess = true;
     let mySales: AdminSale[] = [];
     const storedSales = localStorage.getItem("createdSales");
     if (storedSales) {
@@ -69,32 +71,57 @@ export const CreateSale = ({
     };
 
     const splitNewWhitelistedAddresses = newWhitelistedAddresses.split(" ");
-    if (whitelistedArray.length > 0) {
-      localStorage.setItem(
-        "whitelistedAddresses",
-        JSON.stringify([...whitelistedArray, ...splitNewWhitelistedAddresses])
-      );
-    } else {
-      localStorage.setItem(
-        "whitelistedAddresses",
-        JSON.stringify([...splitNewWhitelistedAddresses])
-      );
-    }
 
-    localStorage.setItem("createdSales", JSON.stringify([...mySales, newSale]));
-    customToast(
-      {
-        mainText: "Success! Your sale has been created.",
-        isPsyc: true
-      },
-      {
-        type: "success",
-        transition: Zoom
-      },
-      width <= 768
-    );
-    setOpenCreateSale(false);
-    setIsSubmitting(false);
+    splitNewWhitelistedAddresses.forEach((address) => {
+      if (!isAddress(address)) {
+        setIsSubmitting(false);
+        isSuccess = false;
+        customToast(
+          {
+            mainText: "Invalid address",
+            isPsyc: true
+          },
+          {
+            type: "error",
+            transition: Zoom
+          },
+          width <= 768
+        );
+        return;
+      }
+    });
+
+    if (isSuccess === true) {
+      if (whitelistedArray.length > 0) {
+        localStorage.setItem(
+          "whitelistedAddresses",
+          JSON.stringify([...whitelistedArray, ...splitNewWhitelistedAddresses])
+        );
+      } else {
+        localStorage.setItem(
+          "whitelistedAddresses",
+          JSON.stringify([...splitNewWhitelistedAddresses])
+        );
+      }
+
+      localStorage.setItem(
+        "createdSales",
+        JSON.stringify([...mySales, newSale])
+      );
+      customToast(
+        {
+          mainText: "Success! Your sale has been created.",
+          isPsyc: true
+        },
+        {
+          type: "success",
+          transition: Zoom
+        },
+        width <= 768
+      );
+      setOpenCreateSale(false);
+      setIsSubmitting(false);
+    }
   };
 
   return (
