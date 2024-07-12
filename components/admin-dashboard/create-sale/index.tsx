@@ -12,6 +12,7 @@ import PrivateSaleSection from "./private-sale-section";
 import SaleStartTimeSection from "./start-time-section";
 import WhiteListedAddressesSection from "./whitelisted-addresses";
 import { isAddress } from "viem";
+import CreateButtonContainer from "./create-button-container";
 
 export const CreateSale = ({
   setOpenCreateSale
@@ -147,45 +148,8 @@ export const CreateSale = ({
             addressArray={whitelistedArray}
             setWhitelistedAddresses={setNewWhitelistedAddresses}
           />
-          <Box
-            width="100%"
-            position="fixed"
-            bottom={0}
-            bg="white"
-            mx="auto"
-            px={10}
-            py={2}
-          >
-            <Button
-              type="submit"
-              variant={"unstyled"}
-              bg={
-                !address
-                  ? "gray.500"
-                  : "linear-gradient(90deg, #B14CE7 0%, #E09CA4 100%)"
-              }
-              color={!address ? "black" : "white"}
-              borderRadius={"full"}
-              paddingX={12}
-              paddingY={3}
-              height="36px"
-              display={"flex"}
-              alignItems="center"
-              justifyContent="center"
-              isDisabled={isSubmitting ?? !address}
-              _hover={{
-                opacity: !address ? "" : "0.8"
-              }}
-              fontFamily={"Amiri"}
-              fontSize={16}
-              fontWeight={600}
-              width="100%"
-              zIndex={10}
-            >
-              Create
-            </Button>
-          </Box>
         </Box>
+        <CreateButtonContainer address={address} isSubmitting={isSubmitting} />
       </form>
     </Flex>
   );

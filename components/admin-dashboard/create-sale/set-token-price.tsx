@@ -48,9 +48,9 @@ const SetTokenPrice = (props: SetTokenPriceProps) => {
         />
         <Flex
           alignItems={"center"}
-          gap={1}
-          borderRadius={4}
-          p="4px"
+          gap={2}
+          borderRadius={"18px"}
+          p={"8px 16px"}
           bg="#F2BEBE1A"
         >
           <Image src="/windows/swap/ETH.svg" alt="ETH icon" />
