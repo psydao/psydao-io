@@ -13,8 +13,9 @@ const SetTokenPrice = (props: SetTokenPriceProps) => {
       p={6}
       gap={4}
       borderY="1px"
-      alignItems="center"
+      alignItems={{ base: "start", md: "center" }}
       borderColor="#F2BEBE"
+      direction={{ base: "column", md: "row" }}
     >
       <FormLabel
         fontSize="18"
@@ -32,12 +33,13 @@ const SetTokenPrice = (props: SetTokenPriceProps) => {
         boxShadow="inner"
         gap={4}
         p="16px"
+        w={{ base: "100%", md: "auto" }}
       >
         <Input
           type="number"
           step={0.01}
           min={0.01}
-          w={20}
+          w={{ base: "100%", md: 20 }}
           fontSize="22px"
           fontFamily={"Inter"}
           onChange={(e) => props.setPrice(e.target.value)}

@@ -39,7 +39,6 @@ export type GetTokensByOwnerData = {
 export type AdminSale = {
   ceilingPrice: string;
   floorPrice: string;
-  privateSale: boolean;
   startDate: string;
   startTime: string;
 };

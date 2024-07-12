@@ -1,4 +1,4 @@
-import { Box, Button, Flex, useToast } from "@chakra-ui/react";
+import { Box, Flex, useToast } from "@chakra-ui/react";
 import { useAccount } from "wagmi";
 
 import { useState } from "react";
@@ -8,7 +8,7 @@ import { type AdminSale } from "@/lib/types";
 import CreateSaleHeader from "./create-sale-header";
 import NftTokensSection from "./nft-tokens";
 import SetTokenPrice from "./set-token-price";
-import PrivateSaleSection from "./private-sale-section";
+
 import SaleStartTimeSection from "./start-time-section";
 import WhiteListedAddressesSection from "./whitelisted-addresses";
 import { isAddress } from "viem";
@@ -22,10 +22,10 @@ export const CreateSale = ({
   const { address } = useAccount();
   const toast = useToast();
   const [timeInputType, setTimeInputType] = useState("text");
-  const [focused, setFocused] = useState(false);
+  const [focusedDate, setFocusedDate] = useState(false);
+  const [focusedTime, setFocusedTime] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [width] = useState(window.innerWidth);
-  const [privateSale, setPrivateSale] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [floorPrice, setFloorPrice] = useState("");
@@ -64,14 +64,16 @@ export const CreateSale = ({
     }
 
     const newSale: AdminSale = {
-      privateSale: privateSale,
       startDate,
       startTime,
       floorPrice,
       ceilingPrice
     };
 
-    const splitNewWhitelistedAddresses = newWhitelistedAddresses.split(" ");
+    const splitNewWhitelistedAddresses =
+      newWhitelistedAddresses.length > 0
+        ? newWhitelistedAddresses.split(", ")
+        : [];
 
     splitNewWhitelistedAddresses.forEach((address) => {
       if (!isAddress(address)) {
@@ -124,7 +126,6 @@ export const CreateSale = ({
       setIsSubmitting(false);
     }
   };
-
   return (
     <Flex direction={"column"} gap={2}>
       <CreateSaleHeader
@@ -134,14 +135,15 @@ export const CreateSale = ({
         <Box position="relative" height="100%" mb={12} overflowY="auto">
           <NftTokensSection />
           <SaleStartTimeSection
-            focused={focused}
-            setFocused={setFocused}
+            focusedDate={focusedDate}
+            setFocusedDate={setFocusedDate}
+            focusedTime={focusedTime}
+            setFocusedTime={setFocusedTime}
             setStartDate={setStartDate}
             setStartTime={setStartTime}
             timeInputType={timeInputType}
             setTimeInputType={setTimeInputType}
           />
-          <PrivateSaleSection setPrivateSale={setPrivateSale} />
           <SetTokenPrice setPrice={setFloorPrice} type="floor" />
           <SetTokenPrice setPrice={setCeilingPrice} type="ceiling" />
           <WhiteListedAddressesSection

@@ -1,9 +1,30 @@
-import { Button } from "@chakra-ui/react";
+import { Button, Flex, Spinner, Text } from "@chakra-ui/react";
 
 type CreateSaleButtonProps = {
   address: string | undefined;
   isSubmitting: boolean;
   children: React.ReactNode;
+};
+
+const ButtonContent = (props: {
+  address: string | undefined;
+  isSubmitting: boolean;
+}) => {
+  return (
+    <Flex
+      alignItems={"center"}
+      justifyContent={"center"}
+      gap={2.5}
+      color={!props.address ? "black" : "white"}
+    >
+      {props.isSubmitting && (
+        <Spinner color="white" size={"sm"} speed="0.65s" />
+      )}
+      <Text fontFamily={"Poppins Semibold"} fontSize={14}>
+        {props.isSubmitting ? "Creating..." : "Create"}
+      </Text>
+    </Flex>
+  );
 };
 
 const CreateSaleButton = (props: CreateSaleButtonProps) => {
@@ -16,7 +37,6 @@ const CreateSaleButton = (props: CreateSaleButtonProps) => {
           ? "gray.500"
           : "linear-gradient(90deg, #B14CE7 0%, #E09CA4 100%)"
       }
-      color={!props.address ? "black" : "white"}
       borderRadius={"full"}
       paddingX={12}
       paddingY={3}
@@ -28,13 +48,13 @@ const CreateSaleButton = (props: CreateSaleButtonProps) => {
       _hover={{
         opacity: !props.address ? "" : "0.8"
       }}
-      fontFamily={"Amiri"}
-      fontSize={16}
-      fontWeight={600}
       width="100%"
       zIndex={10}
     >
-      {props.children}
+      <ButtonContent
+        isSubmitting={props.isSubmitting}
+        address={props.address}
+      />
     </Button>
   );
 };

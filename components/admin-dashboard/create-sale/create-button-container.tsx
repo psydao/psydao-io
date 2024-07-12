@@ -1,4 +1,4 @@
-import { Box, Button } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import CreateSaleButton from "./create-sale-button";
 
 type CreateButtonContainerProps = {
@@ -14,8 +14,8 @@ const CreateButtonContainer = (props: CreateButtonContainerProps) => {
       bottom={0}
       bg="white"
       mx="auto"
-      px={10}
-      py={2}
+      p={4}
+      boxShadow={"0px -2px 25.6px 0px #00000040"}
     >
       <CreateSaleButton
         address={props.address}
