@@ -1,8 +1,6 @@
 import { CalendarIcon, ChevronDownIcon, TimeIcon } from "@chakra-ui/icons";
-import { InputGroup, Input, Icon, InputLeftElement } from "@chakra-ui/react";
+import { InputGroup, Input, InputLeftElement } from "@chakra-ui/react";
 import { type Dispatch, type SetStateAction } from "react";
-import { FaRegCalendarCheck } from "react-icons/fa";
-import { RiTimeLine } from "react-icons/ri";
 
 type DateTimeInputProps = {
   focusedDate?: boolean | undefined;

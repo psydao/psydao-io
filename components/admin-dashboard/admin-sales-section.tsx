@@ -8,7 +8,6 @@ import PsyButton from "../psy-button";
 type Sale = {
   ceilingPrice: string;
   floorPrice: string;
-  privateSale: boolean;
   startDate: string;
   startTime: string;
 };
