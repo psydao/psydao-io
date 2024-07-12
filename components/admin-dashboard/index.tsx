@@ -5,7 +5,7 @@ import { useWindowManager } from "../window-manager";
 import AdminDashboardHeader from "./admin-dashboard-header";
 import AdminDashboardEmptyState from "./admin-dashboard-empty";
 import { AdminSalesSection } from "./admin-sales-section";
-import { CreateSale } from "./create-sale";
+import { CreateSale } from "./create-sale/index";
 import { type AdminSale } from "@/lib/types";
 
 const AdminDashboardWidget = () => {
@@ -48,7 +48,7 @@ const AdminDashboardWidget = () => {
       fullScreenWindow={fullScreenWindow}
     >
       <Window.TitleBar />
-      <Window.Content py={2}>
+      <Window.Content py={2} px={0}>
         {openCreateSale ? (
           <CreateSale setOpenCreateSale={setOpenCreateSale} />
         ) : (
