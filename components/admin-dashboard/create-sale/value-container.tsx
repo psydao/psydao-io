@@ -1,10 +1,12 @@
 import { CloseIcon } from "@chakra-ui/icons";
-import { Flex, Text } from "@chakra-ui/react";
+import { Button, Flex, Text } from "@chakra-ui/react";
+import { shortenAddress } from "./utils/shortenAddress";
 
 type ValueContainerProps = {
   value: string;
   isWhitelistedAddress: boolean;
   key?: number;
+  removeAddress?: (address: string) => void;
 };
 
 const ValueContainer = (props: ValueContainerProps) => {
@@ -25,16 +27,22 @@ const ValueContainer = (props: ValueContainerProps) => {
         _hover={{ textDecoration: "none" }}
         color={"#454545"}
       >
-        {props.value}
+        {props.isWhitelistedAddress ? shortenAddress(props.value) : props.value}
       </Text>
-      {props.isWhitelistedAddress && (
-        <button
+      {props.isWhitelistedAddress && props.removeAddress && (
+        <Button
+          variant={"unstyled"}
+          p={0}
+          m={0}
           onClick={() => {
-            console.log("remove address");
+            if (props.removeAddress) {
+              props.removeAddress(props.value);
+            }
           }}
+          size={"xs"}
         >
           <CloseIcon height={"9px"} width={"9px"} color={"#F2BEBE"} />
-        </button>
+        </Button>
       )}
     </Flex>
   );

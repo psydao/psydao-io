@@ -1,6 +1,6 @@
 import { Flex, Input, Text } from "@chakra-ui/react";
 import ValueContainer from "./value-container";
-import { shortenAddress } from "./utils/shortenAddress";
+import { useState } from "react";
 
 type WhiteListedAddressesSectionProps = {
   setWhitelistedAddresses: React.Dispatch<React.SetStateAction<string>>;
@@ -10,7 +10,21 @@ type WhiteListedAddressesSectionProps = {
 const WhiteListedAddressesSection = (
   props: WhiteListedAddressesSectionProps
 ) => {
-  console.log(props.addressArray);
+  const [addressesToDisplay, setAddressesToDisplay] = useState<string[]>(
+    props.addressArray
+  );
+  const removeAddress = (addressToRemove: string) => {
+    if (
+      addressesToDisplay.length > 0 &&
+      addressesToDisplay.includes(addressToRemove)
+    ) {
+      const newArray = addressesToDisplay.filter(
+        (address) => address !== addressToRemove
+      );
+      setAddressesToDisplay(newArray);
+      localStorage.setItem("whitelistedAddresses", JSON.stringify(newArray));
+    }
+  };
   return (
     <Flex direction={"column"} gap={4} w={"100%"} alignItems={"start"} p={6}>
       <Text fontFamily={"Inter"} color={"black"} fontSize={18}>
@@ -33,12 +47,13 @@ const WhiteListedAddressesSection = (
         required
       />
       <Flex gap={2} flexWrap={"wrap"}>
-        {props.addressArray?.map((address, index) => {
+        {addressesToDisplay.map((address, index) => {
           return (
             <ValueContainer
               key={index}
-              value={shortenAddress(address)}
+              value={address}
               isWhitelistedAddress
+              removeAddress={removeAddress}
             />
           );
         })}
