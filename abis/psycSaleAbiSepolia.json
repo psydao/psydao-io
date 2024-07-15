@@ -2,6 +2,7 @@
   {
     "inputs": [
       { "internalType": "address", "name": "_psyNFT", "type": "address" },
+      { "internalType": "address", "name": "_psyToken", "type": "address" },
       {
         "internalType": "address",
         "name": "_sublicenceNft",
@@ -100,6 +101,12 @@
   {
     "anonymous": false,
     "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "batchId",
+        "type": "uint256"
+      },
       {
         "indexed": false,
         "internalType": "bytes32",
@@ -416,6 +423,13 @@
   },
   {
     "inputs": [],
+    "name": "pause",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "paused",
     "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
@@ -496,7 +510,12 @@
         "name": "ceilingPriceInEth",
         "type": "uint256"
       },
-      { "internalType": "uint256", "name": "saleStartTime", "type": "uint256" }
+      { "internalType": "uint256", "name": "saleStartTime", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "numberOfNftsSoldInBatch",
+        "type": "uint256"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -572,6 +591,13 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "unpause",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [
       { "internalType": "uint256", "name": "_batchId", "type": "uint256" },
       { "internalType": "bytes32", "name": "_newMerkle", "type": "bytes32" },
@@ -597,25 +623,6 @@
       { "internalType": "uint256", "name": "_fee", "type": "uint256" }
     ],
     "name": "updateRevenueSplits",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256[]", "name": "_tokenId", "type": "uint256[]" },
-      {
-        "internalType": "uint256[]",
-        "name": "_floorPrices",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "_ceilingPrices",
-        "type": "uint256[]"
-      }
-    ],
-    "name": "updateSublicencesPrices",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
