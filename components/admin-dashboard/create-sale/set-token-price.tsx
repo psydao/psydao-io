@@ -56,7 +56,9 @@ const SetTokenPrice = (props: SetTokenPriceProps) => {
           bg="#F2BEBE1A"
         >
           <Image src="/windows/swap/ETH.svg" alt="ETH icon" />
-          <Text fontWeight="semibold">ETH</Text>
+          <Text fontWeight="semibold" fontFamily={"Poppins"}>
+            ETH
+          </Text>
         </Flex>
       </Box>
     </Flex>

@@ -1,18 +1,17 @@
-import { Box, Flex, useToast } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { useAccount } from "wagmi";
 
 import { useState } from "react";
-import { Zoom } from "react-toastify";
-import { customToast } from "../../toasts/SwapSuccess";
-import { type AdminSale } from "@/lib/types";
+
 import CreateSaleHeader from "./create-sale-header";
 import NftTokensSection from "./nft-tokens";
 import SetTokenPrice from "./set-token-price";
 
 import SaleStartTimeSection from "./start-time-section";
 import WhiteListedAddressesSection from "./whitelisted-addresses";
-import { isAddress } from "viem";
+
 import CreateButtonContainer from "./create-button-container";
+import { handleCreateSale } from "./utils/createSale";
 
 export const CreateSale = ({
   setOpenCreateSale
@@ -20,7 +19,6 @@ export const CreateSale = ({
   setOpenCreateSale: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { address } = useAccount();
-  const toast = useToast();
   const [timeInputType, setTimeInputType] = useState("text");
   const [focusedDate, setFocusedDate] = useState(false);
   const [focusedTime, setFocusedTime] = useState(false);
@@ -31,6 +29,7 @@ export const CreateSale = ({
   const [floorPrice, setFloorPrice] = useState("");
   const [ceilingPrice, setCeilingPrice] = useState("");
   const [newWhitelistedAddresses, setNewWhitelistedAddresses] = useState("");
+  const startTimeStamp = Date.parse(startDate + " " + startTime);
 
   const whitelistedAddresses: string | null = localStorage.getItem(
     "whitelistedAddresses"
@@ -40,98 +39,29 @@ export const CreateSale = ({
     ? (JSON.parse(whitelistedAddresses) as string[])
     : [];
 
-  const handleCreateSale = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!address) {
-      toast({
-        title: "Please connect your wallet first",
-        position: "top-right",
-        status: "error",
-        isClosable: true
-      });
-      return;
-    }
-    setIsSubmitting(true);
-    let isSuccess = true;
-    let mySales: AdminSale[] = [];
-    const storedSales = localStorage.getItem("createdSales");
-    if (storedSales) {
-      try {
-        mySales = JSON.parse(storedSales) as AdminSale[];
-      } catch (error) {
-        console.error("Failed to parse sales from localStorage:", error);
-      }
-    }
-
-    const newSale: AdminSale = {
-      startDate,
-      startTime,
-      floorPrice,
-      ceilingPrice
-    };
-
-    const splitNewWhitelistedAddresses =
-      newWhitelistedAddresses.length > 0
-        ? newWhitelistedAddresses.split(", ")
-        : [];
-
-    splitNewWhitelistedAddresses.forEach((address) => {
-      if (!isAddress(address)) {
-        setIsSubmitting(false);
-        isSuccess = false;
-        customToast(
-          {
-            mainText: "Invalid address",
-            isPsyc: true
-          },
-          {
-            type: "error",
-            transition: Zoom
-          },
-          width <= 768
-        );
-        return;
-      }
-    });
-
-    if (isSuccess === true) {
-      if (whitelistedArray.length > 0) {
-        localStorage.setItem(
-          "whitelistedAddresses",
-          JSON.stringify([...whitelistedArray, ...splitNewWhitelistedAddresses])
-        );
-      } else {
-        localStorage.setItem(
-          "whitelistedAddresses",
-          JSON.stringify([...splitNewWhitelistedAddresses])
-        );
-      }
-
-      localStorage.setItem(
-        "createdSales",
-        JSON.stringify([...mySales, newSale])
-      );
-      customToast(
-        {
-          mainText: "Success! Your sale has been created.",
-          isPsyc: true
-        },
-        {
-          type: "success",
-          transition: Zoom
-        },
-        width <= 768
-      );
-      setOpenCreateSale(false);
-      setIsSubmitting(false);
-    }
-  };
   return (
     <Flex direction={"column"} gap={2}>
       <CreateSaleHeader
         setOpenCreateSale={() => setOpenCreateSale((prev) => !prev)}
       />
-      <form onSubmit={handleCreateSale}>
+      <form
+        onSubmit={(e) =>
+          handleCreateSale(
+            e,
+            address,
+            setIsSubmitting,
+            startDate,
+            startTime,
+            floorPrice,
+            ceilingPrice,
+            newWhitelistedAddresses,
+            width,
+            startTimeStamp,
+            whitelistedArray,
+            setOpenCreateSale
+          )
+        }
+      >
         <Box position="relative" height="100%" mb={12} overflowY="auto">
           <NftTokensSection />
           <SaleStartTimeSection
