@@ -3,7 +3,6 @@ import { type AdminSale } from "@/lib/types";
 import { type Dispatch, type SetStateAction } from "react";
 import { Zoom } from "react-toastify";
 import { isAddress } from "viem";
-import { handleDeleteWhitelistedAddresses } from "./remove-address-local";
 
 export const handleCreateSale = async (
   e: React.FormEvent<HTMLFormElement>,
@@ -54,8 +53,6 @@ export const handleCreateSale = async (
     floorPrice,
     ceilingPrice
   };
-
-  handleDeleteWhitelistedAddresses(addressesToRemove, whitelistedArray);
 
   const splitNewWhitelistedAddresses =
     newWhitelistedAddresses.length > 0
