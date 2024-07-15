@@ -1,13 +1,19 @@
-import { Box, Divider, Flex } from "@chakra-ui/react";
+import { Box, Divider, Flex, Text } from "@chakra-ui/react";
 import { WhitepaperLink } from "../../commons/whitepaper-link";
 import { PrivateSaleSwitch } from "../../commons/privatesale-switch";
 import NftSaleTabs from "../nft-sale-tabs";
 import { useTokenContext } from "@/providers/TokenContext";
+import { Open } from "@/components/window-manager";
+import { useAccount } from "wagmi";
+import { whitelistedAddresses } from "@/components/admin-dashboard/whitelisted-addresses";
 
 const MintPsycHeader = () => {
   // TODO: Hide toggle if user is not whitelisted
-  const IS_WHITELISTED = true;
   const { tokenCount } = useTokenContext();
+
+  const { address } = useAccount();
+
+  const isWhitelisted = whitelistedAddresses.includes(address ?? "0x");
 
   return (
     <Box w={"100%"}>
@@ -15,14 +21,33 @@ const MintPsycHeader = () => {
         <Flex justifyContent={"start"} direction={"column"} gap={"10px"}>
           <Flex
             alignItems={{ base: "start", md: "center" }}
-            justifyContent={"space-evenly"}
+            justifyContent={"space-between"}
             gap={2}
             flexWrap={"wrap-reverse"}
           >
             <NftSaleTabs numberOfOwnedNfts={tokenCount} />
-            <WhitepaperLink />
+            <Flex
+              alignItems={"center"}
+              gap={3}
+              direction={{ base: "row-reverse", sm: "row" }}
+            >
+              {isWhitelisted && (
+                <Open id="admin-dashboard">
+                  <Text
+                    fontFamily={"Inter Medium"}
+                    fontSize={14}
+                    color={"#AF52DE"}
+                    cursor={"pointer"}
+                    whiteSpace={"nowrap"}
+                  >
+                    Admin Dashboard
+                  </Text>
+                </Open>
+              )}
+              <WhitepaperLink />
+            </Flex>
           </Flex>
-          {IS_WHITELISTED && <PrivateSaleSwitch />}
+          {isWhitelisted && <PrivateSaleSwitch />}
         </Flex>
       </Box>
       <Divider h={"1px"} border={"none"} bg={"#E9BDBD"} width={"100%"} />

@@ -35,3 +35,10 @@ export type OwnedTokenItem = {
 export type GetTokensByOwnerData = {
   tokens: OwnedTokenItem[];
 };
+
+export type AdminSale = {
+  ceilingPrice: string;
+  floorPrice: string;
+  startDate: string;
+  startTime: string;
+};
