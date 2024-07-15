@@ -30,6 +30,7 @@ export const CreateSale = ({
   const [ceilingPrice, setCeilingPrice] = useState("");
   const [newWhitelistedAddresses, setNewWhitelistedAddresses] = useState("");
   const startTimeStamp = Date.parse(startDate + " " + startTime);
+  const [addressesToRemove, setAddressesToRemove] = useState<string[]>([]);
 
   const whitelistedAddresses: string | null = localStorage.getItem(
     "whitelistedAddresses"
@@ -38,6 +39,8 @@ export const CreateSale = ({
   const whitelistedArray: string[] = whitelistedAddresses
     ? (JSON.parse(whitelistedAddresses) as string[])
     : [];
+
+  console.log(addressesToRemove, whitelistedArray);
 
   return (
     <Flex direction={"column"} gap={2}>
@@ -58,7 +61,8 @@ export const CreateSale = ({
             width,
             startTimeStamp,
             whitelistedArray,
-            setOpenCreateSale
+            setOpenCreateSale,
+            addressesToRemove
           )
         }
       >
@@ -79,6 +83,8 @@ export const CreateSale = ({
           <WhiteListedAddressesSection
             addressArray={whitelistedArray}
             setWhitelistedAddresses={setNewWhitelistedAddresses}
+            addressesToRemove={addressesToRemove}
+            setAddressesToRemove={setAddressesToRemove}
           />
         </Box>
         <CreateButtonContainer address={address} isSubmitting={isSubmitting} />

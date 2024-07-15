@@ -3,6 +3,7 @@ import { type AdminSale } from "@/lib/types";
 import { type Dispatch, type SetStateAction } from "react";
 import { Zoom } from "react-toastify";
 import { isAddress } from "viem";
+import { handleDeleteWhitelistedAddresses } from "./remove-address-local";
 
 export const handleCreateSale = async (
   e: React.FormEvent<HTMLFormElement>,
@@ -16,7 +17,8 @@ export const handleCreateSale = async (
   width: number,
   startTimeStamp: number,
   whitelistedArray: string[],
-  setOpenCreateSale: Dispatch<SetStateAction<boolean>>
+  setOpenCreateSale: Dispatch<SetStateAction<boolean>>,
+  addressesToRemove: string[]
 ) => {
   e.preventDefault();
   if (!address) {
@@ -33,6 +35,7 @@ export const handleCreateSale = async (
     );
     return;
   }
+
   setIsSubmitting(true);
   let isSuccess = true;
   let mySales: AdminSale[] = [];
@@ -51,6 +54,8 @@ export const handleCreateSale = async (
     floorPrice,
     ceilingPrice
   };
+
+  handleDeleteWhitelistedAddresses(addressesToRemove, whitelistedArray);
 
   const splitNewWhitelistedAddresses =
     newWhitelistedAddresses.length > 0
@@ -108,8 +113,24 @@ export const handleCreateSale = async (
     );
   }
 
+  let newArray: string[] = whitelistedArray;
+
+  addressesToRemove.forEach((addressToRemove) => {
+    if (
+      addressesToRemove.length > 0 &&
+      whitelistedArray.includes(addressToRemove)
+    ) {
+      newArray = newArray.filter((address) => address !== addressToRemove);
+    }
+  });
+
   if (isSuccess === true) {
-    if (whitelistedArray.length > 0) {
+    if (whitelistedArray.length > 0 && newArray.length > 0) {
+      localStorage.setItem(
+        "whitelistedAddresses",
+        JSON.stringify([...newArray, ...splitNewWhitelistedAddresses])
+      );
+    } else if (whitelistedArray.length > 0 && newArray.length === 0) {
       localStorage.setItem(
         "whitelistedAddresses",
         JSON.stringify([...whitelistedArray, ...splitNewWhitelistedAddresses])

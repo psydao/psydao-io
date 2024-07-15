@@ -4,6 +4,8 @@ import { useState } from "react";
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
 
 type WhiteListedAddressesSectionProps = {
+  addressesToRemove: string[];
+  setAddressesToRemove: React.Dispatch<React.SetStateAction<string[]>>;
   setWhitelistedAddresses: React.Dispatch<React.SetStateAction<string>>;
   addressArray: string[];
 };
@@ -14,7 +16,8 @@ const WhiteListedAddressesSection = (
   const [addressesToDisplay, setAddressesToDisplay] = useState<string[]>(
     props.addressArray
   );
-  const removeAddress = (addressToRemove: string) => {
+
+  const removeAddressOnUI = (addressToRemove: string) => {
     if (
       addressesToDisplay.length > 0 &&
       addressesToDisplay.includes(addressToRemove)
@@ -23,7 +26,6 @@ const WhiteListedAddressesSection = (
         (address) => address !== addressToRemove
       );
       setAddressesToDisplay(newArray);
-      localStorage.setItem("whitelistedAddresses", JSON.stringify(newArray));
     }
   };
   return (
@@ -67,7 +69,13 @@ const WhiteListedAddressesSection = (
               key={index}
               value={address}
               isWhitelistedAddress
-              removeAddress={removeAddress}
+              removeAddress={() => {
+                props.setAddressesToRemove([
+                  ...props.addressesToRemove,
+                  address
+                ]);
+                removeAddressOnUI(address);
+              }}
             />
           );
         })}
