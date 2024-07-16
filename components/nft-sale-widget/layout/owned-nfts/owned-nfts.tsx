@@ -11,7 +11,6 @@ type OwnedNftsProps = {
 const OwnedNfts = (props: OwnedNftsProps) => {
   const images = ["/psyc1.png", "/psyc2.png", "/psyc3.png", "/psyc4.png"];
   const { address } = useAccount();
-  console.log(props.nftData, "nftData");
   const numberOfCopies = countNumberOfCopies(props.nftData ?? { tokens: [] });
 
   // TODO: Add check to see if sale is private and re-add price and mint button if public

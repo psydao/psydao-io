@@ -8,7 +8,7 @@ const addresses: `0x${string}`[] = [
   "0x8754a4c886f8Cb77a1d2F38470c653DDb4727f21"
 ];
 
-export const getMerkleRoot = (values: `0x${string}`[]) => {
+const getMerkleRoot = (values: `0x${string}`[]) => {
   const leaves = values.map((item) => keccak256(item));
   const merkleTree = new MerkleTree(leaves, keccak256, { sortPairs: true });
 

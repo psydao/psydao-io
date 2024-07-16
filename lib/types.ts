@@ -41,4 +41,5 @@ export type AdminSale = {
   floorPrice: string;
   startDate: string;
   startTime: string;
+  tokenIds: number[];
 };
