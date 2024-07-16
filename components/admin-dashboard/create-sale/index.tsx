@@ -1,46 +1,50 @@
 import { Box, Flex } from "@chakra-ui/react";
-import { useAccount } from "wagmi";
-
-import { useState } from "react";
-
 import CreateSaleHeader from "./create-sale-header";
 import NftTokensSection from "./nft-tokens";
 import SetTokenPrice from "./set-token-price";
-
 import SaleStartTimeSection from "./start-time-section";
 import WhiteListedAddressesSection from "./whitelisted-addresses";
-
 import CreateButtonContainer from "./create-button-container";
-import { handleCreateSale } from "./utils/createSale";
+
+import { useCreateSale } from "@/hooks/useCreateSale";
+import { useAccount } from "wagmi";
+import { useFormState } from "@/hooks/useFormState";
+import { useTokenIds } from "@/hooks/useTokenIds";
+import { useSaleLocalStorage } from "@/hooks/useSaleLocalStorage";
 
 export const CreateSale = ({
   setOpenCreateSale
 }: {
   setOpenCreateSale: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+  const {
+    timeInputType,
+    setTimeInputType,
+    focusedDate,
+    setFocusedDate,
+    focusedTime,
+    setFocusedTime,
+    startDate,
+    setStartDate,
+    startTime,
+    setStartTime,
+    floorPrice,
+    setFloorPrice,
+    ceilingPrice,
+    setCeilingPrice,
+    newWhitelistedAddresses,
+    setNewWhitelistedAddresses
+  } = useFormState();
+  const tokenIds = useTokenIds();
+  const { getWhitelistedAddresses } = useSaleLocalStorage();
+  const whitelistedArray = getWhitelistedAddresses();
   const { address } = useAccount();
-  const [timeInputType, setTimeInputType] = useState("text");
-  const [focusedDate, setFocusedDate] = useState(false);
-  const [focusedTime, setFocusedTime] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [width] = useState(window.innerWidth);
-  const [startDate, setStartDate] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [floorPrice, setFloorPrice] = useState("");
-  const [ceilingPrice, setCeilingPrice] = useState("");
-  const [newWhitelistedAddresses, setNewWhitelistedAddresses] = useState("");
-  const startTimeStamp = Date.parse(startDate + " " + startTime);
-  const [addressesToRemove, setAddressesToRemove] = useState<string[]>([]);
-
-  const whitelistedAddresses: string | null = localStorage.getItem(
-    "whitelistedAddresses"
+  const { handleCreateSale, isSubmitting } = useCreateSale(
+    setOpenCreateSale,
+    tokenIds,
+    whitelistedArray
   );
-
-  const whitelistedArray: string[] = whitelistedAddresses
-    ? (JSON.parse(whitelistedAddresses) as string[])
-    : [];
-
-  console.log(addressesToRemove, whitelistedArray);
+  const ipfsHash = "QmQ8qKobu9BnAQa8DYyjEzpv9yqcQ5mKn9Y5oxjcd7ikhT";
 
   return (
     <Flex direction={"column"} gap={2}>
@@ -51,23 +55,17 @@ export const CreateSale = ({
         onSubmit={(e) =>
           handleCreateSale(
             e,
-            address,
-            setIsSubmitting,
+            newWhitelistedAddresses,
             startDate,
             startTime,
             floorPrice,
             ceilingPrice,
-            newWhitelistedAddresses,
-            width,
-            startTimeStamp,
-            whitelistedArray,
-            setOpenCreateSale,
-            addressesToRemove
+            ipfsHash
           )
         }
       >
         <Box position="relative" height="100%" mb={12} overflowY="auto">
-          <NftTokensSection />
+          <NftTokensSection tokenIds={tokenIds} />
           <SaleStartTimeSection
             focusedDate={focusedDate}
             setFocusedDate={setFocusedDate}
@@ -83,8 +81,6 @@ export const CreateSale = ({
           <WhiteListedAddressesSection
             addressArray={whitelistedArray}
             setWhitelistedAddresses={setNewWhitelistedAddresses}
-            addressesToRemove={addressesToRemove}
-            setAddressesToRemove={setAddressesToRemove}
           />
         </Box>
         <CreateButtonContainer address={address} isSubmitting={isSubmitting} />
