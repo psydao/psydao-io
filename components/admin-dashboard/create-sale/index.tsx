@@ -10,8 +10,10 @@ import SetTokenPrice from "./set-token-price";
 import SaleStartTimeSection from "./start-time-section";
 import WhiteListedAddressesSection from "./whitelisted-addresses";
 
-import CreateButtonContainer from "./create-button-container";
+import SubmitButtonContainer from "../../commons/submit-button-container";
 import { handleCreateSale } from "./utils/createSale";
+import { type Sale } from "../admin-sale-component";
+import CreateSaleButton from "./create-sale-button";
 
 export const CreateSale = ({
   setOpenCreateSale
@@ -40,10 +42,15 @@ export const CreateSale = ({
     ? (JSON.parse(whitelistedAddresses) as string[])
     : [];
 
-  console.log(addressesToRemove, whitelistedArray);
+  const createdSales: string | null = localStorage.getItem("createdSales");
+  const createdSalesArray: Sale[] = createdSales
+    ? (JSON.parse(createdSales) as Sale[])
+    : [];
+
+  const nextId = createdSalesArray.length + 1;
 
   return (
-    <Flex direction={"column"} gap={2}>
+    <Flex direction={"column"}>
       <CreateSaleHeader
         setOpenCreateSale={() => setOpenCreateSale((prev) => !prev)}
       />
@@ -51,6 +58,7 @@ export const CreateSale = ({
         onSubmit={(e) =>
           handleCreateSale(
             e,
+            nextId,
             address,
             setIsSubmitting,
             startDate,
@@ -78,8 +86,16 @@ export const CreateSale = ({
             timeInputType={timeInputType}
             setTimeInputType={setTimeInputType}
           />
-          <SetTokenPrice setPrice={setFloorPrice} type="floor" />
-          <SetTokenPrice setPrice={setCeilingPrice} type="ceiling" />
+          <SetTokenPrice
+            setPrice={setFloorPrice}
+            type="floor"
+            price={floorPrice}
+          />
+          <SetTokenPrice
+            setPrice={setCeilingPrice}
+            type="ceiling"
+            price={ceilingPrice}
+          />
           <WhiteListedAddressesSection
             addressArray={whitelistedArray}
             setWhitelistedAddresses={setNewWhitelistedAddresses}
@@ -87,7 +103,13 @@ export const CreateSale = ({
             setAddressesToRemove={setAddressesToRemove}
           />
         </Box>
-        <CreateButtonContainer address={address} isSubmitting={isSubmitting} />
+        <SubmitButtonContainer>
+          <CreateSaleButton
+            address={address}
+            isSubmitting={isSubmitting}
+            children={"Create Sale"}
+          />
+        </SubmitButtonContainer>
       </form>
     </Flex>
   );

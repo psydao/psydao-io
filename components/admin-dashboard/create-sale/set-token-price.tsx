@@ -3,6 +3,7 @@ import { Box, Flex, FormLabel, Input, Image, Text } from "@chakra-ui/react";
 type SetTokenPriceProps = {
   setPrice: React.Dispatch<React.SetStateAction<string>>;
   type: "floor" | "ceiling";
+  price: string;
 };
 
 const SetTokenPrice = (props: SetTokenPriceProps) => {
@@ -42,6 +43,7 @@ const SetTokenPrice = (props: SetTokenPriceProps) => {
           w={{ base: "100%", md: 20 }}
           fontSize="22px"
           fontFamily={"Inter"}
+          value={props.price}
           onChange={(e) => props.setPrice(e.target.value)}
           required
           border={"none"}

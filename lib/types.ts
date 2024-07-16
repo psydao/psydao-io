@@ -37,6 +37,7 @@ export type GetTokensByOwnerData = {
 };
 
 export type AdminSale = {
+  id: number;
   ceilingPrice: string;
   floorPrice: string;
   startDate: string;

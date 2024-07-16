@@ -4,15 +4,18 @@ import { Window } from "@/components/window";
 import { useWindowManager } from "../window-manager";
 import AdminDashboardHeader from "./admin-dashboard-header";
 import AdminDashboardEmptyState from "./admin-dashboard-empty";
-import { AdminSalesSection } from "./admin-sales-section";
+import AdminSalesSection from "./admin-sales-section";
 import { CreateSale } from "./create-sale/index";
 import { type AdminSale } from "@/lib/types";
+import EditSaleHeader from "./edit-sale-header";
 
 const AdminDashboardWidget = () => {
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
   const [openCreateSale, setOpenCreateSale] = useState(false);
+  const [openEditSale, setOpenEditSale] = useState(false);
   const { state } = useWindowManager();
   const [salesExist, setSalesExist] = useState(false);
+  const [saleId, setSaleId] = useState<number | null>(null);
 
   const fullScreenWindow = useMemo(() => {
     return state.fullScreen === "admin-dashboard";
@@ -31,7 +34,7 @@ const AdminDashboardWidget = () => {
     } else {
       setSalesExist(false);
     }
-  }, [openCreateSale]);
+  }, [openCreateSale, openEditSale]);
 
   return (
     <Window
@@ -53,12 +56,20 @@ const AdminDashboardWidget = () => {
           <CreateSale setOpenCreateSale={setOpenCreateSale} />
         ) : (
           <>
-            <AdminDashboardHeader />
+            {saleId === null ? (
+              <AdminDashboardHeader />
+            ) : (
+              <EditSaleHeader id={saleId} backToSales={() => setSaleId(null)} />
+            )}
             <Box w="100%" mt={4}>
               {salesExist ? (
                 <AdminSalesSection
                   setOpenCreateSale={setOpenCreateSale}
+                  setOpenEditSale={setOpenEditSale}
                   openCreateSale={openCreateSale}
+                  saleId={saleId}
+                  setSaleId={setSaleId}
+                  openEditSale={openEditSale}
                 />
               ) : (
                 <AdminDashboardEmptyState

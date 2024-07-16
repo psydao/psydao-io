@@ -6,6 +6,7 @@ import { isAddress } from "viem";
 
 export const handleCreateSale = async (
   e: React.FormEvent<HTMLFormElement>,
+  id: number,
   address: `0x${string}` | undefined,
   setIsSubmitting: Dispatch<SetStateAction<boolean>>,
   startDate: string,
@@ -48,6 +49,7 @@ export const handleCreateSale = async (
   }
 
   const newSale: AdminSale = {
+    id,
     startDate,
     startTime,
     floorPrice,
