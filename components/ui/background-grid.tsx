@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
-import { Grid } from "@/components/grid";
-import { useGrid } from "@/components/grid-context";
+import { Grid } from "@/components/ui/grid";
+import { useGrid } from "@/components/ui/grid-context";
 
 // Including min, excluding max
 const randomIntInRange = (min: number, max: number) =>

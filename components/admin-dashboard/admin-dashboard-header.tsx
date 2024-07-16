@@ -1,7 +1,7 @@
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { Divider, Flex, Text } from "@chakra-ui/react";
 import GeneralDashboardLink from "./general-dashboard-link";
-import { Close, Open } from "../window-manager";
+import { Close, Open } from "../ui/window-manager";
 
 const AdminDashboardHeader = () => {
   return (

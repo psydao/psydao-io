@@ -6,8 +6,8 @@ import {
   TabPanels,
   Tabs
 } from "@chakra-ui/react";
-import { Window } from "@/components/window";
-import { useWindowManager } from "@/components/window-manager";
+import { Window } from "@/components/ui/window";
+import { useWindowManager } from "@/components/ui/window-manager";
 import MintPsycHeader from "./layout/nft-sale/mint-psyc-header";
 import PsycSaleContent from "./layout/nft-sale/psyc-sale-content";
 import OwnedNftsContent from "./layout/owned-nfts/owned-nfts-section";

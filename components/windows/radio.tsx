@@ -8,9 +8,9 @@ import {
   type BoxProps
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { Window } from "@/components/window";
+import { Window } from "@/components/ui/window";
 import { RiArrowLeftLine } from "react-icons/ri";
-import { useWindowManager } from "@/components/window-manager";
+import { useWindowManager } from "@/components/ui/window-manager";
 
 const spotifyBaseUrl =
   "https://open.spotify.com/oembed?url=https://open.spotify.com/playlist/";

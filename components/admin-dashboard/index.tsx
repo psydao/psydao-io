@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect } from "react";
 import { Box, Image, useMediaQuery } from "@chakra-ui/react";
-import { Window } from "@/components/window";
-import { useWindowManager } from "../window-manager";
+import { Window } from "@/components/ui/window";
+import { useWindowManager } from "../ui/window-manager";
 import AdminDashboardHeader from "./admin-dashboard-header";
 import AdminDashboardEmptyState from "./admin-dashboard-empty";
 import { AdminSalesSection } from "./admin-sales-section";
