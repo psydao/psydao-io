@@ -35,7 +35,8 @@ export const CreateSale = ({
     newWhitelistedAddresses,
     setNewWhitelistedAddresses
   } = useFormState();
-  const tokenIds = useTokenIds();
+  const { tokenIds, isLoading } = useTokenIds();
+  console.log("tokenIds in CreateSale:", tokenIds);
   const { getWhitelistedAddresses } = useSaleLocalStorage();
   const whitelistedArray = getWhitelistedAddresses();
   const { address } = useAccount();
@@ -45,6 +46,10 @@ export const CreateSale = ({
     whitelistedArray
   );
   const ipfsHash = "QmQ8qKobu9BnAQa8DYyjEzpv9yqcQ5mKn9Y5oxjcd7ikhT";
+
+  if (isLoading) {
+    return <div>Loading token IDs...</div>;
+  }
 
   return (
     <Flex direction={"column"} gap={2}>
