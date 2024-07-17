@@ -32,7 +32,7 @@ const SetTokenPrice = (props: SetTokenPriceProps) => {
         alignItems="center"
         borderRadius="xl"
         boxShadow="inner"
-        gap={4}
+        gap={{ base: 1, sm: 4 }}
         p="16px"
         w={{ base: "100%", md: "auto" }}
       >
