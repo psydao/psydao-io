@@ -31,6 +31,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { NftSaleWidget } from "@/components/nft-sale-widget";
 import WalletConnectHome from "@/components/connectWalletHome";
 import AdminDashboardWidget from "@/components/admin-dashboard";
+import GeneralDashboard from "@/components/general-dashboard";
 
 // TODO Extract Pill component since it seems it will become a basic primitive
 // in our design
@@ -190,6 +191,7 @@ const Homepage: NextPage = () => {
                     <SwapWidget />
                     <NftSaleWidget />
                     <AdminDashboardWidget />
+                    <GeneralDashboard />
                     <Radio />
                     <Manifesto />
                   </Box>
