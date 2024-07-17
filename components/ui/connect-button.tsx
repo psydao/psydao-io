@@ -6,7 +6,7 @@ import { useBuyToken } from "@/hooks/useBuyToken";
 import { useSignInWallet } from "@/hooks/useSignInWallet";
 
 import LinearButton from "./linear-button";
-import { customToast } from "./toasts/SwapSuccess";
+import { customToast } from "../toasts/SwapSuccess";
 
 interface ConnectWalletButtonProps {
   tokenAmount: string;

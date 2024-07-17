@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Image, Text, Spinner, Tooltip, Flex } from "@chakra-ui/react";
 import NFTPrice from "@/components/commons/nftprice";
-import MintButton from "@/components/mint-button";
+import MintButton from "@/components/ui/mint-button";
 import useBuyNft from "@/hooks/useBuyNft";
 import { useAccount } from "wagmi";
 import { type TokenItem } from "@/lib/types";

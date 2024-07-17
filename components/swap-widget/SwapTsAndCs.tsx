@@ -1,8 +1,8 @@
 import React, { type Dispatch, type SetStateAction, useState } from "react";
 import { Box, Checkbox, Flex, Show, Text } from "@chakra-ui/react";
-import LinearButton from "@/components/linear-button";
+import LinearButton from "@/components/ui/linear-button";
 import TermsAndConditionsContent from "@/components/terms-and-conditions/TermsAndConditionsContent";
-import { useWindowManager } from "@/components/window-manager";
+import { useWindowManager } from "@/components/ui/window-manager";
 
 interface SwapTsAndCsType {
   setTermsAndConditions: Dispatch<SetStateAction<boolean>>;

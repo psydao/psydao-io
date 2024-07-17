@@ -5,9 +5,9 @@ import { AnimatePresence } from "framer-motion";
 import type { BoxProps } from "@chakra-ui/react";
 import { Box, chakra } from "@chakra-ui/react";
 
-import { Cross, Drag } from "@/components/icons";
-import { MotionBox } from "@/components/motion-box";
-import { useWindowManager } from "@/components/window-manager";
+import { Cross, Drag } from "@/components/ui/icons";
+import { MotionBox } from "@/components/ui/motion-box";
+import { useWindowManager } from "@/components/ui/window-manager";
 import { createCtx } from "@/lib/context";
 
 // TODO fix types

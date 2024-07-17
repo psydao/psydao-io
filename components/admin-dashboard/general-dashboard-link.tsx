@@ -1,5 +1,5 @@
 import { Flex, Text } from "@chakra-ui/react";
-import { Open } from "../window-manager";
+import { Open } from "../ui/window-manager";
 
 const GeneralDashboardLink = () => {
   return (

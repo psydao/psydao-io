@@ -2,13 +2,16 @@ import { Box, Flex } from "@chakra-ui/react";
 import { useAccount } from "wagmi";
 import { useState, useEffect } from "react";
 import { type AdminSale } from "@/lib/types";
-import PsyButton from "../psy-button";
-import AdminSaleComponent, { type Sale } from "./admin-sale-component";
-import EditSaleWindow from "../edit-sale-window";
-import SubmitButtonContainer from "../commons/submit-button-container";
-import updateWhitelist from "./create-sale/utils/updateWhitelist";
+import PsyButton from "../ui/psy-button";
 
-const AdminSalesSection = ({
+type Sale = {
+  ceilingPrice: string;
+  floorPrice: string;
+  startDate: string;
+  startTime: string;
+};
+
+export const AdminSalesSection = ({
   setOpenCreateSale,
   openEditSale,
   setOpenEditSale,

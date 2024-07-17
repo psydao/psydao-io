@@ -15,7 +15,7 @@ import {
   handleUserRejection
 } from "@/utils/transactionHandlers";
 import { useResize } from "./useResize";
-import { psycSaleContractConfig } from "@/lib/contract-config";
+import { psycSaleContractConfig } from "@/lib/sale-contract-config";
 
 type ArgsType =
   | [number, string[]]
