@@ -1,26 +1,93 @@
-import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
+import {
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Box,
+  Flex
+} from "@chakra-ui/react";
+import { useState } from "react";
 
-const statusDropdownContent = [
+interface Status {
+  status: string;
+  color: string;
+}
+
+const statusDropdownContent: Status[] = [
   {
-    status: "active"
+    status: "Active",
+    color: "#269200"
   },
   {
-    status: "complete"
+    status: "Complete",
+    color: "#999999"
   },
   {
-    status: "paused"
+    status: "Paused",
+    color: "#E86969"
   }
 ];
 
-const SaleStatusDropdown = () => {
+const CustomSVG = (props: { color: string }) => {
   return (
-    <Menu>
-      <MenuButton p={"8px 16px"} bg={"#F2BEBE1A"} borderRadius={"18px"}>
-        Menu
-      </MenuButton>
-      <MenuList>
-        <MenuItem></MenuItem>
-      </MenuList>
+    <Box color={props.color} h={3} w={3}>
+      <svg
+        width="12"
+        height="12"
+        viewBox="0 0 12 12"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle cx="6" cy="6" r="6" fill="currentColor" />
+      </svg>
+    </Box>
+  );
+};
+
+const SaleStatusDropdown = () => {
+  const [currentValue, setCurrentValue] = useState<Status>({
+    status: "Active",
+    color: "#269200"
+  } as Status);
+  return (
+    <Menu closeOnSelect>
+      {({ isOpen }) => (
+        <>
+          <MenuButton
+            p={"8px 16px"}
+            bg={"#F2BEBE1A"}
+            borderRadius={"18px"}
+            fontFamily={"Inter"}
+            fontWeight={"bold"}
+            fontSize={18}
+          >
+            <Flex alignItems={"center"} gap={2}>
+              <CustomSVG color={currentValue.color} />
+              {currentValue.status}
+              {isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
+            </Flex>
+          </MenuButton>
+          <MenuList>
+            {statusDropdownContent.map((entry) => {
+              return (
+                <MenuItem
+                  fontFamily={"Inter"}
+                  display={"flex"}
+                  fontSize={18}
+                  gap={2}
+                  onClick={() => {
+                    setCurrentValue(entry);
+                  }}
+                >
+                  <CustomSVG color={entry.color} />
+                  {entry.status}
+                </MenuItem>
+              );
+            })}
+          </MenuList>
+        </>
+      )}
     </Menu>
   );
 };

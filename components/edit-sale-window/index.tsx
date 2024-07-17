@@ -4,6 +4,7 @@ import SetTokenPrice from "../admin-dashboard/create-sale/set-token-price";
 import WhiteListedAddressesSection from "../admin-dashboard/create-sale/whitelisted-addresses";
 import React from "react";
 import { type Sale } from "../admin-dashboard/admin-sale-component";
+import SaleStatusSection from "../admin-dashboard/edit-sale/sale-status-section";
 
 const EditSaleWindow = (props: {
   selectedSale: Sale | undefined;
@@ -26,7 +27,7 @@ const EditSaleWindow = (props: {
       alignItems={"start"}
     >
       <NftTokensSection />
-      {/* INSERT SALE STATUS */}
+      <SaleStatusSection />
       <SetTokenPrice
         setPrice={props.setFloorPrice}
         type="floor"
