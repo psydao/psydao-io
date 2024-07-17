@@ -2,6 +2,9 @@ import { Flex, Text } from "@chakra-ui/react";
 import ValueContainer from "./value-container";
 
 const NftTokensSection = ({ tokenIds }: { tokenIds: number[] }) => {
+  const firstTokenId = tokenIds[0];
+  const lastTokenId = tokenIds[tokenIds.length - 1];
+
   return (
     <Flex
       flexDirection="column"
@@ -15,13 +18,11 @@ const NftTokensSection = ({ tokenIds }: { tokenIds: number[] }) => {
         NFT Tokens included in batch
       </Text>
       <Flex gap={2} flexWrap="wrap">
-        {tokenIds.map((id) => (
-          <ValueContainer
-            key={id}
-            value={id.toString()}
-            isWhitelistedAddress={false}
-          />
-        ))}
+        <ValueContainer
+          key={firstTokenId}
+          value={`${firstTokenId} - ${lastTokenId}`}
+          isWhitelistedAddress={false}
+        />
       </Flex>
     </Flex>
   );

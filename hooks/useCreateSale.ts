@@ -20,6 +20,7 @@ import { useCustomToasts } from "./useCustomToasts";
 import { useSaleLocalStorage } from "./useSaleLocalStorage";
 import { useResize } from "@/hooks/useResize";
 import { uploadAddresses } from "@/lib/server-utils";
+// import { useMintNextBatch } from "./useMintNextBatch";
 
 export const useCreateSale = (
   setOpenCreateSale: React.Dispatch<React.SetStateAction<boolean>>,
@@ -34,6 +35,8 @@ export const useCreateSale = (
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [newSale, setNewSale] = useState<AdminSale | null>(null);
   const { width } = useResize();
+
+  // const { mintNextBatch, mintSuccess } = useMintNextBatch();
 
   const { data: hash, writeContract, isPending, error } = useWriteContract();
   const { isSuccess: transactionSuccess } = useWaitForTransactionReceipt({
@@ -111,26 +114,29 @@ export const useCreateSale = (
       const floorPriceWei = toWei(floorPrice);
       const ceilingPriceWei = toWei(ceilingPrice);
       const ipfsHash = await uploadAddresses(splitNewWhitelistedAddresses);
-      try {
-        const args = [
-          tokenIds,
-          saleStartTime,
-          floorPriceWei,
-          ceilingPriceWei,
-          merkleRoot,
-          ipfsHash
-        ];
-        console.log("Calling writeContract with args:", args);
-        writeContract({
-          ...coreContractConfig,
-          functionName: "createSaleBatchPsycSale",
-          args
-        });
-        console.log("writeContract called");
-      } catch (error) {
-        const message = (error as Error).message || "An error occurred";
-        showErrorToast(message, width);
-        setIsSubmitting(false);
+
+      {
+        try {
+          const args = [
+            tokenIds,
+            saleStartTime,
+            floorPriceWei,
+            ceilingPriceWei,
+            merkleRoot,
+            ipfsHash
+          ];
+          console.log("Calling writeContract with args:", args);
+          writeContract({
+            ...coreContractConfig,
+            functionName: "createSaleBatchPsycSale",
+            args
+          });
+          console.log("writeContract called");
+        } catch (error) {
+          const message = (error as Error).message || "An error occurred";
+          showErrorToast(message, width);
+          setIsSubmitting(false);
+        }
       }
     },
     [
@@ -146,6 +152,8 @@ export const useCreateSale = (
       whitelistedArray,
       writeContract,
       width
+      // mintNextBatch,
+      // mintSuccess
     ]
   );
 
