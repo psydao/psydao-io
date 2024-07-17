@@ -6,6 +6,7 @@ import PsyButton from "../psy-button";
 import AdminSaleComponent, { type Sale } from "./admin-sale-component";
 import EditSaleWindow from "../edit-sale-window";
 import SubmitButtonContainer from "../commons/submit-button-container";
+import updateWhitelist from "./create-sale/utils/updateWhitelist";
 
 const AdminSalesSection = ({
   setOpenCreateSale,
@@ -27,6 +28,18 @@ const AdminSalesSection = ({
   const [selectedSale, setSelectedSale] = useState<Sale>();
   const [ceilingPrice, setCeilingPrice] = useState("");
   const [floorPrice, setFloorPrice] = useState("");
+  const whitelistedAddresses: string | null = localStorage.getItem(
+    "whitelistedAddresses"
+  );
+  const [newWhitelistedAddresses, setNewWhitelistedAddresses] = useState("");
+  const [addressesToRemove, setAddressesToRemove] = useState<string[]>([]);
+  const splitNewWhitelistedAddresses =
+    newWhitelistedAddresses.length > 0
+      ? newWhitelistedAddresses.split(", ")
+      : [];
+  const whitelistedArray: string[] = whitelistedAddresses
+    ? (JSON.parse(whitelistedAddresses) as string[])
+    : [];
 
   useEffect(() => {
     const storedSales = localStorage.getItem("createdSales");
@@ -38,6 +51,11 @@ const AdminSalesSection = ({
         setSelectedSale(selectedSale);
         setCeilingPrice(selectedSale?.ceilingPrice ?? "");
         setFloorPrice(selectedSale?.floorPrice ?? "");
+        updateWhitelist(
+          whitelistedArray,
+          addressesToRemove,
+          splitNewWhitelistedAddresses
+        );
       } catch (error) {
         console.error("Failed to parse sales from localStorage:", error);
       }
@@ -72,7 +90,12 @@ const AdminSalesSection = ({
   };
 
   return (
-    <Box textAlign={saleId === null ? "center" : "start"} py={4} px={4}>
+    <Box
+      textAlign={saleId === null ? "center" : "start"}
+      py={4}
+      px={4}
+      position="relative"
+    >
       {saleId === null && !openEditSale ? (
         <Flex
           justifyContent="center"
@@ -80,6 +103,8 @@ const AdminSalesSection = ({
           flexDirection="column"
           alignItems="center"
           width="100%"
+          height="100%"
+          overflowY="auto"
         >
           {sales.length > 0
             ? sales.map((sale: Sale, index: number) => (
@@ -114,6 +139,11 @@ const AdminSalesSection = ({
             ceilingPrice={ceilingPrice}
             setFloorPrice={setFloorPrice}
             setCeilingPrice={setCeilingPrice}
+            addressesToRemove={addressesToRemove}
+            setAddressesToRemove={setAddressesToRemove}
+            setNewWhitelistedAddresses={setNewWhitelistedAddresses}
+            whitelistedArray={whitelistedArray}
+            newWhitelistedAddresses={newWhitelistedAddresses}
           />
           <SubmitButtonContainer>
             <PsyButton

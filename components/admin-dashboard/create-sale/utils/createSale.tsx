@@ -3,6 +3,7 @@ import { type AdminSale } from "@/lib/types";
 import { type Dispatch, type SetStateAction } from "react";
 import { Zoom } from "react-toastify";
 import { isAddress } from "viem";
+import updateWhitelist from "./updateWhitelist";
 
 export const handleCreateSale = async (
   e: React.FormEvent<HTMLFormElement>,
@@ -124,22 +125,11 @@ export const handleCreateSale = async (
   });
 
   if (isSuccess === true) {
-    if (whitelistedArray.length > 0 && newArray.length > 0) {
-      localStorage.setItem(
-        "whitelistedAddresses",
-        JSON.stringify([...newArray, ...splitNewWhitelistedAddresses])
-      );
-    } else if (whitelistedArray.length > 0 && newArray.length === 0) {
-      localStorage.setItem(
-        "whitelistedAddresses",
-        JSON.stringify([...whitelistedArray, ...splitNewWhitelistedAddresses])
-      );
-    } else {
-      localStorage.setItem(
-        "whitelistedAddresses",
-        JSON.stringify([...splitNewWhitelistedAddresses])
-      );
-    }
+    updateWhitelist(
+      whitelistedArray,
+      addressesToRemove,
+      splitNewWhitelistedAddresses
+    );
 
     localStorage.setItem("createdSales", JSON.stringify([...mySales, newSale]));
     customToast(

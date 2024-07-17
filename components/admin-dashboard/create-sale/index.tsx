@@ -42,6 +42,8 @@ export const CreateSale = ({
     ? (JSON.parse(whitelistedAddresses) as string[])
     : [];
 
+  console.log(whitelistedArray);
+
   const createdSales: string | null = localStorage.getItem("createdSales");
   const createdSalesArray: Sale[] = createdSales
     ? (JSON.parse(createdSales) as Sale[])

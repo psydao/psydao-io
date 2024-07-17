@@ -7,7 +7,7 @@ import AdminDashboardEmptyState from "./admin-dashboard-empty";
 import AdminSalesSection from "./admin-sales-section";
 import { CreateSale } from "./create-sale/index";
 import { type AdminSale } from "@/lib/types";
-import EditSaleHeader from "./edit-sale-header";
+import EditSaleHeader from "./edit-sale/edit-sale-header";
 
 const AdminDashboardWidget = () => {
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
@@ -49,9 +49,17 @@ const AdminDashboardWidget = () => {
       left={fullScreenWindow ? "0" : "50%"}
       transform={fullScreenWindow ? "translate(0, 0)" : "translate(-50%, -50%)"}
       fullScreenWindow={fullScreenWindow}
+      px={0}
     >
       <Window.TitleBar />
-      <Window.Content py={2} px={0}>
+      <Window.Content
+        py={2}
+        px={0}
+        position="relative"
+        height="100%"
+        mb={12}
+        overflowY="auto"
+      >
         {openCreateSale ? (
           <CreateSale setOpenCreateSale={setOpenCreateSale} />
         ) : (
@@ -59,7 +67,13 @@ const AdminDashboardWidget = () => {
             {saleId === null ? (
               <AdminDashboardHeader />
             ) : (
-              <EditSaleHeader id={saleId} backToSales={() => setSaleId(null)} />
+              <EditSaleHeader
+                id={saleId}
+                backToSales={() => {
+                  setOpenEditSale(false);
+                  setSaleId(null);
+                }}
+              />
             )}
             <Box w="100%" mt={4}>
               {salesExist ? (
