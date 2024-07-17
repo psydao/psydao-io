@@ -17,7 +17,6 @@ const AdminSaleComponent = (props: AdminSaleComponentProps) => {
       justifyContent="space-between"
       p={4}
       gap={4}
-      borderBottom="1px solid #F2BEBE"
       alignItems="center"
       onClick={() => {
         props.setSelectedSale(props.sale);

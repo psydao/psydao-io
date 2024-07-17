@@ -1,4 +1,4 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Divider, Flex } from "@chakra-ui/react";
 import { useAccount } from "wagmi";
 import { useEffect, useState } from "react";
 import { type Sale, type AdminSale } from "@/lib/types";
@@ -66,12 +66,20 @@ export const AdminSalesSection = ({
         >
           {saleData.length > 0
             ? saleData.map((sale, index: number) => (
-                <AdminSaleComponent
-                  sale={sale}
-                  index={index}
-                  setSelectedSale={setSelectedSale}
-                  setOpenEditSale={setOpenEditSale}
-                />
+                <>
+                  <AdminSaleComponent
+                    sale={sale}
+                    index={index}
+                    setSelectedSale={setSelectedSale}
+                    setOpenEditSale={setOpenEditSale}
+                  />
+                  <Divider
+                    border={"none"}
+                    height={"1px"}
+                    bg={"#F2BEBE"}
+                    width={"100%"}
+                  />
+                </>
               ))
             : null}
           <SubmitButtonContainer>
