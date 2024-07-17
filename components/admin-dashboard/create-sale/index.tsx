@@ -4,11 +4,14 @@ import NftTokensSection from "./nft-tokens";
 import SetTokenPrice from "./set-token-price";
 import SaleStartTimeSection from "./start-time-section";
 import WhiteListedAddressesSection from "./whitelisted-addresses";
+import { useFormState } from "@/hooks/useFormState";
 
 import SubmitButtonContainer from "../../commons/submit-button-container";
-import { handleCreateSale } from "./utils/createSale";
-import { type Sale } from "../admin-sale-component";
 import CreateSaleButton from "./create-sale-button";
+import { useTokenIds } from "@/hooks/useTokenIds";
+import { useSaleLocalStorage } from "@/hooks/useSaleLocalStorage";
+import { useAccount } from "wagmi";
+import { useCreateSale } from "@/hooks/useCreateSale";
 
 export const CreateSale = ({
   setOpenCreateSale
@@ -81,16 +84,8 @@ export const CreateSale = ({
             timeInputType={timeInputType}
             setTimeInputType={setTimeInputType}
           />
-          <SetTokenPrice
-            setPrice={setFloorPrice}
-            type="floor"
-            price={floorPrice}
-          />
-          <SetTokenPrice
-            setPrice={setCeilingPrice}
-            type="ceiling"
-            price={ceilingPrice}
-          />
+          <SetTokenPrice setPrice={setFloorPrice} type="floor" />
+          <SetTokenPrice setPrice={setCeilingPrice} type="ceiling" />
           <WhiteListedAddressesSection
             addressArray={whitelistedArray}
             setWhitelistedAddresses={setNewWhitelistedAddresses}

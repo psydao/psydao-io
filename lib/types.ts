@@ -3,7 +3,7 @@ interface TokenOnSale {
   tokenID: string;
 }
 
-interface Sale {
+export interface Sale {
   batchID: string;
   blockNumber: string;
   ceilingPrice: string;
@@ -37,7 +37,6 @@ export type GetTokensByOwnerData = {
 };
 
 export type AdminSale = {
-  id: number;
   ceilingPrice: string;
   floorPrice: string;
   startDate: string;

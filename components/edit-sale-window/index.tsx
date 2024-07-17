@@ -3,7 +3,7 @@ import NftTokensSection from "../admin-dashboard/create-sale/nft-tokens";
 import SetTokenPrice from "../admin-dashboard/create-sale/set-token-price";
 import WhiteListedAddressesSection from "../admin-dashboard/create-sale/whitelisted-addresses";
 import React from "react";
-import { type Sale } from "../admin-dashboard/admin-sale-component";
+import { type Sale } from "@/lib/types";
 import SaleStatusSection from "../admin-dashboard/edit-sale/sale-status-section";
 
 const EditSaleWindow = (props: {
@@ -18,6 +18,10 @@ const EditSaleWindow = (props: {
   newWhitelistedAddresses: string;
   setNewWhitelistedAddresses: React.Dispatch<React.SetStateAction<string>>;
 }) => {
+  const tokenIds = props.selectedSale
+    ? props.selectedSale.tokensOnSale.map((x) => parseInt(x.tokenID))
+    : [];
+
   return (
     <Flex
       direction={"column"}
@@ -26,21 +30,21 @@ const EditSaleWindow = (props: {
       overflowY={"auto"}
       alignItems={"start"}
     >
-      <NftTokensSection />
+      <NftTokensSection tokenIds={tokenIds} />
       <SaleStatusSection />
       <SetTokenPrice
         setPrice={props.setFloorPrice}
         type="floor"
-        price={props.floorPrice ?? ""}
+        initialValue={props.floorPrice}
       />
       <SetTokenPrice
         setPrice={props.setCeilingPrice}
         type="ceiling"
-        price={props.ceilingPrice ?? ""}
+        initialValue={props.ceilingPrice}
       />
       <WhiteListedAddressesSection
-        addressesToRemove={props.addressesToRemove}
-        setAddressesToRemove={props.setAddressesToRemove}
+        // addressesToRemove={props.addressesToRemove}
+        // setAddressesToRemove={props.setAddressesToRemove}
         addressArray={props.whitelistedArray}
         setWhitelistedAddresses={props.setNewWhitelistedAddresses}
       />

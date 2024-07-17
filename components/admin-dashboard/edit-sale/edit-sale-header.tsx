@@ -1,7 +1,7 @@
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { Box, Flex, Text } from "@chakra-ui/react";
 
-const EditSaleHeader = (props: { id: number; backToSales: () => void }) => {
+const EditSaleHeader = (props: { id: string; backToSales: () => void }) => {
   return (
     <Box px={{ base: 2, md: 4 }} py={2}>
       <Flex

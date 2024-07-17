@@ -1,41 +1,38 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { useAccount } from "wagmi";
-import { useState, useEffect } from "react";
-import { type AdminSale } from "@/lib/types";
+import { useEffect, useState } from "react";
+import { type Sale, type AdminSale } from "@/lib/types";
 import PsyButton from "../ui/psy-button";
-
-type Sale = {
-  ceilingPrice: string;
-  floorPrice: string;
-  startDate: string;
-  startTime: string;
-};
+import AdminSaleComponent from "./admin-sale-component";
+import SubmitButtonContainer from "../commons/submit-button-container";
+import EditSaleWindow from "../edit-sale-window";
+import { formatEther } from "viem";
 
 export const AdminSalesSection = ({
   setOpenCreateSale,
   openEditSale,
   setOpenEditSale,
+  setSelectedSale,
   openCreateSale,
-  saleId,
-  setSaleId
+  saleData,
+  selectedSale
 }: {
+  selectedSale: Sale | undefined;
   setOpenCreateSale: React.Dispatch<React.SetStateAction<boolean>>;
   openEditSale: boolean;
+  setSelectedSale: React.Dispatch<React.SetStateAction<Sale | undefined>>;
   setOpenEditSale: React.Dispatch<React.SetStateAction<boolean>>;
   openCreateSale: boolean;
-  saleId: number | null;
-  setSaleId: React.Dispatch<React.SetStateAction<number | null>>;
+  saleData: Sale[];
 }) => {
   const { address } = useAccount();
-  const [sales, setSales] = useState<Sale[]>([]);
-  const [selectedSale, setSelectedSale] = useState<Sale>();
-  const [ceilingPrice, setCeilingPrice] = useState("");
-  const [floorPrice, setFloorPrice] = useState("");
   const whitelistedAddresses: string | null = localStorage.getItem(
     "whitelistedAddresses"
   );
   const [newWhitelistedAddresses, setNewWhitelistedAddresses] = useState("");
   const [addressesToRemove, setAddressesToRemove] = useState<string[]>([]);
+  const [floorPrice, setFloorPrice] = useState<string>("");
+  const [ceilingPrice, setCeilingPrice] = useState<string>("");
   const splitNewWhitelistedAddresses =
     newWhitelistedAddresses.length > 0
       ? newWhitelistedAddresses.split(", ")
@@ -45,61 +42,19 @@ export const AdminSalesSection = ({
     : [];
 
   useEffect(() => {
-    const storedSales = localStorage.getItem("createdSales");
-    if (storedSales) {
-      try {
-        const parsedSales = JSON.parse(storedSales) as AdminSale[]; // Explicitly cast the parsed result
-        const selectedSale = parsedSales.find((x) => x.id === saleId);
-        setSales(parsedSales);
-        setSelectedSale(selectedSale);
-        setCeilingPrice(selectedSale?.ceilingPrice ?? "");
-        setFloorPrice(selectedSale?.floorPrice ?? "");
-        updateWhitelist(
-          whitelistedArray,
-          addressesToRemove,
-          splitNewWhitelistedAddresses
-        );
-      } catch (error) {
-        console.error("Failed to parse sales from localStorage:", error);
-      }
+    if (selectedSale) {
+      setFloorPrice(formatEther(BigInt(selectedSale.floorPrice)));
+      setCeilingPrice(formatEther(BigInt(selectedSale.ceilingPrice)));
     }
-  }, [openCreateSale, setOpenCreateSale, saleId]);
+  }, [selectedSale]);
 
   const handleEditSale = () => {
-    const storedSales = localStorage.getItem("createdSales");
-    let saleToEdit: Sale;
-    let newArray = [];
-
-    if (storedSales && selectedSale) {
-      try {
-        saleToEdit = selectedSale;
-        const parsedSales = JSON.parse(storedSales) as AdminSale[]; // Explicitly cast the parsed result
-        newArray = parsedSales;
-        const index = parsedSales.findIndex(
-          (sale) => sale.id === saleToEdit.id
-        );
-        saleToEdit.ceilingPrice = ceilingPrice ?? "";
-        saleToEdit.floorPrice = floorPrice ?? "";
-        if (index !== -1) {
-          newArray[index] = saleToEdit;
-        }
-        localStorage.setItem("createdSales", JSON.stringify(newArray));
-        setSaleId(null);
-        setOpenEditSale(false);
-      } catch (error) {
-        console.error("Failed to parse sales from localStorage:", error);
-      }
-    }
+    console.log("edit!");
   };
 
   return (
-    <Box
-      textAlign={saleId === null ? "center" : "start"}
-      py={4}
-      px={4}
-      position="relative"
-    >
-      {saleId === null && !openEditSale ? (
+    <Box textAlign={"start"} py={4} px={4} position="relative">
+      {!openEditSale ? (
         <Flex
           justifyContent="center"
           gap={5}
@@ -109,12 +64,12 @@ export const AdminSalesSection = ({
           height="100%"
           overflowY="auto"
         >
-          {sales.length > 0
-            ? sales.map((sale: Sale, index: number) => (
+          {saleData.length > 0
+            ? saleData.map((sale, index: number) => (
                 <AdminSaleComponent
                   sale={sale}
                   index={index}
-                  setSaleId={setSaleId}
+                  setSelectedSale={setSelectedSale}
                   setOpenEditSale={setOpenEditSale}
                 />
               ))
