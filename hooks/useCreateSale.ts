@@ -19,6 +19,7 @@ import { splitAndValidateAddresses } from "@/utils/splitAndValidateAddresses";
 import { useCustomToasts } from "./useCustomToasts";
 import { useSaleLocalStorage } from "./useSaleLocalStorage";
 import { useResize } from "@/hooks/useResize";
+import { uploadAddresses } from "@/lib/server-utils";
 
 export const useCreateSale = (
   setOpenCreateSale: React.Dispatch<React.SetStateAction<boolean>>,
@@ -46,8 +47,7 @@ export const useCreateSale = (
       startDate: string,
       startTime: string,
       floorPrice: string,
-      ceilingPrice: string,
-      ipfsHash: string
+      ceilingPrice: string
     ) => {
       e.preventDefault();
       if (!isConnected) {
@@ -110,7 +110,7 @@ export const useCreateSale = (
       const merkleRoot = getMerkleRoot(formattedAddresses);
       const floorPriceWei = toWei(floorPrice);
       const ceilingPriceWei = toWei(ceilingPrice);
-
+      const ipfsHash = await uploadAddresses(splitNewWhitelistedAddresses);
       try {
         const args = [
           tokenIds,

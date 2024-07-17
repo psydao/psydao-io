@@ -45,10 +45,13 @@ export const CreateSale = ({
     tokenIds,
     whitelistedArray
   );
-  const ipfsHash = "QmQ8qKobu9BnAQa8DYyjEzpv9yqcQ5mKn9Y5oxjcd7ikhT";
 
   if (isLoading) {
-    return <div>Loading token IDs...</div>;
+    return (
+      <Box textAlign="center" mt={20}>
+        Loading token IDs...
+      </Box>
+    );
   }
 
   return (
@@ -64,8 +67,7 @@ export const CreateSale = ({
             startDate,
             startTime,
             floorPrice,
-            ceilingPrice,
-            ipfsHash
+            ceilingPrice
           )
         }
       >

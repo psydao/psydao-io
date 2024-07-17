@@ -53,13 +53,13 @@ const WhiteListedAddressesSection = (
         borderRadius={"16px"}
         boxShadow={"2px 2px 4px 0px #0000001F inset"}
       />
-      <Flex gap={2} flexWrap={"wrap"}>
+      {/* <Flex gap={2} flexWrap={"wrap"}>
         {addressesToDisplay.map((address, index) => {
           return (
             <ValueContainer key={index} value={address} isWhitelistedAddress />
           );
         })}
-      </Flex>
+      </Flex> */}
     </Flex>
   );
 };
