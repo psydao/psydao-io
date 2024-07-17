@@ -19,7 +19,8 @@ export const handleCreateSale = async (
   startTimeStamp: number,
   whitelistedArray: string[],
   setOpenCreateSale: Dispatch<SetStateAction<boolean>>,
-  addressesToRemove: string[]
+  addressesToRemove: string[],
+  tokenIds: number[]
 ) => {
   e.preventDefault();
   if (!address) {
@@ -50,11 +51,11 @@ export const handleCreateSale = async (
   }
 
   const newSale: AdminSale = {
-    id,
     startDate,
     startTime,
     floorPrice,
-    ceilingPrice
+    ceilingPrice,
+    tokenIds
   };
 
   const splitNewWhitelistedAddresses =
