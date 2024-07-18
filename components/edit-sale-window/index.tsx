@@ -19,7 +19,9 @@ const EditSaleWindow = (props: {
   setNewWhitelistedAddresses: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   const tokenIds = props.selectedSale
-    ? props.selectedSale.tokensOnSale.map((x) => parseInt(x.tokenID))
+    ? props.selectedSale.tokensOnSale
+        .map((x) => parseInt(x.tokenID))
+        .sort((a, b) => a - b)
     : [];
 
   return (
