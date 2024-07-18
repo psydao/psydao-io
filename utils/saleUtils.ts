@@ -1,13 +1,9 @@
 import MerkleTree from "merkletreejs";
-import { isAddress, keccak256, parseUnits } from "viem";
+import { keccak256, parseUnits } from "viem";
 import { type AdminSale } from "@/lib/types";
 
-export const getMerkleRoot = (values: string[]): string => {
-  const leaves = values.map((item) => {
-    if (isAddress(item)) {
-      keccak256(item);
-    }
-  });
+export const getMerkleRoot = (values: `0x${string}`[]): string => {
+  const leaves = values.map((item) => keccak256(item));
 
   const merkleTree = new MerkleTree(leaves, keccak256, { sortPairs: true });
   return merkleTree.getHexRoot();

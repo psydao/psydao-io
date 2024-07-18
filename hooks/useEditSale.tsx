@@ -11,25 +11,30 @@ const getNewAddresses = (
   newAddresses: string[],
   existingAddresses: string[]
 ): `0x${string}`[] => {
-  const filteredAddresses = existingAddresses.filter((address) => {
-    addressesToRemove.forEach((addressToRemove) => {
-      address !== addressToRemove;
-    });
-  });
+  const filteredAddresses = existingAddresses.filter(
+    (address) => !addressesToRemove.includes(address)
+  );
   filteredAddresses.push(...newAddresses);
   filteredAddresses.forEach((address) => {
-    if (!isAddress(address)) {
+    if (address.length > 0 && !isAddress(address)) {
       console.error("Invalid address was input");
       throw new Error("Invalid address");
     }
     return;
   });
+  console.log(filteredAddresses);
   return filteredAddresses as `0x${string}`[];
 };
 
 export const useEditSale = () => {
   const { isConnected } = useAccount();
-  const { data: hash, writeContract, isPending, error } = useWriteContract();
+  const {
+    data: hash,
+    writeContract,
+    isPending,
+    error,
+    isSuccess
+  } = useWriteContract();
   const { showErrorToast, showSuccessToast, showDefaultErrorToast } =
     useCustomToasts();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -50,10 +55,9 @@ export const useEditSale = () => {
       newAddresses,
       existingAddresses
     );
+
     const ipfsHash = await uploadAddresses(addressesToSubmit);
     const merkleRoot = getMerkleRoot(addressesToSubmit);
-
-    console.log(ipfsHash, merkleRoot);
 
     try {
       const args = [batchID, merkleRoot, ipfsHash];

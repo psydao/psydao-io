@@ -31,10 +31,16 @@ export const AdminSalesSection = ({
   const { address } = useAccount();
   const [existingWhitelistedAddresses, setExistingWhitelistedAddresses] =
     useState<string[]>([]);
-  const [newWhitelistedAddresses, setNewWhitelistedAddresses] = useState("");
+  const [newWhitelistedAddresses, setNewWhitelistedAddresses] =
+    useState<string>("");
   const [addressesToRemove, setAddressesToRemove] = useState<string[]>([]);
   const [floorPrice, setFloorPrice] = useState<string>("");
   const [ceilingPrice, setCeilingPrice] = useState<string>("");
+
+  const splitNewWhitelistedAddresses =
+    newWhitelistedAddresses.length > 0
+      ? newWhitelistedAddresses.split(", ")
+      : [];
 
   useEffect(() => {
     if (selectedSale) {
@@ -92,7 +98,7 @@ export const AdminSalesSection = ({
                   e,
                   selectedSale.batchID,
                   addressesToRemove,
-                  newWhitelistedAddresses.split(", "),
+                  splitNewWhitelistedAddresses,
                   existingWhitelistedAddresses
                 )
               : console.error("no sale selected")
