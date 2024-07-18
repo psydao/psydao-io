@@ -3,7 +3,7 @@ interface TokenOnSale {
   tokenID: string;
 }
 
-interface Sale {
+export interface Sale {
   batchID: string;
   blockNumber: string;
   ceilingPrice: string;

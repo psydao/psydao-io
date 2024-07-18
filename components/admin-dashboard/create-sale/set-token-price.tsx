@@ -4,6 +4,7 @@ import { useState } from "react";
 type SetTokenPriceProps = {
   setPrice: React.Dispatch<React.SetStateAction<string>>;
   type: "floor" | "ceiling";
+  initialValue?: string;
   currentFloorPrice?: string;
 };
 
@@ -50,7 +51,7 @@ const SetTokenPrice = (props: SetTokenPriceProps) => {
         alignItems="center"
         borderRadius="xl"
         boxShadow="inner"
-        gap={4}
+        gap={{ base: 1, sm: 4 }}
         p="16px"
         w={{ base: "100%", md: "auto" }}
       >
@@ -59,8 +60,9 @@ const SetTokenPrice = (props: SetTokenPriceProps) => {
           step={0.01}
           min={0.01}
           w={{ base: "100%", md: 20 }}
-          fontSize="22px"
+          fontSize="18px"
           fontFamily={"Inter"}
+          value={props.initialValue}
           onChange={handlePriceChange}
           required
           border={"none"}

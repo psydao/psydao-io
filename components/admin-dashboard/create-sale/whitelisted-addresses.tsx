@@ -1,6 +1,4 @@
 import { Flex, Input, Text, Tooltip } from "@chakra-ui/react";
-import ValueContainer from "./value-container";
-import { useState } from "react";
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
 
 type WhiteListedAddressesSectionProps = {
@@ -11,10 +9,6 @@ type WhiteListedAddressesSectionProps = {
 const WhiteListedAddressesSection = (
   props: WhiteListedAddressesSectionProps
 ) => {
-  const [addressesToDisplay, setAddressesToDisplay] = useState<string[]>(
-    props.addressArray
-  );
-
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     props.setWhitelistedAddresses(e.target.value);
   };

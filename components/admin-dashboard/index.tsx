@@ -1,37 +1,30 @@
-import { useMemo, useState, useEffect } from "react";
-import { Box, Image, useMediaQuery } from "@chakra-ui/react";
+import { useMemo, useState } from "react";
+import { Box, Image, useMediaQuery, Text } from "@chakra-ui/react";
 import { Window } from "@/components/ui/window";
 import { useWindowManager } from "../ui/window-manager";
 import AdminDashboardHeader from "./admin-dashboard-header";
 import AdminDashboardEmptyState from "./admin-dashboard-empty";
-import { AdminSalesSection } from "./admin-sales-section";
+import AdminSalesSection from "./admin-sales-section";
 import { CreateSale } from "./create-sale/index";
-import { type AdminSale } from "@/lib/types";
+import { type Sale, type GetAllSalesWithTokensData } from "@/lib/types";
+import EditSaleHeader from "./edit-sale/edit-sale-header";
+import { getAllSalesWithTokens } from "@/services/graph";
+import { useQuery } from "@apollo/client";
 
 const AdminDashboardWidget = () => {
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
   const [openCreateSale, setOpenCreateSale] = useState(false);
+  const [openEditSale, setOpenEditSale] = useState(false);
   const { state } = useWindowManager();
-  const [salesExist, setSalesExist] = useState(false);
+
+  const [selectedSale, setSelectedSale] = useState<Sale | undefined>(undefined);
+  const { data, loading, error } = useQuery<GetAllSalesWithTokensData>(
+    getAllSalesWithTokens
+  );
 
   const fullScreenWindow = useMemo(() => {
     return state.fullScreen === "admin-dashboard";
   }, [state]);
-
-  useEffect(() => {
-    const sales = localStorage.getItem("createdSales");
-    if (sales) {
-      try {
-        const parsedSales = JSON.parse(sales) as AdminSale[];
-        setSalesExist(parsedSales.length > 0);
-      } catch (error) {
-        console.error("Failed to parse sales from localStorage:", error);
-        setSalesExist(false);
-      }
-    } else {
-      setSalesExist(false);
-    }
-  }, [openCreateSale]);
 
   return (
     <Window
@@ -46,19 +39,44 @@ const AdminDashboardWidget = () => {
       left={fullScreenWindow ? "0" : "50%"}
       transform={fullScreenWindow ? "translate(0, 0)" : "translate(-50%, -50%)"}
       fullScreenWindow={fullScreenWindow}
+      px={0}
     >
       <Window.TitleBar />
-      <Window.Content py={2} px={0}>
+      <Window.Content
+        py={2}
+        px={0}
+        position="relative"
+        height="100%"
+        mb={12}
+        overflowY="auto"
+      >
         {openCreateSale ? (
           <CreateSale setOpenCreateSale={setOpenCreateSale} />
         ) : (
           <>
-            <AdminDashboardHeader />
+            {selectedSale ? (
+              <EditSaleHeader
+                id={selectedSale.id}
+                backToSales={() => {
+                  setOpenEditSale(false);
+                  setSelectedSale(undefined);
+                }}
+              />
+            ) : (
+              <AdminDashboardHeader />
+            )}
             <Box w="100%" mt={4}>
-              {salesExist ? (
+              {loading ? (
+                <Text>Loading existing sales...</Text>
+              ) : data ? (
                 <AdminSalesSection
+                  saleData={data.sales}
+                  selectedSale={selectedSale}
+                  setSelectedSale={setSelectedSale}
                   setOpenCreateSale={setOpenCreateSale}
+                  setOpenEditSale={setOpenEditSale}
                   openCreateSale={openCreateSale}
+                  openEditSale={openEditSale}
                 />
               ) : (
                 <AdminDashboardEmptyState

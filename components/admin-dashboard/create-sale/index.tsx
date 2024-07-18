@@ -4,13 +4,14 @@ import NftTokensSection from "./nft-tokens";
 import SetTokenPrice from "./set-token-price";
 import SaleStartTimeSection from "./start-time-section";
 import WhiteListedAddressesSection from "./whitelisted-addresses";
-import CreateButtonContainer from "./create-button-container";
-
-import { useCreateSale } from "@/hooks/useCreateSale";
-import { useAccount } from "wagmi";
 import { useFormState } from "@/hooks/useFormState";
+
+import SubmitButtonContainer from "../../commons/submit-button-container";
+import CreateSaleButton from "./create-sale-button";
 import { useTokenIds } from "@/hooks/useTokenIds";
 import { useSaleLocalStorage } from "@/hooks/useSaleLocalStorage";
+import { useAccount } from "wagmi";
+import { useCreateSale } from "@/hooks/useCreateSale";
 
 export const CreateSale = ({
   setOpenCreateSale
@@ -55,7 +56,7 @@ export const CreateSale = ({
   }
 
   return (
-    <Flex direction={"column"} gap={2}>
+    <Flex direction={"column"}>
       <CreateSaleHeader
         setOpenCreateSale={() => setOpenCreateSale((prev) => !prev)}
       />
@@ -90,7 +91,13 @@ export const CreateSale = ({
             setWhitelistedAddresses={setNewWhitelistedAddresses}
           />
         </Box>
-        <CreateButtonContainer address={address} isSubmitting={isSubmitting} />
+        <SubmitButtonContainer>
+          <CreateSaleButton
+            address={address}
+            isSubmitting={isSubmitting}
+            children={"Create Sale"}
+          />
+        </SubmitButtonContainer>
       </form>
     </Flex>
   );
