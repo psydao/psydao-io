@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Alert, AlertIcon, Box, Spinner } from "@chakra-ui/react";
 import { useAccount } from "wagmi";
 import { useGeneralSettingsForm } from "@/hooks/useGeneralSettingsForm";
 
@@ -10,6 +10,7 @@ import NftOwnersSection from "./revenue-split/nft-owners-section";
 import TreasurySection from "./revenue-split/treasury-section";
 import SubmitButtonContainer from "../commons/submit-button-container";
 import SaveButton from "./save-settings-button";
+import { useReadGeneralSettings } from "@/hooks/useReadGeneralSettings";
 
 const GeneralSettingsSection = () => {
   const { address } = useAccount();
@@ -26,8 +27,24 @@ const GeneralSettingsSection = () => {
     openPublicSale,
     setOpenPublicSale,
     handleSaveSettings,
-    isSubmitting
+    isSubmitting,
+    loading,
+    error
   } = useGeneralSettingsForm(address);
+
+  useReadGeneralSettings();
+  if (loading) {
+    return <Spinner size="xl" />;
+  }
+
+  if (error) {
+    return (
+      <Alert status="error">
+        <AlertIcon />
+        {error}
+      </Alert>
+    );
+  }
 
   return (
     <form onSubmit={handleSaveSettings}>
