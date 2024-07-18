@@ -20,7 +20,6 @@ import { useCustomToasts } from "./useCustomToasts";
 import { useSaleLocalStorage } from "./useSaleLocalStorage";
 import { useResize } from "@/hooks/useResize";
 import { uploadAddresses } from "@/lib/server-utils";
-// import { useMintNextBatch } from "./useMintNextBatch";
 
 export const useCreateSale = (
   setOpenCreateSale: React.Dispatch<React.SetStateAction<boolean>>,
@@ -35,8 +34,6 @@ export const useCreateSale = (
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [newSale, setNewSale] = useState<AdminSale | null>(null);
   const { width } = useResize();
-
-  // const { mintNextBatch, mintSuccess } = useMintNextBatch();
 
   const { data: hash, writeContract, isPending, error } = useWriteContract();
   const { isSuccess: transactionSuccess } = useWaitForTransactionReceipt({
@@ -152,8 +149,6 @@ export const useCreateSale = (
       whitelistedArray,
       writeContract,
       width
-      // mintNextBatch,
-      // mintSuccess
     ]
   );
 
