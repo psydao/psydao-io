@@ -19,7 +19,7 @@ export const getTokensOnSale = gql`
 
 export const getAllSalesWithTokens = gql`
   query GetAllSalesWithTokens {
-    sales {
+    sales(orderBy: batchID) {
       batchID
       blockNumber
       ceilingPrice
