@@ -4,6 +4,7 @@ interface TokenOnSale {
 }
 
 export interface Sale {
+  ipfsHash: string;
   batchID: string;
   blockNumber: string;
   ceilingPrice: string;

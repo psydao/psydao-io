@@ -1,12 +1,14 @@
 import { Box, Divider, Flex } from "@chakra-ui/react";
 import { useAccount } from "wagmi";
 import { useEffect, useState } from "react";
-import { type Sale, type AdminSale } from "@/lib/types";
+import { type Sale } from "@/lib/types";
 import PsyButton from "../ui/psy-button";
 import AdminSaleComponent from "./admin-sale-component";
 import SubmitButtonContainer from "../commons/submit-button-container";
 import EditSaleWindow from "../edit-sale-window";
 import { formatEther } from "viem";
+import SubmitSaleButton from "../commons/submit-sale-button";
+import { useEditSale } from "@/hooks/useEditSale";
 
 export const AdminSalesSection = ({
   setOpenCreateSale,
@@ -25,21 +27,14 @@ export const AdminSalesSection = ({
   openCreateSale: boolean;
   saleData: Sale[];
 }) => {
+  const { handleEditSale } = useEditSale();
   const { address } = useAccount();
-  const whitelistedAddresses: string | null = localStorage.getItem(
-    "whitelistedAddresses"
-  );
+  const [existingWhitelistedAddresses, setExistingWhitelistedAddresses] =
+    useState<string[]>([]);
   const [newWhitelistedAddresses, setNewWhitelistedAddresses] = useState("");
   const [addressesToRemove, setAddressesToRemove] = useState<string[]>([]);
   const [floorPrice, setFloorPrice] = useState<string>("");
   const [ceilingPrice, setCeilingPrice] = useState<string>("");
-  const splitNewWhitelistedAddresses =
-    newWhitelistedAddresses.length > 0
-      ? newWhitelistedAddresses.split(", ")
-      : [];
-  const whitelistedArray: string[] = whitelistedAddresses
-    ? (JSON.parse(whitelistedAddresses) as string[])
-    : [];
 
   useEffect(() => {
     if (selectedSale) {
@@ -47,10 +42,6 @@ export const AdminSalesSection = ({
       setCeilingPrice(formatEther(BigInt(selectedSale.ceilingPrice)));
     }
   }, [selectedSale]);
-
-  const handleEditSale = () => {
-    console.log("edit!");
-  };
 
   return (
     <Box textAlign={"start"} py={4} px={4} position="relative">
@@ -70,6 +61,7 @@ export const AdminSalesSection = ({
                   <AdminSaleComponent
                     sale={sale}
                     index={index}
+                    setWhitelistedAddresses={setExistingWhitelistedAddresses}
                     setSelectedSale={setSelectedSale}
                     setOpenEditSale={setOpenEditSale}
                   />
@@ -93,34 +85,46 @@ export const AdminSalesSection = ({
           </SubmitButtonContainer>
         </Flex>
       ) : (
-        <Flex
-          justifyContent="center"
-          flexDirection="column"
-          alignItems="center"
-          width="100%"
+        <form
+          onSubmit={(e) =>
+            selectedSale
+              ? handleEditSale(
+                  e,
+                  selectedSale.batchID,
+                  addressesToRemove,
+                  newWhitelistedAddresses.split(", "),
+                  existingWhitelistedAddresses
+                )
+              : console.error("no sale selected")
+          }
         >
-          <EditSaleWindow
-            selectedSale={selectedSale}
-            floorPrice={floorPrice}
-            ceilingPrice={ceilingPrice}
-            setFloorPrice={setFloorPrice}
-            setCeilingPrice={setCeilingPrice}
-            addressesToRemove={addressesToRemove}
-            setAddressesToRemove={setAddressesToRemove}
-            setNewWhitelistedAddresses={setNewWhitelistedAddresses}
-            whitelistedArray={whitelistedArray}
-            newWhitelistedAddresses={newWhitelistedAddresses}
-          />
-          <SubmitButtonContainer>
-            <PsyButton
-              customStyle={{ width: "100%" }}
-              onClick={() => handleEditSale()}
-              isDisabled={!address}
-            >
-              Save
-            </PsyButton>
-          </SubmitButtonContainer>
-        </Flex>
+          <Flex
+            justifyContent="center"
+            flexDirection="column"
+            alignItems="center"
+            width="100%"
+          >
+            <EditSaleWindow
+              selectedSale={selectedSale}
+              floorPrice={floorPrice}
+              setFloorPrice={setFloorPrice}
+              ceilingPrice={ceilingPrice}
+              setCeilingPrice={setCeilingPrice}
+              addressesToRemove={addressesToRemove}
+              setAddressesToRemove={setAddressesToRemove}
+              setNewWhitelistedAddresses={setNewWhitelistedAddresses}
+              whitelistedArray={existingWhitelistedAddresses}
+              newWhitelistedAddresses={newWhitelistedAddresses}
+            />
+            <SubmitButtonContainer>
+              <SubmitSaleButton
+                type="edit"
+                address={address}
+                isSubmitting={false}
+              />
+            </SubmitButtonContainer>
+          </Flex>
+        </form>
       )}
     </Box>
   );

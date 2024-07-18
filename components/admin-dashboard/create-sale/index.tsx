@@ -7,11 +7,11 @@ import WhiteListedAddressesSection from "./whitelisted-addresses";
 import { useFormState } from "@/hooks/useFormState";
 
 import SubmitButtonContainer from "../../commons/submit-button-container";
-import CreateSaleButton from "./create-sale-button";
 import { useTokenIds } from "@/hooks/useTokenIds";
 import { useSaleLocalStorage } from "@/hooks/useSaleLocalStorage";
 import { useAccount } from "wagmi";
 import { useCreateSale } from "@/hooks/useCreateSale";
+import SubmitSaleButton from "../../commons/submit-sale-button";
 
 export const CreateSale = ({
   setOpenCreateSale
@@ -92,10 +92,10 @@ export const CreateSale = ({
           />
         </Box>
         <SubmitButtonContainer>
-          <CreateSaleButton
+          <SubmitSaleButton
             address={address}
             isSubmitting={isSubmitting}
-            children={"Create Sale"}
+            type="create"
           />
         </SubmitButtonContainer>
       </form>

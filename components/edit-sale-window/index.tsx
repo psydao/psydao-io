@@ -8,8 +8,8 @@ import SaleStatusSection from "../admin-dashboard/edit-sale/sale-status-section"
 
 const EditSaleWindow = (props: {
   selectedSale: Sale | undefined;
-  floorPrice: string | undefined;
-  ceilingPrice: string | undefined;
+  floorPrice: string;
+  ceilingPrice: string;
   setFloorPrice: React.Dispatch<React.SetStateAction<string>>;
   setCeilingPrice: React.Dispatch<React.SetStateAction<string>>;
   addressesToRemove: string[];
@@ -43,8 +43,8 @@ const EditSaleWindow = (props: {
         initialValue={props.ceilingPrice}
       />
       <WhiteListedAddressesSection
-        // addressesToRemove={props.addressesToRemove}
-        // setAddressesToRemove={props.setAddressesToRemove}
+        addressesToRemove={props.addressesToRemove}
+        setAddressesToRemove={props.setAddressesToRemove}
         addressArray={props.whitelistedArray}
         setWhitelistedAddresses={props.setNewWhitelistedAddresses}
       />

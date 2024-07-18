@@ -4,6 +4,10 @@ interface PinataResponse {
   Timestamp: string;
 }
 
+type IpfsHashResponse = {
+  addresses: string[];
+};
+
 export const uploadAddresses = async (addresses: string[]): Promise<string> => {
   try {
     const jwtRes = await fetch("/api/generate-jwt", { method: "POST" });
@@ -32,6 +36,21 @@ export const uploadAddresses = async (addresses: string[]): Promise<string> => {
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Unknown error";
     console.error("Error uploading addresses:", message);
+    throw new Error(message);
+  }
+};
+
+export const getAddresses = async (ipfsHash: string): Promise<string[]> => {
+  try {
+    const res = await fetch(`https://gateway.pinata.cloud/ipfs/${ipfsHash}`);
+    if (!res.ok) {
+      throw new Error(`Failed to fetch addresses: ${res.statusText}`);
+    }
+    const json: IpfsHashResponse = (await res.json()) as IpfsHashResponse;
+    return json.addresses;
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    console.error("Error getting addresses:", message);
     throw new Error(message);
   }
 };
