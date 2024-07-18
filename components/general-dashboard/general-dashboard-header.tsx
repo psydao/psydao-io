@@ -1,9 +1,8 @@
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { Divider, Flex, Text } from "@chakra-ui/react";
-import GeneralDashboardLink from "./general-dashboard-link";
 import { Close, Open } from "../ui/window-manager";
 
-const AdminDashboardHeader = () => {
+const GeneralDashboardHeader = () => {
   return (
     <Flex direction={"column"} w={"100%"}>
       <Flex
@@ -13,8 +12,8 @@ const AdminDashboardHeader = () => {
         width={"100%"}
       >
         <Flex alignItems={"center"} gap={1}>
-          <Close id="admin-dashboard" cursor={"pointer"}>
-            <Open id="nft-sale">
+          <Close id="general-dashboard" cursor={"pointer"}>
+            <Open id="admin-dashboard">
               <ArrowBackIcon h={6} w={6} color={"#F2BEBE"} />
             </Open>
           </Close>
@@ -23,10 +22,9 @@ const AdminDashboardHeader = () => {
             color={"#269200"}
             fontFamily={"Amiri"}
           >
-            Admin Dashboard
+            General Dashboard
           </Text>
         </Flex>
-        <GeneralDashboardLink />
       </Flex>
       <Divider
         orientation="horizontal"
@@ -38,4 +36,4 @@ const AdminDashboardHeader = () => {
   );
 };
 
-export default AdminDashboardHeader;
+export default GeneralDashboardHeader;

@@ -1,8 +1,8 @@
 import { useMemo } from "react";
 import { useMediaQuery } from "@chakra-ui/react";
-import { Window } from "@/components/window";
-import Iframe from "@/components/iframe";
-import { useWindowManager } from "@/components/window-manager";
+import { Window } from "@/components/ui/window";
+import Iframe from "@/components/ui/iframe";
+import { useWindowManager } from "@/components/ui/window-manager";
 
 export const Blog = () => {
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");

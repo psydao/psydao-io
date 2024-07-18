@@ -170,6 +170,12 @@
       {
         "indexed": false,
         "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
         "name": "floor",
         "type": "uint256"
       },
@@ -416,6 +422,17 @@
   },
   {
     "inputs": [
+      { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
+      { "internalType": "uint256", "name": "_floor", "type": "uint256" },
+      { "internalType": "uint256", "name": "_ceiling", "type": "uint256" }
+    ],
+    "name": "setNftPrices",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
       { "internalType": "address", "name": "_psycSale", "type": "address" }
     ],
     "name": "setPsycSaleContract",
@@ -466,17 +483,6 @@
       { "internalType": "string", "name": "_newuri", "type": "string" }
     ],
     "name": "updateBaseUri",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
-      { "internalType": "uint256", "name": "_floorPrice", "type": "uint256" },
-      { "internalType": "uint256", "name": "_ceilingPrice", "type": "uint256" }
-    ],
-    "name": "updateTokenPrices",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

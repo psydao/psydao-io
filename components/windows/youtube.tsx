@@ -1,6 +1,6 @@
 import { Box, useBreakpointValue, type BoxProps } from "@chakra-ui/react";
 
-import { Window } from "@/components/window";
+import { Window } from "@/components/ui/window";
 
 interface YoutubeProps extends Omit<BoxProps, "children"> {
   embedId?: string;

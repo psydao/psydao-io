@@ -41,4 +41,13 @@ export type AdminSale = {
   floorPrice: string;
   startDate: string;
   startTime: string;
+  tokenIds: number[];
+};
+
+export type GeneralSettings = {
+  revenue: string;
+  buyLimit: string;
+  treasury: string;
+  royalties: string;
+  nftOwners: string;
 };

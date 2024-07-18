@@ -3,7 +3,7 @@ import { useAccount } from "wagmi";
 import { useState, useEffect } from "react";
 import { FaAngleRight } from "react-icons/fa";
 import { type AdminSale } from "@/lib/types";
-import PsyButton from "../psy-button";
+import PsyButton from "../ui/psy-button";
 
 type Sale = {
   ceilingPrice: string;

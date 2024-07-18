@@ -3,7 +3,7 @@ import { WhitepaperLink } from "../../commons/whitepaper-link";
 import { PrivateSaleSwitch } from "../../commons/privatesale-switch";
 import NftSaleTabs from "../nft-sale-tabs";
 import { useTokenContext } from "@/providers/TokenContext";
-import { Open } from "@/components/window-manager";
+import { Open } from "@/components/ui/window-manager";
 import { useAccount } from "wagmi";
 import { whitelistedAddresses } from "@/components/admin-dashboard/whitelisted-addresses";
 

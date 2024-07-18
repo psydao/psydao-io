@@ -12,15 +12,15 @@ import type { NextPage } from "next";
 import { FaDiscord, FaTwitter, FaYoutube } from "react-icons/fa";
 import { ToastContainer } from "react-toastify";
 
-import { BackgroundGrid } from "@/components/background-grid";
-import { Blobs } from "@/components/blobs";
-import { Csr } from "@/components/csr";
-import { Grid } from "@/components/grid";
-import { GridProvider } from "@/components/grid-context";
-import { Head } from "@/components/head";
-import { Marquee } from "@/components/marquee";
-import { Menu } from "@/components/menu";
-import { Open, WindowManager } from "@/components/window-manager";
+import { BackgroundGrid } from "@/components/ui/background-grid";
+import { Blobs } from "@/components/ui/blobs";
+import { Csr } from "@/components/ui/csr";
+import { Grid } from "@/components/ui/grid";
+import { GridProvider } from "@/components/ui/grid-context";
+import { Head } from "@/components/ui/head";
+import { Marquee } from "@/components/ui/marquee";
+import { Menu } from "@/components/ui/menu";
+import { Open, WindowManager } from "@/components/ui/window-manager";
 import { Manifesto } from "@/components/windows/manifesto";
 import { Radio } from "@/components/windows/radio";
 import { MixpanelTracking } from "@/services/mixpanel";
@@ -31,6 +31,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { NftSaleWidget } from "@/components/nft-sale-widget";
 import WalletConnectHome from "@/components/connectWalletHome";
 import AdminDashboardWidget from "@/components/admin-dashboard";
+import GeneralDashboard from "@/components/general-dashboard";
 
 // TODO Extract Pill component since it seems it will become a basic primitive
 // in our design
@@ -190,6 +191,7 @@ const Homepage: NextPage = () => {
                     <SwapWidget />
                     <NftSaleWidget />
                     <AdminDashboardWidget />
+                    <GeneralDashboard />
                     <Radio />
                     <Manifesto />
                   </Box>

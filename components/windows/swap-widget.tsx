@@ -11,9 +11,9 @@ import { formatUnits, parseEther } from "viem";
 import ImageNext from "next/image";
 import { ArrowDownIcon } from "@chakra-ui/icons";
 import { Box, Flex, Image, Link, Text, useMediaQuery } from "@chakra-ui/react";
-import { Window } from "@/components/window";
-import { TokenContainer } from "@/components/token-container";
-import { ConnectWalletButton } from "@/components/connect-button";
+import { Window } from "@/components/ui/window";
+import { TokenContainer } from "@/components/ui/token-container";
+import { ConnectWalletButton } from "@/components/ui/connect-button";
 import { useRescrictedCountries } from "hooks/restrictedCountries";
 import { RestrictedCountries } from "@/components/swap-widget/RestrictedCountries";
 import { SwapTsAndCs } from "@/components/swap-widget/SwapTsAndCs";
@@ -21,7 +21,7 @@ import { psyDAOTokenPrice } from "@/constants/psyTokenPrice";
 import { useReadEthPrice } from "@/services/web3/useReadEthPrice";
 import { useReadTokenPriceInDollar } from "@/services/web3/useReadTokenPriceInDollar";
 import { useReadTotalTokensForSale } from "@/services/web3/useReadTotalTokensForSale";
-import { useWindowManager } from "@/components/window-manager";
+import { useWindowManager } from "@/components/ui/window-manager";
 
 const SwapWidgetTitle = () => (
   <Box p={4} pb={8}>

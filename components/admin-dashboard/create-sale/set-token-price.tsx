@@ -1,11 +1,30 @@
 import { Box, Flex, FormLabel, Input, Image, Text } from "@chakra-ui/react";
+import { useState } from "react";
 
 type SetTokenPriceProps = {
   setPrice: React.Dispatch<React.SetStateAction<string>>;
   type: "floor" | "ceiling";
+  currentFloorPrice?: string;
 };
 
 const SetTokenPrice = (props: SetTokenPriceProps) => {
+  const [error, setError] = useState<string | null>(null);
+
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    props.setPrice(value);
+
+    if (
+      props.type === "floor" &&
+      props.currentFloorPrice &&
+      parseFloat(value) <= parseFloat(props.currentFloorPrice)
+    ) {
+      setError("Floor price must be greater than the current floor price.");
+    } else {
+      setError(null);
+    }
+  };
+
   return (
     <Flex
       width="100%"
@@ -42,7 +61,7 @@ const SetTokenPrice = (props: SetTokenPriceProps) => {
           w={{ base: "100%", md: 20 }}
           fontSize="22px"
           fontFamily={"Inter"}
-          onChange={(e) => props.setPrice(e.target.value)}
+          onChange={handlePriceChange}
           required
           border={"none"}
           focusBorderColor="transparent"
@@ -56,9 +75,12 @@ const SetTokenPrice = (props: SetTokenPriceProps) => {
           bg="#F2BEBE1A"
         >
           <Image src="/windows/swap/ETH.svg" alt="ETH icon" />
-          <Text fontWeight="semibold">ETH</Text>
+          <Text fontWeight="semibold" fontFamily={"Poppins"}>
+            ETH
+          </Text>
         </Flex>
       </Box>
+      {error && <Text color="red.500">{error}</Text>}
     </Flex>
   );
 };

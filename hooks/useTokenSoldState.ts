@@ -1,4 +1,4 @@
-import { psycSaleContractConfig } from "@/lib/contract-config";
+import { psycSaleContractConfig } from "@/lib/sale-contract-config";
 import { useReadContract } from "wagmi";
 
 export function useTokenSoldState(tokenId: number) {

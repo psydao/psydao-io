@@ -9,10 +9,10 @@ import {
   useMediaQuery
 } from "@chakra-ui/react";
 import { IoIosPlay, IoIosPause } from "react-icons/io";
-import { Window } from "@/components/window";
-import { useWindowManager } from "@/components/window-manager";
+import { Window } from "@/components/ui/window";
+import { useWindowManager } from "@/components/ui/window-manager";
 import { useMemo } from "react";
-import { MotionBox } from "@/components/motion-box";
+import { MotionBox } from "@/components/ui/motion-box";
 import { useAudio } from "@/hooks/useAudio";
 import { manifestoPlayer } from "@/constants/manifestoPlayer";
 
