@@ -2,22 +2,23 @@ import React, { useEffect, useState, useRef, useMemo } from "react";
 import { Box, Flex, Grid } from "@chakra-ui/react";
 import { useQuery } from "@apollo/client";
 import { getAllSalesWithTokens } from "@/services/graph";
-import { type TokenItem, type GetAllSalesWithTokensData } from "@/lib/types";
+import type { TokenItem, GetAllSalesWithTokensData, Sale } from "@/lib/types";
 import { formatUnits } from "viem";
 import PsycItem from "../../psyc-item";
 import useRandomImage from "@/hooks/useRandomImage";
 
 interface MintSectionProps {
   isRandom: boolean;
+  activeSale: Sale | undefined;
 }
 
 const images = ["/psyc1.png", "/psyc2.png", "/psyc3.png", "/psyc4.png"];
 
-const MintSection = ({ isRandom }: MintSectionProps) => {
+const MintSection = (props: MintSectionProps) => {
   const { loading, error, data } = useQuery<GetAllSalesWithTokensData>(
     getAllSalesWithTokens
   );
-  const currentImageIndex = useRandomImage(isRandom, images);
+  const currentImageIndex = useRandomImage(props.isRandom, images);
   const tokensRef = useRef<TokenItem[]>([]);
   const [randomToken, setRandomToken] = useState<TokenItem | null>(null);
 
@@ -36,20 +37,19 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
   }, [data, currentImageIndex]);
 
   useEffect(() => {
-    if (isRandom && tokens.length > 0) {
+    if (props.isRandom && tokens.length > 0) {
       tokensRef.current = tokens;
       setRandomToken(tokens[currentImageIndex % tokens.length] ?? null);
     }
-  }, [tokens, currentImageIndex, isRandom]);
-
-  // useEffect(() => {
-  //   console.log(data, "data");
-  // }, [data]);
+  }, [tokens, currentImageIndex, props.isRandom]);
 
   if (loading) return <Box textAlign="center">Loading...</Box>;
   if (error) return <Box textAlign="center">Error loading data</Box>;
+  const tokenIdsForActivation = props.activeSale
+    ? props.activeSale.tokensOnSale.map((token) => parseInt(token.tokenID))
+    : [];
 
-  if (isRandom && randomToken) {
+  if (props.isRandom && randomToken) {
     const tokenIdsForActivation = tokensRef.current.map((token) =>
       parseInt(token.tokenId)
     );
@@ -77,27 +77,22 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
           }}
           gap={6}
         >
-          {data?.sales.map((sale, saleIndex) => {
-            const tokenIdsForActivation = sale.tokensOnSale.map((token) =>
-              parseInt(token.tokenID)
-            );
-            return sale.tokensOnSale.map((token) => (
-              <PsycItem
-                isPrivateSale={false}
-                key={token.id}
-                item={{
-                  src: images[saleIndex % images.length] ?? "",
-                  price: `${formatUnits(BigInt(sale.ceilingPrice), 18)}`,
-                  isSold: false,
-                  batchId: sale.batchID,
-                  tokenId: token.tokenID
-                }}
-                index={parseInt(token.id, 10)}
-                isRandom={isRandom}
-                tokenIdsForActivation={tokenIdsForActivation}
-              />
-            ));
-          })}
+          {props.activeSale?.tokensOnSale.map((token, index) => (
+            <PsycItem
+              isPrivateSale={false}
+              key={token.id}
+              item={{
+                src: images[index % images.length] ?? "",
+                price: `${formatUnits(BigInt(props.activeSale ? props.activeSale.ceilingPrice : "0"), 18)}`,
+                isSold: false,
+                batchId: props.activeSale ? props.activeSale.batchID : "1",
+                tokenId: token.tokenID
+              }}
+              index={parseInt(token.id, 10)}
+              isRandom={props.isRandom}
+              tokenIdsForActivation={tokenIdsForActivation}
+            />
+          ))}
         </Grid>
       </Box>
     );

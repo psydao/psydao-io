@@ -36,6 +36,10 @@ export type GetTokensByOwnerData = {
   tokens: OwnedTokenItem[];
 };
 
+export type GetSaleByIdData = {
+  sale: Sale;
+};
+
 export type AdminSale = {
   ceilingPrice: string;
   floorPrice: string;
