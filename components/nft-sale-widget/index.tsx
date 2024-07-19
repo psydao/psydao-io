@@ -17,6 +17,7 @@ import { TokenProvider } from "@/providers/TokenContext";
 import type { Sale, GetSaleByIdData } from "@/lib/types";
 import { useQuery } from "@apollo/client";
 import { getSaleById } from "@/services/graph";
+import { InterimState } from "../commons/interim-state";
 
 export const NftSaleWidget = () => {
   const [activeSale, setActiveSale] = useState<Sale>();
@@ -60,41 +61,9 @@ export const NftSaleWidget = () => {
               setActiveSale={setActiveSale}
             />
             {loading ? (
-              <Flex
-                h={{ base: "150px", md: "300px" }}
-                w={"100%"}
-                alignItems={"center"}
-                justifyContent={"center"}
-              >
-                <Flex
-                  p={{ base: 2, sm: 6 }}
-                  bg={"#F2BEBE1A"}
-                  border={"1px solid #e2e2e2"}
-                  borderRadius={"18px"}
-                >
-                  <Text fontSize={{ base: "14px", sm: "18px" }}>
-                    Loading sales, please wait...
-                  </Text>
-                </Flex>
-              </Flex>
+              <InterimState type="loading" />
             ) : error ? (
-              <Flex
-                h={{ base: "150px", md: "300px" }}
-                w={"100%"}
-                alignItems={"center"}
-                justifyContent={"center"}
-              >
-                <Flex
-                  p={{ base: 2, sm: 6 }}
-                  bg={"#F2BEBE1A"}
-                  border={"1px solid #e2e2e2"}
-                  borderRadius={"18px"}
-                >
-                  <Text fontSize={{ base: "14px", sm: "18px" }}>
-                    Error: Failed to load sales
-                  </Text>
-                </Flex>
-              </Flex>
+              <InterimState type="error" />
             ) : (
               <TabPanels>
                 <TabPanel px={0}>
