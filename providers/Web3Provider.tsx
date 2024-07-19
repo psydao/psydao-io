@@ -18,7 +18,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const { wallets } = getDefaultWallets();
 
-const wagmiConfig = getDefaultConfig({
+export const wagmiConfig = getDefaultConfig({
   appName: process.env.NEXT_PUBLIC_APP_NAME ?? "",
   projectId: process.env.NEXT_PUBLIC_PROJECT_ID ?? "",
   wallets: [

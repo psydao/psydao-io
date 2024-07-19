@@ -47,7 +47,8 @@ export type AdminSale = {
 export type GeneralSettings = {
   revenue: string;
   buyLimit: string;
-  treasury: string;
   royalties: string;
-  nftOwners: string;
+  treasury: string;
+  ownerPercentage: string;
+  openPublicSale: boolean;
 };
