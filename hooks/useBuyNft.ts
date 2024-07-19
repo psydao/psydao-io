@@ -8,7 +8,7 @@ import {
 import { customToast } from "@/components/toasts/SwapSuccess";
 import { useToast } from "@chakra-ui/react";
 import { Zoom } from "react-toastify";
-// import { parseUnits } from "viem";
+
 import {
   handleTransactionError,
   handleTransactionSuccess,
@@ -16,6 +16,7 @@ import {
 } from "@/utils/transactionHandlers";
 import { useResize } from "./useResize";
 import { psycSaleContractConfig } from "@/lib/sale-contract-config";
+import { toWei } from "@/utils/saleUtils";
 
 type ArgsType =
   | [number, string[]]
@@ -85,13 +86,13 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
           args = [batchId, erc721TokenId];
         }
 
-        // const parsedAmount = parseUnits(price, 18);
+        const parsedAmount = toWei(price);
 
         writeContract({
           ...psycSaleContractConfig,
           functionName: functionName,
-          args: args
-          // value: parsedAmount
+          args: args,
+          value: parsedAmount
         });
       } catch (error) {
         handleTransactionError(error, width);
