@@ -9,6 +9,7 @@ import useActivateSale from "@/hooks/useActivateSale";
 import { handleTransactionError } from "@/utils/transactionHandlers";
 import { useResize } from "@/hooks/useResize";
 import { useTokenSoldState } from "@/hooks/useTokenSoldState";
+import { Token } from "graphql";
 
 interface PsycItemProps {
   item: TokenItem;
@@ -18,6 +19,41 @@ interface PsycItemProps {
   tokenIdsForActivation: number[];
   loading: boolean;
 }
+
+interface PsycItemSkeletonProps {
+  isRandom: boolean;
+}
+
+export const PsycItemSkeleton = (props: PsycItemSkeletonProps) => {
+  return (
+    <Flex
+      maxW={{
+        sm: props.isRandom ? "100%" : "170px",
+        lg: props.isRandom ? "500px" : "170px"
+      }}
+      mx="auto"
+      w={"100%"}
+      direction={"column"}
+      gap={4}
+      alignItems={"center"}
+    >
+      <Flex
+        w="100%"
+        h={props.isRandom ? "180px" : "208px"}
+        borderRadius={props.isRandom ? "15px" : "20px"}
+        overflow="hidden"
+        position="relative"
+        border="1px solid #e2e2e2"
+        boxShadow="md"
+        bg={"#F2BEBE1A"}
+        alignItems={"center"}
+        justifyContent={"center"}
+      >
+        <Text fontFamily={"Inter"}>Loading...</Text>
+      </Flex>
+    </Flex>
+  );
+};
 
 const PsycItem = ({
   item,

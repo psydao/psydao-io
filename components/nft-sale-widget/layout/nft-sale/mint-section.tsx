@@ -4,12 +4,13 @@ import { useQuery } from "@apollo/client";
 import { getAllSalesWithTokens } from "@/services/graph";
 import type { TokenItem, GetAllSalesWithTokensData, Sale } from "@/lib/types";
 import { formatUnits } from "viem";
-import PsycItem from "../../psyc-item";
+import PsycItem, { PsycItemSkeleton } from "../../psyc-item";
 import useRandomImage from "@/hooks/useRandomImage";
 
 interface MintSectionProps {
   isRandom: boolean;
   activeSale: Sale | undefined;
+  loading: boolean;
 }
 
 const images = ["/psyc1.png", "/psyc2.png", "/psyc3.png", "/psyc4.png"];
@@ -57,14 +58,18 @@ const MintSection = (props: MintSectionProps) => {
     return (
       <Box textAlign="center" py={4}>
         <Flex justifyContent="center">
-          <PsycItem
-            item={randomToken}
-            index={currentImageIndex}
-            isRandom={true}
-            isPrivateSale={false}
-            tokenIdsForActivation={tokenIdsForActivation}
-            loading={loading}
-          />
+          {props.loading ? (
+            <PsycItemSkeleton isRandom={true} />
+          ) : (
+            <PsycItem
+              item={randomToken}
+              index={currentImageIndex}
+              isRandom={true}
+              isPrivateSale={false}
+              tokenIdsForActivation={tokenIdsForActivation}
+              loading={loading}
+            />
+          )}
         </Flex>
       </Box>
     );
@@ -78,23 +83,31 @@ const MintSection = (props: MintSectionProps) => {
           }}
           gap={6}
         >
-          {props.activeSale?.tokensOnSale.map((token, index) => (
-            <PsycItem
-              isPrivateSale={false}
-              key={token.id}
-              item={{
-                src: images[index % images.length] ?? "",
-                price: `${formatUnits(BigInt(props.activeSale ? props.activeSale.ceilingPrice : "0"), 18)}`,
-                isSold: false,
-                batchId: props.activeSale ? props.activeSale.batchID : "1",
-                tokenId: token.tokenID
-              }}
-              index={parseInt(token.id, 10)}
-              isRandom={props.isRandom}
-              tokenIdsForActivation={tokenIdsForActivation}
-              loading={loading}
-            />
-          ))}
+          {props.loading ? (
+            <>
+              <PsycItemSkeleton isRandom={props.isRandom} />
+              <PsycItemSkeleton isRandom={props.isRandom} />
+              <PsycItemSkeleton isRandom={props.isRandom} />
+            </>
+          ) : (
+            props.activeSale?.tokensOnSale.map((token, index) => (
+              <PsycItem
+                isPrivateSale={false}
+                key={token.id}
+                item={{
+                  src: images[index % images.length] ?? "",
+                  price: `${formatUnits(BigInt(props.activeSale ? props.activeSale.ceilingPrice : "0"), 18)}`,
+                  isSold: false,
+                  batchId: props.activeSale ? props.activeSale.batchID : "1",
+                  tokenId: token.tokenID
+                }}
+                index={parseInt(token.id, 10)}
+                isRandom={props.isRandom}
+                tokenIdsForActivation={tokenIdsForActivation}
+                loading={loading}
+              />
+            ))
+          )}
         </Grid>
       </Box>
     );
