@@ -16,6 +16,7 @@ interface PsycItemProps {
   isRandom: boolean;
   isPrivateSale: boolean;
   tokenIdsForActivation: number[];
+  loading: boolean;
 }
 
 const PsycItem = ({
@@ -23,7 +24,8 @@ const PsycItem = ({
   index,
   isRandom,
   isPrivateSale,
-  tokenIdsForActivation
+  tokenIdsForActivation,
+  loading
 }: PsycItemProps) => {
   const { buyNft, isPending, isConfirming, isMinting, isConfirmed } = useBuyNft(
     isPrivateSale,
@@ -68,6 +70,7 @@ const PsycItem = ({
       key={index}
       maxW={isRandom ? "500px" : "170px"}
       mx="auto"
+      w={loading ? "100%" : "auto"}
       direction={"column"}
       gap={4}
       alignItems={"center"}

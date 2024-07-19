@@ -63,6 +63,7 @@ const MintSection = (props: MintSectionProps) => {
             isRandom={true}
             isPrivateSale={false}
             tokenIdsForActivation={tokenIdsForActivation}
+            loading={loading}
           />
         </Flex>
       </Box>
@@ -91,6 +92,7 @@ const MintSection = (props: MintSectionProps) => {
               index={parseInt(token.id, 10)}
               isRandom={props.isRandom}
               tokenIdsForActivation={tokenIdsForActivation}
+              loading={loading}
             />
           ))}
         </Grid>
