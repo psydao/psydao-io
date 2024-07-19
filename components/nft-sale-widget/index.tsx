@@ -5,7 +5,8 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-  Text
+  Text,
+  Flex
 } from "@chakra-ui/react";
 import { Window } from "@/components/ui/window";
 import { useWindowManager } from "@/components/ui/window-manager";
@@ -59,16 +60,47 @@ export const NftSaleWidget = () => {
               setActiveSale={setActiveSale}
             />
             {loading ? (
-              <Text>Loading sales, please wait...</Text>
+              <Flex
+                h={{ base: "150px", md: "300px" }}
+                w={"100%"}
+                alignItems={"center"}
+                justifyContent={"center"}
+              >
+                <Flex
+                  p={{ base: 2, sm: 6 }}
+                  bg={"#F2BEBE1A"}
+                  border={"1px solid #e2e2e2"}
+                  borderRadius={"18px"}
+                >
+                  <Text fontSize={{ base: "14px", sm: "18px" }}>
+                    Loading sales, please wait...
+                  </Text>
+                </Flex>
+              </Flex>
             ) : error ? (
-              <Text>Failed to load sales</Text>
+              <Flex
+                h={{ base: "150px", md: "300px" }}
+                w={"100%"}
+                alignItems={"center"}
+                justifyContent={"center"}
+              >
+                <Flex
+                  p={{ base: 2, sm: 6 }}
+                  bg={"#F2BEBE1A"}
+                  border={"1px solid #e2e2e2"}
+                  borderRadius={"18px"}
+                >
+                  <Text fontSize={{ base: "14px", sm: "18px" }}>
+                    Error: Failed to load sales
+                  </Text>
+                </Flex>
+              </Flex>
             ) : (
               <TabPanels>
                 <TabPanel px={0}>
                   <PsycSaleContent
                     isFullScreen={fullScreenWindow}
                     activeSale={activeSale}
-                    loading={loading}
                   />
                 </TabPanel>
                 <TabPanel h="100%" w="100%">

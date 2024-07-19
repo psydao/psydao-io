@@ -9,7 +9,7 @@ type OwnedNftsProps = {
 };
 
 const OwnedNfts = (props: OwnedNftsProps) => {
-  const images = ["/psyc1.png", "/psyc2.png", "/psyc3.png", "/psyc4.png"];
+  const images = ["/psyc1.webp", "/psyc2.webp", "/psyc3.webp", "/psyc4.webp"];
   const { address } = useAccount();
   const numberOfCopies = countNumberOfCopies(props.nftData ?? { tokens: [] });
 
