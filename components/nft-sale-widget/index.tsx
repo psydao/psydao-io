@@ -68,6 +68,7 @@ export const NftSaleWidget = () => {
                   <PsycSaleContent
                     isFullScreen={fullScreenWindow}
                     activeSale={activeSale}
+                    loading={loading}
                   />
                 </TabPanel>
                 <TabPanel h="100%" w="100%">
