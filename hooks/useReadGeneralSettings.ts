@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useReadContract } from "wagmi";
+import { formatEther } from "viem"; // Import formatEther from viem
 import { psycSaleContractConfig } from "@/lib/sale-contract-config";
 
 interface RevenueSplit {
@@ -75,7 +76,8 @@ export const useReadGeneralSettings = () => {
   useEffect(() => {
     setBuyLimit(buyLimitData?.toString() ?? "0");
     setIsPrivateSale(privateSaleData !== null ? !privateSaleData : false);
-    setRoyaltiesRevenue(royaltiesData?.toString() ?? "0");
+
+    setRoyaltiesRevenue(royaltiesData ? formatEther(royaltiesData) : "0");
 
     if (revenueSplitData) {
       setRevenueSplit({

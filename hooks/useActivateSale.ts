@@ -9,17 +9,17 @@ const useActivateSale = () => {
   const { writeContract } = useWriteContract();
 
   const activateSale = useCallback(
-    async (tokenIds: number[], onError: (error: unknown) => void) => {
+    async (tokenId: number[], onError: (error: unknown) => void) => {
       try {
         setIsSalesActive(false);
         writeContract({
           address: psycSaleSepolia,
           abi: psycSaleAbiSepolia,
           functionName: "setSalesActive",
-          args: [tokenIds]
+          args: [tokenId]
         });
         setIsSalesActive(true);
-        console.log("Sales activated", tokenIds);
+        console.log("Sales activated", tokenId);
       } catch (error: unknown) {
         onError(error);
       }

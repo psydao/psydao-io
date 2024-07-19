@@ -17,6 +17,7 @@ import {
 import { useResize } from "./useResize";
 import { psycSaleContractConfig } from "@/lib/sale-contract-config";
 import { toWei } from "@/utils/saleUtils";
+import useActivateSale from "./useActivateSale";
 
 type ArgsType =
   | [number, string[]]
@@ -32,7 +33,7 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { width } = useResize();
-
+  const { isSalesActive, activateSale } = useActivateSale();
   const { data: hash, writeContract, isPending, error } = useWriteContract();
 
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
@@ -69,6 +70,13 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
       });
       try {
         setIsMinting(true);
+
+        if (!isSalesActive) {
+          await activateSale([erc721TokenId], (error) => {
+            throw error;
+          });
+        }
+
         let functionName = "";
         let args: ArgsType = [batchId, erc721TokenId];
 
