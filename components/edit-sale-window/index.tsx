@@ -17,6 +17,10 @@ const EditSaleWindow = (props: {
   whitelistedArray: string[];
   newWhitelistedAddresses: string;
   setNewWhitelistedAddresses: React.Dispatch<React.SetStateAction<string>>;
+  saleStatus: "active" | "complete" | "paused";
+  setSaleStatus: React.Dispatch<
+    React.SetStateAction<"active" | "complete" | "paused">
+  >;
 }) => {
   const tokenIds = props.selectedSale
     ? props.selectedSale.tokensOnSale.map((x) => parseInt(x.tokenID))
@@ -31,7 +35,10 @@ const EditSaleWindow = (props: {
       alignItems={"start"}
     >
       <NftTokensSection tokenIds={tokenIds} />
-      <SaleStatusSection />
+      <SaleStatusSection
+        saleStatus={props.saleStatus}
+        setSaleStatus={props.setSaleStatus}
+      />
       <SetTokenPrice
         setPrice={props.setFloorPrice}
         type="floor"
