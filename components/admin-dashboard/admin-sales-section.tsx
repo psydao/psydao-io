@@ -32,7 +32,8 @@ export const AdminSalesSection = ({
   const { address } = useAccount();
   const { handleEditSale, isSubmitting } = useEditSaleForm(
     address,
-    setOpenEditSale
+    setOpenEditSale,
+    selectedSale?.batchID ?? ""
   );
   const [existingWhitelistedAddresses, setExistingWhitelistedAddresses] =
     useState<string[]>([]);

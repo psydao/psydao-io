@@ -17,6 +17,10 @@ export interface GetAllSalesWithTokensData {
   sales: Sale[];
 }
 
+export interface GetSaleByIdData {
+  sale: Sale;
+}
+
 export interface TokenItem {
   src: string;
   price: string;
