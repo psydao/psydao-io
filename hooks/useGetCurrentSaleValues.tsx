@@ -1,9 +1,7 @@
-import { psycSaleContractConfig } from "@/lib/sale-contract-config";
 import type { GetSaleByIdData } from "@/lib/types";
 import { getSaleById } from "@/services/graph";
 import { useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
-import { useReadContract } from "wagmi";
 import { useCustomToasts } from "./useCustomToasts";
 
 export const useGetCurrentSaleValues = (id: string, width: number) => {
@@ -18,11 +16,11 @@ export const useGetCurrentSaleValues = (id: string, width: number) => {
     }
   });
 
-  //! TEMPORARY: Figure out what gives with switchSaleType
-  const { data: isPaused } = useReadContract({
-    ...psycSaleContractConfig,
-    functionName: "paused"
-  });
+  // args = parseInt(id), return paused/unpaused
+  // const { data: saleBatches } = useReadContract({
+  //   ...psycSaleContractConfig,
+  //   functionName: "saleBatches"
+  // });
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/prefer-optional-chain

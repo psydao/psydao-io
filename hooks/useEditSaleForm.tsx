@@ -23,13 +23,28 @@ export const useEditSaleForm = (
   } = useGetCurrentSaleValues(id, width);
   const { showErrorToast, showSuccessToast } = useCustomToasts();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isError, setIsError] = useState(false);
   const { writeContractAsync } = useWriteContract();
+  const [floorPriceHash, setFloorPriceHash] = useState<
+    `0x${string}` | undefined
+  >(undefined);
+  const [ceilingPriceHash, setCeilingPriceHash] = useState<
+    `0x${string}` | undefined
+  >(undefined);
+  const [whitelistHash, setWhitelistHash] = useState<`0x${string}` | undefined>(
+    undefined
+  );
   const { isSuccess: floorPriceSuccess, error: floorPriceError } =
-    useWaitForTransactionReceipt();
+    useWaitForTransactionReceipt({ hash: floorPriceHash });
   const { isSuccess: ceilingPriceSuccess, error: ceilingPriceError } =
-    useWaitForTransactionReceipt();
+    useWaitForTransactionReceipt({
+      hash: ceilingPriceHash
+    });
   const { isSuccess: whitelistSuccess, error: whitelistError } =
-    useWaitForTransactionReceipt();
+    useWaitForTransactionReceipt({
+      hash: whitelistHash
+    });
 
   const handleEditSale = async (
     e: React.FormEvent<HTMLFormElement>,
@@ -72,53 +87,52 @@ export const useEditSaleForm = (
         setIsSubmitting(false);
         return;
       }
-      console.log(
-        currentFloorPrice,
-        currentCeilingPrice,
-        newFloorPrice,
-        newCeilingPrice
-      );
+
       if (
         JSON.stringify(addressesToSubmit.sort()) !==
         JSON.stringify(currentAddresses.sort())
       ) {
         const newIpfsHash = await uploadAddresses(addressesToSubmit);
         const newMerkleRoot = getMerkleRoot(addressesToSubmit);
-        await writeContractAsync({
+        // promise.all these contract calls
+        const merklerootResponse = await writeContractAsync({
           ...psycSaleContractConfig,
           functionName: "updateMerkleRoot",
           args: [batchID, newMerkleRoot, newIpfsHash]
         });
+        setWhitelistHash(merklerootResponse);
       }
       if (parseUnits(newFloorPrice, 18).toString() !== currentFloorPrice) {
-        await writeContractAsync({
+        const floorPriceResponse = await writeContractAsync({
           ...psycSaleContractConfig,
           functionName: "changeFloorPriceOfBatch",
           args: [batchID, parseUnits(newFloorPrice, 18)]
         });
+        setFloorPriceHash(floorPriceResponse);
       }
       if (parseUnits(newCeilingPrice, 18).toString() !== currentCeilingPrice) {
-        await writeContractAsync({
+        const ceilingPriceResponse = await writeContractAsync({
           ...psycSaleContractConfig,
           functionName: "changeCeilingPriceOfBatch",
           args: [batchID, parseUnits(newCeilingPrice, 18)]
         });
+        setCeilingPriceHash(ceilingPriceResponse);
       }
 
-      // TODO: contracts are being redeployed, change these to correct function names later
-      // if (!isPaused && saleStatus === "paused") {
+      // TODO: need to redeploy SG, change these to correct function names later
+      // if (isPausedLocal !== isPausedContract) {
       // writeContract({
       //   ...psycSaleContractConfig,
-      //   functionName: "pause"
+      //   functionName: "switchBatchStatus"
       // });
-      // console.log("pause sale");
-      // } else if (isPaused && saleStatus === "active") {
-      // writeContract({
-      //   ...psycSaleContractConfig,
-      //   functionName: "unpause"
-      // });
-      // console.log("unpause sale");
       // }
+
+      if (isSuccess) {
+        showSuccessToast("Success! Your sale has been edited!", width);
+      }
+      if (isError) {
+        showErrorToast("An error has occurred. Please try again later", width);
+      }
     } catch (error) {
       const message = (error as Error).message || "An error occurred";
       setIsSubmitting(false);
@@ -139,32 +153,21 @@ export const useEditSaleForm = (
 
   useEffect(() => {
     if (ceilingPriceError ?? floorPriceError ?? whitelistError) {
-      console.log("error!");
-      const errorMessage =
-        ceilingPriceError?.message ??
-        floorPriceError?.message ??
-        whitelistError?.message ??
-        "An error occurred";
-      if (errorMessage.includes("user rejected")) {
-        showErrorToast("Transaction rejected by user", width);
-        setIsSubmitting(false);
-        return;
-      }
-      if (errorMessage.includes("invalid price")) {
-        showErrorToast("Ceiling price cannot be less than floor price", width);
-        setIsSubmitting(false);
-        return;
-      }
-      showErrorToast(errorMessage, width);
-      console.error(errorMessage, "error");
+      setIsError(true);
       setIsSubmitting(false);
+      setCeilingPriceHash(undefined);
+      setFloorPriceHash(undefined);
+      setWhitelistHash(undefined);
       return;
     }
 
     if (ceilingPriceSuccess || floorPriceSuccess || whitelistSuccess) {
-      showSuccessToast("Success! This sale has been edited.", width);
+      setIsSuccess(true);
       setIsSubmitting(false);
       setOpenEditSale(false);
+      setCeilingPriceHash(undefined);
+      setFloorPriceHash(undefined);
+      setWhitelistHash(undefined);
       return;
     }
   }, [
@@ -174,9 +177,8 @@ export const useEditSaleForm = (
     ceilingPriceSuccess,
     whitelistError,
     whitelistSuccess,
-    width,
-    showErrorToast,
-    showSuccessToast,
+    isSuccess,
+    isError,
     setOpenEditSale
   ]);
 
