@@ -89,7 +89,6 @@ const PsycItem = ({
           alt={`PSYC ${index + 1}`}
           fill
           objectFit="cover"
-          loading="lazy"
         />
         <Box
           position="absolute"
