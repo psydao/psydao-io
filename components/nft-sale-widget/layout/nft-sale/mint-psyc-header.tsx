@@ -6,8 +6,14 @@ import { useTokenContext } from "@/providers/TokenContext";
 import { Open } from "@/components/ui/window-manager";
 import { useAccount } from "wagmi";
 import { whitelistedAddresses } from "@/components/admin-dashboard/whitelisted-addresses";
+import NftSalesDropdown from "../../commons/sales-dropdown";
+import type { Sale } from "@/lib/types";
+import type { SetStateAction } from "react";
 
-const MintPsycHeader = () => {
+const MintPsycHeader = (props: {
+  activeSale: Sale | undefined;
+  setActiveSale: React.Dispatch<SetStateAction<Sale | undefined>>;
+}) => {
   // TODO: Hide toggle if user is not whitelisted
   const { tokenCount } = useTokenContext();
 
@@ -47,7 +53,13 @@ const MintPsycHeader = () => {
               <WhitepaperLink />
             </Flex>
           </Flex>
-          {isWhitelisted && <PrivateSaleSwitch />}
+          <Flex gap={6}>
+            <NftSalesDropdown
+              activeSale={props.activeSale}
+              setActiveSale={props.setActiveSale}
+            />
+            {isWhitelisted && <PrivateSaleSwitch />}
+          </Flex>
         </Flex>
       </Box>
       <Divider h={"1px"} border={"none"} bg={"#E9BDBD"} width={"100%"} />
