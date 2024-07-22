@@ -61,7 +61,11 @@ export const getAddresses = async (
         throw new Error(`Failed to fetch addresses: ${res.statusText}`);
       }
       const json: IpfsHashResponse = (await res.json()) as IpfsHashResponse;
-      return json.addresses;
+      if (json.addresses) {
+        return json.addresses;
+      } else {
+        return [];
+      }
     } else {
       return [];
     }

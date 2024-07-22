@@ -23,7 +23,9 @@ export const useEditSaleForm = (
   } = useGetCurrentSaleValues(id, width);
   const { showErrorToast, showSuccessToast } = useCustomToasts();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [isSuccess, setIsSuccess] = useState<
+    "ceiling" | "floor" | "whitelist" | undefined
+  >(undefined);
   const [isError, setIsError] = useState(false);
   const { writeContractAsync } = useWriteContract();
   const [floorPriceHash, setFloorPriceHash] = useState<
@@ -126,7 +128,6 @@ export const useEditSaleForm = (
       //   functionName: "switchBatchStatus"
       // });
       // }
-
       if (isSuccess) {
         showSuccessToast("Success! Your sale has been edited!", width);
       }
@@ -161,14 +162,35 @@ export const useEditSaleForm = (
       return;
     }
 
-    if (ceilingPriceSuccess || floorPriceSuccess || whitelistSuccess) {
-      setIsSuccess(true);
+    console.log(isSuccess);
+
+    if (ceilingPriceSuccess) {
+      setIsSuccess("ceiling");
+    }
+
+    if (floorPriceSuccess) {
+      setIsSuccess("floor");
+    }
+
+    if (whitelistSuccess) {
+      setIsSuccess("whitelist");
+    }
+
+    if (isSuccess) {
       setIsSubmitting(false);
       setOpenEditSale(false);
       setCeilingPriceHash(undefined);
       setFloorPriceHash(undefined);
       setWhitelistHash(undefined);
       return;
+    }
+    if (isError) {
+      showErrorToast("An error has occurred. Please try again later", width);
+      setIsSubmitting(false);
+      setOpenEditSale(false);
+      setCeilingPriceHash(undefined);
+      setFloorPriceHash(undefined);
+      setWhitelistHash(undefined);
     }
   }, [
     floorPriceError,
