@@ -161,8 +161,6 @@ export const useEditSaleForm = (
       return;
     }
 
-    console.log(isSuccess);
-
     if (ceilingPriceSuccess) {
       setIsSuccess("ceiling");
     }
