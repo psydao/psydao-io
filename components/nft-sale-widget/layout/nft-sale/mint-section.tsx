@@ -62,7 +62,6 @@ const MintSection = (props: MintSectionProps) => {
             index={currentImageIndex}
             isRandom={true}
             isPrivateSale={false}
-            tokenIdsForActivation={tokenIdsForActivation}
             loading={loading}
           />
         </Flex>
@@ -80,7 +79,7 @@ const MintSection = (props: MintSectionProps) => {
         >
           {props.activeSale?.tokensOnSale.map((token, index) => (
             <PsycItem
-              isPrivateSale={false}
+              isPrivateSale={true}
               key={token.id}
               item={{
                 src: images[index % images.length] ?? "",
@@ -91,7 +90,6 @@ const MintSection = (props: MintSectionProps) => {
               }}
               index={parseInt(token.id, 10)}
               isRandom={props.isRandom}
-              tokenIdsForActivation={tokenIdsForActivation}
               loading={loading}
             />
           ))}

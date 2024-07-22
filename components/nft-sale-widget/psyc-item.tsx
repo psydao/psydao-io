@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Image, Text, Spinner, Tooltip, Flex } from "@chakra-ui/react";
 import NFTPrice from "@/components/commons/nftprice";
 import MintButton from "@/components/ui/mint-button";
@@ -9,14 +9,14 @@ import useActivateSale from "@/hooks/useActivateSale";
 import { handleTransactionError } from "@/utils/transactionHandlers";
 import { useResize } from "@/hooks/useResize";
 import { useTokenSoldState } from "@/hooks/useTokenSoldState";
-import { Token } from "graphql";
+import { getMerkleProof } from "@/services/merkleRootProofs";
+import { whitelistedAddresses } from "../admin-dashboard/whitelisted-addresses";
 
 interface PsycItemProps {
   item: TokenItem;
   index: number;
   isRandom: boolean;
   isPrivateSale: boolean;
-  tokenIdsForActivation: number[];
   loading: boolean;
 }
 
@@ -25,7 +25,6 @@ const PsycItem = ({
   index,
   isRandom,
   isPrivateSale,
-  tokenIdsForActivation,
   loading
 }: PsycItemProps) => {
   const { buyNft, isPending, isConfirming, isMinting, isConfirmed } = useBuyNft(
@@ -33,29 +32,33 @@ const PsycItem = ({
     isRandom
   );
 
-  const { width } = useResize();
-  const { isSalesActive, activateSale } = useActivateSale();
+  // const { width } = useResize();
+  // const { isSalesActive, activateSale } = useActivateSale();
   const { address } = useAccount();
   const { isSold, isLoading: isSoldLoading } = useTokenSoldState(
     parseInt(item.tokenId)
   );
 
-  const handleMint = async () => {
-    if (!isSalesActive) {
-      try {
-        await activateSale(tokenIdsForActivation, (error) =>
-          handleTransactionError(error, width)
-        );
-      } catch (error) {
-        console.error("Failed to activate sales:", error);
-        return;
-      }
+  const whitelist: `0x${string}`[] = [
+    "0x7c6d212E46E38F7c1A9C12D1664Ce90B202715A4",
+    "0x03961e7f170eb959fDA928c7c9Ce8A5973ee52B6",
+    "0x57b69EE64F985ea2f62BDdf8bD6233262b543410"
+  ];
+
+  const [proof, setProof] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (isPrivateSale && address) {
+      const proof = getMerkleProof(address, whitelist);
+      setProof(proof);
     }
+  }, [address, isPrivateSale]);
+  const handleMint = async () => {
     await buyNft(
       parseInt(item.batchId),
       parseInt(item.tokenId),
-      tokenIdsForActivation,
-      item.price
+      item.price,
+      proof
     );
   };
 
