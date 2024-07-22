@@ -1,3 +1,5 @@
+import { CID } from "multiformats/cid";
+
 interface PinataResponse {
   IpfsHash: string;
   PinSize: number;
@@ -6,6 +8,15 @@ interface PinataResponse {
 
 type IpfsHashResponse = {
   addresses: string[];
+};
+
+const isValidIpfsHash = (hash: string): boolean => {
+  try {
+    CID.parse(hash);
+    return true;
+  } catch (error) {
+    return false;
+  }
 };
 
 export const uploadAddresses = async (addresses: string[]): Promise<string> => {
@@ -40,14 +51,20 @@ export const uploadAddresses = async (addresses: string[]): Promise<string> => {
   }
 };
 
-export const getAddresses = async (ipfsHash: string): Promise<string[]> => {
+export const getAddresses = async (
+  ipfsHash: string
+): Promise<string[] | []> => {
   try {
-    const res = await fetch(`https://gateway.pinata.cloud/ipfs/${ipfsHash}`);
-    if (!res.ok) {
-      throw new Error(`Failed to fetch addresses: ${res.statusText}`);
+    if (ipfsHash && ipfsHash.length > 0 && isValidIpfsHash(ipfsHash)) {
+      const res = await fetch(`https://gateway.pinata.cloud/ipfs/${ipfsHash}`);
+      if (!res.ok) {
+        throw new Error(`Failed to fetch addresses: ${res.statusText}`);
+      }
+      const json: IpfsHashResponse = (await res.json()) as IpfsHashResponse;
+      return json.addresses;
+    } else {
+      return [];
     }
-    const json: IpfsHashResponse = (await res.json()) as IpfsHashResponse;
-    return json.addresses;
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Unknown error";
     console.error("Error getting addresses:", message);
