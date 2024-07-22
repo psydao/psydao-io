@@ -138,7 +138,6 @@ export const useEditSaleForm = (
       const message = (error as Error).message || "An error occurred";
       setIsSubmitting(false);
       console.error(message, "error");
-      console.log(message);
       if (message.includes("Invalid Price")) {
         showErrorToast("Ceiling price cannot be less than floor price", width);
         setIsSubmitting(false);
@@ -161,8 +160,6 @@ export const useEditSaleForm = (
       setWhitelistHash(undefined);
       return;
     }
-
-    console.log(isSuccess);
 
     if (ceilingPriceSuccess) {
       setIsSuccess("ceiling");
