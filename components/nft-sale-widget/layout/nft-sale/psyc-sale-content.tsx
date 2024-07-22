@@ -11,7 +11,7 @@ const PsycSaleContent = (props: PsycSaleContentProps) => {
   return (
     <>
       <MintRandomPsycHeader isFullScreen={props.isFullScreen} />
-      <MintSection isRandom />
+      <MintSection isRandom isFullscreen={props.isFullScreen} />
       <Divider
         h={"1px"}
         border={"none"}

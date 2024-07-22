@@ -9,6 +9,7 @@ import useRandomImage from "@/hooks/useRandomImage";
 
 interface MintSectionProps {
   isRandom: boolean;
+  isFullscreen?: boolean;
 }
 
 const images = ["/psyc1.png", "/psyc2.png", "/psyc3.png", "/psyc4.png"];
