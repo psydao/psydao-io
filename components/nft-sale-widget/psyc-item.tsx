@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Image, Text, Spinner, Tooltip, Flex } from "@chakra-ui/react";
+import { Box, Text, Spinner, Tooltip, Flex } from "@chakra-ui/react";
 import NFTPrice from "@/components/commons/nftprice";
 import MintButton from "@/components/ui/mint-button";
 import useBuyNft from "@/hooks/useBuyNft";
@@ -9,6 +9,7 @@ import useActivateSale from "@/hooks/useActivateSale";
 import { handleTransactionError } from "@/utils/transactionHandlers";
 import { useResize } from "@/hooks/useResize";
 import { useTokenSoldState } from "@/hooks/useTokenSoldState";
+import Image from "next/image";
 
 interface PsycItemProps {
   item: TokenItem;
@@ -24,8 +25,7 @@ const PsycItem = ({
   index,
   isRandom,
   isPrivateSale,
-  tokenIdsForActivation,
-  loading
+  tokenIdsForActivation
 }: PsycItemProps) => {
   const { buyNft, isPending, isConfirming, isMinting, isConfirmed } = useBuyNft(
     isPrivateSale,
@@ -70,14 +70,14 @@ const PsycItem = ({
       key={index}
       maxW={isRandom ? "500px" : "170px"}
       mx="auto"
-      w={loading ? "100%" : "auto"}
+      w={"100%"}
       direction={"column"}
       gap={4}
       alignItems={"center"}
     >
       <Box
         w="100%"
-        h={isRandom ? "auto" : "208px"}
+        h={isRandom ? "195px" : "208px"}
         borderRadius={isRandom ? "15px" : "20px"}
         overflow="hidden"
         position="relative"
@@ -87,8 +87,7 @@ const PsycItem = ({
         <Image
           src={item.src}
           alt={`PSYC ${index + 1}`}
-          w="100%"
-          h="100%"
+          fill
           objectFit="cover"
           loading="lazy"
         />
