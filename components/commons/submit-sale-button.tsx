@@ -1,14 +1,15 @@
 import { Button, Flex, Spinner, Text } from "@chakra-ui/react";
 
-type CreateSaleButtonProps = {
+type SubmitSaleButtonProps = {
   address: string | undefined;
   isSubmitting: boolean;
-  children: React.ReactNode;
+  type: "create" | "edit";
 };
 
 const ButtonContent = (props: {
   address: string | undefined;
   isSubmitting: boolean;
+  type: "create" | "edit";
 }) => {
   return (
     <Flex
@@ -21,13 +22,19 @@ const ButtonContent = (props: {
         <Spinner color="white" size={"sm"} speed="0.65s" />
       )}
       <Text fontFamily={"Poppins Semibold"} fontSize={14}>
-        {props.isSubmitting ? "Creating..." : "Create"}
+        {props.type === "create"
+          ? props.isSubmitting
+            ? "Creating..."
+            : "Create Sale"
+          : props.isSubmitting
+            ? "Loading..."
+            : "Save"}
       </Text>
     </Flex>
   );
 };
 
-const CreateSaleButton = (props: CreateSaleButtonProps) => {
+const SubmitSaleButton = (props: SubmitSaleButtonProps) => {
   return (
     <Button
       type="submit"
@@ -54,9 +61,10 @@ const CreateSaleButton = (props: CreateSaleButtonProps) => {
       <ButtonContent
         isSubmitting={props.isSubmitting}
         address={props.address}
+        type={props.type}
       />
     </Button>
   );
 };
 
-export default CreateSaleButton;
+export default SubmitSaleButton;

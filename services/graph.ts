@@ -26,7 +26,7 @@ export const getAllSalesWithTokens = gql`
       floorPrice
       ipfsHash
       id
-      tokensOnSale {
+      tokensOnSale(orderBy: tokenID) {
         id
         tokenID
       }

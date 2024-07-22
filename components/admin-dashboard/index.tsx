@@ -21,7 +21,6 @@ const AdminDashboardWidget = () => {
   const { data, loading, error } = useQuery<GetAllSalesWithTokensData>(
     getAllSalesWithTokens
   );
-
   const fullScreenWindow = useMemo(() => {
     return state.fullScreen === "admin-dashboard";
   }, [state]);
