@@ -11,7 +11,7 @@ const SubmitButtonContainer = (props: SubmitButtonContainerProps) => {
       position="fixed"
       bottom={0}
       bg="white"
-      mx="auto"
+      ml="-4px"
       p={4}
       boxShadow={"0px -2px 25.6px 0px #00000040"}
     >

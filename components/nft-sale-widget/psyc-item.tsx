@@ -9,6 +9,7 @@ import useActivateSale from "@/hooks/useActivateSale";
 import { handleTransactionError } from "@/utils/transactionHandlers";
 import { useResize } from "@/hooks/useResize";
 import { useTokenSoldState } from "@/hooks/useTokenSoldState";
+import { Token } from "graphql";
 
 interface PsycItemProps {
   item: TokenItem;
@@ -16,6 +17,7 @@ interface PsycItemProps {
   isRandom: boolean;
   isPrivateSale: boolean;
   tokenIdsForActivation: number[];
+  loading: boolean;
 }
 
 const PsycItem = ({
@@ -23,7 +25,8 @@ const PsycItem = ({
   index,
   isRandom,
   isPrivateSale,
-  tokenIdsForActivation
+  tokenIdsForActivation,
+  loading
 }: PsycItemProps) => {
   const { buyNft, isPending, isConfirming, isMinting, isConfirmed } = useBuyNft(
     isPrivateSale,
@@ -68,6 +71,7 @@ const PsycItem = ({
       key={index}
       maxW={isRandom ? "500px" : "170px"}
       mx="auto"
+      w={loading ? "100%" : "auto"}
       direction={"column"}
       gap={4}
       alignItems={"center"}

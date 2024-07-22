@@ -41,6 +41,10 @@ export type GetTokensByOwnerData = {
   tokens: OwnedTokenItem[];
 };
 
+export type GetSaleByIdData = {
+  sale: Sale;
+};
+
 export type AdminSale = {
   ceilingPrice: string;
   floorPrice: string;
@@ -52,7 +56,8 @@ export type AdminSale = {
 export type GeneralSettings = {
   revenue: string;
   buyLimit: string;
-  treasury: string;
   royalties: string;
-  nftOwners: string;
+  treasury: string;
+  ownerPercentage: string;
+  openPublicSale: boolean;
 };
