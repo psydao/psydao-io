@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  Box,
-  Image,
-  Text,
-  Spinner,
-  Tooltip,
-  Flex,
-  useBreakpointValue
-} from "@chakra-ui/react";
+import { Box, Image, Text, Spinner, Tooltip, Flex } from "@chakra-ui/react";
 import NFTPrice from "@/components/commons/nftprice";
 import MintButton from "@/components/ui/mint-button";
 import useBuyNft from "@/hooks/useBuyNft";
@@ -24,7 +16,7 @@ interface PsycItemProps {
   isRandom: boolean;
   isPrivateSale: boolean;
   tokenIdsForActivation: number[];
-  isFullscreen?: boolean;
+  loading: boolean;
 }
 
 const PsycItem = ({
@@ -33,7 +25,7 @@ const PsycItem = ({
   isRandom,
   isPrivateSale,
   tokenIdsForActivation,
-  isFullscreen
+  loading
 }: PsycItemProps) => {
   const { buyNft, isPending, isConfirming, isMinting, isConfirmed } = useBuyNft(
     isPrivateSale,
@@ -41,11 +33,6 @@ const PsycItem = ({
   );
 
   const { width } = useResize();
-  const minWidth = useBreakpointValue({
-    base: isRandom ? "250px" : "168px",
-    sm: isRandom ? "300px" : "170px",
-    lg: isRandom ? (isFullscreen ? "500px" : "70%") : "170px"
-  });
   const { isSalesActive, activateSale } = useActivateSale();
   const { address } = useAccount();
   const { isSold, isLoading: isSoldLoading } = useTokenSoldState(
@@ -83,10 +70,10 @@ const PsycItem = ({
       key={index}
       maxW={isRandom ? "500px" : "170px"}
       mx="auto"
+      w={loading ? "100%" : "auto"}
       direction={"column"}
       gap={4}
       alignItems={"center"}
-      minW={minWidth}
     >
       <Box
         w="100%"
@@ -103,6 +90,7 @@ const PsycItem = ({
           w="100%"
           h="100%"
           objectFit="cover"
+          loading="lazy"
         />
         <Box
           position="absolute"

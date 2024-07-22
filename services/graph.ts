@@ -39,15 +39,12 @@ export const getSaleById = gql`
     sale(id: $id) {
       batchID
       blockNumber
-      blockTimestamp
       ceilingPrice
       floorPrice
       ipfsHash
-      saleStartTime
+      id
       tokensOnSale {
-        blockNumber
         id
-        price
         tokenID
       }
     }

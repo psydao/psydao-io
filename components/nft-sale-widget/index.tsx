@@ -1,10 +1,12 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Image,
   useMediaQuery,
   TabPanel,
   TabPanels,
-  Tabs
+  Tabs,
+  Text,
+  Flex
 } from "@chakra-ui/react";
 import { Window } from "@/components/ui/window";
 import { useWindowManager } from "@/components/ui/window-manager";
@@ -12,9 +14,24 @@ import MintPsycHeader from "./layout/nft-sale/mint-psyc-header";
 import PsycSaleContent from "./layout/nft-sale/psyc-sale-content";
 import OwnedNftsContent from "./layout/owned-nfts/owned-nfts-section";
 import { TokenProvider } from "@/providers/TokenContext";
+import type { Sale, GetSaleByIdData } from "@/lib/types";
+import { useQuery } from "@apollo/client";
+import { getSaleById } from "@/services/graph";
+import { InterimState } from "../commons/interim-state";
 
 export const NftSaleWidget = () => {
+  const [activeSale, setActiveSale] = useState<Sale>();
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
+  const { data, loading, error } = useQuery<GetSaleByIdData>(getSaleById, {
+    variables: { id: activeSale ? activeSale.id : "1" }
+  });
+
+  useEffect(() => {
+    if (data) {
+      setActiveSale(data.sale);
+    }
+  }, [data, setActiveSale]);
+
   const { state } = useWindowManager();
 
   const fullScreenWindow = useMemo(() => {
@@ -39,15 +56,27 @@ export const NftSaleWidget = () => {
       <Window.Content py={2} px={0} height={"100%"} width={"100%"}>
         <TokenProvider>
           <Tabs variant={"unstyled"}>
-            <MintPsycHeader />
-            <TabPanels>
-              <TabPanel px={0}>
-                <PsycSaleContent isFullScreen={fullScreenWindow} />
-              </TabPanel>
-              <TabPanel h="100%" w="100%">
-                <OwnedNftsContent isFullScreen={fullScreenWindow} />
-              </TabPanel>
-            </TabPanels>
+            <MintPsycHeader
+              activeSale={activeSale}
+              setActiveSale={setActiveSale}
+            />
+            {loading ? (
+              <InterimState type="loading" />
+            ) : error ? (
+              <InterimState type="error" />
+            ) : (
+              <TabPanels>
+                <TabPanel px={0}>
+                  <PsycSaleContent
+                    isFullScreen={fullScreenWindow}
+                    activeSale={activeSale}
+                  />
+                </TabPanel>
+                <TabPanel h="100%" w="100%">
+                  <OwnedNftsContent isFullScreen={fullScreenWindow} />
+                </TabPanel>
+              </TabPanels>
+            )}
           </Tabs>
         </TokenProvider>
         <Image
