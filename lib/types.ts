@@ -27,6 +27,7 @@ export interface TokenItem {
   isSold: boolean;
   batchId: string;
   tokenId: string;
+  ipfsHash: string;
 }
 
 export type OwnedTokenItem = {
