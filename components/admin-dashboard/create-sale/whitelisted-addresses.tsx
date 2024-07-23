@@ -1,7 +1,10 @@
 import { Flex, Input, Text, Tooltip } from "@chakra-ui/react";
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
+import ValueContainer from "./value-container";
 
 type WhiteListedAddressesSectionProps = {
+  addressesToRemove?: string[];
+  setAddressesToRemove?: React.Dispatch<React.SetStateAction<string[]>>;
   setWhitelistedAddresses: React.Dispatch<React.SetStateAction<string>>;
   addressArray: string[];
 };
@@ -47,13 +50,25 @@ const WhiteListedAddressesSection = (
         borderRadius={"16px"}
         boxShadow={"2px 2px 4px 0px #0000001F inset"}
       />
-      {/* <Flex gap={2} flexWrap={"wrap"}>
-        {addressesToDisplay.map((address, index) => {
+      <Flex gap={2} flexWrap={"wrap"}>
+        {props.addressArray.map((address, index) => {
           return (
-            <ValueContainer key={index} value={address} isWhitelistedAddress />
+            <ValueContainer
+              key={index}
+              value={address}
+              isWhitelistedAddress
+              removeAddress={() => {
+                props.setAddressesToRemove && props.addressesToRemove
+                  ? props.setAddressesToRemove([
+                      ...props.addressesToRemove,
+                      address
+                    ])
+                  : {};
+              }}
+            />
           );
         })}
-      </Flex> */}
+      </Flex>
     </Flex>
   );
 };

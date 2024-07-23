@@ -13,7 +13,10 @@ const OwnedNfts = (props: OwnedNftsProps) => {
   const { address } = useAccount();
   const numberOfCopies = countNumberOfCopies(props.nftData ?? { tokens: [] });
 
-  // TODO: Add check to see if sale is private and re-add price and mint button if public
+  if (!address) {
+    return null;
+  }
+
   return (
     <Box textAlign="left" py={4} px={4} maxWidth="170px">
       <Grid
@@ -35,7 +38,6 @@ const OwnedNfts = (props: OwnedNftsProps) => {
             copiesOwned={numberOfCopies[token.tokenId] ?? 0}
             src={images[index % images.length] ?? ""}
             index={index}
-            // TODO: Add public and private sale checks
             isPrivateSale={false}
             isOwned={token.owner === address}
           />

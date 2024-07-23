@@ -4,6 +4,7 @@ interface TokenOnSale {
 }
 
 export interface Sale {
+  ipfsHash: string;
   batchID: string;
   blockNumber: string;
   ceilingPrice: string;
@@ -16,12 +17,17 @@ export interface GetAllSalesWithTokensData {
   sales: Sale[];
 }
 
+export interface GetSaleByIdData {
+  sale: Sale;
+}
+
 export interface TokenItem {
   src: string;
   price: string;
   isSold: boolean;
   batchId: string;
   tokenId: string;
+  ipfsHash: string;
 }
 
 export type OwnedTokenItem = {
@@ -34,10 +40,6 @@ export type OwnedTokenItem = {
 
 export type GetTokensByOwnerData = {
   tokens: OwnedTokenItem[];
-};
-
-export type GetSaleByIdData = {
-  sale: Sale;
 };
 
 export type AdminSale = {

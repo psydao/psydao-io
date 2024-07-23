@@ -33,7 +33,8 @@ export const TokenProvider: React.FC<{ children: ReactNode }> = ({
       },
       onCompleted: (data) => {
         setTokenCount(data?.tokens.length ?? 0);
-      }
+      },
+      skip: !address
     }
   );
 

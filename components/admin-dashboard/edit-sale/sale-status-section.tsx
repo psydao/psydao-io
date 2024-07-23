@@ -1,7 +1,12 @@
 import { Flex, Text } from "@chakra-ui/react";
 import SaleStatusDropdown from "./sale-status-dropdown";
 
-const SaleStatusSection = () => {
+const SaleStatusSection = (props: {
+  saleStatus: "active" | "paused" | "complete";
+  setSaleStatus: React.Dispatch<
+    React.SetStateAction<"active" | "paused" | "complete">
+  >;
+}) => {
   return (
     <Flex
       alignItems={"center"}
@@ -13,7 +18,10 @@ const SaleStatusSection = () => {
       <Text fontFamily={"Inter"} fontSize={18} color={"black"}>
         Sale Status
       </Text>
-      <SaleStatusDropdown />
+      <SaleStatusDropdown
+        saleStatus={props.saleStatus}
+        setSaleStatus={props.setSaleStatus}
+      />
     </Flex>
   );
 };

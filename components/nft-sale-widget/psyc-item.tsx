@@ -5,18 +5,16 @@ import MintButton from "@/components/ui/mint-button";
 import useBuyNft from "@/hooks/useBuyNft";
 import { useAccount } from "wagmi";
 import { type TokenItem } from "@/lib/types";
-import useActivateSale from "@/hooks/useActivateSale";
-import { handleTransactionError } from "@/utils/transactionHandlers";
-import { useResize } from "@/hooks/useResize";
 import { useTokenSoldState } from "@/hooks/useTokenSoldState";
+import useFetchProof from "@/hooks/useFetchProof";
 import Image from "next/image";
+import { Token } from "graphql";
 
 interface PsycItemProps {
-  item: TokenItem;
+  item: TokenItem & { whitelist: string[] };
   index: number;
   isRandom: boolean;
   isPrivateSale: boolean;
-  tokenIdsForActivation: number[];
   loading: boolean;
 }
 
@@ -25,45 +23,42 @@ const PsycItem = ({
   index,
   isRandom,
   isPrivateSale,
-  tokenIdsForActivation
+  loading
 }: PsycItemProps) => {
   const { buyNft, isPending, isConfirming, isMinting, isConfirmed } = useBuyNft(
     isPrivateSale,
     isRandom
   );
 
-  const { width } = useResize();
-  const { isSalesActive, activateSale } = useActivateSale();
   const { address } = useAccount();
   const { isSold, isLoading: isSoldLoading } = useTokenSoldState(
     parseInt(item.tokenId)
   );
 
+  const proof = useFetchProof(address, item.ipfsHash, isPrivateSale);
+
+  const isWhitelisted = address ? item.whitelist.includes(address) : false;
+
   const handleMint = async () => {
-    if (!isSalesActive) {
-      try {
-        await activateSale(tokenIdsForActivation, (error) =>
-          handleTransactionError(error, width)
-        );
-      } catch (error) {
-        console.error("Failed to activate sales:", error);
-        return;
-      }
-    }
     await buyNft(
       parseInt(item.batchId),
       parseInt(item.tokenId),
-      tokenIdsForActivation,
-      item.price
+      item.price,
+      proof
     );
   };
 
   const isButtonDisabled =
     !address ||
-    (isSold ?? isPending) ||
+    !isWhitelisted ||
+    ((isRandom ? false : isSold) ?? isPending) ||
     isConfirming ||
     isMinting ||
     isSoldLoading;
+
+  const tooltipLabel = !address
+    ? "You need to connect your wallet"
+    : "You need to be whitelisted to mint";
 
   return (
     <Flex
@@ -97,43 +92,51 @@ const PsycItem = ({
           width="100%"
           height="100%"
           bg={"#00000066"}
-          display={isSold ? "block" : "none"}
-        />
+          display={isSold && !isRandom ? "flex" : "none"}
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Text color="white" fontWeight="bold">
+            Sold
+          </Text>
+        </Box>
         <NFTPrice price={item.price} />
       </Box>
       <Tooltip
-        isDisabled={!!address}
-        label="To mint PSYC NFTs, you need to connect your wallet first."
+        isDisabled={address && isWhitelisted}
+        label={tooltipLabel}
         placement="top"
-        bg={"white"}
-        py={4}
-        px={6}
-        color={"#1A202C"}
-        fontSize={18}
-        maxW={"300px"}
-        whiteSpace={"normal"}
-        borderRadius={"16px"}
-        border={"2px solid #F2BEBE73"}
+        bg="white"
+        py={2}
+        px={4}
+        color="#1A202C"
+        fontSize={14}
+        maxW="300px"
+        whiteSpace="normal"
+        borderRadius="16px"
+        border="2px solid #F2BEBE73"
       >
-        <MintButton
-          customStyle={{ width: "100%", opacity: isButtonDisabled ? 0.5 : 1 }}
-          onClick={handleMint}
-          isDisabled={isButtonDisabled}
-          isRandom={isRandom}
-        >
-          {isConfirmed ? (
-            <Text color="black">Minted</Text>
-          ) : isMinting ? (
-            <>
-              <Spinner size="sm" mr={2} />
-              Minting
-            </>
-          ) : isSold ? (
-            <Text color="black">Sold</Text>
-          ) : (
-            "Mint"
-          )}
-        </MintButton>
+        <Flex justifyContent="center" w="100%">
+          <MintButton
+            customStyle={{ width: "100%", opacity: isButtonDisabled ? 0.5 : 1 }}
+            onClick={handleMint}
+            isDisabled={isButtonDisabled}
+            isRandom={isRandom}
+          >
+            {isConfirmed ? (
+              <Text color="black">Minted</Text>
+            ) : isMinting ? (
+              <>
+                <Spinner size="sm" mr={2} />
+                Minting
+              </>
+            ) : isRandom || !isSold ? (
+              "Mint"
+            ) : (
+              <Text color="black">Sold</Text>
+            )}
+          </MintButton>
+        </Flex>
       </Tooltip>
     </Flex>
   );

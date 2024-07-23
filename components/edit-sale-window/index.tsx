@@ -8,8 +8,8 @@ import SaleStatusSection from "../admin-dashboard/edit-sale/sale-status-section"
 
 const EditSaleWindow = (props: {
   selectedSale: Sale | undefined;
-  floorPrice: string | undefined;
-  ceilingPrice: string | undefined;
+  floorPrice: string;
+  ceilingPrice: string;
   setFloorPrice: React.Dispatch<React.SetStateAction<string>>;
   setCeilingPrice: React.Dispatch<React.SetStateAction<string>>;
   addressesToRemove: string[];
@@ -17,6 +17,10 @@ const EditSaleWindow = (props: {
   whitelistedArray: string[];
   newWhitelistedAddresses: string;
   setNewWhitelistedAddresses: React.Dispatch<React.SetStateAction<string>>;
+  saleStatus: "active" | "complete" | "paused";
+  setSaleStatus: React.Dispatch<
+    React.SetStateAction<"active" | "complete" | "paused">
+  >;
 }) => {
   const tokenIds = props.selectedSale
     ? props.selectedSale.tokensOnSale
@@ -32,7 +36,10 @@ const EditSaleWindow = (props: {
       alignItems={"start"}
     >
       <NftTokensSection tokenIds={tokenIds} />
-      <SaleStatusSection />
+      <SaleStatusSection
+        saleStatus={props.saleStatus}
+        setSaleStatus={props.setSaleStatus}
+      />
       <SetTokenPrice
         setPrice={props.setFloorPrice}
         type="floor"
@@ -44,8 +51,8 @@ const EditSaleWindow = (props: {
         initialValue={props.ceilingPrice}
       />
       <WhiteListedAddressesSection
-        // addressesToRemove={props.addressesToRemove}
-        // setAddressesToRemove={props.setAddressesToRemove}
+        addressesToRemove={props.addressesToRemove}
+        setAddressesToRemove={props.setAddressesToRemove}
         addressArray={props.whitelistedArray}
         setWhitelistedAddresses={props.setNewWhitelistedAddresses}
       />
