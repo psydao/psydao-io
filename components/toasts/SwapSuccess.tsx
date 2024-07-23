@@ -66,7 +66,7 @@ const ToastBody = (props: BodyProps) => {
             fontStyle={"italic"}
             fontFamily={"Amiri"}
             mt={"2px"}
-            maxW={{ base: props.type === "error" ? "100%" : "80%", md: "90%" }}
+            maxW={{ base: props.type === "error" ? "100%" : "80%", md: "100%" }}
           >
             {props.isPsyc && props.type === "default"}
             {props.mainText}

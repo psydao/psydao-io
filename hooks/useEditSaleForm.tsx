@@ -21,7 +21,8 @@ export const useEditSaleForm = (
     floorPrice: currentFloorPrice,
     ipfsHash: currentIpfsHash
   } = useGetCurrentSaleValues(id, width);
-  const { showErrorToast, showSuccessToast } = useCustomToasts();
+  const { showErrorToast, showCustomErrorToast, showSuccessToast } =
+    useCustomToasts();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState<
     "ceiling" | "floor" | "whitelist" | undefined
@@ -140,7 +141,7 @@ export const useEditSaleForm = (
       setWhitelistHash(undefined);
       console.log(message);
       console.error(message, "error");
-      showErrorToast(message, width);
+      showCustomErrorToast(message, width);
     }
   };
 
