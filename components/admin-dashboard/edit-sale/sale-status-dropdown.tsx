@@ -10,7 +10,7 @@ import {
 import { useState } from "react";
 
 interface Status {
-  status: string;
+  status: "Active" | "Complete" | "Paused";
   color: string;
 }
 
@@ -45,7 +45,12 @@ const CustomSVG = (props: { color: string }) => {
   );
 };
 
-const SaleStatusDropdown = () => {
+const SaleStatusDropdown = (props: {
+  saleStatus: "active" | "paused" | "complete";
+  setSaleStatus: React.Dispatch<
+    React.SetStateAction<"active" | "paused" | "complete">
+  >;
+}) => {
   const [currentValue, setCurrentValue] = useState<Status>({
     status: "Active",
     color: "#269200"
@@ -69,15 +74,22 @@ const SaleStatusDropdown = () => {
             </Flex>
           </MenuButton>
           <MenuList>
-            {statusDropdownContent.map((entry) => {
+            {statusDropdownContent.map((entry, index) => {
               return (
                 <MenuItem
+                  key={index}
                   fontFamily={"Inter"}
                   display={"flex"}
                   fontSize={18}
                   gap={2}
                   onClick={() => {
                     setCurrentValue(entry);
+                    props.setSaleStatus(
+                      entry.status.toLowerCase() as
+                        | "active"
+                        | "paused"
+                        | "complete"
+                    );
                   }}
                 >
                   <CustomSVG color={entry.color} />
