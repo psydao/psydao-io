@@ -515,8 +515,7 @@
         "internalType": "uint256",
         "name": "numberOfNftsSoldInBatch",
         "type": "uint256"
-      },
-      { "internalType": "bool", "name": "paused", "type": "bool" }
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -550,15 +549,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "_batchId", "type": "uint256" }
-    ],
-    "name": "switchBatchStatus",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
