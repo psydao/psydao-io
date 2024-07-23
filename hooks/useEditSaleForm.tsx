@@ -129,36 +129,36 @@ export const useEditSaleForm = (
       // });
       // }
       if (isSuccess) {
+        console.log("yay");
         showSuccessToast("Success! Your sale has been edited!", width);
-      }
-      if (isError) {
-        showErrorToast("An error has occurred. Please try again later", width);
       }
     } catch (error) {
       const message = (error as Error).message || "An error occurred";
       setIsSubmitting(false);
+      setCeilingPriceHash(undefined);
+      setFloorPriceHash(undefined);
+      setWhitelistHash(undefined);
+      console.log(message);
       console.error(message, "error");
-      if (message.includes("Invalid Price")) {
-        showErrorToast("Ceiling price cannot be less than floor price", width);
-        setIsSubmitting(false);
-      } else if (message.includes("User rejected")) {
-        showErrorToast("Transaction rejected by user", width);
-        setIsSubmitting(false);
-      } else {
-        showErrorToast(message, width);
-        setIsSubmitting(false);
-      }
+      showErrorToast(message, width);
     }
   };
 
   useEffect(() => {
-    if (ceilingPriceError ?? floorPriceError ?? whitelistError) {
+    if (ceilingPriceError) {
       setIsError(true);
+      return;
+    } else if (floorPriceError) {
+      setIsError(true);
+    } else if (whitelistError) {
+      setIsError(true);
+    }
+
+    if (isError) {
       setIsSubmitting(false);
       setCeilingPriceHash(undefined);
       setFloorPriceHash(undefined);
       setWhitelistHash(undefined);
-      return;
     }
 
     if (ceilingPriceSuccess) {
@@ -172,23 +172,6 @@ export const useEditSaleForm = (
     if (whitelistSuccess) {
       setIsSuccess("whitelist");
     }
-
-    if (isSuccess) {
-      setIsSubmitting(false);
-      setOpenEditSale(false);
-      setCeilingPriceHash(undefined);
-      setFloorPriceHash(undefined);
-      setWhitelistHash(undefined);
-      return;
-    }
-    if (isError) {
-      showErrorToast("An error has occurred. Please try again later", width);
-      setIsSubmitting(false);
-      setOpenEditSale(false);
-      setCeilingPriceHash(undefined);
-      setFloorPriceHash(undefined);
-      setWhitelistHash(undefined);
-    }
   }, [
     floorPriceError,
     floorPriceSuccess,
@@ -200,6 +183,30 @@ export const useEditSaleForm = (
     isError,
     setOpenEditSale
   ]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      setIsSubmitting(false);
+      setOpenEditSale(false);
+      setCeilingPriceHash(undefined);
+      setFloorPriceHash(undefined);
+      setWhitelistHash(undefined);
+      setIsSuccess(undefined);
+      setIsError(false);
+      showSuccessToast("Your sale has been edited!", width);
+      return;
+    }
+    if (isError) {
+      showErrorToast("An error has occurred. Please try again later", width);
+      setIsSubmitting(false);
+      setOpenEditSale(false);
+      setCeilingPriceHash(undefined);
+      setFloorPriceHash(undefined);
+      setWhitelistHash(undefined);
+      setIsSuccess(undefined);
+      setIsError(false);
+    }
+  }, [isSuccess, isError, setOpenEditSale]);
 
   return {
     handleEditSale,
