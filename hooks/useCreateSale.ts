@@ -148,6 +148,7 @@ export const useCreateSale = (
       setOpenCreateSale,
       showDefaultErrorToast,
       showErrorToast,
+      showCustomErrorToast,
       showSuccessToast,
       tokenIds,
       whitelistedArray,

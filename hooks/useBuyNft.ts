@@ -9,15 +9,12 @@ import { customToast } from "@/components/toasts/SwapSuccess";
 import { useToast } from "@chakra-ui/react";
 import { Zoom } from "react-toastify";
 
-import {
-  handleTransactionError,
-  handleTransactionSuccess,
-  handleUserRejection
-} from "@/utils/transactionHandlers";
+import { handleTransactionSuccess } from "@/utils/transactionHandlers";
 import { useResize } from "./useResize";
 import { psycSaleContractConfig } from "@/lib/sale-contract-config";
 import { toWei } from "@/utils/saleUtils";
 import useActivateSale from "./useActivateSale";
+import { useCustomToasts } from "./useCustomToasts";
 
 type ArgsType =
   | [number, string[]]
@@ -38,6 +35,7 @@ const useBuyNft = (
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { width } = useResize();
   const { isSalesActive, activateSale } = useActivateSale();
+  const { showCustomErrorToast } = useCustomToasts();
   const {
     data: hash,
     writeContractAsync,
@@ -126,8 +124,13 @@ const useBuyNft = (
           value: parsedAmount
         });
       } catch (error) {
-        handleTransactionError(error, width);
-        setIsMinting(false);
+        if (error instanceof Error) {
+          showCustomErrorToast(error.message, width);
+          setIsMinting(false);
+        } else {
+          showCustomErrorToast("An error occurred", width);
+          setIsMinting(false);
+        }
       }
     },
     [
@@ -144,11 +147,7 @@ const useBuyNft = (
 
   useEffect(() => {
     if (error) {
-      if (error.message.includes("User rejected")) {
-        handleUserRejection(width);
-      } else {
-        // handleTransactionError(error, width);
-      }
+      showCustomErrorToast(error.message, width);
       setIsMinting(false);
       setIsModalOpen(false);
     } else if (isPending) {

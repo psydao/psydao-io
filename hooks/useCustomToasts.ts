@@ -63,7 +63,7 @@ export const customErrorMessage = (message: string) => {
     return "Ceiling price cannot be less than the floor price.";
   }
   if (message.includes("server error")) {
-    return "Error on the server side. Please try again.";
+    return "A sever error has occurred. Please try again.";
   }
   if (message.includes("OwnableUnauthorizedAccount")) {
     return "Invalid wallet address.";

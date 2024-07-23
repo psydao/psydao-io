@@ -155,13 +155,6 @@ export const useEditSaleForm = (
       setIsError(true);
     }
 
-    if (isError) {
-      setIsSubmitting(false);
-      setCeilingPriceHash(undefined);
-      setFloorPriceHash(undefined);
-      setWhitelistHash(undefined);
-    }
-
     if (ceilingPriceSuccess) {
       setIsSuccess("ceiling");
     }
