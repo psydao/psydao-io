@@ -25,11 +25,7 @@ type ArgsType =
   | [number, number, string[]]
   | [number, number];
 
-const useBuyNft = (
-  isPrivateSale: boolean,
-  isRandom: boolean,
-  isOriginal: boolean
-) => {
+const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
   const { isConnected } = useAccount();
   const toast = useToast();
   const { connect, connectors } = useConnect();
@@ -82,34 +78,18 @@ const useBuyNft = (
         let functionName = "";
         let args: ArgsType = [batchId, erc721TokenId];
 
-        if (isOriginal) {
-          if (isRandom) {
-            functionName = isPrivateSale
-              ? "buyRandomFromBatch"
-              : "buyRandomFromBatch";
-            args = isPrivateSale ? [batchId, proof] : [batchId, []];
-            console.log("Function Name: ", functionName);
-            console.log("Arguments: ", args);
-          } else {
-            functionName = isPrivateSale ? "buyFromBatch" : "buyFromBatch";
-            args = isPrivateSale
-              ? [batchId, erc721TokenId, proof]
-              : [batchId, erc721TokenId, []];
-            console.log("Function Name: ", functionName);
-            console.log("Arguments: ", args);
-          }
-        } else {
-          if (isRandom) {
-            functionName = "buyRandomNftCopyFromBatch";
-            args = [batchId];
-            console.log("Function Name: ", functionName);
-            console.log("Arguments: ", args);
-          } else {
-            functionName = "buyNftCopyFromBatch";
-            args = [batchId, erc721TokenId];
-            console.log("Function Name: ", functionName);
-            console.log("Arguments: ", args);
-          }
+        if (isPrivateSale && isRandom) {
+          functionName = "buyRandomFromBatch";
+          args = [batchId, proof];
+        } else if (!isPrivateSale && isRandom) {
+          functionName = "buyRandomNftCopyFromBatch";
+          args = [batchId];
+        } else if (isPrivateSale && !isRandom) {
+          functionName = "buyFromBatch";
+          args = [batchId, erc721TokenId, proof];
+        } else if (!isPrivateSale && !isRandom) {
+          functionName = "buyNftCopyFromBatch";
+          args = [batchId, erc721TokenId];
         }
 
         const parsedAmount = toWei(price);
@@ -132,11 +112,9 @@ const useBuyNft = (
       toast,
       connectors,
       isPrivateSale,
-      isRandom,
-      isOriginal
+      isRandom
     ]
   );
-
   useEffect(() => {
     if (error) {
       if (error.message.includes("User rejected")) {

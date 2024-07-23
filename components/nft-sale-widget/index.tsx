@@ -21,6 +21,7 @@ import { InterimState } from "../commons/interim-state";
 
 export const NftSaleWidget = () => {
   const [activeSale, setActiveSale] = useState<Sale>();
+  const [isOriginal, setIsOriginal] = useState<boolean>(true);
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
   const { data, loading, error } = useQuery<GetSaleByIdData>(getSaleById, {
     variables: { id: activeSale ? activeSale.id : "1" }
@@ -59,6 +60,8 @@ export const NftSaleWidget = () => {
             <MintPsycHeader
               activeSale={activeSale}
               setActiveSale={setActiveSale}
+              isOriginal={isOriginal}
+              setIsOriginal={setIsOriginal}
             />
             {loading ? (
               <InterimState type="loading" />
@@ -70,6 +73,7 @@ export const NftSaleWidget = () => {
                   <PsycSaleContent
                     isFullScreen={fullScreenWindow}
                     activeSale={activeSale}
+                    isOriginal={isOriginal}
                   />
                 </TabPanel>
                 <TabPanel h="100%" w="100%">

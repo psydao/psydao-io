@@ -1,6 +1,6 @@
-import { keccak256 } from "viem";
 import { MerkleTree } from "merkletreejs";
 import { useUpdateMerkleRoot } from "./web3/useUpdateMerkleRoot";
+import { keccak256 } from "ethers";
 
 // TODO: create file for getting/uploading IPFS
 
