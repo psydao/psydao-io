@@ -28,7 +28,7 @@ export const customErrorMessage = (message: string) => {
   }
 
   if (message.includes("Batch Zero")) {
-    return "The batch ID cannot be Zero";
+    return "The batch ID cannot be zero.";
   }
 
   if (message.includes("Purchase Limit Reached")) {
@@ -64,6 +64,9 @@ export const customErrorMessage = (message: string) => {
   }
   if (message.includes("server error")) {
     return "Error on the server side. Please try again.";
+  }
+  if (message.includes("OwnableUnauthorizedAccount")) {
+    return "Invalid wallet address.";
   }
   return "An unknown error occurred. Please contact an administrator or try again later.";
 };
