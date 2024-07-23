@@ -38,7 +38,12 @@ const useBuyNft = (
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { width } = useResize();
   const { isSalesActive, activateSale } = useActivateSale();
-  const { data: hash, writeContract, isPending, error } = useWriteContract();
+  const {
+    data: hash,
+    writeContractAsync,
+    isPending,
+    error
+  } = useWriteContract();
 
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
     hash
@@ -73,11 +78,11 @@ const useBuyNft = (
       try {
         setIsMinting(true);
 
-        // if (!isSalesActive) {
-        //   await activateSale([erc721TokenId], (error) => {
-        //     throw error;
-        //   });
-        // }
+        if (!isSalesActive && !isOriginal) {
+          await activateSale([erc721TokenId], (error) => {
+            throw error;
+          });
+        }
 
         let functionName = "";
         let args: ArgsType = [batchId, erc721TokenId];
@@ -114,7 +119,7 @@ const useBuyNft = (
 
         const parsedAmount = toWei(price);
 
-        writeContract({
+        await writeContractAsync({
           ...psycSaleContractConfig,
           functionName: functionName,
           args: args,
@@ -128,7 +133,7 @@ const useBuyNft = (
     [
       isConnected,
       connect,
-      writeContract,
+      writeContractAsync,
       toast,
       connectors,
       isPrivateSale,
@@ -142,7 +147,7 @@ const useBuyNft = (
       if (error.message.includes("User rejected")) {
         handleUserRejection(width);
       } else {
-        handleTransactionError(error, width);
+        // handleTransactionError(error, width);
       }
       setIsMinting(false);
       setIsModalOpen(false);
