@@ -44,7 +44,6 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
     async (
       batchId: number,
       erc721TokenId: number,
-      tokenIdsForActivation: number[],
       price: string,
       proof: string[] = []
     ) => {
@@ -64,18 +63,17 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
       console.log({
         batchId,
         erc721TokenId,
-        tokenIdsForActivation,
         price,
         proof
       });
       try {
         setIsMinting(true);
 
-        if (!isSalesActive) {
-          await activateSale([erc721TokenId], (error) => {
-            throw error;
-          });
-        }
+        // if (!isSalesActive) {
+        //   await activateSale([erc721TokenId], (error) => {
+        //     throw error;
+        //   });
+        // }
 
         let functionName = "";
         let args: ArgsType = [batchId, erc721TokenId];
