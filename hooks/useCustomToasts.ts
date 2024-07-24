@@ -12,7 +12,7 @@ export const customErrorMessage = (message: string) => {
   }
 
   if (message.includes("Sale Paused")) {
-    return "NFT Sold. Copy Sale Paused By Owner";
+    return "NFT Sold. Copy Sale Paused By Owner, Contact Admin";
   }
 
   if (message.includes("Limit Identical")) {
