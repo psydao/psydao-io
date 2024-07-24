@@ -9,15 +9,11 @@ import { customToast } from "@/components/toasts/SwapSuccess";
 import { useToast } from "@chakra-ui/react";
 import { Zoom } from "react-toastify";
 
-import {
-  handleTransactionError,
-  handleTransactionSuccess,
-  handleUserRejection
-} from "@/utils/transactionHandlers";
+import { handleTransactionSuccess } from "@/utils/transactionHandlers";
 import { useResize } from "./useResize";
 import { psycSaleContractConfig } from "@/lib/sale-contract-config";
 import { toWei } from "@/utils/saleUtils";
-import useActivateSale from "./useActivateSale";
+import { useCustomToasts } from "./useCustomToasts";
 
 type ArgsType =
   | [number, string[]]
@@ -25,7 +21,11 @@ type ArgsType =
   | [number, number, string[]]
   | [number, number];
 
-const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
+const useBuyNft = (
+  isPrivateSale: boolean,
+  isRandom: boolean,
+  isOriginal: boolean
+) => {
   const { isConnected } = useAccount();
   const toast = useToast();
   const { connect, connectors } = useConnect();
@@ -33,8 +33,13 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { width } = useResize();
-  const { isSalesActive, activateSale } = useActivateSale();
-  const { data: hash, writeContract, isPending, error } = useWriteContract();
+  const { showCustomErrorToast } = useCustomToasts();
+  const {
+    data: hash,
+    writeContractAsync,
+    isPending,
+    error
+  } = useWriteContract();
 
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
     hash
@@ -69,59 +74,69 @@ const useBuyNft = (isPrivateSale: boolean, isRandom: boolean) => {
       try {
         setIsMinting(true);
 
-        // if (!isSalesActive) {
-        //   await activateSale([erc721TokenId], (error) => {
-        //     throw error;
-        //   });
-        // }
-
         let functionName = "";
         let args: ArgsType = [batchId, erc721TokenId];
 
-        if (isPrivateSale && isRandom) {
-          functionName = "buyRandomFromBatch";
-          args = [batchId, proof];
-        } else if (!isPrivateSale && isRandom) {
-          functionName = "buyRandomNftCopyFromBatch";
-          args = [batchId];
-        } else if (isPrivateSale && !isRandom) {
-          functionName = "buyFromBatch";
-          args = [batchId, erc721TokenId, proof];
-        } else if (!isPrivateSale && !isRandom) {
-          functionName = "buyNftCopyFromBatch";
-          args = [batchId, erc721TokenId];
+        if (isOriginal) {
+          if (isRandom) {
+            functionName = isPrivateSale
+              ? "buyRandomFromBatch"
+              : "buyRandomFromBatch";
+            args = isPrivateSale ? [batchId, proof] : [batchId, []];
+            console.log("Function Name: ", functionName);
+            console.log("Arguments: ", args);
+          } else {
+            functionName = isPrivateSale ? "buyFromBatch" : "buyFromBatch";
+            args = isPrivateSale
+              ? [batchId, erc721TokenId, proof]
+              : [batchId, erc721TokenId, []];
+            console.log("Function Name: ", functionName);
+            console.log("Arguments: ", args);
+          }
+        } else {
+          if (isRandom) {
+            functionName = "buyRandomNftCopyFromBatch";
+            args = [batchId];
+            console.log("Function Name: ", functionName);
+            console.log("Arguments: ", args);
+          } else {
+            functionName = "buyNftCopyFromBatch";
+            args = [batchId, erc721TokenId];
+            console.log("Function Name: ", functionName);
+            console.log("Arguments: ", args);
+          }
         }
 
         const parsedAmount = toWei(price);
 
-        writeContract({
+        await writeContractAsync({
           ...psycSaleContractConfig,
           functionName: functionName,
           args: args,
           value: parsedAmount
         });
       } catch (error) {
-        handleTransactionError(error, width);
-        setIsMinting(false);
+        if (error instanceof Error) {
+          console.error(error);
+          setIsMinting(false);
+        }
       }
     },
     [
       isConnected,
       connect,
-      writeContract,
+      writeContractAsync,
       toast,
       connectors,
       isPrivateSale,
-      isRandom
+      isRandom,
+      isOriginal
     ]
   );
+
   useEffect(() => {
     if (error) {
-      if (error.message.includes("User rejected")) {
-        handleUserRejection(width);
-      } else {
-        handleTransactionError(error, width);
-      }
+      showCustomErrorToast(error.message, width);
       setIsMinting(false);
       setIsModalOpen(false);
     } else if (isPending) {

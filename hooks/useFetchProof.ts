@@ -19,12 +19,17 @@ const useFetchProof = (
             addr.startsWith("0x")
           ) as `0x${string}`[];
 
+          if (whitelist.length === 1) {
+            console.warn(
+              "Whitelist contains only one address. Proof will be empty."
+            );
+          }
+
           const formattedAddress: `0x${string}` = address.startsWith("0x")
             ? (address as `0x${string}`)
             : `0x${address}`;
 
           const proof = getMerkleProof(formattedAddress, whitelist);
-
           setProof(proof);
         } catch (error) {
           console.error("Error fetching whitelist or generating proof:", error);

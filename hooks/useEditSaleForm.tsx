@@ -21,7 +21,8 @@ export const useEditSaleForm = (
     floorPrice: currentFloorPrice,
     ipfsHash: currentIpfsHash
   } = useGetCurrentSaleValues(id, width);
-  const { showErrorToast, showSuccessToast } = useCustomToasts();
+  const { showErrorToast, showCustomErrorToast, showSuccessToast } =
+    useCustomToasts();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState<
     "ceiling" | "floor" | "whitelist" | undefined
@@ -96,7 +97,6 @@ export const useEditSaleForm = (
       ) {
         const newIpfsHash = await uploadAddresses(addressesToSubmit);
         const newMerkleRoot = getMerkleRoot(addressesToSubmit);
-        // promise.all these contract calls
         const merklerootResponse = await writeContractAsync({
           ...psycSaleContractConfig,
           functionName: "updateMerkleRoot",
@@ -129,36 +129,29 @@ export const useEditSaleForm = (
       // });
       // }
       if (isSuccess) {
+        console.log("yay");
         showSuccessToast("Success! Your sale has been edited!", width);
-      }
-      if (isError) {
-        showErrorToast("An error has occurred. Please try again later", width);
       }
     } catch (error) {
       const message = (error as Error).message || "An error occurred";
       setIsSubmitting(false);
+      setCeilingPriceHash(undefined);
+      setFloorPriceHash(undefined);
+      setWhitelistHash(undefined);
+      console.log(message);
       console.error(message, "error");
-      if (message.includes("Invalid Price")) {
-        showErrorToast("Ceiling price cannot be less than floor price", width);
-        setIsSubmitting(false);
-      } else if (message.includes("User rejected")) {
-        showErrorToast("Transaction rejected by user", width);
-        setIsSubmitting(false);
-      } else {
-        showErrorToast(message, width);
-        setIsSubmitting(false);
-      }
+      showCustomErrorToast(message, width);
     }
   };
 
   useEffect(() => {
-    if (ceilingPriceError ?? floorPriceError ?? whitelistError) {
+    if (ceilingPriceError) {
       setIsError(true);
-      setIsSubmitting(false);
-      setCeilingPriceHash(undefined);
-      setFloorPriceHash(undefined);
-      setWhitelistHash(undefined);
       return;
+    } else if (floorPriceError) {
+      setIsError(true);
+    } else if (whitelistError) {
+      setIsError(true);
     }
 
     if (ceilingPriceSuccess) {
@@ -172,23 +165,6 @@ export const useEditSaleForm = (
     if (whitelistSuccess) {
       setIsSuccess("whitelist");
     }
-
-    if (isSuccess) {
-      setIsSubmitting(false);
-      setOpenEditSale(false);
-      setCeilingPriceHash(undefined);
-      setFloorPriceHash(undefined);
-      setWhitelistHash(undefined);
-      return;
-    }
-    if (isError) {
-      showErrorToast("An error has occurred. Please try again later", width);
-      setIsSubmitting(false);
-      setOpenEditSale(false);
-      setCeilingPriceHash(undefined);
-      setFloorPriceHash(undefined);
-      setWhitelistHash(undefined);
-    }
   }, [
     floorPriceError,
     floorPriceSuccess,
@@ -200,6 +176,30 @@ export const useEditSaleForm = (
     isError,
     setOpenEditSale
   ]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      setIsSubmitting(false);
+      setOpenEditSale(false);
+      setCeilingPriceHash(undefined);
+      setFloorPriceHash(undefined);
+      setWhitelistHash(undefined);
+      setIsSuccess(undefined);
+      setIsError(false);
+      showSuccessToast("Your sale has been edited!", width);
+      return;
+    }
+    if (isError) {
+      showErrorToast("An error has occurred. Please try again later", width);
+      setIsSubmitting(false);
+      setOpenEditSale(false);
+      setCeilingPriceHash(undefined);
+      setFloorPriceHash(undefined);
+      setWhitelistHash(undefined);
+      setIsSuccess(undefined);
+      setIsError(false);
+    }
+  }, [isSuccess, isError, setOpenEditSale]);
 
   return {
     handleEditSale,

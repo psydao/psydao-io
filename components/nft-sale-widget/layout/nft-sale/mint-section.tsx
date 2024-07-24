@@ -7,17 +7,23 @@ import { formatUnits } from "viem";
 import PsycItem from "../../psyc-item";
 import useRandomImage from "@/hooks/useRandomImage";
 import { getAddresses } from "@/lib/server-utils";
+import usePrivateSale from "@/hooks/usePrivateSale";
 
 interface MintSectionProps {
   isRandom: boolean;
   activeSale: Sale | undefined;
+  isOriginal: boolean;
 }
 
 interface WhitelistedTokenItem extends TokenItem {
   whitelist: string[];
 }
 
-const MintSection = ({ isRandom, activeSale }: MintSectionProps) => {
+const MintSection = ({
+  isRandom,
+  activeSale,
+  isOriginal
+}: MintSectionProps) => {
   const { loading, error, data } = useQuery<GetAllSalesWithTokensData>(
     getAllSalesWithTokens
   );
@@ -38,6 +44,12 @@ const MintSection = ({ isRandom, activeSale }: MintSectionProps) => {
     null
   );
   const [whitelist, setWhitelist] = useState<{ [key: string]: string[] }>({});
+
+  const { isLoading, isPrivateSale } = usePrivateSale();
+
+  useEffect(() => {
+    console.log(!isLoading && isPrivateSale, "isPrivateSale");
+  }, [isPrivateSale]);
 
   useEffect(() => {
     if (activeSale) {
@@ -82,6 +94,8 @@ const MintSection = ({ isRandom, activeSale }: MintSectionProps) => {
   if (loading) return <Box textAlign="center">Loading...</Box>;
   if (error) return <Box textAlign="center">Error loading data</Box>;
 
+  const privateSale = !isLoading && isPrivateSale;
+
   return (
     <Box textAlign="center" py={4} px={4}>
       {isRandom && randomToken ? (
@@ -90,7 +104,8 @@ const MintSection = ({ isRandom, activeSale }: MintSectionProps) => {
             item={randomToken}
             index={currentImageIndex}
             isRandom={true}
-            isPrivateSale={true}
+            isPrivateSale={privateSale}
+            isOriginal={isOriginal}
             loading={loading}
           />
         </Flex>
@@ -104,7 +119,6 @@ const MintSection = ({ isRandom, activeSale }: MintSectionProps) => {
         >
           {activeSale?.tokensOnSale.map((token, index) => (
             <PsycItem
-              isPrivateSale={true}
               key={token.id}
               item={{
                 src: `/psyc${(index % 3) + 1}.webp`,
@@ -117,6 +131,8 @@ const MintSection = ({ isRandom, activeSale }: MintSectionProps) => {
               }}
               index={parseInt(token.id, 10)}
               isRandom={isRandom}
+              isPrivateSale={privateSale}
+              isOriginal={isOriginal}
               loading={loading}
             />
           ))}
