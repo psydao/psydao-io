@@ -141,7 +141,6 @@ export const useEditSaleForm = (
       console.log(message);
       console.error(message, "error");
       showCustomErrorToast(message, width);
-
     }
   };
 
@@ -165,6 +164,7 @@ export const useEditSaleForm = (
 
     if (whitelistSuccess) {
       setIsSuccess("whitelist");
+    }
   }, [
     floorPriceError,
     floorPriceSuccess,
