@@ -10,8 +10,6 @@ import useActivateSale from "@/hooks/useActivateSale";
 import type { Sale } from "@/lib/types";
 import { psycSaleSepolia } from "@/constants/contracts";
 import useFetchTokenOwners from "@/hooks/useFetchTokenOwner";
-import { useCustomToasts } from "@/hooks/useCustomToasts";
-import { useResize } from "@/hooks/useResize";
 import MintButton from "../ui/mint-button";
 
 interface EditSaleWindowProps {
@@ -54,8 +52,6 @@ const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
     : [];
 
   const { owners, loading, error } = useFetchTokenOwners(tokenIds);
-  const { width } = useResize();
-  const { showCustomErrorToast } = useCustomToasts();
 
   const handleActivateSale = async () => {
     console.log("Contract Address:", psycSaleSepolia);
@@ -86,7 +82,6 @@ const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
       console.log("Loading token owners...");
     } else if (error) {
       console.error("Error fetching token owners:", error);
-      showCustomErrorToast(error.message, width);
     } else {
       console.log("Token owners fetched:", owners);
     }
