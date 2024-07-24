@@ -25,7 +25,7 @@ const PsycItem = ({
   isOriginal,
   loading
 }: PsycItemProps) => {
-  const { buyNft, isPending, isConfirming, isMinting, isConfirmed } = useBuyNft(
+  const { buyNft, isPending, isConfirming, isMinting } = useBuyNft(
     isPrivateSale,
     isRandom,
     isOriginal
@@ -130,9 +130,7 @@ const PsycItem = ({
               isDisabled={isButtonDisabled}
               isRandom={isRandom}
             >
-              {isConfirmed ? (
-                <Text color="black">Minted</Text>
-              ) : isMinting ? (
+              {isMinting ? (
                 <>
                   <Spinner size="sm" mr={2} />
                   Minting
@@ -152,9 +150,7 @@ const PsycItem = ({
             isDisabled={isButtonDisabled}
             isRandom={isRandom}
           >
-            {isConfirmed ? (
-              <Text color="black">Minted</Text>
-            ) : isMinting ? (
+            {isMinting ? (
               <>
                 <Spinner size="sm" mr={2} />
                 Minting

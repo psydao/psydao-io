@@ -11,6 +11,10 @@ export const customErrorMessage = (message: string) => {
     return "The floor price cannot be greater than or equal to the current floor price.";
   }
 
+  if (message.includes("Sale Paused")) {
+    return "NFT Sold. Copy Sale Paused By Owner";
+  }
+
   if (message.includes("Limit Identical")) {
     return "You are attempting to change the buy limit to the same value. Please try again.";
   }

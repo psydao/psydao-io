@@ -13,7 +13,6 @@ import { handleTransactionSuccess } from "@/utils/transactionHandlers";
 import { useResize } from "./useResize";
 import { psycSaleContractConfig } from "@/lib/sale-contract-config";
 import { toWei } from "@/utils/saleUtils";
-import useActivateSale from "./useActivateSale";
 import { useCustomToasts } from "./useCustomToasts";
 
 type ArgsType =
@@ -34,7 +33,6 @@ const useBuyNft = (
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { width } = useResize();
-  const { isSalesActive, activateSale } = useActivateSale();
   const { showCustomErrorToast } = useCustomToasts();
   const {
     data: hash,
@@ -75,12 +73,6 @@ const useBuyNft = (
       });
       try {
         setIsMinting(true);
-
-        if (!isSalesActive && !isOriginal) {
-          await activateSale([erc721TokenId], (error) => {
-            throw error;
-          });
-        }
 
         let functionName = "";
         let args: ArgsType = [batchId, erc721TokenId];
@@ -125,10 +117,7 @@ const useBuyNft = (
         });
       } catch (error) {
         if (error instanceof Error) {
-          showCustomErrorToast(error.message, width);
-          setIsMinting(false);
-        } else {
-          showCustomErrorToast("An error occurred", width);
+          console.error(error);
           setIsMinting(false);
         }
       }
