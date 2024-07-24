@@ -97,7 +97,6 @@ export const useEditSaleForm = (
       ) {
         const newIpfsHash = await uploadAddresses(addressesToSubmit);
         const newMerkleRoot = getMerkleRoot(addressesToSubmit);
-        // promise.all these contract calls
         const merklerootResponse = await writeContractAsync({
           ...psycSaleContractConfig,
           functionName: "updateMerkleRoot",
