@@ -4,21 +4,17 @@ import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { psycSaleContractConfig } from "@/lib/sale-contract-config";
 import { useCustomToasts } from "@/hooks/useCustomToasts";
 import { useResize } from "@/hooks/useResize";
-import { parseUnits } from "viem";
+import { type Address, parseUnits } from "viem";
 import { getAddresses, uploadAddresses } from "@/lib/server-utils";
 import { getMerkleRoot, getNewAddresses } from "@/utils/saleUtils";
 import { useGetCurrentSaleValues } from "./useGetCurrentSaleValues";
-import useActivateSale from "./useActivateSale";
-import useFetchTokenOwners from "./useFetchTokenOwner";
-import { psycSaleSepolia } from "@/constants/contracts";
 
 export const useEditSaleForm = (
   address: string | undefined,
   setOpenEditSale: React.Dispatch<React.SetStateAction<boolean>>,
   id: string,
   triggerNftSaleUpdate: () => void,
-  refetchSalesData: () => void,
-  tokenIds: string[]
+  refetchSalesData: () => void
 ) => {
   const toast = useToast();
   const { width } = useResize();
@@ -40,6 +36,9 @@ export const useEditSaleForm = (
   const [whitelistHash, setWhitelistHash] = useState<`0x${string}` | undefined>(
     undefined
   );
+  const [switchSaleStatusHash, setSwitchSaleStatusHash] = useState<
+    Address | undefined
+  >(undefined);
   const {
     isSuccess: floorAndCeilingPriceSuccess,
     error: floorAndCeilingPriceError
@@ -50,30 +49,10 @@ export const useEditSaleForm = (
       hash: whitelistHash
     });
 
-  const { activateSale } = useActivateSale();
-
-  const { owners } = useFetchTokenOwners(tokenIds);
-
-  const handleActivateSale = async () => {
-    const tokensOwnedByContract = owners
-      .filter((owner) => {
-        const isOwnedByContract =
-          owner.owner.toLowerCase() === psycSaleSepolia.toLowerCase();
-        console.log(
-          `Token ID ${owner.id} is owned by contract: ${isOwnedByContract}`
-        );
-        return isOwnedByContract;
-      })
-      .map((token) => parseInt(token.id));
-
-    console.log("tokensOwnedByContract:", tokensOwnedByContract);
-
-    if (tokensOwnedByContract.length > 0) {
-      await activateSale(tokensOwnedByContract);
-    } else {
-      console.error("No tokens are owned by the contract address.");
-    }
-  };
+  const { isSuccess: switchSaleStatusSuccess, error: switchSaleStatusError } =
+    useWaitForTransactionReceipt({
+      hash: switchSaleStatusHash
+    });
 
   const handleEditSale = async (
     e: React.FormEvent<HTMLFormElement>,
@@ -83,7 +62,7 @@ export const useEditSaleForm = (
     existingAddresses: string[],
     newFloorPrice: string,
     newCeilingPrice: string,
-    saleStatusLocal: "active" | "paused",
+    isPausedLocal: boolean,
 
     width: number
   ) => {
@@ -103,6 +82,7 @@ export const useEditSaleForm = (
       parseUnits(newCeilingPrice, 18).toString() !== currentCeilingPrice;
     const floorPriceHasChanged =
       parseUnits(newFloorPrice, 18).toString() !== currentFloorPrice;
+    const saleStatusMustChange = isPausedLocal !== currentSaleBatch[6];
 
     const addressesToSubmit = getNewAddresses(
       addressesToRemove,
@@ -112,13 +92,13 @@ export const useEditSaleForm = (
 
     try {
       const currentAddresses = await getAddresses(currentIpfsHash);
-      const isPausedLocal = saleStatusLocal === "paused";
       const isPausedContract = currentSaleBatch[6];
       if (
         !ceilingPriceHasChanged &&
         !floorPriceHasChanged &&
         JSON.stringify(addressesToSubmit.sort()) ===
-          JSON.stringify(currentAddresses.sort())
+          JSON.stringify(currentAddresses.sort()) &&
+        !saleStatusMustChange
       ) {
         showErrorToast("No changes to submit!", width);
         setIsSubmitting(false);
@@ -167,7 +147,12 @@ export const useEditSaleForm = (
       }
 
       if (isPausedLocal !== isPausedContract) {
-        await handleActivateSale();
+        const switchSaleStatusResponse = await writeContractAsync({
+          ...psycSaleContractConfig,
+          functionName: "switchBatchStatus",
+          args: [batchID]
+        });
+        setSwitchSaleStatusHash(switchSaleStatusResponse);
       }
 
       if (isSuccess) {
@@ -192,11 +177,29 @@ export const useEditSaleForm = (
     if (whitelistSuccess) {
       setIsSuccess(true);
     }
+
+    if (switchSaleStatusSuccess) {
+      setIsSuccess(true);
+    }
+
+    if (floorAndCeilingPriceError) {
+      setIsError(true);
+    }
+
+    if (switchSaleStatusError) {
+      setIsError(true);
+    }
+
+    if (whitelistError) {
+      setIsError(true);
+    }
   }, [
     floorAndCeilingPriceError,
     floorAndCeilingPriceSuccess,
     whitelistError,
     whitelistSuccess,
+    switchSaleStatusSuccess,
+    switchSaleStatusError,
     isSuccess,
     isError,
     setOpenEditSale
@@ -215,6 +218,7 @@ export const useEditSaleForm = (
       showSuccessToast("Your sale has been edited!", width);
       return;
     }
+
     if (isError) {
       showErrorToast("An error has occurred. Please try again later", width);
       setIsSubmitting(false);

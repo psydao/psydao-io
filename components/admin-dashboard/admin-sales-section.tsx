@@ -17,7 +17,6 @@ export const AdminSalesSection = ({
   openEditSale,
   setOpenEditSale,
   setSelectedSale,
-  openCreateSale,
   saleData,
   selectedSale,
   triggerNftSaleUpdate,
@@ -28,22 +27,20 @@ export const AdminSalesSection = ({
   openEditSale: boolean;
   setSelectedSale: React.Dispatch<React.SetStateAction<Sale | undefined>>;
   setOpenEditSale: React.Dispatch<React.SetStateAction<boolean>>;
-  openCreateSale: boolean;
   saleData: Sale[];
   triggerNftSaleUpdate: () => void;
   refetchSalesData: () => void;
 }) => {
   const { width } = useResize();
   const { address } = useAccount();
-  const [tokenIds, setTokenIds] = useState<string[]>([]);
   const { handleEditSale, isSubmitting } = useEditSaleForm(
     address,
     setOpenEditSale,
     selectedSale?.batchID ?? "",
     triggerNftSaleUpdate,
-    refetchSalesData,
-    tokenIds
+    refetchSalesData
   );
+  const [isPaused, setIsPaused] = useState<boolean>(false);
   const [existingWhitelistedAddresses, setExistingWhitelistedAddresses] =
     useState<string[]>([]);
   const [newWhitelistedAddresses, setNewWhitelistedAddresses] =
@@ -52,7 +49,6 @@ export const AdminSalesSection = ({
   const [addressesToRemove, setAddressesToRemove] = useState<string[]>([]);
   const [floorPrice, setFloorPrice] = useState<string>("");
   const [ceilingPrice, setCeilingPrice] = useState<string>("");
-  const [saleStatus, setSaleStatus] = useState<"active" | "paused">("active");
   const [saleComplete, setSaleComplete] = useState<boolean>(false);
 
   const splitNewWhitelistedAddresses =
@@ -64,11 +60,6 @@ export const AdminSalesSection = ({
     if (selectedSale) {
       setFloorPrice(formatEther(BigInt(selectedSale.floorPrice)));
       setCeilingPrice(formatEther(BigInt(selectedSale.ceilingPrice)));
-      setTokenIds(
-        selectedSale.tokensOnSale
-          .map((x) => x.tokenID)
-          .sort((a, b) => parseInt(a) - parseInt(b))
-      );
       setSaleComplete(getSaleComplete(selectedSale));
     }
   }, [selectedSale]);
@@ -98,6 +89,8 @@ export const AdminSalesSection = ({
                       setSelectedSale={setSelectedSale}
                       setOpenEditSale={setOpenEditSale}
                       isComplete={isComplete}
+                      isPaused={isPaused}
+                      setIsPaused={setIsPaused}
                     />
                     <Divider
                       border={"none"}
@@ -131,7 +124,7 @@ export const AdminSalesSection = ({
                   existingWhitelistedAddresses,
                   floorPrice,
                   ceilingPrice,
-                  saleStatus,
+                  isPaused,
                   width
                 )
               : console.error("no sale selected")
@@ -154,8 +147,9 @@ export const AdminSalesSection = ({
               setNewWhitelistedAddresses={setNewWhitelistedAddresses}
               whitelistedArray={existingWhitelistedAddresses}
               newWhitelistedAddresses={newWhitelistedAddresses}
-              setSaleStatus={setSaleStatus}
-              saleStatus={saleStatus}
+              setIsPaused={setIsPaused}
+              isPaused={isPaused}
+              isComplete={saleComplete}
             />
             <SubmitButtonContainer>
               <SubmitSaleButton

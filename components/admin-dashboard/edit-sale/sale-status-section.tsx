@@ -2,8 +2,8 @@ import { Box, Flex, Text } from "@chakra-ui/react";
 import SaleStatusDropdown from "./sale-status-dropdown";
 
 const SaleStatusSection = (props: {
-  saleStatus: "active" | "paused";
-  setSaleStatus: React.Dispatch<React.SetStateAction<"active" | "paused">>;
+  isPaused: boolean;
+  setIsPaused: React.Dispatch<React.SetStateAction<boolean>>;
   isComplete: boolean;
 }) => {
   return (
@@ -43,8 +43,8 @@ const SaleStatusSection = (props: {
         </Box>
       ) : (
         <SaleStatusDropdown
-          saleStatus={props.saleStatus}
-          setSaleStatus={props.setSaleStatus}
+          isPaused={props.isPaused}
+          setIsPaused={props.setIsPaused}
         />
       )}
     </Flex>

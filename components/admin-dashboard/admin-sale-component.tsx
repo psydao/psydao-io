@@ -1,6 +1,9 @@
+import { useGetCurrentSaleValues } from "@/hooks/useGetCurrentSaleValues";
+import { useResize } from "@/hooks/useResize";
 import { getAddresses } from "@/lib/server-utils";
 import { type Sale } from "@/lib/types";
 import { Box, Flex, Icon, Text } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { FaAngleRight } from "react-icons/fa";
 
 type AdminSaleComponentProps = {
@@ -19,6 +22,18 @@ const AdminSaleComponent = (props: AdminSaleComponentProps) => {
     props.setSelectedSale(props.sale);
     props.setOpenEditSale(true);
   };
+
+  const [isPaused, setIsPaused] = useState<boolean>(false);
+
+  const { width } = useResize();
+
+  const { saleBatches } = useGetCurrentSaleValues(props.sale.batchID, width);
+
+  useEffect(() => {
+    if (saleBatches) {
+      setIsPaused(saleBatches[6]);
+    }
+  }, [saleBatches]);
   return (
     <button
       style={{
@@ -41,9 +56,13 @@ const AdminSaleComponent = (props: AdminSaleComponentProps) => {
             rounded="full"
             w={3}
             h={3}
-            bg={props.isComplete ? "#999999" : "#269200"}
+            bg={props.isComplete ? "#999999" : isPaused ? "#E86969" : "#269200"}
           />
-          <Text fontSize="18" color={props.isComplete ? "#727272" : "black"}>
+          <Text
+            fontSize="18"
+            color={props.isComplete ? "#727272" : "black"}
+            fontFamily={"Inter Medium"}
+          >
             Sale ({props.sale.batchID})
           </Text>
         </Flex>

@@ -10,18 +10,21 @@ import {
 import { useState } from "react";
 
 interface Status {
-  status: "Active" | "Complete" | "Paused";
+  status: "Active" | "Paused";
   color: string;
+  paused: boolean;
 }
 
 const statusDropdownContent: Status[] = [
   {
     status: "Active",
-    color: "#269200"
+    color: "#269200",
+    paused: false
   },
   {
     status: "Paused",
-    color: "#E86969"
+    color: "#E86969",
+    paused: true
   }
 ];
 
@@ -42,8 +45,8 @@ const CustomSVG = (props: { color: string }) => {
 };
 
 const SaleStatusDropdown = (props: {
-  saleStatus: "active" | "paused";
-  setSaleStatus: React.Dispatch<React.SetStateAction<"active" | "paused">>;
+  isPaused: boolean;
+  setIsPaused: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [currentValue, setCurrentValue] = useState<Status>({
     status: "Active",
@@ -78,9 +81,7 @@ const SaleStatusDropdown = (props: {
                   gap={2}
                   onClick={() => {
                     setCurrentValue(entry);
-                    props.setSaleStatus(
-                      entry.status.toLowerCase() as "active" | "paused"
-                    );
+                    props.setIsPaused(entry.paused);
                   }}
                 >
                   <CustomSVG color={entry.color} />
