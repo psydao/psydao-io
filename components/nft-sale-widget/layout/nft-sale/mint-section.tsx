@@ -97,7 +97,7 @@ const MintSection = ({
   const privateSale = !isLoading && isPrivateSale;
 
   return (
-    <Box textAlign="center" py={4} px={4}>
+    <Flex textAlign="center" py={4} px={4} justifyContent={"center"}>
       {isRandom && randomToken ? (
         <Flex justifyContent="center">
           <PsycItem
@@ -116,6 +116,8 @@ const MintSection = ({
             sm: "repeat(auto-fit, minmax(170px, 1fr))"
           }}
           gap={6}
+          justifyItems={"center"}
+          maxW={"100%"}
         >
           {activeSale?.tokensOnSale.map((token, index) => (
             <PsycItem
@@ -138,7 +140,7 @@ const MintSection = ({
           ))}
         </Grid>
       )}
-    </Box>
+    </Flex>
   );
 };
 

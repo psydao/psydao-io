@@ -22,7 +22,6 @@ const MintRandomPsycHeader = (props: MintRandomPsycHeaderProps) => {
           alignItems="center"
           justifyContent="center"
           position="relative"
-          bg="white"
           border="2px solid rgba(242, 190, 190, 0.45)"
           borderRadius="full"
           px={2.5}
