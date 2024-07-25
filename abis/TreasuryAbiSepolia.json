@@ -102,13 +102,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "ethBalance",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
       {
@@ -146,6 +139,13 @@
   },
   {
     "inputs": [],
+    "name": "pendingBalances",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "pendingOwner",
     "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
@@ -158,6 +158,27 @@
       { "internalType": "contract PsyNFT", "name": "", "type": "address" }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "psycSale",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "rageQuitBalance",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "receiveERC721Profit",
+    "outputs": [],
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -197,6 +218,15 @@
       { "internalType": "address", "name": "_psyNft", "type": "address" }
     ],
     "name": "updatePsyNftContract",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_psycSale", "type": "address" }
+    ],
+    "name": "updatePsycSaleAddress",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
