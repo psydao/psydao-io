@@ -19,7 +19,8 @@ export const AdminSalesSection = ({
   openCreateSale,
   saleData,
   selectedSale,
-  triggerNftSaleUpdate
+  triggerNftSaleUpdate,
+  refetchSalesData
 }: {
   selectedSale: Sale | undefined;
   setOpenCreateSale: React.Dispatch<React.SetStateAction<boolean>>;
@@ -29,6 +30,7 @@ export const AdminSalesSection = ({
   openCreateSale: boolean;
   saleData: Sale[];
   triggerNftSaleUpdate: () => void;
+  refetchSalesData: () => void;
 }) => {
   const { width } = useResize();
   const { address } = useAccount();
@@ -36,7 +38,8 @@ export const AdminSalesSection = ({
     address,
     setOpenEditSale,
     selectedSale?.batchID ?? "",
-    triggerNftSaleUpdate
+    triggerNftSaleUpdate,
+    refetchSalesData
   );
   const [existingWhitelistedAddresses, setExistingWhitelistedAddresses] =
     useState<string[]>([]);

@@ -13,7 +13,8 @@ export const useEditSaleForm = (
   address: string | undefined,
   setOpenEditSale: React.Dispatch<React.SetStateAction<boolean>>,
   id: string,
-  triggerNftSaleUpdate: () => void
+  triggerNftSaleUpdate: () => void,
+  refetchSalesData: () => void
 ) => {
   const toast = useToast();
   const { width } = useResize();
@@ -181,6 +182,7 @@ export const useEditSaleForm = (
   useEffect(() => {
     if (isSuccess) {
       triggerNftSaleUpdate();
+      refetchSalesData();
       setIsSubmitting(false);
       setOpenEditSale(false);
       setCeilingPriceHash(undefined);

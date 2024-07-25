@@ -15,10 +15,12 @@ import SubmitSaleButton from "../../commons/submit-sale-button";
 
 export const CreateSale = ({
   setOpenCreateSale,
-  triggerNftSaleUpdate
+  triggerNftSaleUpdate,
+  refetchSalesData
 }: {
   setOpenCreateSale: React.Dispatch<React.SetStateAction<boolean>>;
   triggerNftSaleUpdate: () => void;
+  refetchSalesData: () => void;
 }) => {
   const {
     timeInputType,
@@ -47,7 +49,8 @@ export const CreateSale = ({
     setOpenCreateSale,
     tokenIds,
     whitelistedArray,
-    triggerNftSaleUpdate
+    triggerNftSaleUpdate,
+    refetchSalesData
   );
 
   if (isLoading) {
