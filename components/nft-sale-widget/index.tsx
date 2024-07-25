@@ -34,8 +34,6 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
     }
   );
 
-  console.log(data);
-
   useEffect(() => {
     if (data) {
       setActiveSale(data.sale);
@@ -84,27 +82,23 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
               <InterimState type="loading" />
             ) : error ? (
               <InterimState type="error" />
-            ) : (
+            ) : data?.sale ? (
               <TabPanels>
-                {data?.sale ? (
-                  <>
-                    <TabPanel px={0}>
-                      <PsycSaleContent
-                        isFullScreen={fullScreenWindow}
-                        activeSale={activeSale}
-                        isOriginal={isOriginal}
-                      />
-                    </TabPanel>
-                    <TabPanel h="100%" w="100%">
-                      <OwnedNftsContent isFullScreen={fullScreenWindow} />
-                    </TabPanel>
-                  </>
-                ) : (
-                  <Grid h={"100%"} w={"100%"} gridTemplateRows={"30% 1fr"}>
-                    <NFTSaleWidgetEmptyState />
-                  </Grid>
-                )}
+                <TabPanel px={0}>
+                  <PsycSaleContent
+                    isFullScreen={fullScreenWindow}
+                    activeSale={activeSale}
+                    isOriginal={isOriginal}
+                  />
+                </TabPanel>
+                <TabPanel h="100%" w="100%">
+                  <OwnedNftsContent isFullScreen={fullScreenWindow} />
+                </TabPanel>
               </TabPanels>
+            ) : (
+              <Grid h={"100%"} w={"100%"} gridTemplateRows={"30% 1fr"}>
+                <NFTSaleWidgetEmptyState />
+              </Grid>
             )}
           </Tabs>
         </TokenProvider>

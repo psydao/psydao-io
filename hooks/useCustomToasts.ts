@@ -9,7 +9,7 @@ const ERROR_MESSAGES = {
   "Limit Identical":
     "You are attempting to change the buy limit to the same value. Please try again.",
   "No Limit": "You cannot set the buy limit to 0. Please try again.",
-  "Sale Has Not Started": "Cannot edit sale: Sale has not started.",
+  "Sale Has Not Started": "This sale has not yet started.",
   "Not Whitelisted":
     "Cannot access sale: Your connected wallet address is not whitelisted.",
   "Batch Zero": "The batch ID cannot be zero.",
