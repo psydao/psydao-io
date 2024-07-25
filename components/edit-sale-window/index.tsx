@@ -1,16 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Flex } from "@chakra-ui/react";
 import NftTokensSection from "../admin-dashboard/create-sale/nft-tokens";
 import SetTokenPrice from "../admin-dashboard/create-sale/set-token-price";
 import WhiteListedAddressesSection from "../admin-dashboard/create-sale/whitelisted-addresses";
 import SaleStatusSection from "../admin-dashboard/edit-sale/sale-status-section";
 
-import useActivateSale from "@/hooks/useActivateSale";
-
 import type { Sale } from "@/lib/types";
-import { psycSaleSepolia } from "@/constants/contracts";
-import useFetchTokenOwners from "@/hooks/useFetchTokenOwner";
-import MintButton from "../ui/mint-button";
 import { getSaleComplete } from "@/utils/getSaleComplete";
 
 interface EditSaleWindowProps {
@@ -42,7 +37,6 @@ const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
   saleStatus,
   setSaleStatus
 }) => {
-  const { activateSale, isPending: isLoading } = useActivateSale();
   let isComplete = false;
 
   if (selectedSale) {
@@ -54,42 +48,6 @@ const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
         .map((x) => x.tokenID)
         .sort((a, b) => parseInt(a) - parseInt(b))
     : [];
-
-  const { owners, loading, error } = useFetchTokenOwners(tokenIds);
-
-  const handleActivateSale = async () => {
-    console.log("Contract Address:", psycSaleSepolia);
-    console.log("Owners:", owners);
-
-    const tokensOwnedByContract = owners
-      .filter((owner) => {
-        const isOwnedByContract =
-          owner.owner.toLowerCase() === psycSaleSepolia.toLowerCase();
-        console.log(
-          `Token ID ${owner.id} is owned by contract: ${isOwnedByContract}`
-        );
-        return isOwnedByContract;
-      })
-      .map((token) => parseInt(token.id));
-
-    console.log("tokensOwnedByContract:", tokensOwnedByContract);
-
-    if (tokensOwnedByContract.length > 0) {
-      await activateSale(tokensOwnedByContract);
-    } else {
-      console.error("No tokens are owned by the contract address.");
-    }
-  };
-
-  useEffect(() => {
-    if (loading) {
-      console.log("Loading token owners...");
-    } else if (error) {
-      console.error("Error fetching token owners:", error);
-    } else {
-      console.log("Token owners fetched:", owners);
-    }
-  }, [owners, loading, error]);
 
   return (
     <Flex
@@ -109,17 +67,20 @@ const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
         setPrice={setFloorPrice}
         type="floor"
         initialValue={floorPrice}
+        isDisabled={isComplete}
       />
       <SetTokenPrice
         setPrice={setCeilingPrice}
         type="ceiling"
         initialValue={ceilingPrice}
+        isDisabled={isComplete}
       />
       <WhiteListedAddressesSection
         addressesToRemove={addressesToRemove}
         setAddressesToRemove={setAddressesToRemove}
         addressArray={whitelistedArray}
         setWhitelistedAddresses={setNewWhitelistedAddresses}
+        saleComplete={isComplete}
       />
     </Flex>
   );

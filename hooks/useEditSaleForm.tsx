@@ -9,13 +9,16 @@ import { getAddresses, uploadAddresses } from "@/lib/server-utils";
 import { getMerkleRoot, getNewAddresses } from "@/utils/saleUtils";
 import { useGetCurrentSaleValues } from "./useGetCurrentSaleValues";
 import useActivateSale from "./useActivateSale";
+import useFetchTokenOwners from "./useFetchTokenOwner";
+import { psycSaleSepolia } from "@/constants/contracts";
 
 export const useEditSaleForm = (
   address: string | undefined,
   setOpenEditSale: React.Dispatch<React.SetStateAction<boolean>>,
   id: string,
   triggerNftSaleUpdate: () => void,
-  refetchSalesData: () => void
+  refetchSalesData: () => void,
+  tokenIds: string[]
 ) => {
   const toast = useToast();
   const { width } = useResize();
@@ -47,6 +50,31 @@ export const useEditSaleForm = (
       hash: whitelistHash
     });
 
+  const { activateSale } = useActivateSale();
+
+  const { owners } = useFetchTokenOwners(tokenIds);
+
+  const handleActivateSale = async () => {
+    const tokensOwnedByContract = owners
+      .filter((owner) => {
+        const isOwnedByContract =
+          owner.owner.toLowerCase() === psycSaleSepolia.toLowerCase();
+        console.log(
+          `Token ID ${owner.id} is owned by contract: ${isOwnedByContract}`
+        );
+        return isOwnedByContract;
+      })
+      .map((token) => parseInt(token.id));
+
+    console.log("tokensOwnedByContract:", tokensOwnedByContract);
+
+    if (tokensOwnedByContract.length > 0) {
+      await activateSale(tokensOwnedByContract);
+    } else {
+      console.error("No tokens are owned by the contract address.");
+    }
+  };
+
   const handleEditSale = async (
     e: React.FormEvent<HTMLFormElement>,
     batchID: string,
@@ -56,7 +84,7 @@ export const useEditSaleForm = (
     newFloorPrice: string,
     newCeilingPrice: string,
     saleStatusLocal: "active" | "paused",
-    tokenIds: string[],
+
     width: number
   ) => {
     e.preventDefault();
@@ -81,8 +109,6 @@ export const useEditSaleForm = (
       newAddresses,
       existingAddresses
     );
-
-    const { activateSale } = useActivateSale();
 
     try {
       const currentAddresses = await getAddresses(currentIpfsHash);
@@ -116,7 +142,7 @@ export const useEditSaleForm = (
       if (ceilingPriceHasChanged && floorPriceHasChanged) {
         const floorAndCeilingPriceResponse = await writeContractAsync({
           ...psycSaleContractConfig,
-          functionName: "updateCeilingAndFloorPrice",
+          functionName: "changeFloorAndCeilingPriceOfBatch",
           args: [
             batchID,
             parseUnits(newFloorPrice, 18),
@@ -127,22 +153,21 @@ export const useEditSaleForm = (
       } else if (ceilingPriceHasChanged && !floorPriceHasChanged) {
         const floorAndCeilingPriceResponse = await writeContractAsync({
           ...psycSaleContractConfig,
-          functionName: "updateCeilingPrice",
+          functionName: "changeFloorAndCeilingPriceOfBatch",
           args: [batchID, currentFloorPrice, parseUnits(newCeilingPrice, 18)]
         });
         setFloorAndCeilingPriceHash(floorAndCeilingPriceResponse);
       } else if (!ceilingPriceHasChanged && floorPriceHasChanged) {
         const floorAndCeilingPriceResponse = await writeContractAsync({
           ...psycSaleContractConfig,
-          functionName: "updateFloorPrice",
+          functionName: "changeFloorAndCeilingPriceOfBatch",
           args: [batchID, parseUnits(newFloorPrice, 18), currentCeilingPrice]
         });
         setFloorAndCeilingPriceHash(floorAndCeilingPriceResponse);
       }
 
       if (isPausedLocal !== isPausedContract) {
-        const tokenIdsAsNum = tokenIds.map((id) => parseInt(id));
-        await activateSale(tokenIdsAsNum);
+        await handleActivateSale();
       }
 
       if (isSuccess) {

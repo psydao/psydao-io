@@ -35,22 +35,25 @@ export const AdminSalesSection = ({
 }) => {
   const { width } = useResize();
   const { address } = useAccount();
+  const [tokenIds, setTokenIds] = useState<string[]>([]);
   const { handleEditSale, isSubmitting } = useEditSaleForm(
     address,
     setOpenEditSale,
     selectedSale?.batchID ?? "",
     triggerNftSaleUpdate,
-    refetchSalesData
+    refetchSalesData,
+    tokenIds
   );
   const [existingWhitelistedAddresses, setExistingWhitelistedAddresses] =
     useState<string[]>([]);
   const [newWhitelistedAddresses, setNewWhitelistedAddresses] =
     useState<string>("");
-  const [tokenIds, setTokenIds] = useState<string[]>([]);
+
   const [addressesToRemove, setAddressesToRemove] = useState<string[]>([]);
   const [floorPrice, setFloorPrice] = useState<string>("");
   const [ceilingPrice, setCeilingPrice] = useState<string>("");
   const [saleStatus, setSaleStatus] = useState<"active" | "paused">("active");
+  const [saleComplete, setSaleComplete] = useState<boolean>(false);
 
   const splitNewWhitelistedAddresses =
     newWhitelistedAddresses.length > 0
@@ -66,6 +69,7 @@ export const AdminSalesSection = ({
           .map((x) => x.tokenID)
           .sort((a, b) => parseInt(a) - parseInt(b))
       );
+      setSaleComplete(getSaleComplete(selectedSale));
     }
   }, [selectedSale]);
 
@@ -128,7 +132,6 @@ export const AdminSalesSection = ({
                   floorPrice,
                   ceilingPrice,
                   saleStatus,
-                  tokenIds,
                   width
                 )
               : console.error("no sale selected")
@@ -159,6 +162,7 @@ export const AdminSalesSection = ({
                 type="edit"
                 address={address}
                 isSubmitting={isSubmitting}
+                saleComplete={saleComplete}
               />
             </SubmitButtonContainer>
           </Flex>
