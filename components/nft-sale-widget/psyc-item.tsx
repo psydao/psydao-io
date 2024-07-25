@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Box, Image, Text, Spinner, Tooltip, Flex } from "@chakra-ui/react";
+import { Box, Text, Spinner, Tooltip, Flex } from "@chakra-ui/react";
 import NFTPrice from "@/components/commons/nftprice";
 import MintButton from "@/components/ui/mint-button";
 import useBuyNft from "@/hooks/useBuyNft";
@@ -8,6 +8,7 @@ import { type TokenItem } from "@/lib/types";
 import { useTokenSoldState } from "@/hooks/useTokenSoldState";
 import useFetchProof from "@/hooks/useFetchProof";
 import { useTokenContext } from "@/providers/TokenContext";
+import Image from "next/image";
 
 interface PsycItemProps {
   item: TokenItem & { whitelist: string[] };
@@ -75,14 +76,14 @@ const PsycItem = ({
       key={index}
       maxW={isRandom ? "500px" : "170px"}
       mx="auto"
-      w={loading ? "100%" : "auto"}
+      w={"100%"}
       direction={"column"}
       gap={4}
       alignItems={"center"}
     >
       <Box
         w="100%"
-        h={isRandom ? "auto" : "208px"}
+        h={isRandom ? "195px" : "208px"}
         borderRadius={isRandom ? "15px" : "20px"}
         overflow="hidden"
         position="relative"
@@ -91,9 +92,8 @@ const PsycItem = ({
       >
         <Image
           src={item.src}
-          alt={`PSYC ${index}`}
-          w="100%"
-          h="100%"
+          alt={`PSYC ${index + 1}`}
+          fill
           objectFit="cover"
         />
         {isOriginal && isSold && !isRandom && (

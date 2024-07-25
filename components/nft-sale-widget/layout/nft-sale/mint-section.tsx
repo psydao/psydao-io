@@ -12,6 +12,7 @@ import usePrivateSale from "@/hooks/usePrivateSale";
 interface MintSectionProps {
   isRandom: boolean;
   activeSale: Sale | undefined;
+  isFullscreen?: boolean;
   isOriginal: boolean;
 }
 
@@ -99,7 +100,7 @@ const MintSection = ({
   return (
     <Flex textAlign="center" py={4} px={4} justifyContent={"center"}>
       {isRandom && randomToken ? (
-        <Flex justifyContent="center">
+        <Flex justifyContent="center" w={"100%"}>
           <PsycItem
             item={randomToken}
             index={currentImageIndex}
