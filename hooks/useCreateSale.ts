@@ -138,6 +138,7 @@ export const useCreateSale = (
         } catch (error) {
           const message = (error as Error).message || "An error occurred";
           showCustomErrorToast(message, width);
+
           setIsSubmitting(false);
         }
       }
@@ -163,11 +164,6 @@ export const useCreateSale = (
     if (error) {
       showCustomErrorToast(error.message, width);
       setIsSubmitting(false);
-    } else if (isPending) {
-      showSuccessToast(
-        "Your transaction is processing. Please wait for confirmation.",
-        width
-      );
     } else if (transactionSuccess && newSale) {
       const mySales = getSales();
       saveSales([...mySales, newSale]);

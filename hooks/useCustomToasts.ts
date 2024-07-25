@@ -2,75 +2,37 @@ import { customToast } from "@/components/toasts/SwapSuccess";
 import { useToast } from "@chakra-ui/react";
 import { Zoom } from "react-toastify";
 
-export const customErrorMessage = (message: string) => {
-  if (message.includes("User rejected")) {
-    return "User rejected transaction request.";
-  }
+const ERROR_MESSAGES = {
+  "User rejected": "User rejected transaction request.",
+  "Invalid Price":
+    "The floor price cannot be greater than or equal to the current floor price.",
+  "Limit Identical":
+    "You are attempting to change the buy limit to the same value. Please try again.",
+  "No Limit": "You cannot set the buy limit to 0. Please try again.",
+  "Sale Has Not Started": "Cannot edit sale: Sale has not started.",
+  "Not Whitelisted":
+    "Cannot access sale: Your connected wallet address is not whitelisted.",
+  "Batch Zero": "The batch ID cannot be zero.",
+  "Purchase Limit Reached":
+    "You have reached your purchase limit for this sale. Please try a different sale",
+  "Token Already Sold":
+    "Oh no! This token has already been sold. Please try a different token.",
+  "No Proof Provided": "No proof submitted. Please contact an administrator.",
+  "Token Not In Batch":
+    "Token not in selected batch. Please contact an administrator.",
+  "Incorrect Value": "Incorrect ETH value for token. Please try again.",
+  "Non-Existent Batch": "Invalid batch number. Please try again.",
+  "Only Core Contract": "Only the core contract can call this function.",
+  "Ceiling Price Below Floor":
+    "Ceiling price cannot be less than the floor price.",
+  "server error": "A server error has occurred. Please try again.",
+  OwnableUnauthorizedAccount: "Invalid wallet address.",
+  "Token Array Empty": "No tokens provided for sale."
+};
 
-  if (message.includes("Invalid Price")) {
-    return "The floor price cannot be greater than or equal to the current floor price.";
-  }
-
-  if (message.includes("Sale Paused")) {
-    return "NFT Sold. Copy Sale Paused By Owner, Contact Admin";
-  }
-
-  if (message.includes("Limit Identical")) {
-    return "You are attempting to change the buy limit to the same value. Please try again.";
-  }
-
-  if (message.includes("No Limit")) {
-    return "You cannot set the buy limit to 0. Please try again.";
-  }
-
-  if (message.includes("Sale Has Not Started")) {
-    return "Cannot edit sale: Sale has not started.";
-  }
-
-  if (message.includes("Not Whitelisted")) {
-    return "Cannot access sale: Your connected wallet address is not whitelisted.";
-  }
-
-  if (message.includes("Batch Zero")) {
-    return "The batch ID cannot be zero.";
-  }
-
-  if (message.includes("Purchase Limit Reached")) {
-    return "You have reached your purchase limit for this sale. Please try a different sale";
-  }
-
-  if (message.includes("Token Already Sold")) {
-    return "Oh no! This token has already been sold. Please try a different token.";
-  }
-
-  if (message.includes("No Proof Provided")) {
-    return "No proof submitted. Please contact an administrator.";
-  }
-
-  if (message.includes("Token Not In Batch")) {
-    return "Token not in selected batch. Please contact an administrator.";
-  }
-
-  if (message.includes("Incorrect Value")) {
-    return "Incorrect ETH value for token. Please try again.";
-  }
-
-  if (message.includes("Non-Existent Batch")) {
-    return "Invalid batch number. Please try again.";
-  }
-
-  if (message.includes("Only Core Contract")) {
-    return "Only the core contract can call this function.";
-  }
-
-  if (message.includes("Ceiling Price Below Floor")) {
-    return "Ceiling price cannot be less than the floor price.";
-  }
-  if (message.includes("server error")) {
-    return "A sever error has occurred. Please try again.";
-  }
-  if (message.includes("OwnableUnauthorizedAccount")) {
-    return "Invalid wallet address.";
+export const customErrorMessage = (message: string): string => {
+  for (const [key, value] of Object.entries(ERROR_MESSAGES)) {
+    if (message.includes(key)) return value;
   }
   return "An unknown error occurred. Please contact an administrator or try again later.";
 };
@@ -94,6 +56,7 @@ export const useCustomToasts = () => {
 
   const showCustomErrorToast = (message: string, width: number) => {
     const errorMessage = customErrorMessage(message);
+    console.log(message);
     customToast(
       {
         mainText: errorMessage,

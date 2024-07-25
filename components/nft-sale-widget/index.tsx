@@ -6,7 +6,9 @@ import {
   TabPanels,
   Tabs,
   Text,
-  Flex
+  Flex,
+  Box,
+  Grid
 } from "@chakra-ui/react";
 import { Window } from "@/components/ui/window";
 import { useWindowManager } from "@/components/ui/window-manager";
@@ -18,6 +20,8 @@ import type { Sale, GetSaleByIdData } from "@/lib/types";
 import { useQuery } from "@apollo/client";
 import { getSaleById } from "@/services/graph";
 import { InterimState } from "../commons/interim-state";
+import AdminDashboardEmptyState from "../admin-dashboard/admin-dashboard-empty";
+import NFTSaleWidgetEmptyState from "./layout/nft-sale-widget-empty";
 
 export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
   const [activeSale, setActiveSale] = useState<Sale>();
@@ -29,6 +33,8 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
       variables: { id: activeSale ? activeSale.id : "1" }
     }
   );
+
+  console.log(data);
 
   useEffect(() => {
     if (data) {
@@ -80,16 +86,24 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
               <InterimState type="error" />
             ) : (
               <TabPanels>
-                <TabPanel px={0}>
-                  <PsycSaleContent
-                    isFullScreen={fullScreenWindow}
-                    activeSale={activeSale}
-                    isOriginal={isOriginal}
-                  />
-                </TabPanel>
-                <TabPanel h="100%" w="100%">
-                  <OwnedNftsContent isFullScreen={fullScreenWindow} />
-                </TabPanel>
+                {data?.sale ? (
+                  <>
+                    <TabPanel px={0}>
+                      <PsycSaleContent
+                        isFullScreen={fullScreenWindow}
+                        activeSale={activeSale}
+                        isOriginal={isOriginal}
+                      />
+                    </TabPanel>
+                    <TabPanel h="100%" w="100%">
+                      <OwnedNftsContent isFullScreen={fullScreenWindow} />
+                    </TabPanel>
+                  </>
+                ) : (
+                  <Grid h={"100%"} w={"100%"} gridTemplateRows={"30% 1fr"}>
+                    <NFTSaleWidgetEmptyState />
+                  </Grid>
+                )}
               </TabPanels>
             )}
           </Tabs>
