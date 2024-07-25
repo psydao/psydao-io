@@ -57,8 +57,7 @@ const SetTokenPrice = (props: SetTokenPriceProps) => {
       >
         <Input
           type="number"
-          step={0.01}
-          min={0.01}
+          step={0.001}
           w={{ base: "100%", md: 20 }}
           fontSize="18px"
           fontFamily={"Inter"}
