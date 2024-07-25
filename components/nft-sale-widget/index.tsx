@@ -19,19 +19,30 @@ import { useQuery } from "@apollo/client";
 import { getSaleById } from "@/services/graph";
 import { InterimState } from "../commons/interim-state";
 
-export const NftSaleWidget = () => {
+export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
   const [activeSale, setActiveSale] = useState<Sale>();
   const [isOriginal, setIsOriginal] = useState<boolean>(true);
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
-  const { data, loading, error } = useQuery<GetSaleByIdData>(getSaleById, {
-    variables: { id: activeSale ? activeSale.id : "1" }
-  });
+  const { data, loading, error, refetch } = useQuery<GetSaleByIdData>(
+    getSaleById,
+    {
+      variables: { id: activeSale ? activeSale.id : "1" }
+    }
+  );
 
   useEffect(() => {
     if (data) {
       setActiveSale(data.sale);
     }
   }, [data, setActiveSale]);
+
+  useEffect(() => {
+    const refetchData = async () => {
+      await refetch();
+      console.log("Refetched data");
+    };
+    refetchData().catch(console.error);
+  }, [updateTrigger, refetch]);
 
   const { state } = useWindowManager();
 

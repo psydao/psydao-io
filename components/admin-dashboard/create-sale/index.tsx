@@ -14,9 +14,11 @@ import { useCreateSale } from "@/hooks/useCreateSale";
 import SubmitSaleButton from "../../commons/submit-sale-button";
 
 export const CreateSale = ({
-  setOpenCreateSale
+  setOpenCreateSale,
+  triggerNftSaleUpdate
 }: {
   setOpenCreateSale: React.Dispatch<React.SetStateAction<boolean>>;
+  triggerNftSaleUpdate: () => void;
 }) => {
   const {
     timeInputType,
@@ -44,7 +46,8 @@ export const CreateSale = ({
   const { handleCreateSale, isSubmitting } = useCreateSale(
     setOpenCreateSale,
     tokenIds,
-    whitelistedArray
+    whitelistedArray,
+    triggerNftSaleUpdate
   );
 
   if (isLoading) {

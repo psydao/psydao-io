@@ -24,7 +24,8 @@ import { uploadAddresses } from "@/lib/server-utils";
 export const useCreateSale = (
   setOpenCreateSale: React.Dispatch<React.SetStateAction<boolean>>,
   tokenIds: number[],
-  whitelistedArray: string[]
+  whitelistedArray: string[],
+  triggerNftSaleUpdate: () => void
 ) => {
   const { isConnected } = useAccount();
   const {
@@ -171,6 +172,7 @@ export const useCreateSale = (
       saveSales([...mySales, newSale]);
       console.log("Sale created:", newSale);
       showSuccessToast("Success! Your sale has been created.", width);
+      triggerNftSaleUpdate();
       setOpenCreateSale(false);
       setIsSubmitting(false);
     }

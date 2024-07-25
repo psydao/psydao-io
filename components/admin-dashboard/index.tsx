@@ -11,7 +11,11 @@ import EditSaleHeader from "./edit-sale/edit-sale-header";
 import { getAllSalesWithTokens } from "@/services/graph";
 import { useQuery } from "@apollo/client";
 
-const AdminDashboardWidget = () => {
+const AdminDashboardWidget = ({
+  triggerNftSaleUpdate
+}: {
+  triggerNftSaleUpdate: () => void;
+}) => {
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
   const [openCreateSale, setOpenCreateSale] = useState(false);
   const [openEditSale, setOpenEditSale] = useState(false);
@@ -50,7 +54,10 @@ const AdminDashboardWidget = () => {
         overflowY="auto"
       >
         {openCreateSale ? (
-          <CreateSale setOpenCreateSale={setOpenCreateSale} />
+          <CreateSale
+            setOpenCreateSale={setOpenCreateSale}
+            triggerNftSaleUpdate={triggerNftSaleUpdate}
+          />
         ) : (
           <>
             {selectedSale ? (
@@ -76,6 +83,7 @@ const AdminDashboardWidget = () => {
                   setOpenEditSale={setOpenEditSale}
                   openCreateSale={openCreateSale}
                   openEditSale={openEditSale}
+                  triggerNftSaleUpdate={triggerNftSaleUpdate}
                 />
               ) : (
                 <AdminDashboardEmptyState
