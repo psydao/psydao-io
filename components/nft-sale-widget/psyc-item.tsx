@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Image, Text, Spinner, Tooltip, Flex } from "@chakra-ui/react";
 import NFTPrice from "@/components/commons/nftprice";
 import MintButton from "@/components/ui/mint-button";
@@ -7,6 +7,7 @@ import { useAccount } from "wagmi";
 import { type TokenItem } from "@/lib/types";
 import { useTokenSoldState } from "@/hooks/useTokenSoldState";
 import useFetchProof from "@/hooks/useFetchProof";
+import { useTokenContext } from "@/providers/TokenContext";
 
 interface PsycItemProps {
   item: TokenItem & { whitelist: string[] };
@@ -36,6 +37,14 @@ const PsycItem = ({
     parseInt(item.tokenId)
   );
 
+  const { refetch } = useTokenContext();
+
+  useEffect(() => {
+    if (isSold) {
+      refetch();
+    }
+  }, [isSold, refetch]);
+
   const proof = useFetchProof(address, item.ipfsHash, isPrivateSale);
 
   const isWhitelisted = address ? item.whitelist.includes(address) : false;
@@ -47,6 +56,7 @@ const PsycItem = ({
       item.price,
       proof
     );
+    refetch();
   };
 
   const isButtonDisabled =

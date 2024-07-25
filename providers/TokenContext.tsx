@@ -5,7 +5,8 @@ import React, {
   createContext,
   useContext,
   useState,
-  type ReactNode
+  type ReactNode,
+  useCallback
 } from "react";
 import { useAccount } from "wagmi";
 
@@ -14,6 +15,7 @@ interface TokenContextType {
   loading: boolean;
   error: Error | undefined;
   tokenCount: number;
+  refetch: () => void;
   setTokenCount: (count: number) => void;
 }
 
@@ -25,22 +27,28 @@ export const TokenProvider: React.FC<{ children: ReactNode }> = ({
   const [tokenCount, setTokenCount] = useState(0);
   const { address } = useAccount();
 
-  const { data, loading, error } = useQuery<GetTokensByOwnerData>(
-    getTokensByOwner,
-    {
-      variables: {
-        owner: address
-      },
-      onCompleted: (data) => {
-        setTokenCount(data?.tokens.length ?? 0);
-      },
-      skip: !address
-    }
-  );
+  const {
+    data,
+    loading,
+    error,
+    refetch: refetchQuery
+  } = useQuery<GetTokensByOwnerData>(getTokensByOwner, {
+    variables: {
+      owner: address
+    },
+    onCompleted: (data) => {
+      setTokenCount(data?.tokens.length ?? 0);
+    },
+    skip: !address
+  });
+
+  const refetch = useCallback((): void => {
+    void refetchQuery();
+  }, [refetchQuery]);
 
   return (
     <TokenContext.Provider
-      value={{ tokenCount, setTokenCount, data, loading, error }}
+      value={{ tokenCount, setTokenCount, data, loading, error, refetch }}
     >
       {children}
     </TokenContext.Provider>
