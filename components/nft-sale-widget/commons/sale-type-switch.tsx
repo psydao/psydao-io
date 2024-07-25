@@ -1,14 +1,20 @@
 import { Flex, Switch, Text } from "@chakra-ui/react";
-import { useState } from "react";
+import type { SetStateAction } from "react";
 
-export const PrivateSaleSwitch = () => {
-  const [isPrivateSale, setIsPrivateSale] = useState(false);
+interface SaleTypeSwitchProps {
+  isOriginal: boolean;
+  setIsOriginal: React.Dispatch<SetStateAction<boolean>>;
+}
 
+export const SaleTypeSwitch = ({
+  isOriginal,
+  setIsOriginal
+}: SaleTypeSwitchProps) => {
   return (
     <Flex alignItems={"center"} gap={2} mb={1}>
       <Switch
-        isChecked={isPrivateSale}
-        onChange={() => setIsPrivateSale((prev) => !prev)}
+        isChecked={isOriginal}
+        onChange={() => setIsOriginal((prev) => !prev)}
         sx={{
           "span.chakra-switch__track:not([data-checked])": {
             backgroundColor: "#E9E9EA"
@@ -23,7 +29,7 @@ export const PrivateSaleSwitch = () => {
         fontSize={{ base: 12, md: 14 }}
         color={"#585858"}
       >
-        Private Sale
+        Original Sale
       </Text>
     </Flex>
   );

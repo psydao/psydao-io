@@ -11,14 +11,18 @@ import EditSaleHeader from "./edit-sale/edit-sale-header";
 import { getAllSalesWithTokens } from "@/services/graph";
 import { useQuery } from "@apollo/client";
 
-const AdminDashboardWidget = () => {
+const AdminDashboardWidget = ({
+  triggerNftSaleUpdate
+}: {
+  triggerNftSaleUpdate: () => void;
+}) => {
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
   const [openCreateSale, setOpenCreateSale] = useState(false);
   const [openEditSale, setOpenEditSale] = useState(false);
   const { state } = useWindowManager();
 
   const [selectedSale, setSelectedSale] = useState<Sale | undefined>(undefined);
-  const { data, loading, error } = useQuery<GetAllSalesWithTokensData>(
+  const { data, loading, error, refetch } = useQuery<GetAllSalesWithTokensData>(
     getAllSalesWithTokens
   );
   const fullScreenWindow = useMemo(() => {
@@ -50,7 +54,11 @@ const AdminDashboardWidget = () => {
         overflowY="auto"
       >
         {openCreateSale ? (
-          <CreateSale setOpenCreateSale={setOpenCreateSale} />
+          <CreateSale
+            setOpenCreateSale={setOpenCreateSale}
+            triggerNftSaleUpdate={triggerNftSaleUpdate}
+            refetchSalesData={refetch}
+          />
         ) : (
           <>
             {selectedSale ? (
@@ -76,6 +84,8 @@ const AdminDashboardWidget = () => {
                   setOpenEditSale={setOpenEditSale}
                   openCreateSale={openCreateSale}
                   openEditSale={openEditSale}
+                  triggerNftSaleUpdate={triggerNftSaleUpdate}
+                  refetchSalesData={refetch}
                 />
               ) : (
                 <AdminDashboardEmptyState

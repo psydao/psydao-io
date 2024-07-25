@@ -1,35 +1,59 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useWriteContract } from "wagmi";
 
 import psycSaleAbiSepolia from "../abis/psycSaleAbiSepolia.json";
 import { psycSaleSepolia } from "../constants/contracts";
+import { useCustomToasts } from "./useCustomToasts";
+import { useResize } from "./useResize";
 
 const useActivateSale = () => {
   const [isSalesActive, setIsSalesActive] = useState(false);
-  const { writeContract } = useWriteContract();
+  const { writeContract, isPending, isSuccess, error } = useWriteContract();
+  const { width } = useResize();
+  const { showCustomErrorToast, showSuccessToast } = useCustomToasts();
 
   const activateSale = useCallback(
-    async (tokenId: number[], onError: (error: unknown) => void) => {
-      try {
-        setIsSalesActive(false);
-        writeContract({
-          address: psycSaleSepolia,
-          abi: psycSaleAbiSepolia,
-          functionName: "setSalesActive",
-          args: [tokenId]
-        });
-        setIsSalesActive(true);
-        console.log("Sales activated", tokenId);
-      } catch (error: unknown) {
-        onError(error);
-      }
+    async (tokenIds: number[]) => {
+      setIsSalesActive(false);
+      writeContract({
+        address: psycSaleSepolia,
+        abi: psycSaleAbiSepolia,
+        functionName: "setSalesActive",
+        args: [tokenIds]
+      });
     },
     [writeContract]
   );
 
+  useEffect(() => {
+    if (isPending) {
+      showSuccessToast(
+        "Your transaction is processing. Please wait for confirmation.",
+        width
+      );
+    } else if (isSuccess) {
+      setIsSalesActive(true);
+      showSuccessToast("Success! Your sales have been activated.", width);
+    } else if (error) {
+      const message = (error as Error).message || "An error occurred";
+      showCustomErrorToast(message, width);
+      setIsSalesActive(false);
+    }
+  }, [
+    isPending,
+    isSuccess,
+    error,
+    showCustomErrorToast,
+    showSuccessToast,
+    width
+  ]);
+
   return {
     isSalesActive,
-    activateSale
+    activateSale,
+    isPending,
+    isSuccess,
+    error
   };
 };
 

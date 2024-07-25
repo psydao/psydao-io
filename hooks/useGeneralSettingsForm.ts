@@ -8,7 +8,8 @@ import { useReadGeneralSettings } from "./useReadGeneralSettings";
 
 export const useGeneralSettingsForm = (address: string | undefined) => {
   const toast = useToast();
-  const { showErrorToast, showSuccessToast } = useCustomToasts();
+  const { showErrorToast, showCustomErrorToast, showSuccessToast } =
+    useCustomToasts();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { width } = useResize();
 
@@ -113,7 +114,7 @@ export const useGeneralSettingsForm = (address: string | undefined) => {
     } catch (error) {
       const message = (error as Error).message || "An error occurred";
       console.error(message, "error");
-      showErrorToast(message, width);
+      showCustomErrorToast(message, width);
     } finally {
       setIsSubmitting(false);
     }
@@ -126,7 +127,7 @@ export const useGeneralSettingsForm = (address: string | undefined) => {
         saleTypeError?.message ??
         buyLimitError?.message ??
         "An error occurred";
-      showErrorToast(errorMessage, width);
+      showCustomErrorToast(errorMessage, width);
       console.error(errorMessage, "error");
       setIsSubmitting(false);
     }

@@ -73,3 +73,12 @@ export const getTokensByOwner = gql`
     }
   }
 `;
+
+export const getTokensOwners = gql`
+  query GetTokensOwners($ids: [ID!]!) {
+    tokens(where: { id_in: $ids }) {
+      id
+      owner
+    }
+  }
+`;

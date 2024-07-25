@@ -66,12 +66,7 @@ const ToastBody = (props: BodyProps) => {
             fontStyle={"italic"}
             fontFamily={"Amiri"}
             mt={"2px"}
-            maxW={{ base: props.type === "error" ? "100%" : "80%", md: "90%" }}
-            whiteSpace={{
-              base:
-                props.isPsyc && props.type === "success" ? "nowrap" : "normal",
-              md: props.type === "error" ? "nowrap" : "normal"
-            }}
+            maxW={{ base: props.type === "error" ? "100%" : "80%", md: "100%" }}
           >
             {props.isPsyc && props.type === "default"}
             {props.mainText}
@@ -92,7 +87,8 @@ export function customToast(
     style: {
       background: "linear-gradient(#FFFFFF, #F3FFE9, #E7FEFF)",
       width: isMobile ? "100%" : "fit-content",
-      transform: isMobile ? "" : "translateX(-20%)"
+      transform: isMobile ? "" : "translateX(-20%)",
+      whiteSpace: "wrap"
     },
     closeButton: CustomCloseButton,
     position: "top-center",

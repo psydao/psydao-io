@@ -1,6 +1,6 @@
 import { Box, Divider, Flex, Text } from "@chakra-ui/react";
 import { WhitepaperLink } from "../../commons/whitepaper-link";
-import { PrivateSaleSwitch } from "../../commons/privatesale-switch";
+import { SaleTypeSwitch } from "../../commons/sale-type-switch";
 import NftSaleTabs from "../nft-sale-tabs";
 import { useTokenContext } from "@/providers/TokenContext";
 import { Open } from "@/components/ui/window-manager";
@@ -13,8 +13,9 @@ import type { SetStateAction } from "react";
 const MintPsycHeader = (props: {
   activeSale: Sale | undefined;
   setActiveSale: React.Dispatch<SetStateAction<Sale | undefined>>;
+  isOriginal: boolean;
+  setIsOriginal: React.Dispatch<SetStateAction<boolean>>;
 }) => {
-  // TODO: Hide toggle if user is not whitelisted
   const { tokenCount } = useTokenContext();
 
   const { address } = useAccount();
@@ -58,7 +59,10 @@ const MintPsycHeader = (props: {
               activeSale={props.activeSale}
               setActiveSale={props.setActiveSale}
             />
-            {isWhitelisted && <PrivateSaleSwitch />}
+            <SaleTypeSwitch
+              isOriginal={props.isOriginal}
+              setIsOriginal={props.setIsOriginal}
+            />
           </Flex>
         </Flex>
       </Box>

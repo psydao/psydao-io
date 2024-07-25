@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Center,
@@ -77,6 +77,12 @@ const Homepage: NextPage = () => {
   const fadeinAnimate = `${fadeIn} infinite 6s`;
 
   const SALE_ACTIVE = true;
+
+  const [updateNftSaleTrigger, setUpdateNftSaleTrigger] = useState(0);
+
+  const triggerNftSaleUpdate = () => {
+    setUpdateNftSaleTrigger((prev) => prev + 1);
+  };
 
   return (
     <>
@@ -189,8 +195,10 @@ const Homepage: NextPage = () => {
                   >
                     <Blog />
                     <SwapWidget />
-                    <NftSaleWidget />
-                    <AdminDashboardWidget />
+                    <NftSaleWidget updateTrigger={updateNftSaleTrigger} />
+                    <AdminDashboardWidget
+                      triggerNftSaleUpdate={triggerNftSaleUpdate}
+                    />
                     <GeneralDashboard />
                     <Radio />
                     <Manifesto />

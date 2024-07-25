@@ -62,7 +62,6 @@ export const useTokenIds = () => {
     error: Error | null;
   };
 
-  console.log(saleBatch, "saleBatch");
   console.log("Batch Error Details:", batchErrorDetails);
 
   useEffect(() => {
@@ -78,18 +77,8 @@ export const useTokenIds = () => {
       const lastTokenId = Number(batchArray[1]);
       setCurrentFloorPrice(batchArray[2]);
 
-      console.log("Checking conditions for generateNftIds...");
-      console.log("saleBatchCount:", saleBatchCount);
-      console.log("lastTokenId:", lastTokenId);
-
       if (saleBatchCount > 0 && !isNaN(lastTokenId)) {
         const newBatchCount = saleBatchCount + 1n;
-        console.log(
-          "Generating new token IDs with batchCount:",
-          newBatchCount,
-          "and lastTokenId:",
-          lastTokenId
-        );
         const newTokenIds = generateNftIds(Number(newBatchCount), lastTokenId);
         console.log("Setting tokenIds:", newTokenIds);
         setTokenIds(newTokenIds);

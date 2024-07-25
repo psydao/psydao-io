@@ -24,11 +24,17 @@ import { uploadAddresses } from "@/lib/server-utils";
 export const useCreateSale = (
   setOpenCreateSale: React.Dispatch<React.SetStateAction<boolean>>,
   tokenIds: number[],
-  whitelistedArray: string[]
+  whitelistedArray: string[],
+  triggerNftSaleUpdate: () => void,
+  refetchSalesData: () => void
 ) => {
   const { isConnected } = useAccount();
-  const { showErrorToast, showSuccessToast, showDefaultErrorToast } =
-    useCustomToasts();
+  const {
+    showErrorToast,
+    showCustomErrorToast,
+    showSuccessToast,
+    showDefaultErrorToast
+  } = useCustomToasts();
   const { getSales, saveSales, saveWhitelistedAddresses } =
     useSaleLocalStorage();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -131,7 +137,7 @@ export const useCreateSale = (
           console.log("writeContract called");
         } catch (error) {
           const message = (error as Error).message || "An error occurred";
-          showErrorToast(message, width);
+          showCustomErrorToast(message, width);
           setIsSubmitting(false);
         }
       }
@@ -144,6 +150,7 @@ export const useCreateSale = (
       setOpenCreateSale,
       showDefaultErrorToast,
       showErrorToast,
+      showCustomErrorToast,
       showSuccessToast,
       tokenIds,
       whitelistedArray,
@@ -154,12 +161,7 @@ export const useCreateSale = (
 
   useEffect(() => {
     if (error) {
-      if (error.message.includes("User rejected")) {
-        showErrorToast("User rejected", width);
-      } else {
-        showErrorToast(error.message, width);
-        console.log("Transaction error:", error.message);
-      }
+      showCustomErrorToast(error.message, width);
       setIsSubmitting(false);
     } else if (isPending) {
       showSuccessToast(
@@ -170,7 +172,9 @@ export const useCreateSale = (
       const mySales = getSales();
       saveSales([...mySales, newSale]);
       console.log("Sale created:", newSale);
+      refetchSalesData();
       showSuccessToast("Success! Your sale has been created.", width);
+      triggerNftSaleUpdate();
       setOpenCreateSale(false);
       setIsSubmitting(false);
     }

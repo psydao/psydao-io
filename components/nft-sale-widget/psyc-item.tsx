@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Text, Spinner, Tooltip, Flex } from "@chakra-ui/react";
 import NFTPrice from "@/components/commons/nftprice";
 import MintButton from "@/components/ui/mint-button";
@@ -7,14 +7,15 @@ import { useAccount } from "wagmi";
 import { type TokenItem } from "@/lib/types";
 import { useTokenSoldState } from "@/hooks/useTokenSoldState";
 import useFetchProof from "@/hooks/useFetchProof";
+import { useTokenContext } from "@/providers/TokenContext";
 import Image from "next/image";
-import { Token } from "graphql";
 
 interface PsycItemProps {
   item: TokenItem & { whitelist: string[] };
   index: number;
   isRandom: boolean;
   isPrivateSale: boolean;
+  isOriginal: boolean;
   loading: boolean;
 }
 
@@ -23,17 +24,27 @@ const PsycItem = ({
   index,
   isRandom,
   isPrivateSale,
+  isOriginal,
   loading
 }: PsycItemProps) => {
-  const { buyNft, isPending, isConfirming, isMinting, isConfirmed } = useBuyNft(
+  const { buyNft, isPending, isConfirming, isMinting } = useBuyNft(
     isPrivateSale,
-    isRandom
+    isRandom,
+    isOriginal
   );
 
   const { address } = useAccount();
   const { isSold, isLoading: isSoldLoading } = useTokenSoldState(
     parseInt(item.tokenId)
   );
+
+  const { refetch } = useTokenContext();
+
+  useEffect(() => {
+    if (isSold) {
+      refetch();
+    }
+  }, [isSold, refetch]);
 
   const proof = useFetchProof(address, item.ipfsHash, isPrivateSale);
 
@@ -46,15 +57,15 @@ const PsycItem = ({
       item.price,
       proof
     );
+    refetch();
   };
 
   const isButtonDisabled =
     !address ||
-    !isWhitelisted ||
-    ((isRandom ? false : isSold) ?? isPending) ||
-    isConfirming ||
-    isMinting ||
-    isSoldLoading;
+    (!isWhitelisted && isOriginal) ||
+    (isOriginal && !isRandom && isSold)
+      ? true
+      : isPending || isConfirming || isMinting || isSoldLoading;
 
   const tooltipLabel = !address
     ? "You need to connect your wallet"
@@ -85,37 +96,63 @@ const PsycItem = ({
           fill
           objectFit="cover"
         />
-        <Box
-          position="absolute"
-          top="0"
-          left="0"
-          width="100%"
-          height="100%"
-          bg={"#00000066"}
-          display={isSold && !isRandom ? "flex" : "none"}
-          alignItems="center"
-          justifyContent="center"
-        >
-          <Text color="white" fontWeight="bold">
-            Sold
-          </Text>
-        </Box>
+        {isOriginal && isSold && !isRandom && (
+          <Box
+            position="absolute"
+            top="0"
+            left="0"
+            width="100%"
+            height="100%"
+            bg={"#00000066"}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Text color="white" fontWeight="bold">
+              Sold
+            </Text>
+          </Box>
+        )}
         <NFTPrice price={item.price} />
       </Box>
-      <Tooltip
-        isDisabled={address && isWhitelisted}
-        label={tooltipLabel}
-        placement="top"
-        bg="white"
-        py={2}
-        px={4}
-        color="#1A202C"
-        fontSize={14}
-        maxW="300px"
-        whiteSpace="normal"
-        borderRadius="16px"
-        border="2px solid #F2BEBE73"
-      >
+      {isOriginal && (
+        <Tooltip
+          isDisabled={address ? isWhitelisted : false}
+          label={tooltipLabel}
+          placement="top"
+          bg="white"
+          py={2}
+          px={4}
+          color="#1A202C"
+          fontSize={14}
+          maxW="300px"
+          whiteSpace="normal"
+          borderRadius="16px"
+          border="2px solid #F2BEBE73"
+        >
+          <Flex justifyContent="center" w="100%">
+            <MintButton
+              customStyle={{
+                width: "100%",
+                opacity: isButtonDisabled ? 0.5 : 1
+              }}
+              onClick={handleMint}
+              isDisabled={isButtonDisabled}
+              isRandom={isRandom}
+            >
+              {isMinting ? (
+                <>
+                  <Spinner size="sm" mr={2} />
+                  Minting
+                </>
+              ) : (
+                "Mint"
+              )}
+            </MintButton>
+          </Flex>
+        </Tooltip>
+      )}
+      {!isOriginal && (
         <Flex justifyContent="center" w="100%">
           <MintButton
             customStyle={{ width: "100%", opacity: isButtonDisabled ? 0.5 : 1 }}
@@ -123,21 +160,17 @@ const PsycItem = ({
             isDisabled={isButtonDisabled}
             isRandom={isRandom}
           >
-            {isConfirmed ? (
-              <Text color="black">Minted</Text>
-            ) : isMinting ? (
+            {isMinting ? (
               <>
                 <Spinner size="sm" mr={2} />
                 Minting
               </>
-            ) : isRandom || !isSold ? (
-              "Mint"
             ) : (
-              <Text color="black">Sold</Text>
+              "Mint"
             )}
           </MintButton>
         </Flex>
-      </Tooltip>
+      )}
     </Flex>
   );
 };

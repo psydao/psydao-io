@@ -14,9 +14,13 @@ import { useCreateSale } from "@/hooks/useCreateSale";
 import SubmitSaleButton from "../../commons/submit-sale-button";
 
 export const CreateSale = ({
-  setOpenCreateSale
+  setOpenCreateSale,
+  triggerNftSaleUpdate,
+  refetchSalesData
 }: {
   setOpenCreateSale: React.Dispatch<React.SetStateAction<boolean>>;
+  triggerNftSaleUpdate: () => void;
+  refetchSalesData: () => void;
 }) => {
   const {
     timeInputType,
@@ -37,14 +41,16 @@ export const CreateSale = ({
     setNewWhitelistedAddresses
   } = useFormState();
   const { tokenIds, isLoading } = useTokenIds();
-  console.log("tokenIds in CreateSale:", tokenIds);
+
   const { getWhitelistedAddresses } = useSaleLocalStorage();
   const whitelistedArray = getWhitelistedAddresses();
   const { address } = useAccount();
   const { handleCreateSale, isSubmitting } = useCreateSale(
     setOpenCreateSale,
     tokenIds,
-    whitelistedArray
+    whitelistedArray,
+    triggerNftSaleUpdate,
+    refetchSalesData
   );
 
   if (isLoading) {
