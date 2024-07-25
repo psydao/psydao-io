@@ -3,12 +3,33 @@ import { getSaleById } from "@/services/graph";
 import { useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useCustomToasts } from "./useCustomToasts";
+import { useReadContract } from "wagmi";
+import { psycSaleContractConfig } from "@/lib/sale-contract-config";
+
+type SaleBatchesReturn = [
+  bigint,
+  bigint,
+  bigint,
+  bigint,
+  bigint,
+  bigint,
+  boolean
+];
 
 export const useGetCurrentSaleValues = (id: string, width: number) => {
   const [floorPrice, setFloorPrice] = useState<string>("");
   const [ceilingPrice, setCeilingPrice] = useState<string>("");
   const [ipfsHash, setIpfsHash] = useState<string>("");
   const { showErrorToast } = useCustomToasts();
+  const [saleBatches, setSaleBatches] = useState<SaleBatchesReturn>([
+    0n,
+    0n,
+    0n,
+    0n,
+    0n,
+    0n,
+    false
+  ]);
 
   const { data, error } = useQuery<GetSaleByIdData>(getSaleById, {
     variables: {
@@ -16,11 +37,11 @@ export const useGetCurrentSaleValues = (id: string, width: number) => {
     }
   });
 
-  // args = parseInt(id), return paused/unpaused
-  // const { data: saleBatches } = useReadContract({
-  //   ...psycSaleContractConfig,
-  //   functionName: "saleBatches"
-  // });
+  const { data: saleBatchesData, error: saleBatchesError } = useReadContract({
+    ...psycSaleContractConfig,
+    functionName: "saleBatches",
+    args: [parseInt(id)]
+  });
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
@@ -32,6 +53,21 @@ export const useGetCurrentSaleValues = (id: string, width: number) => {
     if (error) {
       showErrorToast("Error fetching data from subgraph", width);
     }
-  }, [data, setCeilingPrice, setFloorPrice, setIpfsHash]);
-  return { floorPrice, ceilingPrice, ipfsHash };
+
+    if (saleBatchesData) {
+      setSaleBatches(saleBatchesData as SaleBatchesReturn);
+    }
+
+    if (saleBatchesError) {
+      showErrorToast("Error fetching sale batches from contract", width);
+    }
+  }, [
+    data,
+    setCeilingPrice,
+    setFloorPrice,
+    setIpfsHash,
+    saleBatchesData,
+    saleBatchesError
+  ]);
+  return { floorPrice, ceilingPrice, ipfsHash, saleBatches };
 };

@@ -11,6 +11,7 @@ import type { Sale } from "@/lib/types";
 import { psycSaleSepolia } from "@/constants/contracts";
 import useFetchTokenOwners from "@/hooks/useFetchTokenOwner";
 import MintButton from "../ui/mint-button";
+import { getSaleComplete } from "@/utils/getSaleComplete";
 
 interface EditSaleWindowProps {
   selectedSale: Sale | undefined;
@@ -23,10 +24,8 @@ interface EditSaleWindowProps {
   whitelistedArray: string[];
   newWhitelistedAddresses: string;
   setNewWhitelistedAddresses: React.Dispatch<React.SetStateAction<string>>;
-  saleStatus: "active" | "complete" | "paused";
-  setSaleStatus: React.Dispatch<
-    React.SetStateAction<"active" | "complete" | "paused">
-  >;
+  saleStatus: "active" | "paused";
+  setSaleStatus: React.Dispatch<React.SetStateAction<"active" | "paused">>;
 }
 
 const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
@@ -44,6 +43,11 @@ const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
   setSaleStatus
 }) => {
   const { activateSale, isPending: isLoading } = useActivateSale();
+  let isComplete = false;
+
+  if (selectedSale) {
+    isComplete = getSaleComplete(selectedSale);
+  }
 
   const tokenIds = selectedSale
     ? selectedSale.tokensOnSale
@@ -87,7 +91,6 @@ const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
     }
   }, [owners, loading, error]);
 
-  const isButtonDisabled = loading || tokenIds.length === 0 || isLoading;
   return (
     <Flex
       direction={"column"}
@@ -96,23 +99,11 @@ const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
       overflowY={"auto"}
       alignItems={"start"}
     >
-      <MintButton
-        onClick={handleActivateSale}
-        isDisabled={isButtonDisabled}
-        customStyle={{
-          position: "absolute",
-          top: "80px",
-          right: "40px",
-          px: "10px"
-        }}
-      >
-        {isLoading ? "Activating..." : "Activate Sale"}
-      </MintButton>
-
       <NftTokensSection tokenIds={tokenIds.map((id) => parseInt(id))} />
       <SaleStatusSection
         saleStatus={saleStatus}
         setSaleStatus={setSaleStatus}
+        isComplete={isComplete}
       />
       <SetTokenPrice
         setPrice={setFloorPrice}

@@ -10,6 +10,7 @@ import { formatEther } from "viem";
 import SubmitSaleButton from "../commons/submit-sale-button";
 import { useEditSaleForm } from "@/hooks/useEditSaleForm";
 import { useResize } from "@/hooks/useResize";
+import { getSaleComplete } from "@/utils/getSaleComplete";
 
 export const AdminSalesSection = ({
   setOpenCreateSale,
@@ -45,12 +46,11 @@ export const AdminSalesSection = ({
     useState<string[]>([]);
   const [newWhitelistedAddresses, setNewWhitelistedAddresses] =
     useState<string>("");
+  const [tokenIds, setTokenIds] = useState<string[]>([]);
   const [addressesToRemove, setAddressesToRemove] = useState<string[]>([]);
   const [floorPrice, setFloorPrice] = useState<string>("");
   const [ceilingPrice, setCeilingPrice] = useState<string>("");
-  const [saleStatus, setSaleStatus] = useState<
-    "active" | "complete" | "paused"
-  >("active");
+  const [saleStatus, setSaleStatus] = useState<"active" | "paused">("active");
 
   const splitNewWhitelistedAddresses =
     newWhitelistedAddresses.length > 0
@@ -61,6 +61,11 @@ export const AdminSalesSection = ({
     if (selectedSale) {
       setFloorPrice(formatEther(BigInt(selectedSale.floorPrice)));
       setCeilingPrice(formatEther(BigInt(selectedSale.ceilingPrice)));
+      setTokenIds(
+        selectedSale.tokensOnSale
+          .map((x) => x.tokenID)
+          .sort((a, b) => parseInt(a) - parseInt(b))
+      );
     }
   }, [selectedSale]);
 
@@ -77,24 +82,28 @@ export const AdminSalesSection = ({
           overflowY="auto"
         >
           {saleData.length > 0
-            ? saleData.map((sale, index: number) => (
-                <>
-                  <AdminSaleComponent
-                    key={index}
-                    sale={sale}
-                    index={index}
-                    setWhitelistedAddresses={setExistingWhitelistedAddresses}
-                    setSelectedSale={setSelectedSale}
-                    setOpenEditSale={setOpenEditSale}
-                  />
-                  <Divider
-                    border={"none"}
-                    height={"1px"}
-                    bg={"#F2BEBE"}
-                    width={"100%"}
-                  />
-                </>
-              ))
+            ? saleData.map((sale, index: number) => {
+                const isComplete = getSaleComplete(sale);
+                return (
+                  <>
+                    <AdminSaleComponent
+                      key={index}
+                      sale={sale}
+                      index={index}
+                      setWhitelistedAddresses={setExistingWhitelistedAddresses}
+                      setSelectedSale={setSelectedSale}
+                      setOpenEditSale={setOpenEditSale}
+                      isComplete={isComplete}
+                    />
+                    <Divider
+                      border={"none"}
+                      height={"1px"}
+                      bg={"#F2BEBE"}
+                      width={"100%"}
+                    />
+                  </>
+                );
+              })
             : null}
           <SubmitButtonContainer>
             <PsyButton
@@ -119,6 +128,7 @@ export const AdminSalesSection = ({
                   floorPrice,
                   ceilingPrice,
                   saleStatus,
+                  tokenIds,
                   width
                 )
               : console.error("no sale selected")

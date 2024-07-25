@@ -22,5 +22,11 @@ export const TreasurySepolia = "0xDeaf211d7554defc958206fa0eA8297869E5D2C1";
 //Core
 export const CoreSepolia = "0xF8dFd9988dc0E9ACe6eB14775589b032C3BEe1Be";
 
+//! ONLY PSYC SALE HAS BEEN UPDATED FOR THE MOMENT!!!!!!! ABIS AS WELL!!!
+//! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 //PSYC Sale
-export const psycSaleSepolia = "0xe5Ae259609a461D67304F89343C8de3400807C9D";
+export const psycSaleSepolia = "0xbAeC4f684E22932046d2e5E3e0A4650ace6fbd4C";
+
+//! ONLY PSYC SALE HAS BEEN UPDATED FOR THE MOMENT!!!!!!!
+//! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

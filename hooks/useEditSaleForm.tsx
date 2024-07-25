@@ -8,6 +8,7 @@ import { parseUnits } from "viem";
 import { getAddresses, uploadAddresses } from "@/lib/server-utils";
 import { getMerkleRoot, getNewAddresses } from "@/utils/saleUtils";
 import { useGetCurrentSaleValues } from "./useGetCurrentSaleValues";
+import useActivateSale from "./useActivateSale";
 
 export const useEditSaleForm = (
   address: string | undefined,
@@ -21,31 +22,26 @@ export const useEditSaleForm = (
   const {
     ceilingPrice: currentCeilingPrice,
     floorPrice: currentFloorPrice,
-    ipfsHash: currentIpfsHash
+    ipfsHash: currentIpfsHash,
+    saleBatches: currentSaleBatch
   } = useGetCurrentSaleValues(id, width);
   const { showErrorToast, showCustomErrorToast, showSuccessToast } =
     useCustomToasts();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState<
-    "ceiling" | "floor" | "whitelist" | undefined
-  >(undefined);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [isError, setIsError] = useState(false);
   const { writeContractAsync } = useWriteContract();
-  const [floorPriceHash, setFloorPriceHash] = useState<
-    `0x${string}` | undefined
-  >(undefined);
-  const [ceilingPriceHash, setCeilingPriceHash] = useState<
+  const [floorAndCeilingPriceHash, setFloorAndCeilingPriceHash] = useState<
     `0x${string}` | undefined
   >(undefined);
   const [whitelistHash, setWhitelistHash] = useState<`0x${string}` | undefined>(
     undefined
   );
-  const { isSuccess: floorPriceSuccess, error: floorPriceError } =
-    useWaitForTransactionReceipt({ hash: floorPriceHash });
-  const { isSuccess: ceilingPriceSuccess, error: ceilingPriceError } =
-    useWaitForTransactionReceipt({
-      hash: ceilingPriceHash
-    });
+  const {
+    isSuccess: floorAndCeilingPriceSuccess,
+    error: floorAndCeilingPriceError
+  } = useWaitForTransactionReceipt({ hash: floorAndCeilingPriceHash });
+
   const { isSuccess: whitelistSuccess, error: whitelistError } =
     useWaitForTransactionReceipt({
       hash: whitelistHash
@@ -59,7 +55,8 @@ export const useEditSaleForm = (
     existingAddresses: string[],
     newFloorPrice: string,
     newCeilingPrice: string,
-    saleStatus: "active" | "complete" | "paused",
+    saleStatusLocal: "active" | "paused",
+    tokenIds: string[],
     width: number
   ) => {
     e.preventDefault();
@@ -74,17 +71,26 @@ export const useEditSaleForm = (
     }
     setIsSubmitting(true);
 
+    const ceilingPriceHasChanged =
+      parseUnits(newCeilingPrice, 18).toString() !== currentCeilingPrice;
+    const floorPriceHasChanged =
+      parseUnits(newFloorPrice, 18).toString() !== currentFloorPrice;
+
     const addressesToSubmit = getNewAddresses(
       addressesToRemove,
       newAddresses,
       existingAddresses
     );
 
+    const { activateSale } = useActivateSale();
+
     try {
       const currentAddresses = await getAddresses(currentIpfsHash);
+      const isPausedLocal = saleStatusLocal === "paused";
+      const isPausedContract = currentSaleBatch[6];
       if (
-        parseUnits(newCeilingPrice, 18).toString() === currentCeilingPrice &&
-        parseUnits(newFloorPrice, 18).toString() === currentFloorPrice &&
+        !ceilingPriceHasChanged &&
+        !floorPriceHasChanged &&
         JSON.stringify(addressesToSubmit.sort()) ===
           JSON.stringify(currentAddresses.sort())
       ) {
@@ -106,39 +112,46 @@ export const useEditSaleForm = (
         });
         setWhitelistHash(merklerootResponse);
       }
-      if (parseUnits(newFloorPrice, 18).toString() !== currentFloorPrice) {
-        const floorPriceResponse = await writeContractAsync({
+
+      if (ceilingPriceHasChanged && floorPriceHasChanged) {
+        const floorAndCeilingPriceResponse = await writeContractAsync({
           ...psycSaleContractConfig,
-          functionName: "changeFloorPriceOfBatch",
-          args: [batchID, parseUnits(newFloorPrice, 18)]
+          functionName: "updateCeilingAndFloorPrice",
+          args: [
+            batchID,
+            parseUnits(newFloorPrice, 18),
+            parseUnits(newCeilingPrice, 18)
+          ]
         });
-        setFloorPriceHash(floorPriceResponse);
-      }
-      if (parseUnits(newCeilingPrice, 18).toString() !== currentCeilingPrice) {
-        const ceilingPriceResponse = await writeContractAsync({
+        setFloorAndCeilingPriceHash(floorAndCeilingPriceResponse);
+      } else if (ceilingPriceHasChanged && !floorPriceHasChanged) {
+        const floorAndCeilingPriceResponse = await writeContractAsync({
           ...psycSaleContractConfig,
-          functionName: "changeCeilingPriceOfBatch",
-          args: [batchID, parseUnits(newCeilingPrice, 18)]
+          functionName: "updateCeilingPrice",
+          args: [batchID, currentFloorPrice, parseUnits(newCeilingPrice, 18)]
         });
-        setCeilingPriceHash(ceilingPriceResponse);
+        setFloorAndCeilingPriceHash(floorAndCeilingPriceResponse);
+      } else if (!ceilingPriceHasChanged && floorPriceHasChanged) {
+        const floorAndCeilingPriceResponse = await writeContractAsync({
+          ...psycSaleContractConfig,
+          functionName: "updateFloorPrice",
+          args: [batchID, parseUnits(newFloorPrice, 18), currentCeilingPrice]
+        });
+        setFloorAndCeilingPriceHash(floorAndCeilingPriceResponse);
       }
 
-      // TODO: need to redeploy SG, change these to correct function names later
-      // if (isPausedLocal !== isPausedContract) {
-      // writeContract({
-      //   ...psycSaleContractConfig,
-      //   functionName: "switchBatchStatus"
-      // });
-      // }
+      if (isPausedLocal !== isPausedContract) {
+        const tokenIdsAsNum = tokenIds.map((id) => parseInt(id));
+        await activateSale(tokenIdsAsNum);
+      }
+
       if (isSuccess) {
-        console.log("yay");
         showSuccessToast("Success! Your sale has been edited!", width);
       }
     } catch (error) {
       const message = (error as Error).message || "An error occurred";
       setIsSubmitting(false);
-      setCeilingPriceHash(undefined);
-      setFloorPriceHash(undefined);
+      setFloorAndCeilingPriceHash(undefined);
       setWhitelistHash(undefined);
       console.log(message);
       console.error(message, "error");
@@ -147,31 +160,16 @@ export const useEditSaleForm = (
   };
 
   useEffect(() => {
-    if (ceilingPriceError) {
-      setIsError(true);
-      return;
-    } else if (floorPriceError) {
-      setIsError(true);
-    } else if (whitelistError) {
-      setIsError(true);
-    }
-
-    if (ceilingPriceSuccess) {
-      setIsSuccess("ceiling");
-    }
-
-    if (floorPriceSuccess) {
-      setIsSuccess("floor");
+    if (floorAndCeilingPriceSuccess) {
+      setIsSuccess(true);
     }
 
     if (whitelistSuccess) {
-      setIsSuccess("whitelist");
+      setIsSuccess(true);
     }
   }, [
-    floorPriceError,
-    floorPriceSuccess,
-    ceilingPriceError,
-    ceilingPriceSuccess,
+    floorAndCeilingPriceError,
+    floorAndCeilingPriceSuccess,
     whitelistError,
     whitelistSuccess,
     isSuccess,
@@ -185,10 +183,9 @@ export const useEditSaleForm = (
       refetchSalesData();
       setIsSubmitting(false);
       setOpenEditSale(false);
-      setCeilingPriceHash(undefined);
-      setFloorPriceHash(undefined);
+      setFloorAndCeilingPriceHash(undefined);
       setWhitelistHash(undefined);
-      setIsSuccess(undefined);
+      setIsSuccess(true);
       setIsError(false);
       showSuccessToast("Your sale has been edited!", width);
       return;
@@ -197,11 +194,10 @@ export const useEditSaleForm = (
       showErrorToast("An error has occurred. Please try again later", width);
       setIsSubmitting(false);
       setOpenEditSale(false);
-      setCeilingPriceHash(undefined);
-      setFloorPriceHash(undefined);
+      setFloorAndCeilingPriceHash(undefined);
       setWhitelistHash(undefined);
-      setIsSuccess(undefined);
-      setIsError(false);
+      setIsSuccess(false);
+      setIsError(true);
     }
   }, [isSuccess, isError, setOpenEditSale]);
 
