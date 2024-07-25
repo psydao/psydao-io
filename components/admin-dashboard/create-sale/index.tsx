@@ -41,7 +41,7 @@ export const CreateSale = ({
     setNewWhitelistedAddresses
   } = useFormState();
   const { tokenIds, isLoading } = useTokenIds();
-  console.log("tokenIds in CreateSale:", tokenIds);
+
   const { getWhitelistedAddresses } = useSaleLocalStorage();
   const whitelistedArray = getWhitelistedAddresses();
   const { address } = useAccount();
