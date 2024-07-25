@@ -1,10 +1,12 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
 import SaleStatusDropdown from "./sale-status-dropdown";
+import type { Sale } from "@/lib/types";
 
 const SaleStatusSection = (props: {
   isPaused: boolean;
   setIsPaused: React.Dispatch<React.SetStateAction<boolean>>;
   isComplete: boolean;
+  sale: Sale | undefined;
 }) => {
   return (
     <Flex
@@ -45,6 +47,7 @@ const SaleStatusSection = (props: {
         <SaleStatusDropdown
           isPaused={props.isPaused}
           setIsPaused={props.setIsPaused}
+          sale={props.sale}
         />
       )}
     </Flex>

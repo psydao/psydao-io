@@ -121,6 +121,7 @@ const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
         isPaused={isPaused}
         setIsPaused={setIsPaused}
         isComplete={isComplete}
+        sale={selectedSale}
       />
       <SetTokenPrice
         setPrice={setFloorPrice}
