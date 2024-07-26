@@ -33,9 +33,9 @@ export const useEditSaleForm = (
   const [floorAndCeilingPriceHash, setFloorAndCeilingPriceHash] = useState<
     `0x${string}` | undefined
   >(undefined);
-  const [whitelistHash, setWhitelistHash] = useState<`0x${string}` | undefined>(
-    undefined
-  );
+  const [merkleRootHash, setMerkleRootHash] = useState<
+    `0x${string}` | undefined
+  >(undefined);
   const [switchSaleStatusHash, setSwitchSaleStatusHash] = useState<
     Address | undefined
   >(undefined);
@@ -44,9 +44,9 @@ export const useEditSaleForm = (
     error: floorAndCeilingPriceError
   } = useWaitForTransactionReceipt({ hash: floorAndCeilingPriceHash });
 
-  const { isSuccess: whitelistSuccess, error: whitelistError } =
+  const { isSuccess: merkleRootSuccess, error: merkleRootError } =
     useWaitForTransactionReceipt({
-      hash: whitelistHash
+      hash: merkleRootHash
     });
 
   const { isSuccess: switchSaleStatusSuccess, error: switchSaleStatusError } =
@@ -87,7 +87,12 @@ export const useEditSaleForm = (
     const addressesToSubmit = getNewAddresses(
       addressesToRemove,
       newAddresses,
-      existingAddresses
+      existingAddresses,
+      () => {
+        setIsSubmitting(false);
+        setIsSuccess(false);
+        setIsError(true);
+      }
     );
 
     try {
@@ -116,7 +121,7 @@ export const useEditSaleForm = (
           functionName: "updateMerkleRoot",
           args: [batchID, newMerkleRoot, newIpfsHash]
         });
-        setWhitelistHash(merklerootResponse);
+        setMerkleRootHash(merklerootResponse);
       }
 
       if (ceilingPriceHasChanged && floorPriceHasChanged) {
@@ -154,15 +159,11 @@ export const useEditSaleForm = (
         });
         setSwitchSaleStatusHash(switchSaleStatusResponse);
       }
-
-      if (isSuccess) {
-        showSuccessToast("Success! Your sale has been edited!", width);
-      }
     } catch (error) {
       const message = (error as Error).message || "An error occurred";
       setIsSubmitting(false);
       setFloorAndCeilingPriceHash(undefined);
-      setWhitelistHash(undefined);
+      setMerkleRootHash(undefined);
       console.log(message);
       console.error(message, "error");
       showCustomErrorToast(message, width);
@@ -170,39 +171,25 @@ export const useEditSaleForm = (
   };
 
   useEffect(() => {
-    if (floorAndCeilingPriceSuccess) {
+    if (
+      floorAndCeilingPriceSuccess ||
+      merkleRootSuccess ||
+      switchSaleStatusSuccess
+    ) {
       setIsSuccess(true);
     }
 
-    if (whitelistSuccess) {
-      setIsSuccess(true);
-    }
-
-    if (switchSaleStatusSuccess) {
-      setIsSuccess(true);
-    }
-
-    if (floorAndCeilingPriceError) {
-      setIsError(true);
-    }
-
-    if (switchSaleStatusError) {
-      setIsError(true);
-    }
-
-    if (whitelistError) {
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    if (floorAndCeilingPriceError || merkleRootError || switchSaleStatusError) {
       setIsError(true);
     }
   }, [
     floorAndCeilingPriceError,
     floorAndCeilingPriceSuccess,
-    whitelistError,
-    whitelistSuccess,
+    merkleRootError,
+    merkleRootSuccess,
     switchSaleStatusSuccess,
-    switchSaleStatusError,
-    isSuccess,
-    isError,
-    setOpenEditSale
+    switchSaleStatusError
   ]);
 
   useEffect(() => {
@@ -212,23 +199,23 @@ export const useEditSaleForm = (
       setIsSubmitting(false);
       setOpenEditSale(false);
       setFloorAndCeilingPriceHash(undefined);
-      setWhitelistHash(undefined);
-      setIsSuccess(true);
+      setMerkleRootHash(undefined);
+      setSwitchSaleStatusHash(undefined);
+      setIsSuccess(false);
       setIsError(false);
       showSuccessToast("Your sale has been edited!", width);
       return;
     }
 
     if (isError) {
-      showErrorToast("An error has occurred. Please try again later", width);
       setIsSubmitting(false);
-      setOpenEditSale(false);
       setFloorAndCeilingPriceHash(undefined);
-      setWhitelistHash(undefined);
+      setMerkleRootHash(undefined);
+      setSwitchSaleStatusHash(undefined);
       setIsSuccess(false);
-      setIsError(true);
+      setIsError(false);
     }
-  }, [isSuccess, isError, setOpenEditSale]);
+  }, [isSuccess, isError]);
 
   return {
     handleEditSale,

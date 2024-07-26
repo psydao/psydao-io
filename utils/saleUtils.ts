@@ -20,18 +20,20 @@ export const toWei = (value: string): bigint => {
 export const getNewAddresses = (
   addressesToRemove: string[],
   newAddresses: string[],
-  existingAddresses: string[]
+  existingAddresses: string[],
+  onError: () => void
 ): `0x${string}`[] => {
   const filteredAddresses = existingAddresses.filter(
     (address) => !addressesToRemove.includes(address)
   );
   filteredAddresses.push(...newAddresses);
-  filteredAddresses.forEach((address) => {
-    if (address.length > 0 && !isAddress(address)) {
-      console.error("Invalid address was input");
-      throw new Error("Invalid address");
-    }
-    return;
-  });
+  const invalidAddresses = filteredAddresses.filter(
+    (address) => !isAddress(address)
+  );
+
+  if (invalidAddresses.length > 0) {
+    onError();
+    return [];
+  }
   return filteredAddresses as `0x${string}`[];
 };

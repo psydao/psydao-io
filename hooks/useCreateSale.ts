@@ -12,7 +12,6 @@ import { splitAndValidateAddresses } from "@/utils/splitAndValidateAddresses";
 import { useCustomToasts } from "./useCustomToasts";
 import { useResize } from "@/hooks/useResize";
 import { uploadAddresses } from "@/lib/server-utils";
-import type { Address } from "viem";
 
 export const useCreateSale = (
   setOpenCreateSale: React.Dispatch<React.SetStateAction<boolean>>,

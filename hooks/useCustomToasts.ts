@@ -29,7 +29,9 @@ const ERROR_MESSAGES = {
   OwnableUnauthorizedAccount: "Invalid wallet address.",
   "Token Array Empty": "No tokens provided for sale.",
   "Unable to decode signature":
-    "Please run 'mintNextBatch' first before creating a sale"
+    "Please run 'mintNextBatch' first before creating a sale",
+  "Size of bytes": "Invalid wallet address(es) submitted",
+  "Invalid Ceiling Price": "Floor price cannot be greater than ceiling price."
 };
 
 export const customErrorMessage = (message: string): string => {
