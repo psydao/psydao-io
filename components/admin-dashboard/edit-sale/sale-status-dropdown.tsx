@@ -96,6 +96,7 @@ const SaleStatusDropdown = (props: {
             fontFamily={"Inter"}
             fontWeight={"bold"}
             fontSize={18}
+            type="button"
           >
             <Flex alignItems={"center"} gap={2}>
               <CustomSVG color={currentValue.color} />

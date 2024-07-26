@@ -40,7 +40,7 @@ export const useGetCurrentSaleValues = (id: string, width: number) => {
   const { data: saleBatchesData, error: saleBatchesError } = useReadContract({
     ...psycSaleContractConfig,
     functionName: "saleBatches",
-    args: [parseInt(id)]
+    args: [id]
   });
 
   useEffect(() => {
@@ -55,11 +55,17 @@ export const useGetCurrentSaleValues = (id: string, width: number) => {
     }
 
     if (saleBatchesData) {
+      console.log(saleBatchesData, "saleBatchesData");
       setSaleBatches(saleBatchesData as SaleBatchesReturn);
     }
 
     if (saleBatchesError) {
-      showErrorToast("Error fetching sale batches from contract", width);
+      showErrorToast(
+        "Error fetching current sale statuses from contract",
+        width
+      );
+      console.log(saleBatchesError.message);
+      console.error(saleBatchesError.message);
     }
   }, [
     data,
