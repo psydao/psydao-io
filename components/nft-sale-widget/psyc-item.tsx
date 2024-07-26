@@ -64,15 +64,11 @@ const PsycItem = ({
   };
 
   const isButtonDisabled =
-    !address ||
-    (!isWhitelisted && isOriginal) ||
-    (isOriginal && !isRandom && isSold)
+    isOriginal && !isRandom && isSold
       ? true
       : isPending || isConfirming || isMinting || isSoldLoading;
 
-  const tooltipLabel = !address
-    ? "You need to connect your wallet"
-    : "You need to be whitelisted to mint";
+  const modalNeeded = !address || (!isWhitelisted && isOriginal);
 
   return (
     <Flex
@@ -123,10 +119,12 @@ const PsycItem = ({
           <MintButton
             customStyle={{
               width: "100%",
-              opacity: isButtonDisabled ? 0.5 : 1
+              opacity: isButtonDisabled || modalNeeded ? 0.5 : 1,
+              cursor: modalNeeded ? "help" : "default"
             }}
-            onClick={address ? handleMint : () => setConnectModalOpen(true)}
+            onClick={modalNeeded ? () => setConnectModalOpen(true) : handleMint}
             isRandom={isRandom}
+            isDisabled={isButtonDisabled}
           >
             {isMinting ? (
               <>
@@ -143,7 +141,11 @@ const PsycItem = ({
         <Flex justifyContent="center" w="100%">
           <MintButton
             customStyle={{ width: "100%", opacity: isButtonDisabled ? 0.5 : 1 }}
-            onClick={address ? handleMint : () => setConnectModalOpen(true)}
+            onClick={
+              modalNeeded
+                ? () => setConnectModalOpen((prev) => !prev)
+                : handleMint
+            }
             isDisabled={isButtonDisabled}
             isRandom={isRandom}
           >
