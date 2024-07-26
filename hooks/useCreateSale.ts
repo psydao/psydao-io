@@ -4,22 +4,17 @@ import {
   useWaitForTransactionReceipt,
   useWriteContract
 } from "wagmi";
-import { type AdminSale } from "@/lib/types";
+import type { GetAllSalesWithTokensData, Sale } from "@/lib/types";
 
-import { generateNftIds } from "@/services/generateNftIds";
-import {
-  getLastTokenId,
-  getMerkleRoot,
-  toUnixTimestamp,
-  toWei
-} from "@/utils/saleUtils";
+import { getMerkleRoot, toUnixTimestamp, toWei } from "@/utils/saleUtils";
 import { coreContractConfig } from "@/lib/core-contract-config";
 import { splitAndValidateAddresses } from "@/utils/splitAndValidateAddresses";
 
 import { useCustomToasts } from "./useCustomToasts";
-import { useSaleLocalStorage } from "./useSaleLocalStorage";
 import { useResize } from "@/hooks/useResize";
 import { uploadAddresses } from "@/lib/server-utils";
+import { useQuery } from "@apollo/client";
+import { getAllSalesWithTokens } from "@/services/graph";
 
 export const useCreateSale = (
   setOpenCreateSale: React.Dispatch<React.SetStateAction<boolean>>,
@@ -35,10 +30,7 @@ export const useCreateSale = (
     showSuccessToast,
     showDefaultErrorToast
   } = useCustomToasts();
-  const { getSales, saveSales, saveWhitelistedAddresses } =
-    useSaleLocalStorage();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [newSale, setNewSale] = useState<AdminSale | null>(null);
   const { width } = useResize();
 
   const { data: hash, writeContract, isPending, error } = useWriteContract();
@@ -66,18 +58,6 @@ export const useCreateSale = (
       }
       setIsSubmitting(true);
       let isSuccess = true;
-      const mySales: AdminSale[] = getSales();
-      const lastTokenId = getLastTokenId(mySales);
-
-      const newSale: AdminSale = {
-        startDate,
-        startTime,
-        floorPrice,
-        ceilingPrice,
-        tokenIds:
-          tokenIds.length > 0 ? tokenIds : generateNftIds(1, lastTokenId)
-      };
-      setNewSale(newSale);
 
       const splitNewWhitelistedAddresses = splitAndValidateAddresses(
         newWhitelistedAddresses,
@@ -137,6 +117,7 @@ export const useCreateSale = (
           console.log("writeContract called");
         } catch (error) {
           const message = (error as Error).message || "An error occurred";
+          console.log(message);
           showCustomErrorToast(message, width);
 
           setIsSubmitting(false);
@@ -145,9 +126,6 @@ export const useCreateSale = (
     },
     [
       isConnected,
-      getSales,
-      saveSales,
-      saveWhitelistedAddresses,
       setOpenCreateSale,
       showDefaultErrorToast,
       showErrorToast,
@@ -164,10 +142,8 @@ export const useCreateSale = (
     if (error) {
       showCustomErrorToast(error.message, width);
       setIsSubmitting(false);
-    } else if (transactionSuccess && newSale) {
-      const mySales = getSales();
-      saveSales([...mySales, newSale]);
-      console.log("Sale created:", newSale);
+    } else if (transactionSuccess) {
+      console.log("Sale created successfully");
       refetchSalesData();
       showSuccessToast("Success! Your sale has been created.", width);
       triggerNftSaleUpdate();
@@ -179,14 +155,10 @@ export const useCreateSale = (
     transactionSuccess,
     isPending,
     width,
-    getSales,
-    saveSales,
     setOpenCreateSale,
     showDefaultErrorToast,
     showSuccessToast,
-    newSale,
     whitelistedArray,
-    saveWhitelistedAddresses,
     splitAndValidateAddresses
   ]);
 

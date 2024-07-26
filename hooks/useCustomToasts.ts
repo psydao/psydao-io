@@ -27,7 +27,9 @@ const ERROR_MESSAGES = {
     "Ceiling price cannot be less than the floor price.",
   "server error": "A server error has occurred. Please try again.",
   OwnableUnauthorizedAccount: "Invalid wallet address.",
-  "Token Array Empty": "No tokens provided for sale."
+  "Token Array Empty": "No tokens provided for sale.",
+  "Unable to decode signature":
+    "Please run 'mintNextBatch' first before creating a sale"
 };
 
 export const customErrorMessage = (message: string): string => {
