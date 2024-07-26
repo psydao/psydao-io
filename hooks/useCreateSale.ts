@@ -4,7 +4,6 @@ import {
   useWaitForTransactionReceipt,
   useWriteContract
 } from "wagmi";
-import type { GetAllSalesWithTokensData, Sale } from "@/lib/types";
 
 import { getMerkleRoot, toUnixTimestamp, toWei } from "@/utils/saleUtils";
 import { coreContractConfig } from "@/lib/core-contract-config";
@@ -13,8 +12,7 @@ import { splitAndValidateAddresses } from "@/utils/splitAndValidateAddresses";
 import { useCustomToasts } from "./useCustomToasts";
 import { useResize } from "@/hooks/useResize";
 import { uploadAddresses } from "@/lib/server-utils";
-import { useQuery } from "@apollo/client";
-import { getAllSalesWithTokens } from "@/services/graph";
+import type { Address } from "viem";
 
 export const useCreateSale = (
   setOpenCreateSale: React.Dispatch<React.SetStateAction<boolean>>,
@@ -33,10 +31,20 @@ export const useCreateSale = (
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { width } = useResize();
 
-  const { data: hash, writeContract, isPending, error } = useWriteContract();
+  const [createSaleHash, setCreateSaleHash] = useState<Address | undefined>(
+    undefined
+  );
+
+  const { data: hash, writeContract, error } = useWriteContract();
   const { isSuccess: transactionSuccess } = useWaitForTransactionReceipt({
-    hash
+    hash: createSaleHash
   });
+
+  useEffect(() => {
+    if (hash) {
+      setCreateSaleHash(hash);
+    }
+  }, [hash]);
 
   const handleCreateSale = useCallback(
     async (
@@ -117,7 +125,6 @@ export const useCreateSale = (
           console.log("writeContract called");
         } catch (error) {
           const message = (error as Error).message || "An error occurred";
-          console.log(message);
           showCustomErrorToast(message, width);
 
           setIsSubmitting(false);
@@ -142,6 +149,8 @@ export const useCreateSale = (
     if (error) {
       showCustomErrorToast(error.message, width);
       setIsSubmitting(false);
+      setCreateSaleHash(undefined);
+      console.log(createSaleHash);
     } else if (transactionSuccess) {
       console.log("Sale created successfully");
       refetchSalesData();
@@ -149,18 +158,9 @@ export const useCreateSale = (
       triggerNftSaleUpdate();
       setOpenCreateSale(false);
       setIsSubmitting(false);
+      setCreateSaleHash(undefined);
     }
-  }, [
-    error,
-    transactionSuccess,
-    isPending,
-    width,
-    setOpenCreateSale,
-    showDefaultErrorToast,
-    showSuccessToast,
-    whitelistedArray,
-    splitAndValidateAddresses
-  ]);
+  }, [error, transactionSuccess, width]);
 
   return { handleCreateSale, isSubmitting };
 };
