@@ -7,6 +7,7 @@ type ValueContainerProps = {
   isWhitelistedAddress: boolean;
   key?: number;
   removeAddress?: (address: string) => void;
+  saleComplete?: boolean;
 };
 
 const ValueContainer = (props: ValueContainerProps) => {
@@ -14,7 +15,7 @@ const ValueContainer = (props: ValueContainerProps) => {
     <Flex
       py={{ base: 2, md: 3 }}
       px={{ base: 2, md: 4 }}
-      cursor={"pointer"}
+      cursor={props.saleComplete ? "default" : "pointer"}
       bg={"#F2BEBE1A"}
       borderRadius={"50px"}
       flexShrink={0}
@@ -29,21 +30,23 @@ const ValueContainer = (props: ValueContainerProps) => {
       >
         {props.isWhitelistedAddress ? shortenAddress(props.value) : props.value}
       </Text>
-      {props.isWhitelistedAddress && props.removeAddress && (
-        <Button
-          variant={"unstyled"}
-          p={0}
-          m={0}
-          onClick={() => {
-            if (props.removeAddress) {
-              props.removeAddress(props.value);
-            }
-          }}
-          size={"xs"}
-        >
-          <CloseIcon height={"9px"} width={"9px"} color={"#F2BEBE"} />
-        </Button>
-      )}
+      {props.isWhitelistedAddress &&
+        props.removeAddress &&
+        !props.saleComplete && (
+          <Button
+            variant={"unstyled"}
+            p={0}
+            m={0}
+            onClick={() => {
+              if (props.removeAddress) {
+                props.removeAddress(props.value);
+              }
+            }}
+            size={"xs"}
+          >
+            <CloseIcon height={"9px"} width={"9px"} color={"#F2BEBE"} />
+          </Button>
+        )}
     </Flex>
   );
 };

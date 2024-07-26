@@ -4,6 +4,7 @@ type SubmitSaleButtonProps = {
   address: string | undefined;
   isSubmitting: boolean;
   type: "create" | "edit";
+  saleComplete?: boolean;
 };
 
 const ButtonContent = (props: {
@@ -51,7 +52,7 @@ const SubmitSaleButton = (props: SubmitSaleButtonProps) => {
       display={"flex"}
       alignItems="center"
       justifyContent="center"
-      isDisabled={props.isSubmitting ?? !props.address}
+      isDisabled={props.isSubmitting || !props.address || props.saleComplete}
       _hover={{
         opacity: !props.address ? "" : "0.8"
       }}

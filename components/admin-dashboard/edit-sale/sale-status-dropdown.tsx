@@ -1,3 +1,6 @@
+import { useGetCurrentSaleValues } from "@/hooks/useGetCurrentSaleValues";
+import { useResize } from "@/hooks/useResize";
+import type { Sale } from "@/lib/types";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import {
   Menu,
@@ -7,25 +10,24 @@ import {
   Box,
   Flex
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Status {
-  status: "Active" | "Complete" | "Paused";
+  status: "Active" | "Paused";
   color: string;
+  paused: boolean;
 }
 
 const statusDropdownContent: Status[] = [
   {
     status: "Active",
-    color: "#269200"
-  },
-  {
-    status: "Complete",
-    color: "#999999"
+    color: "#269200",
+    paused: false
   },
   {
     status: "Paused",
-    color: "#E86969"
+    color: "#E86969",
+    paused: true
   }
 ];
 
@@ -46,15 +48,43 @@ const CustomSVG = (props: { color: string }) => {
 };
 
 const SaleStatusDropdown = (props: {
-  saleStatus: "active" | "paused" | "complete";
-  setSaleStatus: React.Dispatch<
-    React.SetStateAction<"active" | "paused" | "complete">
-  >;
+  isPaused: boolean;
+  setIsPaused: React.Dispatch<React.SetStateAction<boolean>>;
+  sale: Sale | undefined;
 }) => {
+  const { width } = useResize();
+  const [id, setId] = useState<string>("");
+
+  const { saleBatches } = useGetCurrentSaleValues(id, width);
   const [currentValue, setCurrentValue] = useState<Status>({
     status: "Active",
-    color: "#269200"
-  } as Status);
+    color: "#269200",
+    paused: false
+  });
+
+  useEffect(() => {
+    if (saleBatches) {
+      props.setIsPaused(saleBatches[6]);
+      setCurrentValue(
+        saleBatches[6]
+          ? {
+              status: "Paused",
+              color: "#E86969",
+              paused: true
+            }
+          : {
+              status: "Active",
+              color: "#269200",
+              paused: false
+            }
+      );
+    }
+
+    if (props.sale) {
+      setId(props.sale.batchID);
+    }
+  }, [saleBatches, props.sale]);
+
   return (
     <Menu closeOnSelect>
       {({ isOpen }) => (
@@ -66,6 +96,7 @@ const SaleStatusDropdown = (props: {
             fontFamily={"Inter"}
             fontWeight={"bold"}
             fontSize={18}
+            type="button"
           >
             <Flex alignItems={"center"} gap={2}>
               <CustomSVG color={currentValue.color} />
@@ -84,12 +115,7 @@ const SaleStatusDropdown = (props: {
                   gap={2}
                   onClick={() => {
                     setCurrentValue(entry);
-                    props.setSaleStatus(
-                      entry.status.toLowerCase() as
-                        | "active"
-                        | "paused"
-                        | "complete"
-                    );
+                    props.setIsPaused(entry.paused);
                   }}
                 >
                   <CustomSVG color={entry.color} />
