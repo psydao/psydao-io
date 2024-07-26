@@ -1,4 +1,12 @@
-import { Box, Modal, ModalContent, ModalOverlay } from "@chakra-ui/react";
+import { CloseIcon } from "@chakra-ui/icons";
+import {
+  Box,
+  Button,
+  Flex,
+  Modal,
+  ModalContent,
+  ModalOverlay
+} from "@chakra-ui/react";
 import Image from "next/image";
 
 type FullSizeImageModalProps = {
@@ -15,6 +23,24 @@ const FullSizeImageModal = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
+      <Flex
+        w={"100%"}
+        position={"absolute"}
+        top={"8%"}
+        justifyContent={"center"}
+        zIndex={9999}
+      >
+        <Button
+          variant={"unstyled"}
+          bg={"#00000038"}
+          w={"64px"}
+          h={"64px"}
+          borderRadius={"999px"}
+          onClick={onClose}
+        >
+          <CloseIcon h={"27px"} w={"27px"} color={"white"} />
+        </Button>
+      </Flex>
       <ModalContent
         h={{ base: "20%", sm: "27%", lg: "40%" }}
         w={"100%"}
