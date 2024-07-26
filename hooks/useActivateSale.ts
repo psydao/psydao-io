@@ -26,12 +26,7 @@ const useActivateSale = () => {
   );
 
   useEffect(() => {
-    if (isPending) {
-      showSuccessToast(
-        "Your transaction is processing. Please wait for confirmation.",
-        width
-      );
-    } else if (isSuccess) {
+    if (isSuccess) {
       setIsSalesActive(true);
       showSuccessToast("Success! Your sales have been activated.", width);
     } else if (error) {
@@ -39,14 +34,7 @@ const useActivateSale = () => {
       showCustomErrorToast(message, width);
       setIsSalesActive(false);
     }
-  }, [
-    isPending,
-    isSuccess,
-    error,
-    showCustomErrorToast,
-    showSuccessToast,
-    width
-  ]);
+  }, [isSuccess, error, width]);
 
   return {
     isSalesActive,
