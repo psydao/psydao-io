@@ -59,7 +59,12 @@ export const useGetCurrentSaleValues = (id: string, width: number) => {
     }
 
     if (saleBatchesError) {
-      showErrorToast("Error fetching sale batches from contract", width);
+      showErrorToast(
+        "Error fetching current sale statuses from contract",
+        width
+      );
+      console.log(saleBatchesError.message);
+      console.error(saleBatchesError.message);
     }
   }, [
     data,
