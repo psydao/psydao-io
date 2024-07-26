@@ -40,7 +40,7 @@ export const useGetCurrentSaleValues = (id: string, width: number) => {
   const { data: saleBatchesData, error: saleBatchesError } = useReadContract({
     ...psycSaleContractConfig,
     functionName: "saleBatches",
-    args: [parseInt(id)]
+    args: [id]
   });
 
   useEffect(() => {
@@ -55,6 +55,7 @@ export const useGetCurrentSaleValues = (id: string, width: number) => {
     }
 
     if (saleBatchesData) {
+      console.log(saleBatchesData, "saleBatchesData");
       setSaleBatches(saleBatchesData as SaleBatchesReturn);
     }
 
