@@ -14,7 +14,7 @@ export const useWithdrawRoyalties = () => {
     useCustomToasts();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { data: hash, writeContract, isPending, error } = useWriteContract();
+  const { data: hash, writeContract, error } = useWriteContract();
   const { isSuccess: transactionSuccess } = useWaitForTransactionReceipt({
     hash
   });
@@ -58,16 +58,11 @@ export const useWithdrawRoyalties = () => {
         console.log("Transaction error:", error.message);
       }
       setIsSubmitting(false);
-    } else if (isPending) {
-      showSuccessToast(
-        "Your transaction is processing. Please wait for confirmation.",
-        width
-      );
     } else if (transactionSuccess) {
       showSuccessToast("Success! Royalties have been withdrawn.", width);
       setIsSubmitting(false);
     }
-  }, [error, transactionSuccess, isPending, showErrorToast, showSuccessToast]);
+  }, [error, transactionSuccess]);
 
   return { withdrawRoyalties, isSubmitting };
 };
