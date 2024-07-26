@@ -6,6 +6,7 @@ type SetTokenPriceProps = {
   type: "floor" | "ceiling";
   initialValue?: string;
   currentFloorPrice?: string;
+  isDisabled?: boolean;
 };
 
 const SetTokenPrice = (props: SetTokenPriceProps) => {
@@ -67,6 +68,7 @@ const SetTokenPrice = (props: SetTokenPriceProps) => {
           border={"none"}
           focusBorderColor="transparent"
           onWheel={(e) => e.currentTarget.blur()}
+          isDisabled={props.isDisabled}
         />
         <Flex
           alignItems={"center"}

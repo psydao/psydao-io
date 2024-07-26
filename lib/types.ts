@@ -1,6 +1,9 @@
+import type { Address } from "viem";
+
 interface TokenOnSale {
   id: string;
   tokenID: string;
+  buyer: Address | null;
 }
 
 export interface Sale {

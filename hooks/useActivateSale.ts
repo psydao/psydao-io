@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useWriteContract } from "wagmi";
 
 import psycSaleAbiSepolia from "../abis/psycSaleAbiSepolia.json";
@@ -7,14 +7,12 @@ import { useCustomToasts } from "./useCustomToasts";
 import { useResize } from "./useResize";
 
 const useActivateSale = () => {
-  const [isSalesActive, setIsSalesActive] = useState(false);
   const { writeContract, isPending, isSuccess, error } = useWriteContract();
   const { width } = useResize();
   const { showCustomErrorToast, showSuccessToast } = useCustomToasts();
 
   const activateSale = useCallback(
     async (tokenIds: number[]) => {
-      setIsSalesActive(false);
       writeContract({
         address: psycSaleSepolia,
         abi: psycSaleAbiSepolia,
@@ -26,30 +24,15 @@ const useActivateSale = () => {
   );
 
   useEffect(() => {
-    if (isPending) {
-      showSuccessToast(
-        "Your transaction is processing. Please wait for confirmation.",
-        width
-      );
-    } else if (isSuccess) {
-      setIsSalesActive(true);
+    if (isSuccess) {
       showSuccessToast("Success! Your sales have been activated.", width);
     } else if (error) {
       const message = (error as Error).message || "An error occurred";
       showCustomErrorToast(message, width);
-      setIsSalesActive(false);
     }
-  }, [
-    isPending,
-    isSuccess,
-    error,
-    showCustomErrorToast,
-    showSuccessToast,
-    width
-  ]);
+  }, [isSuccess, error, showCustomErrorToast, showSuccessToast, width]);
 
   return {
-    isSalesActive,
     activateSale,
     isPending,
     isSuccess,

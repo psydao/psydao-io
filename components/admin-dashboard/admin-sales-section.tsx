@@ -10,13 +10,13 @@ import { formatEther } from "viem";
 import SubmitSaleButton from "../commons/submit-sale-button";
 import { useEditSaleForm } from "@/hooks/useEditSaleForm";
 import { useResize } from "@/hooks/useResize";
+import { getSaleComplete } from "@/utils/getSaleComplete";
 
 export const AdminSalesSection = ({
   setOpenCreateSale,
   openEditSale,
   setOpenEditSale,
   setSelectedSale,
-  openCreateSale,
   saleData,
   selectedSale,
   triggerNftSaleUpdate,
@@ -27,7 +27,6 @@ export const AdminSalesSection = ({
   openEditSale: boolean;
   setSelectedSale: React.Dispatch<React.SetStateAction<Sale | undefined>>;
   setOpenEditSale: React.Dispatch<React.SetStateAction<boolean>>;
-  openCreateSale: boolean;
   saleData: Sale[];
   triggerNftSaleUpdate: () => void;
   refetchSalesData: () => void;
@@ -41,16 +40,16 @@ export const AdminSalesSection = ({
     triggerNftSaleUpdate,
     refetchSalesData
   );
+  const [isPaused, setIsPaused] = useState<boolean>(false);
   const [existingWhitelistedAddresses, setExistingWhitelistedAddresses] =
     useState<string[]>([]);
   const [newWhitelistedAddresses, setNewWhitelistedAddresses] =
     useState<string>("");
+
   const [addressesToRemove, setAddressesToRemove] = useState<string[]>([]);
   const [floorPrice, setFloorPrice] = useState<string>("");
   const [ceilingPrice, setCeilingPrice] = useState<string>("");
-  const [saleStatus, setSaleStatus] = useState<
-    "active" | "complete" | "paused"
-  >("active");
+  const [saleComplete, setSaleComplete] = useState<boolean>(false);
 
   const splitNewWhitelistedAddresses =
     newWhitelistedAddresses.length > 0
@@ -61,6 +60,7 @@ export const AdminSalesSection = ({
     if (selectedSale) {
       setFloorPrice(formatEther(BigInt(selectedSale.floorPrice)));
       setCeilingPrice(formatEther(BigInt(selectedSale.ceilingPrice)));
+      setSaleComplete(getSaleComplete(selectedSale));
     }
   }, [selectedSale]);
 
@@ -77,24 +77,30 @@ export const AdminSalesSection = ({
           overflowY="auto"
         >
           {saleData.length > 0
-            ? saleData.map((sale, index: number) => (
-                <>
-                  <AdminSaleComponent
-                    key={index}
-                    sale={sale}
-                    index={index}
-                    setWhitelistedAddresses={setExistingWhitelistedAddresses}
-                    setSelectedSale={setSelectedSale}
-                    setOpenEditSale={setOpenEditSale}
-                  />
-                  <Divider
-                    border={"none"}
-                    height={"1px"}
-                    bg={"#F2BEBE"}
-                    width={"100%"}
-                  />
-                </>
-              ))
+            ? saleData.map((sale, index: number) => {
+                const isComplete = getSaleComplete(sale);
+                return (
+                  <>
+                    <AdminSaleComponent
+                      key={index}
+                      sale={sale}
+                      index={index}
+                      setWhitelistedAddresses={setExistingWhitelistedAddresses}
+                      setSelectedSale={setSelectedSale}
+                      setOpenEditSale={setOpenEditSale}
+                      isComplete={isComplete}
+                      isPaused={isPaused}
+                      setIsPaused={setIsPaused}
+                    />
+                    <Divider
+                      border={"none"}
+                      height={"1px"}
+                      bg={"#F2BEBE"}
+                      width={"100%"}
+                    />
+                  </>
+                );
+              })
             : null}
           <SubmitButtonContainer>
             <PsyButton
@@ -118,7 +124,7 @@ export const AdminSalesSection = ({
                   existingWhitelistedAddresses,
                   floorPrice,
                   ceilingPrice,
-                  saleStatus,
+                  isPaused,
                   width
                 )
               : console.error("no sale selected")
@@ -141,14 +147,16 @@ export const AdminSalesSection = ({
               setNewWhitelistedAddresses={setNewWhitelistedAddresses}
               whitelistedArray={existingWhitelistedAddresses}
               newWhitelistedAddresses={newWhitelistedAddresses}
-              setSaleStatus={setSaleStatus}
-              saleStatus={saleStatus}
+              setIsPaused={setIsPaused}
+              isPaused={isPaused}
+              isComplete={saleComplete}
             />
             <SubmitButtonContainer>
               <SubmitSaleButton
                 type="edit"
                 address={address}
                 isSubmitting={isSubmitting}
+                saleComplete={saleComplete}
               />
             </SubmitButtonContainer>
           </Flex>
