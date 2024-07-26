@@ -31,20 +31,10 @@ export const useCreateSale = (
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { width } = useResize();
 
-  const [createSaleHash, setCreateSaleHash] = useState<Address | undefined>(
-    undefined
-  );
-
   const { data: hash, writeContract, error } = useWriteContract();
   const { isSuccess: transactionSuccess } = useWaitForTransactionReceipt({
-    hash: createSaleHash
+    hash
   });
-
-  useEffect(() => {
-    if (hash) {
-      setCreateSaleHash(hash);
-    }
-  }, [hash]);
 
   const handleCreateSale = useCallback(
     async (
@@ -149,8 +139,6 @@ export const useCreateSale = (
     if (error) {
       showCustomErrorToast(error.message, width);
       setIsSubmitting(false);
-      setCreateSaleHash(undefined);
-      console.log(createSaleHash);
     } else if (transactionSuccess) {
       console.log("Sale created successfully");
       refetchSalesData();
@@ -158,7 +146,6 @@ export const useCreateSale = (
       triggerNftSaleUpdate();
       setOpenCreateSale(false);
       setIsSubmitting(false);
-      setCreateSaleHash(undefined);
     }
   }, [error, transactionSuccess, width]);
 
