@@ -24,7 +24,7 @@ export const customErrorMessage = (message: string) => {
   }
 
   if (message.includes("Sale Has Not Started")) {
-    return "Cannot edit sale: Sale has not started.";
+    return "Sale has not started.";
   }
 
   if (message.includes("Not Whitelisted")) {

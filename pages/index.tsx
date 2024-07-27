@@ -32,6 +32,7 @@ import { NftSaleWidget } from "@/components/nft-sale-widget";
 import WalletConnectHome from "@/components/connectWalletHome";
 import AdminDashboardWidget from "@/components/admin-dashboard";
 import GeneralDashboard from "@/components/general-dashboard";
+// import SaleWidgetProvider from "@/providers/SaleWidgetContext";
 
 // TODO Extract Pill component since it seems it will become a basic primitive
 // in our design
@@ -195,11 +196,15 @@ const Homepage: NextPage = () => {
                   >
                     <Blog />
                     <SwapWidget />
+
                     <NftSaleWidget updateTrigger={updateNftSaleTrigger} />
                     <AdminDashboardWidget
                       triggerNftSaleUpdate={triggerNftSaleUpdate}
                     />
-                    <GeneralDashboard />
+                    <GeneralDashboard
+                      triggerNftSaleUpdate={triggerNftSaleUpdate}
+                    />
+
                     <Radio />
                     <Manifesto />
                   </Box>

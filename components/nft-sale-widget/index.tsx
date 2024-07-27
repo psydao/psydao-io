@@ -4,9 +4,7 @@ import {
   useMediaQuery,
   TabPanel,
   TabPanels,
-  Tabs,
-  Text,
-  Flex
+  Tabs
 } from "@chakra-ui/react";
 import { Window } from "@/components/ui/window";
 import { useWindowManager } from "@/components/ui/window-manager";
