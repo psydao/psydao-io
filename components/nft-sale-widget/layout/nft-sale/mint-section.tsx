@@ -42,9 +42,14 @@ const MintSection = ({
   const { loading, error, data } = useQuery<GetAllSalesWithTokensData>(
     getAllSalesWithTokens
   );
-
   const client = useApolloClient() as ApolloClient<NormalizedCacheObject>;
   const { address } = useAccount();
+  const [balances, setBalances] = useState<{ [key: string]: string }>({});
+  const [randomToken, setRandomToken] = useState<WhitelistedTokenItem | null>(
+    null
+  );
+  const [whitelist, setWhitelist] = useState<{ [key: string]: string[] }>({});
+  const { isLoading, isPrivateSale } = usePrivateSale();
 
   const fetchUserBalance = async (
     client: ApolloClient<NormalizedCacheObject>,
@@ -66,8 +71,6 @@ const MintSection = ({
       return null;
     }
   };
-
-  const [balances, setBalances] = useState<{ [key: string]: string }>({});
 
   const fetchBalances = async () => {
     if (address && activeSale) {
@@ -99,15 +102,9 @@ const MintSection = ({
     }
   };
 
-  useEffect(() => {
-    fetchBalances().catch((error) => {
-      console.error("Error fetching balances:", error);
-    });
-  }, [address, activeSale, client]);
-
-  useEffect(() => {
-    console.log(data?.sales, "sales");
-  }, [data]);
+  const refetchAllBalances = async () => {
+    await fetchBalances();
+  };
 
   const images = useMemo(() => {
     if (!activeSale) return [];
@@ -117,35 +114,6 @@ const MintSection = ({
   }, [activeSale]);
 
   const currentImageIndex = useRandomImage(isRandom, images);
-  const [randomToken, setRandomToken] = useState<WhitelistedTokenItem | null>(
-    null
-  );
-  const [whitelist, setWhitelist] = useState<{ [key: string]: string[] }>({});
-
-  const { isLoading, isPrivateSale } = usePrivateSale();
-
-  useEffect(() => {
-    console.log(!isLoading && isPrivateSale, "isPrivateSale");
-  }, [isPrivateSale]);
-
-  useEffect(() => {
-    if (activeSale) {
-      const fetchWhitelist = async () => {
-        try {
-          const addresses = await getAddresses(activeSale.ipfsHash);
-          setWhitelist((prev) => ({
-            ...prev,
-            [activeSale.ipfsHash]: addresses
-          }));
-        } catch (error) {
-          console.error("Error fetching whitelist addresses:", error);
-        }
-      };
-      fetchWhitelist().catch((error) => {
-        console.error("Error fetching whitelist:", error);
-      });
-    }
-  }, [activeSale]);
 
   const activeTokens = useMemo(() => {
     if (!activeSale) return [];
@@ -159,7 +127,44 @@ const MintSection = ({
       whitelist: whitelist[activeSale.ipfsHash] ?? [],
       balance: balances[token.tokenID] ?? "0"
     }));
-  }, [activeSale, images, whitelist]);
+  }, [activeSale, images, whitelist, balances]);
+
+  const fetchWhitelist = async () => {
+    if (activeSale) {
+      try {
+        const addresses = await getAddresses(activeSale.ipfsHash);
+        setWhitelist((prev) => ({
+          ...prev,
+          [activeSale.ipfsHash]: addresses
+        }));
+      } catch (error) {
+        console.error("Error fetching whitelist addresses:", error);
+      }
+    }
+  };
+  useEffect(() => {
+    console.log(!isLoading && isPrivateSale, "isPrivateSale");
+  }, [isPrivateSale]);
+
+  useEffect(() => {
+    console.log(data?.sales, "sales");
+  }, [data]);
+
+  useEffect(() => {
+    if (address && activeSale) {
+      fetchBalances().catch((error) => {
+        console.error("Error fetching balances:", error);
+      });
+    }
+  }, [address, activeSale, client]);
+
+  useEffect(() => {
+    if (activeSale) {
+      fetchWhitelist().catch((error) => {
+        console.error("Error fetching whitelist:", error);
+      });
+    }
+  }, [activeSale]);
 
   useEffect(() => {
     if (isRandom && activeTokens.length > 0) {
@@ -172,7 +177,7 @@ const MintSection = ({
   if (loading) return <Box textAlign="center">Loading...</Box>;
   if (error) return <Box textAlign="center">Error loading data</Box>;
 
-  const privateSale = !isLoading && isPrivateSale;
+  const privateSaleStatus = !isLoading && isPrivateSale;
 
   return (
     <Flex textAlign="center" py={4} px={4} justifyContent={"center"}>
@@ -182,9 +187,10 @@ const MintSection = ({
             item={randomToken}
             index={currentImageIndex}
             isRandom={true}
-            isPrivateSale={privateSale}
+            isPrivateSale={privateSaleStatus}
             isOriginal={isOriginal}
             loading={loading}
+            refetchBalances={refetchAllBalances}
           />
         </Flex>
       ) : (
@@ -212,9 +218,10 @@ const MintSection = ({
               }}
               index={parseInt(token.id, 10)}
               isRandom={isRandom}
-              isPrivateSale={privateSale}
+              isPrivateSale={privateSaleStatus}
               isOriginal={isOriginal}
               loading={loading}
+              refetchBalances={refetchAllBalances}
             />
           ))}
         </Grid>

@@ -16,6 +16,7 @@ interface PsycItemProps {
   isPrivateSale: boolean;
   isOriginal: boolean;
   loading: boolean;
+  refetchBalances: () => void;
 }
 
 const PsycItem = ({
@@ -23,13 +24,15 @@ const PsycItem = ({
   index,
   isRandom,
   isPrivateSale,
-  isOriginal
+  isOriginal,
   // loading
+  refetchBalances
 }: PsycItemProps) => {
   const { buyNft, isPending, isConfirming, isMinting } = useBuyNft(
     isPrivateSale,
     isRandom,
-    isOriginal
+    isOriginal,
+    refetchBalances
   );
 
   const { address } = useAccount();
