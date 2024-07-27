@@ -12,6 +12,7 @@ import Image from "next/image";
 import FullSizeImageModal from "../commons/image-modal";
 
 import ConnectWalletModal from "./commons/connect-wallet-modal";
+import MintCount from "../commons/mint-count";
 
 interface PsycItemProps {
   item: TokenItem & { whitelist: string[]; balance: string };
@@ -76,7 +77,7 @@ const PsycItem = ({
 
   const [isImageOpen, setIsImageOpen] = useState(false);
 
-  const showMintedText = !isOriginal && item.balance !== "0";
+  const showMintedText = !isRandom && !isOriginal && item.balance !== "0";
 
   return (
     <Flex
@@ -121,7 +122,7 @@ const PsycItem = ({
             </Text>
           </Box>
         )}
-        {showMintedText && (
+        {/* {showMintedText && (
           <Box
             position="absolute"
             top="0"
@@ -134,10 +135,12 @@ const PsycItem = ({
             justifyContent="center"
           >
             <Text color="white" fontWeight="bold">
-              You have Minted {item.balance} times
+              You have Minted{" "}
+              {item.balance === "1" ? "Once" : `${item.balance} times`}
             </Text>
           </Box>
-        )}
+        )} */}
+        {showMintedText && <MintCount count={item.balance} />}
         <NFTPrice price={item.price} />
       </Box>
       {isOriginal && (

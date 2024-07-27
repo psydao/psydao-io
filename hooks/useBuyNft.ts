@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { InMemoryCache } from "@apollo/client";
 import {
   useConnect,
   useWaitForTransactionReceipt,
@@ -14,6 +15,7 @@ import { useResize } from "./useResize";
 import { psycSaleContractConfig } from "@/lib/sale-contract-config";
 import { toWei } from "@/utils/saleUtils";
 import { useCustomToasts } from "./useCustomToasts";
+import graphClient from "@/config/graphql";
 
 type ArgsType =
   | [number, string[]]
@@ -142,7 +144,13 @@ const useBuyNft = (
       setIsModalOpen(false);
     } else if (isSuccess) {
       handleTransactionSuccess(width);
+      graphClient.cache.evict({
+        fieldName: "userCopyBalance",
+        broadcast: false
+      });
+      graphClient.cache.gc();
       refetchBalances();
+      console.log("Balances refetched after mint");
       setIsMinting(false);
       setIsModalOpen(false);
       setIsConfirmed(true);
