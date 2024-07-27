@@ -1,13 +1,19 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { Box, Flex, Grid } from "@chakra-ui/react";
-import { useQuery } from "@apollo/client";
-import { getAllSalesWithTokens } from "@/services/graph";
+import {
+  type ApolloClient,
+  type NormalizedCacheObject,
+  useApolloClient,
+  useQuery
+} from "@apollo/client";
+import { getAllSalesWithTokens, getUserCopyBalance } from "@/services/graph";
 import type { TokenItem, GetAllSalesWithTokensData, Sale } from "@/lib/types";
 import { formatUnits } from "viem";
 import PsycItem from "../../psyc-item";
 import useRandomImage from "@/hooks/useRandomImage";
 import { getAddresses } from "@/lib/server-utils";
 import usePrivateSale from "@/hooks/usePrivateSale";
+import { useAccount } from "wagmi";
 
 interface MintSectionProps {
   isRandom: boolean;
@@ -18,6 +24,14 @@ interface MintSectionProps {
 
 interface WhitelistedTokenItem extends TokenItem {
   whitelist: string[];
+  balance: string;
+}
+
+interface UserCopyBalance {
+  balance: string;
+  id: string;
+  originalTokenId: string;
+  user: string;
 }
 
 const MintSection = ({
@@ -28,6 +42,68 @@ const MintSection = ({
   const { loading, error, data } = useQuery<GetAllSalesWithTokensData>(
     getAllSalesWithTokens
   );
+
+  const client = useApolloClient() as ApolloClient<NormalizedCacheObject>;
+  const { address } = useAccount();
+
+  const fetchUserBalance = async (
+    client: ApolloClient<NormalizedCacheObject>,
+    tokenId: string,
+    address: string
+  ): Promise<UserCopyBalance | null> => {
+    const concatenatedId = `${address.toLowerCase()}-${tokenId}`;
+    try {
+      const { data } = await client.query<{
+        userCopyBalance: UserCopyBalance | null;
+      }>({
+        query: getUserCopyBalance,
+        variables: { id: concatenatedId }
+      });
+      console.log(data.userCopyBalance, "copyBalance");
+      return data.userCopyBalance;
+    } catch (error) {
+      console.error("Error fetching user balance:", error);
+      return null;
+    }
+  };
+
+  const [balances, setBalances] = useState<{ [key: string]: string }>({});
+
+  const fetchBalances = async () => {
+    if (address && activeSale) {
+      try {
+        const balancesPromises = activeSale.tokensOnSale.map(async (token) => {
+          const userBalance = await fetchUserBalance(
+            client,
+            token.tokenID,
+            address
+          );
+
+          return {
+            tokenId: token.tokenID,
+            balance: userBalance?.balance ?? "0"
+          };
+        });
+        const balancesData = await Promise.all(balancesPromises);
+        const balancesMap = balancesData.reduce(
+          (acc, { tokenId, balance }) => {
+            acc[tokenId] = balance;
+            return acc;
+          },
+          {} as { [key: string]: string }
+        );
+        setBalances(balancesMap);
+      } catch (error) {
+        console.error("Error fetching user balances:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchBalances().catch((error) => {
+      console.error("Error fetching balances:", error);
+    });
+  }, [address, activeSale, client]);
 
   useEffect(() => {
     console.log(data?.sales, "sales");
@@ -80,7 +156,8 @@ const MintSection = ({
       batchId: activeSale.batchID,
       tokenId: token.tokenID,
       ipfsHash: activeSale.ipfsHash,
-      whitelist: whitelist[activeSale.ipfsHash] ?? []
+      whitelist: whitelist[activeSale.ipfsHash] ?? [],
+      balance: balances[token.tokenID] ?? "0"
     }));
   }, [activeSale, images, whitelist]);
 
@@ -113,7 +190,7 @@ const MintSection = ({
       ) : (
         <Grid
           templateColumns={{
-            base: "minmax(170px, 1fr)",
+            base: "1fr",
             sm: "repeat(auto-fit, minmax(170px, 1fr))"
           }}
           gap={6}
@@ -130,7 +207,8 @@ const MintSection = ({
                 batchId: activeSale.batchID,
                 tokenId: token.tokenID,
                 ipfsHash: activeSale.ipfsHash,
-                whitelist: whitelist[activeSale.ipfsHash] ?? []
+                whitelist: whitelist[activeSale.ipfsHash] ?? [],
+                balance: balances[token.tokenID] ?? "0"
               }}
               index={parseInt(token.id, 10)}
               isRandom={isRandom}
