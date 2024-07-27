@@ -24,7 +24,8 @@ type ArgsType =
 const useBuyNft = (
   isPrivateSale: boolean,
   isRandom: boolean,
-  isOriginal: boolean
+  isOriginal: boolean,
+  refetchBalances: () => void
 ) => {
   const { isConnected } = useAccount();
   const toast = useToast();
@@ -150,6 +151,7 @@ const useBuyNft = (
       );
     } else if (isSuccess) {
       handleTransactionSuccess(width);
+      refetchBalances();
       setIsMinting(false);
       setIsModalOpen(false);
       setIsConfirmed(true);
