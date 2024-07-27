@@ -76,7 +76,6 @@ const PsycItem = ({
 
   const [isImageOpen, setIsImageOpen] = useState(false);
 
-
   const showMintedText = !isOriginal && item.balance !== "0";
 
   return (
@@ -187,16 +186,15 @@ const PsycItem = ({
           </MintButton>
         </Flex>
       )}
-      
+
       <FullSizeImageModal
         isOpen={isImageOpen}
         onClose={() => setIsImageOpen((prev) => !prev)}
         imageSrc={item.src}
-
+      />
       <ConnectWalletModal
         isOpen={connectModalOpen}
         onClose={() => setConnectModalOpen((prev) => !prev)}
-
       />
     </Flex>
   );
