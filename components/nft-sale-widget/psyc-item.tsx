@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Text, Spinner, Tooltip, Flex } from "@chakra-ui/react";
 import NFTPrice from "@/components/commons/nftprice";
 import MintButton from "@/components/ui/mint-button";
@@ -9,6 +9,7 @@ import { useTokenSoldState } from "@/hooks/useTokenSoldState";
 import useFetchProof from "@/hooks/useFetchProof";
 import { useTokenContext } from "@/providers/TokenContext";
 import Image from "next/image";
+import FullSizeImageModal from "../commons/image-modal";
 
 import ConnectWalletModal from "./commons/connect-wallet-modal";
 
@@ -73,7 +74,10 @@ const PsycItem = ({
 
   const modalNeeded = !address || (!isWhitelisted && isOriginal);
 
+  const [isImageOpen, setIsImageOpen] = useState(false);
+
   const showMintedText = !isOriginal && item.balance !== "0";
+
   return (
     <Flex
       key={index}
@@ -92,6 +96,7 @@ const PsycItem = ({
         position="relative"
         border="1px solid #e2e2e2"
         boxShadow="md"
+        onClick={() => setIsImageOpen((prev) => !prev)}
       >
         <Image
           src={item.src}
@@ -181,6 +186,12 @@ const PsycItem = ({
           </MintButton>
         </Flex>
       )}
+
+      <FullSizeImageModal
+        isOpen={isImageOpen}
+        onClose={() => setIsImageOpen((prev) => !prev)}
+        imageSrc={item.src}
+      />
       <ConnectWalletModal
         isOpen={connectModalOpen}
         onClose={() => setConnectModalOpen((prev) => !prev)}

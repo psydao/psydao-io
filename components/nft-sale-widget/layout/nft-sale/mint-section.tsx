@@ -196,7 +196,7 @@ const MintSection = ({
       ) : (
         <Grid
           templateColumns={{
-            base: "1fr",
+            base: "minmax(170px, 1fr)",
             sm: "repeat(auto-fit, minmax(170px, 1fr))"
           }}
           gap={6}
