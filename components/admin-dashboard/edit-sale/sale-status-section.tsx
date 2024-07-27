@@ -1,11 +1,12 @@
-import { Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import SaleStatusDropdown from "./sale-status-dropdown";
+import type { Sale } from "@/lib/types";
 
 const SaleStatusSection = (props: {
-  saleStatus: "active" | "paused" | "complete";
-  setSaleStatus: React.Dispatch<
-    React.SetStateAction<"active" | "paused" | "complete">
-  >;
+  isPaused: boolean;
+  setIsPaused: React.Dispatch<React.SetStateAction<boolean>>;
+  isComplete: boolean;
+  sale: Sale | undefined;
 }) => {
   return (
     <Flex
@@ -18,10 +19,37 @@ const SaleStatusSection = (props: {
       <Text fontFamily={"Inter"} fontSize={18} color={"black"}>
         Sale Status
       </Text>
-      <SaleStatusDropdown
-        saleStatus={props.saleStatus}
-        setSaleStatus={props.setSaleStatus}
-      />
+      {props.isComplete ? (
+        <Box
+          p={"8px 16px"}
+          bg={"#F2BEBE1A"}
+          borderRadius={"18px"}
+          fontFamily={"Inter"}
+          fontWeight={"bold"}
+          fontSize={18}
+        >
+          <Flex alignItems={"center"} gap={2}>
+            <Box color={"#999999"}>
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle cx="6" cy="6" r="6" fill="currentColor" />
+              </svg>
+            </Box>
+            Completed
+          </Flex>
+        </Box>
+      ) : (
+        <SaleStatusDropdown
+          isPaused={props.isPaused}
+          setIsPaused={props.setIsPaused}
+          sale={props.sale}
+        />
+      )}
     </Flex>
   );
 };

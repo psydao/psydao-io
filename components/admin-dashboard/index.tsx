@@ -22,7 +22,7 @@ const AdminDashboardWidget = ({
   const { state } = useWindowManager();
 
   const [selectedSale, setSelectedSale] = useState<Sale | undefined>(undefined);
-  const { data, loading, error, refetch } = useQuery<GetAllSalesWithTokensData>(
+  const { data, loading, refetch } = useQuery<GetAllSalesWithTokensData>(
     getAllSalesWithTokens
   );
   const fullScreenWindow = useMemo(() => {
@@ -82,7 +82,6 @@ const AdminDashboardWidget = ({
                   setSelectedSale={setSelectedSale}
                   setOpenCreateSale={setOpenCreateSale}
                   setOpenEditSale={setOpenEditSale}
-                  openCreateSale={openCreateSale}
                   openEditSale={openEditSale}
                   triggerNftSaleUpdate={triggerNftSaleUpdate}
                   refetchSalesData={refetch}

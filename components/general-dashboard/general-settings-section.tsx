@@ -10,9 +10,12 @@ import NftOwnersSection from "./revenue-split/nft-owners-section";
 import TreasurySection from "./revenue-split/treasury-section";
 import SubmitButtonContainer from "../commons/submit-button-container";
 import SaveButton from "./save-settings-button";
-import { useReadGeneralSettings } from "@/hooks/useReadGeneralSettings";
 
-const GeneralSettingsSection = () => {
+const GeneralSettingsSection = ({
+  triggerNftSaleUpdate
+}: {
+  triggerNftSaleUpdate: () => void;
+}) => {
   const { address } = useAccount();
   const {
     revenue,
@@ -30,9 +33,8 @@ const GeneralSettingsSection = () => {
     isSubmitting,
     loading,
     error
-  } = useGeneralSettingsForm(address);
+  } = useGeneralSettingsForm(address, triggerNftSaleUpdate);
 
-  useReadGeneralSettings();
   if (loading) {
     return <Spinner size="xl" />;
   }

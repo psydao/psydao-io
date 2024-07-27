@@ -11,6 +11,7 @@ import type { Sale } from "@/lib/types";
 import { psycSaleSepolia } from "@/constants/contracts";
 import useFetchTokenOwners from "@/hooks/useFetchTokenOwner";
 import MintButton from "../ui/mint-button";
+import { getSaleComplete } from "@/utils/getSaleComplete";
 
 interface EditSaleWindowProps {
   selectedSale: Sale | undefined;
@@ -23,10 +24,9 @@ interface EditSaleWindowProps {
   whitelistedArray: string[];
   newWhitelistedAddresses: string;
   setNewWhitelistedAddresses: React.Dispatch<React.SetStateAction<string>>;
-  saleStatus: "active" | "complete" | "paused";
-  setSaleStatus: React.Dispatch<
-    React.SetStateAction<"active" | "complete" | "paused">
-  >;
+  isPaused: boolean;
+  setIsPaused: React.Dispatch<React.SetStateAction<boolean>>;
+  isComplete: boolean;
 }
 
 const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
@@ -40,9 +40,15 @@ const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
   whitelistedArray,
   // newWhitelistedAddresses,
   setNewWhitelistedAddresses,
-  saleStatus,
-  setSaleStatus
+  isPaused,
+  setIsPaused
 }) => {
+  let isComplete = false;
+
+  if (selectedSale) {
+    isComplete = getSaleComplete(selectedSale);
+  }
+
   const { activateSale, isPending: isLoading } = useActivateSale();
 
   const tokenIds = selectedSale
@@ -87,7 +93,8 @@ const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
     }
   }, [owners, loading, error]);
 
-  const isButtonDisabled = loading || tokenIds.length === 0 || isLoading;
+  const isButtonDisabled =
+    loading || tokenIds.length === 0 || isLoading || isComplete;
   return (
     <Flex
       direction={"column"}
@@ -111,24 +118,29 @@ const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
 
       <NftTokensSection tokenIds={tokenIds.map((id) => parseInt(id))} />
       <SaleStatusSection
-        saleStatus={saleStatus}
-        setSaleStatus={setSaleStatus}
+        isPaused={isPaused}
+        setIsPaused={setIsPaused}
+        isComplete={isComplete}
+        sale={selectedSale}
       />
       <SetTokenPrice
         setPrice={setFloorPrice}
         type="floor"
         initialValue={floorPrice}
+        isDisabled={isComplete}
       />
       <SetTokenPrice
         setPrice={setCeilingPrice}
         type="ceiling"
         initialValue={ceilingPrice}
+        isDisabled={isComplete}
       />
       <WhiteListedAddressesSection
         addressesToRemove={addressesToRemove}
         setAddressesToRemove={setAddressesToRemove}
         addressArray={whitelistedArray}
         setWhitelistedAddresses={setNewWhitelistedAddresses}
+        saleComplete={isComplete}
       />
     </Flex>
   );

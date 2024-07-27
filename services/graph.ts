@@ -29,6 +29,7 @@ export const getAllSalesWithTokens = gql`
       tokensOnSale(orderBy: tokenID) {
         id
         tokenID
+        buyer
       }
     }
   }
@@ -79,6 +80,17 @@ export const getTokensOwners = gql`
     tokens(where: { id_in: $ids }) {
       id
       owner
+    }
+  }
+`;
+
+export const getUserCopyBalance = gql`
+  query GetUserCopyBalance($id: ID!) {
+    userCopyBalance(id: $id) {
+      balance
+      id
+      originalTokenId
+      user
     }
   }
 `;
