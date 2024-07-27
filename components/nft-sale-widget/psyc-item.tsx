@@ -9,6 +9,9 @@ import { useTokenSoldState } from "@/hooks/useTokenSoldState";
 import useFetchProof from "@/hooks/useFetchProof";
 import { useTokenContext } from "@/providers/TokenContext";
 import Image from "next/image";
+
+import ConnectWalletModal from "./commons/connect-wallet-modal";
+
 interface PsycItemProps {
   item: TokenItem & { whitelist: string[]; balance: string };
   index: number;
@@ -48,6 +51,8 @@ const PsycItem = ({
     }
   }, [isSold, refetch]);
 
+  const [connectModalOpen, setConnectModalOpen] = React.useState(false);
+
   const proof = useFetchProof(address, item.ipfsHash, isPrivateSale);
 
   const isWhitelisted = address ? item.whitelist.includes(address) : false;
@@ -62,15 +67,11 @@ const PsycItem = ({
   };
 
   const isButtonDisabled =
-    !address ||
-    (!isWhitelisted && isOriginal) ||
-    (isOriginal && !isRandom && isSold)
+    isOriginal && !isRandom && isSold
       ? true
       : isPending || isConfirming || isMinting || isSoldLoading;
 
-  const tooltipLabel = !address
-    ? "You need to connect your wallet"
-    : "You need to be whitelisted to mint";
+  const modalNeeded = !address || (!isWhitelisted && isOriginal);
 
   const showMintedText = !isOriginal && item.balance !== "0";
   return (
@@ -135,47 +136,37 @@ const PsycItem = ({
         <NFTPrice price={item.price} />
       </Box>
       {isOriginal && (
-        <Tooltip
-          isDisabled={address ? isWhitelisted : false}
-          label={tooltipLabel}
-          placement="top"
-          bg="white"
-          py={2}
-          px={4}
-          color="#1A202C"
-          fontSize={14}
-          maxW="300px"
-          whiteSpace="normal"
-          borderRadius="16px"
-          border="2px solid #F2BEBE73"
-        >
-          <Flex justifyContent="center" w="100%">
-            <MintButton
-              customStyle={{
-                width: "100%",
-                opacity: isButtonDisabled ? 0.5 : 1
-              }}
-              onClick={handleMint}
-              isDisabled={isButtonDisabled}
-              isRandom={isRandom}
-            >
-              {isMinting ? (
-                <>
-                  <Spinner size="sm" mr={2} />
-                  Minting
-                </>
-              ) : (
-                "Mint"
-              )}
-            </MintButton>
-          </Flex>
-        </Tooltip>
+        <Flex justifyContent="center" w="100%">
+          <MintButton
+            customStyle={{
+              width: "100%",
+              opacity: isButtonDisabled || modalNeeded ? 0.5 : 1,
+              cursor: modalNeeded ? "help" : "default"
+            }}
+            onClick={modalNeeded ? () => setConnectModalOpen(true) : handleMint}
+            isRandom={isRandom}
+            isDisabled={isButtonDisabled}
+          >
+            {isMinting ? (
+              <>
+                <Spinner size="sm" mr={2} />
+                Minting
+              </>
+            ) : (
+              "Mint"
+            )}
+          </MintButton>
+        </Flex>
       )}
       {!isOriginal && (
         <Flex justifyContent="center" w="100%">
           <MintButton
             customStyle={{ width: "100%", opacity: isButtonDisabled ? 0.5 : 1 }}
-            onClick={handleMint}
+            onClick={
+              modalNeeded
+                ? () => setConnectModalOpen((prev) => !prev)
+                : handleMint
+            }
             isDisabled={isButtonDisabled}
             isRandom={isRandom}
           >
@@ -190,6 +181,10 @@ const PsycItem = ({
           </MintButton>
         </Flex>
       )}
+      <ConnectWalletModal
+        isOpen={connectModalOpen}
+        onClose={() => setConnectModalOpen((prev) => !prev)}
+      />
     </Flex>
   );
 };
