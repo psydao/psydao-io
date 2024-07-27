@@ -15,7 +15,7 @@ export const useUpdateRevenueSplits = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { width } = useResize();
 
-  const { data: hash, writeContract, isPending, error } = useWriteContract();
+  const { data: hash, writeContract, error } = useWriteContract();
   const { isSuccess: transactionSuccess } = useWaitForTransactionReceipt({
     hash
   });
@@ -71,23 +71,11 @@ export const useUpdateRevenueSplits = () => {
         console.log("Transaction error:", error.message);
       }
       setIsSubmitting(false);
-    } else if (isPending) {
-      showSuccessToast(
-        "Your transaction is processing. Please wait for confirmation.",
-        width
-      );
     } else if (transactionSuccess) {
       showSuccessToast("Success! Your settings have been saved.", width);
       setIsSubmitting(false);
     }
-  }, [
-    error,
-    transactionSuccess,
-    isPending,
-    width,
-    showErrorToast,
-    showSuccessToast
-  ]);
+  }, [error, transactionSuccess, width]);
 
   return { updateRevenueSplits, isSubmitting };
 };

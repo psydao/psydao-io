@@ -30,7 +30,7 @@ const useActivateSale = () => {
       const message = (error as Error).message || "An error occurred";
       showCustomErrorToast(message, width);
     }
-  }, [isSuccess, error, showCustomErrorToast, showSuccessToast, width]);
+  }, [isSuccess, error, width]);
 
   return {
     activateSale,

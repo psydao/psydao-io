@@ -140,15 +140,6 @@ const useBuyNft = (
       showCustomErrorToast(error.message, width);
       setIsMinting(false);
       setIsModalOpen(false);
-    } else if (isPending) {
-      customToast(
-        {
-          mainText:
-            "Your transaction is processing. Please wait for confirmation."
-        },
-        { type: "default", transition: Zoom },
-        width <= 768
-      );
     } else if (isSuccess) {
       handleTransactionSuccess(width);
       refetchBalances();
@@ -156,7 +147,7 @@ const useBuyNft = (
       setIsModalOpen(false);
       setIsConfirmed(true);
     }
-  }, [error, isSuccess, isPending, width]);
+  }, [error, isSuccess, width]);
 
   return {
     buyNft,

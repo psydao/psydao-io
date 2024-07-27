@@ -72,12 +72,12 @@ export const useTokenIds = () => {
         bigint,
         bigint,
         bigint,
-        bigint
+        bigint,
+        boolean
       ];
       const lastTokenId = Number(batchArray[1]);
       setCurrentFloorPrice(batchArray[2]);
-
-      if (saleBatchCount > 0 && !isNaN(lastTokenId)) {
+      if (saleBatchCount >= 0 && !isNaN(lastTokenId)) {
         const newBatchCount = saleBatchCount + 1n;
         const newTokenIds = generateNftIds(Number(newBatchCount), lastTokenId);
         console.log("Setting tokenIds:", newTokenIds);
