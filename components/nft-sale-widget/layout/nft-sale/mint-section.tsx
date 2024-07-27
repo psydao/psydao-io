@@ -62,7 +62,8 @@ const MintSection = ({
         userCopyBalance: UserCopyBalance | null;
       }>({
         query: getUserCopyBalance,
-        variables: { id: concatenatedId }
+        variables: { id: concatenatedId },
+        fetchPolicy: "network-only"
       });
       console.log(data.userCopyBalance, "copyBalance");
       return data.userCopyBalance;
@@ -96,6 +97,7 @@ const MintSection = ({
           {} as { [key: string]: string }
         );
         setBalances(balancesMap);
+        console.log("Updated balances:", balancesMap);
       } catch (error) {
         console.error("Error fetching user balances:", error);
       }
@@ -105,6 +107,11 @@ const MintSection = ({
   const refetchAllBalances = async () => {
     await fetchBalances();
   };
+
+  useEffect(() => {
+    refetchAllBalances().catch(console.error);
+    console.log("Refetched balances");
+  }, []);
 
   const images = useMemo(() => {
     if (!activeSale) return [];
