@@ -83,3 +83,14 @@ export const getTokensOwners = gql`
     }
   }
 `;
+
+export const getUserCopyBalance = gql`
+  query GetUserCopyBalance($id: ID!) {
+    userCopyBalance(id: $id) {
+      balance
+      id
+      originalTokenId
+      user
+    }
+  }
+`;

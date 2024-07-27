@@ -9,15 +9,17 @@ import { useTokenSoldState } from "@/hooks/useTokenSoldState";
 import useFetchProof from "@/hooks/useFetchProof";
 import { useTokenContext } from "@/providers/TokenContext";
 import Image from "next/image";
+
 import ConnectWalletModal from "./commons/connect-wallet-modal";
 
 interface PsycItemProps {
-  item: TokenItem & { whitelist: string[] };
+  item: TokenItem & { whitelist: string[]; balance: string };
   index: number;
   isRandom: boolean;
   isPrivateSale: boolean;
   isOriginal: boolean;
   loading: boolean;
+  refetchBalances: () => void;
 }
 
 const PsycItem = ({
@@ -26,12 +28,14 @@ const PsycItem = ({
   isRandom,
   isPrivateSale,
   isOriginal,
-  loading
+  // loading
+  refetchBalances
 }: PsycItemProps) => {
   const { buyNft, isPending, isConfirming, isMinting } = useBuyNft(
     isPrivateSale,
     isRandom,
-    isOriginal
+    isOriginal,
+    refetchBalances
   );
 
   const { address } = useAccount();
@@ -60,7 +64,6 @@ const PsycItem = ({
       item.price,
       proof
     );
-    refetch();
   };
 
   const isButtonDisabled =
@@ -70,6 +73,7 @@ const PsycItem = ({
 
   const modalNeeded = !address || (!isWhitelisted && isOriginal);
 
+  const showMintedText = !isOriginal && item.balance !== "0";
   return (
     <Flex
       key={index}
@@ -109,6 +113,23 @@ const PsycItem = ({
           >
             <Text color="white" fontWeight="bold">
               Sold
+            </Text>
+          </Box>
+        )}
+        {showMintedText && (
+          <Box
+            position="absolute"
+            top="0"
+            left="0"
+            width="100%"
+            height="100%"
+            bg={"#00000066"}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Text color="white" fontWeight="bold">
+              You have Minted {item.balance} times
             </Text>
           </Box>
         )}

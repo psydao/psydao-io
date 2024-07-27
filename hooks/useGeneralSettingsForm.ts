@@ -6,7 +6,10 @@ import { useCustomToasts } from "@/hooks/useCustomToasts";
 import { useResize } from "@/hooks/useResize";
 import { useReadGeneralSettings } from "./useReadGeneralSettings";
 
-export const useGeneralSettingsForm = (address: string | undefined) => {
+export const useGeneralSettingsForm = (
+  address: string | undefined,
+  triggerNftSaleUpdate: () => void
+) => {
   const toast = useToast();
   const { showErrorToast, showCustomErrorToast, showSuccessToast } =
     useCustomToasts();
@@ -133,6 +136,7 @@ export const useGeneralSettingsForm = (address: string | undefined) => {
     }
 
     if (revenueSplitsSuccess || saleTypeSuccess || buyLimitSuccess) {
+      triggerNftSaleUpdate();
       showSuccessToast("Success! Your settings have been saved.", width);
       setIsSubmitting(false);
     }

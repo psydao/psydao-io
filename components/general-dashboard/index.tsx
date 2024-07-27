@@ -5,7 +5,11 @@ import { Window } from "../ui/window";
 import GeneralDashboardHeader from "./general-dashboard-header";
 import GeneralSettingsSection from "./general-settings-section";
 
-const GeneralDashboard = () => {
+const GeneralDashboard = ({
+  triggerNftSaleUpdate
+}: {
+  triggerNftSaleUpdate: () => void;
+}) => {
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
   const { state } = useWindowManager();
 
@@ -30,7 +34,7 @@ const GeneralDashboard = () => {
       <Window.TitleBar />
       <Window.Content py={2}>
         <GeneralDashboardHeader />
-        <GeneralSettingsSection />
+        <GeneralSettingsSection triggerNftSaleUpdate={triggerNftSaleUpdate} />
         <Image
           src="/windows/alchemist/clouds.png"
           alt=""
