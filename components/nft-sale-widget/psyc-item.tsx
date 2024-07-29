@@ -69,7 +69,7 @@ const PsycItem = ({
     if (address && !item.whitelist.includes(address) && isOriginal) {
       handleModal();
     }
-  }, [item.whitelist, modalNeeded]);
+  }, [isWhitelisted, item.whitelist]);
 
   const handleMint = async () => {
     await buyNft(
