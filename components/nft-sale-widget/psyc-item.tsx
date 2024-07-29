@@ -63,13 +63,13 @@ const PsycItem = ({
   const proof = useFetchProof(address, item.ipfsHash, isPrivateSale);
 
   const isWhitelisted = address ? item.whitelist.includes(address) : false;
+  const modalNeeded = !address || (!isWhitelisted && isOriginal);
 
   useEffect(() => {
-    if (address && !isWhitelisted && isOriginal) {
+    if (address && modalNeeded) {
       handleModal();
     }
-    console.info("isWhitelisted", isWhitelisted);
-  }, [item.batchId, isWhitelisted]);
+  }, [modalNeeded, item.whitelist]);
 
   const handleMint = async () => {
     await buyNft(
@@ -84,8 +84,6 @@ const PsycItem = ({
     isOriginal && !isRandom && isSold
       ? true
       : isPending || isConfirming || isMinting || isSoldLoading || isPaused;
-
-  const modalNeeded = !address || (!isWhitelisted && isOriginal);
 
   const [isImageOpen, setIsImageOpen] = useState(false);
 
