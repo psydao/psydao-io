@@ -68,7 +68,7 @@ const PsycItem = ({
     if (address && !isWhitelisted && isOriginal) {
       handleModal();
     }
-  }, [item.batchId]);
+  }, [item.batchId, isWhitelisted]);
 
   const handleMint = async () => {
     await buyNft(
