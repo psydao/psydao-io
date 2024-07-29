@@ -68,6 +68,7 @@ const PsycItem = ({
     if (address && !isWhitelisted && isOriginal) {
       handleModal();
     }
+    console.info("isWhitelisted", isWhitelisted);
   }, [item.batchId, isWhitelisted]);
 
   const handleMint = async () => {
