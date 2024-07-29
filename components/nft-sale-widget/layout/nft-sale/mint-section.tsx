@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { Box, Flex, Grid } from "@chakra-ui/react";
+import { Box, Flex, Grid, useDisclosure } from "@chakra-ui/react";
 import {
   type ApolloClient,
   type NormalizedCacheObject,
@@ -107,10 +107,9 @@ const MintSection = ({
     }
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [isOpen, setIsOpen] = useState(false);
   const handleModal = () => {
-    setIsModalOpen((prev) => !prev);
+    setIsOpen((prev) => !prev);
   };
 
   const refetchAllBalances = async () => {
@@ -245,7 +244,7 @@ const MintSection = ({
         </Grid>
       )}
       <ConnectWalletModal
-        isOpen={isModalOpen}
+        isOpen={isOpen}
         onClose={handleModal}
         elementRef={elementRef}
       />

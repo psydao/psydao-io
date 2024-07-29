@@ -64,6 +64,12 @@ const PsycItem = ({
 
   const isWhitelisted = address ? item.whitelist.includes(address) : false;
 
+  useEffect(() => {
+    if (address && !isWhitelisted && isOriginal) {
+      handleModal();
+    }
+  }, [item.batchId]);
+
   const handleMint = async () => {
     await buyNft(
       parseInt(item.batchId),
@@ -154,7 +160,7 @@ const PsycItem = ({
             customStyle={{
               width: "100%",
               opacity: isButtonDisabled || modalNeeded ? 0.5 : 1,
-              cursor: modalNeeded ? "help" : "default"
+              cursor: modalNeeded ? "help" : "pointer"
             }}
             onClick={modalNeeded ? handleModal : handleMint}
             isRandom={isRandom}

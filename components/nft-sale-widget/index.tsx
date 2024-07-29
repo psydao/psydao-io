@@ -73,10 +73,9 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
         width={"100%"}
         ref={elementRef}
         position={"relative"}
-        py={2}
       >
         <Window.TitleBar />
-        <Window.Content py={0} px={0} height={"100%"} width={"100%"}>
+        <Window.Content py={2} px={0} height={"100%"} width={"100%"}>
           <TokenProvider>
             <Tabs variant={"unstyled"}>
               <MintPsycHeader
