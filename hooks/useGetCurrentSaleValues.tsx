@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useCustomToasts } from "./useCustomToasts";
 import { useReadContract } from "wagmi";
 import { psycSaleContractConfig } from "@/lib/sale-contract-config";
+import usePausedSale from "./usePausedSale";
 
 type SaleBatchesReturn = [
   bigint,
@@ -17,30 +18,16 @@ type SaleBatchesReturn = [
 ];
 
 export const useGetCurrentSaleValues = (id: string, width: number) => {
+  const { isPaused, isError: pausedSaleError } = usePausedSale(id);
   const [floorPrice, setFloorPrice] = useState<string>("");
   const [ceilingPrice, setCeilingPrice] = useState<string>("");
   const [ipfsHash, setIpfsHash] = useState<string>("");
   const { showErrorToast } = useCustomToasts();
-  const [saleBatches, setSaleBatches] = useState<SaleBatchesReturn>([
-    0n,
-    0n,
-    0n,
-    0n,
-    0n,
-    0n,
-    false
-  ]);
 
   const { data, error } = useQuery<GetSaleByIdData>(getSaleById, {
     variables: {
       id
     }
-  });
-
-  const { data: saleBatchesData, error: saleBatchesError } = useReadContract({
-    ...psycSaleContractConfig,
-    functionName: "saleBatches",
-    args: [id]
   });
 
   useEffect(() => {
@@ -54,26 +41,25 @@ export const useGetCurrentSaleValues = (id: string, width: number) => {
       showErrorToast("Error fetching data from subgraph", width);
     }
 
-    if (saleBatchesData) {
-      console.log(saleBatchesData, "saleBatchesData");
-      setSaleBatches(saleBatchesData as SaleBatchesReturn);
+    if (isPaused) {
+      console.log(isPaused, "saleBatchesData");
     }
 
-    if (saleBatchesError) {
+    if (pausedSaleError) {
       showErrorToast(
         "Error fetching current sale statuses from contract",
         width
       );
-      console.log(saleBatchesError.message);
-      console.error(saleBatchesError.message);
+
+      console.error("Error fetching current sale statuses from contract");
     }
   }, [
     data,
     setCeilingPrice,
     setFloorPrice,
     setIpfsHash,
-    saleBatchesData,
-    saleBatchesError
+    isPaused,
+    pausedSaleError
   ]);
-  return { floorPrice, ceilingPrice, ipfsHash, saleBatches };
+  return { floorPrice, ceilingPrice, ipfsHash, isPaused };
 };

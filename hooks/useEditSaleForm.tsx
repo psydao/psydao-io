@@ -22,7 +22,7 @@ export const useEditSaleForm = (
     ceilingPrice: currentCeilingPrice,
     floorPrice: currentFloorPrice,
     ipfsHash: currentIpfsHash,
-    saleBatches: currentSaleBatch
+    isPaused: currentIsPaused
   } = useGetCurrentSaleValues(id, width);
   const { showErrorToast, showCustomErrorToast, showSuccessToast } =
     useCustomToasts();
@@ -82,7 +82,7 @@ export const useEditSaleForm = (
       parseUnits(newCeilingPrice, 18).toString() !== currentCeilingPrice;
     const floorPriceHasChanged =
       parseUnits(newFloorPrice, 18).toString() !== currentFloorPrice;
-    const saleStatusMustChange = isPausedLocal !== currentSaleBatch[6];
+    const saleStatusMustChange = isPausedLocal !== currentIsPaused;
 
     const addressesToSubmit = getNewAddresses(
       addressesToRemove,
@@ -97,7 +97,7 @@ export const useEditSaleForm = (
 
     try {
       const currentAddresses = await getAddresses(currentIpfsHash);
-      const isPausedContract = currentSaleBatch[6];
+
       if (
         !ceilingPriceHasChanged &&
         !floorPriceHasChanged &&
@@ -151,7 +151,7 @@ export const useEditSaleForm = (
         setFloorAndCeilingPriceHash(floorAndCeilingPriceResponse);
       }
 
-      if (isPausedLocal !== isPausedContract) {
+      if (isPausedLocal !== currentIsPaused) {
         const switchSaleStatusResponse = await writeContractAsync({
           ...psycSaleContractConfig,
           functionName: "switchBatchStatus",
