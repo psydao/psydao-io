@@ -1,5 +1,5 @@
-import { useGetCurrentSaleValues } from "@/hooks/useGetCurrentSaleValues";
-import { useResize } from "@/hooks/useResize";
+import usePausedSale from "@/hooks/usePausedSale";
+
 import type { Sale } from "@/lib/types";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import {
@@ -52,10 +52,9 @@ const SaleStatusDropdown = (props: {
   setIsPaused: React.Dispatch<React.SetStateAction<boolean>>;
   sale: Sale | undefined;
 }) => {
-  const { width } = useResize();
   const [id, setId] = useState<string>("");
 
-  const { saleBatches } = useGetCurrentSaleValues(id, width);
+  const { isPaused } = usePausedSale(id);
   const [currentValue, setCurrentValue] = useState<Status>({
     status: "Active",
     color: "#269200",
@@ -63,27 +62,25 @@ const SaleStatusDropdown = (props: {
   });
 
   useEffect(() => {
-    if (saleBatches) {
-      props.setIsPaused(saleBatches[6]);
-      setCurrentValue(
-        saleBatches[6]
-          ? {
-              status: "Paused",
-              color: "#E86969",
-              paused: true
-            }
-          : {
-              status: "Active",
-              color: "#269200",
-              paused: false
-            }
-      );
-    }
+    props.setIsPaused(isPaused);
+    setCurrentValue(
+      isPaused
+        ? {
+            status: "Paused",
+            color: "#E86969",
+            paused: true
+          }
+        : {
+            status: "Active",
+            color: "#269200",
+            paused: false
+          }
+    );
 
     if (props.sale) {
       setId(props.sale.batchID);
     }
-  }, [saleBatches, props.sale]);
+  }, [isPaused, props.sale]);
 
   return (
     <Menu closeOnSelect>

@@ -1,9 +1,7 @@
-import { useGetCurrentSaleValues } from "@/hooks/useGetCurrentSaleValues";
-import { useResize } from "@/hooks/useResize";
+import usePausedSale from "@/hooks/usePausedSale";
 import { getAddresses } from "@/lib/server-utils";
 import { type Sale } from "@/lib/types";
 import { Box, Flex, Icon, Text } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
 import { FaAngleRight } from "react-icons/fa";
 
 type AdminSaleComponentProps = {
@@ -25,17 +23,8 @@ const AdminSaleComponent = (props: AdminSaleComponentProps) => {
     props.setOpenEditSale(true);
   };
 
-  const { width } = useResize();
+  const { isPaused } = usePausedSale(props.sale.batchID);
 
-  const [isPaused, setIsPaused] = useState<boolean>(false);
-
-  const { saleBatches } = useGetCurrentSaleValues(props.sale.batchID, width);
-
-  useEffect(() => {
-    if (saleBatches) {
-      setIsPaused(saleBatches[6]);
-    }
-  }, [saleBatches]);
   return (
     <button
       style={{

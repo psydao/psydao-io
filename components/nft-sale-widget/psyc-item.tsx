@@ -13,6 +13,7 @@ import FullSizeImageModal from "../commons/image-modal";
 
 import ConnectWalletModal from "./commons/connect-wallet-modal";
 import MintCount from "../commons/mint-count";
+import usePausedSale from "@/hooks/usePausedSale";
 
 interface PsycItemProps {
   item: TokenItem & { whitelist: string[]; balance: string };
@@ -45,6 +46,8 @@ const PsycItem = ({
     parseInt(item.tokenId)
   );
 
+  const { isPaused } = usePausedSale(item.batchId);
+
   const { refetch } = useTokenContext();
 
   useEffect(() => {
@@ -71,7 +74,7 @@ const PsycItem = ({
   const isButtonDisabled =
     isOriginal && !isRandom && isSold
       ? true
-      : isPending || isConfirming || isMinting || isSoldLoading;
+      : isPending || isConfirming || isMinting || isSoldLoading || isPaused;
 
   const modalNeeded = !address || (!isWhitelisted && isOriginal);
 
@@ -160,6 +163,8 @@ const PsycItem = ({
                 <Spinner size="sm" mr={2} />
                 Minting
               </>
+            ) : isPaused ? (
+              "Paused"
             ) : (
               "Mint"
             )}
@@ -183,6 +188,8 @@ const PsycItem = ({
                 <Spinner size="sm" mr={2} />
                 Minting
               </>
+            ) : isPaused ? (
+              "Paused"
             ) : (
               "Mint"
             )}
