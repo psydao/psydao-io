@@ -1,6 +1,6 @@
 import MerkleTree from "merkletreejs";
 import { isAddress, keccak256, parseUnits } from "viem";
-
+import { parseISO } from "date-fns";
 export const getMerkleRoot = (values: `0x${string}`[]): string => {
   const leaves = values.map((item) => keccak256(item));
 
@@ -8,9 +8,13 @@ export const getMerkleRoot = (values: `0x${string}`[]): string => {
   return merkleTree.getHexRoot();
 };
 
-export const toUnixTimestamp = (date: string, time: string): number => {
-  const dateTime = new Date(`${date}T${time}:00Z`);
-  return Math.floor(dateTime.getTime() / 1000);
+export const toUnixTimestamp = (
+  startDate: string,
+  startTime: string
+): number => {
+  const isoString = `${startDate}T${startTime}:00`;
+  const date = parseISO(isoString);
+  return Math.floor(date.getTime() / 1000);
 };
 
 export const toWei = (value: string): bigint => {
