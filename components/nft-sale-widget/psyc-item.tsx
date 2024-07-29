@@ -69,6 +69,7 @@ const PsycItem = ({
     if (address && modalNeeded) {
       handleModal();
     }
+    console.info("Modal needed", modalNeeded, isWhitelisted);
   }, [modalNeeded, item.whitelist]);
 
   const handleMint = async () => {
