@@ -15,7 +15,10 @@ import MintCount from "../commons/mint-count";
 import usePausedSale from "@/hooks/usePausedSale";
 
 interface PsycItemProps {
-  item: TokenItem & { whitelist: string[]; balance: string };
+  item: TokenItem & {
+    whitelist: string[];
+    balance: string;
+  };
   index: number;
   isRandom: boolean;
   isPrivateSale: boolean;
