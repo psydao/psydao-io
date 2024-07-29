@@ -30,10 +30,10 @@ const ConnectWalletModal = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay
-        height={targetRect ? targetRect.height : "auto"}
-        width={targetRect ? targetRect.width : "auto"}
-        top={targetRect ? targetRect.top : "auto"}
-        left={targetRect ? targetRect.left : "auto"}
+        height={{ base: "100%", lg: targetRect ? targetRect.height : "auto" }}
+        width={{ base: "100%", lg: targetRect ? targetRect.width : "auto" }}
+        top={{ base: 0, lg: targetRect ? targetRect.top : "auto" }}
+        left={{ base: 0, lg: targetRect ? targetRect.left : "auto" }}
         bg={"#27272724"}
       />
       <ModalContent
