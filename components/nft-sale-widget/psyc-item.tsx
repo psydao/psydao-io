@@ -66,11 +66,10 @@ const PsycItem = ({
   const modalNeeded = !address || (!isWhitelisted && isOriginal);
 
   useEffect(() => {
-    if (address && modalNeeded) {
+    if (address && !item.whitelist.includes(address) && isOriginal) {
       handleModal();
     }
-    console.info("Modal needed", modalNeeded);
-  }, [modalNeeded, item.whitelist]);
+  }, [item.whitelist, modalNeeded]);
 
   const handleMint = async () => {
     await buyNft(
