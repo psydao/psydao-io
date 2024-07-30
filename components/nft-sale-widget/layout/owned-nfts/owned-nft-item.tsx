@@ -1,4 +1,3 @@
-import NFTPrice from "@/components/commons/nftprice";
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import { useEffect } from "react";
 
