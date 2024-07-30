@@ -5,10 +5,12 @@ type OpenPublicSaleSectionProps = {
   setOpenPublicSale: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const OpenPublicSaleSection = ({
-  openPublicSale,
-  setOpenPublicSale
-}: OpenPublicSaleSectionProps) => {
+const OpenPublicSaleSection = (
+  {
+    // openPublicSale,
+    // setOpenPublicSale
+  }: OpenPublicSaleSectionProps
+) => {
   return (
     <Flex
       width="100%"
@@ -24,8 +26,9 @@ const OpenPublicSaleSection = ({
       </FormLabel>
       <Switch
         id="openPublicSale"
-        isChecked={openPublicSale}
-        onChange={() => setOpenPublicSale(!openPublicSale)}
+        isChecked={false}
+        // isDisabled={true}
+        // onChange={() => setOpenPublicSale(!openPublicSale)}
       />
     </Flex>
   );
