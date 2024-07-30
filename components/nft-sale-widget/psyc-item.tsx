@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Text, Spinner, Tooltip, Flex } from "@chakra-ui/react";
+import { Box, Text, Spinner, Flex } from "@chakra-ui/react";
 import NFTPrice from "@/components/commons/nftprice";
 import MintButton from "@/components/ui/mint-button";
 import useBuyNft from "@/hooks/useBuyNft";
@@ -11,7 +11,6 @@ import { useTokenContext } from "@/providers/TokenContext";
 import Image from "next/image";
 import FullSizeImageModal from "../commons/image-modal";
 
-import ConnectWalletModal from "./commons/connect-wallet-modal";
 import MintCount from "../commons/mint-count";
 import usePausedSale from "@/hooks/usePausedSale";
 
@@ -23,6 +22,7 @@ interface PsycItemProps {
   isOriginal: boolean;
   loading: boolean;
   refetchBalances: () => void;
+  handleModal: () => void;
 }
 
 const PsycItem = ({
@@ -32,7 +32,8 @@ const PsycItem = ({
   isPrivateSale,
   isOriginal,
   // loading
-  refetchBalances
+  refetchBalances,
+  handleModal
 }: PsycItemProps) => {
   const { buyNft, isPending, isConfirming, isMinting } = useBuyNft(
     isPrivateSale,
@@ -55,8 +56,6 @@ const PsycItem = ({
       refetch();
     }
   }, [isSold, refetch]);
-
-  const [connectModalOpen, setConnectModalOpen] = React.useState(false);
 
   const proof = useFetchProof(address, item.ipfsHash, isPrivateSale);
 
@@ -154,7 +153,7 @@ const PsycItem = ({
               opacity: isButtonDisabled || modalNeeded ? 0.5 : 1,
               cursor: modalNeeded ? "help" : "default"
             }}
-            onClick={modalNeeded ? () => setConnectModalOpen(true) : handleMint}
+            onClick={modalNeeded ? handleModal : handleMint}
             isRandom={isRandom}
             isDisabled={isButtonDisabled}
           >
@@ -175,11 +174,7 @@ const PsycItem = ({
         <Flex justifyContent="center" w="100%">
           <MintButton
             customStyle={{ width: "100%", opacity: isButtonDisabled ? 0.5 : 1 }}
-            onClick={
-              modalNeeded
-                ? () => setConnectModalOpen((prev) => !prev)
-                : handleMint
-            }
+            onClick={modalNeeded ? handleModal : handleMint}
             isDisabled={isButtonDisabled}
             isRandom={isRandom}
           >
@@ -201,10 +196,6 @@ const PsycItem = ({
         isOpen={isImageOpen}
         onClose={() => setIsImageOpen((prev) => !prev)}
         imageSrc={item.src}
-      />
-      <ConnectWalletModal
-        isOpen={connectModalOpen}
-        onClose={() => setConnectModalOpen((prev) => !prev)}
       />
     </Flex>
   );

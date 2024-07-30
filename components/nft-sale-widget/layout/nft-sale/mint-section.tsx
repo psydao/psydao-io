@@ -14,6 +14,7 @@ import useRandomImage from "@/hooks/useRandomImage";
 import { getAddresses } from "@/lib/server-utils";
 import usePrivateSale from "@/hooks/usePrivateSale";
 import { useAccount } from "wagmi";
+import ConnectWalletModal from "../../commons/connect-wallet-modal";
 
 interface MintSectionProps {
   isRandom: boolean;
@@ -102,6 +103,12 @@ const MintSection = ({
         console.error("Error fetching user balances:", error);
       }
     }
+  };
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleModal = () => {
+    setIsModalOpen((prev) => !prev);
   };
 
   const refetchAllBalances = async () => {
@@ -198,6 +205,7 @@ const MintSection = ({
             isOriginal={isOriginal}
             loading={loading}
             refetchBalances={refetchAllBalances}
+            handleModal={handleModal}
           />
         </Flex>
       ) : (
@@ -229,10 +237,12 @@ const MintSection = ({
               isOriginal={isOriginal}
               loading={loading}
               refetchBalances={refetchAllBalances}
+              handleModal={handleModal}
             />
           ))}
         </Grid>
       )}
+      <ConnectWalletModal isOpen={isModalOpen} onClose={handleModal} />
     </Flex>
   );
 };
