@@ -58,6 +58,7 @@ const SubmitSaleButton = (props: SubmitSaleButtonProps) => {
       }}
       width="100%"
       zIndex={10}
+      maxWidth="550px"
     >
       <ButtonContent
         isSubmitting={props.isSubmitting}
