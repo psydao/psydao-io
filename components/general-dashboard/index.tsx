@@ -14,7 +14,7 @@ const GeneralDashboard = ({
   const { state } = useWindowManager();
 
   const fullScreenWindow = useMemo(() => {
-    return state.fullScreen === "admin-dashboard";
+    return state.fullScreen === "general-dashboard";
   }, [state]);
 
   return (
