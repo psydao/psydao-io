@@ -76,7 +76,7 @@ const PsycItem = ({
     ) {
       handleModal();
     }
-  }, [modalNeeded, isAddressesLoading, item.whitelist, item.whitelist.length]);
+  }, [modalNeeded, isAddressesLoading]);
 
   const handleMint = async () => {
     await buyNft(
