@@ -19,7 +19,7 @@ export const useGetAddresses = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const getAddresses = useCallback(
-    async (ipfsHash: string): Promise<Address[]> => {
+    async (ipfsHash: string): Promise<string[]> => {
       if (!ipfsHash || !isValidIpfsHash(ipfsHash)) {
         return [];
       }
