@@ -26,6 +26,7 @@ interface PsycItemProps {
   loading: boolean;
   refetchBalances: () => void;
   handleModal: () => void;
+  isAddressesLoading: boolean;
 }
 
 const PsycItem = ({
@@ -36,7 +37,8 @@ const PsycItem = ({
   isOriginal,
   // loading
   refetchBalances,
-  handleModal
+  handleModal,
+  isAddressesLoading
 }: PsycItemProps) => {
   const { buyNft, isPending, isConfirming, isMinting } = useBuyNft(
     isPrivateSale,
@@ -66,10 +68,15 @@ const PsycItem = ({
   const modalNeeded = !address || (!isWhitelisted && isOriginal);
 
   useEffect(() => {
-    if (address && !item.whitelist.includes(address) && isOriginal) {
+    if (
+      address &&
+      modalNeeded &&
+      item.whitelist.length > 0 &&
+      !isAddressesLoading
+    ) {
       handleModal();
     }
-  }, [isWhitelisted, item.whitelist]);
+  }, [modalNeeded, isAddressesLoading, item.whitelist, item.whitelist.length]);
 
   const handleMint = async () => {
     await buyNft(

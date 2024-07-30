@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { Box, Flex, Grid, useDisclosure } from "@chakra-ui/react";
+import { Box, Flex, Grid } from "@chakra-ui/react";
 import {
   type ApolloClient,
   type NormalizedCacheObject,
@@ -11,7 +11,7 @@ import type { TokenItem, GetAllSalesWithTokensData, Sale } from "@/lib/types";
 import { formatUnits } from "viem";
 import PsycItem from "../../psyc-item";
 import useRandomImage from "@/hooks/useRandomImage";
-import { getAddresses } from "@/lib/server-utils";
+import { useGetAddresses } from "@/hooks/useGetAddresses";
 import usePrivateSale from "@/hooks/usePrivateSale";
 import { useAccount } from "wagmi";
 import ConnectWalletModal from "../../commons/connect-wallet-modal";
@@ -53,6 +53,8 @@ const MintSection = ({
   );
   const [whitelist, setWhitelist] = useState<{ [key: string]: string[] }>({});
   const { isLoading, isPrivateSale } = usePrivateSale();
+
+  const { isLoading: isAddressesLoading, getAddresses } = useGetAddresses();
 
   const fetchUserBalance = async (
     client: ApolloClient<NormalizedCacheObject>,
@@ -148,10 +150,12 @@ const MintSection = ({
     if (activeSale) {
       try {
         const addresses = await getAddresses(activeSale.ipfsHash);
-        setWhitelist((prev) => ({
-          ...prev,
-          [activeSale.ipfsHash]: addresses
-        }));
+        if (addresses && !isAddressesLoading) {
+          setWhitelist((prev) => ({
+            ...prev,
+            [activeSale.ipfsHash]: addresses
+          }));
+        }
       } catch (error) {
         console.error("Error fetching whitelist addresses:", error);
       }
@@ -207,6 +211,7 @@ const MintSection = ({
             loading={loading}
             refetchBalances={refetchAllBalances}
             handleModal={handleModal}
+            isAddressesLoading={isAddressesLoading}
           />
         </Flex>
       ) : (
@@ -239,6 +244,7 @@ const MintSection = ({
               loading={loading}
               refetchBalances={refetchAllBalances}
               handleModal={handleModal}
+              isAddressesLoading={isAddressesLoading}
             />
           ))}
         </Grid>
