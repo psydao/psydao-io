@@ -14,6 +14,7 @@ const SubmitButtonContainer = (props: SubmitButtonContainerProps) => {
       left={0}
       p={4}
       boxShadow={"0px -2px 25.6px 0px #00000040"}
+      zIndex={2}
     >
       {props.children}
     </Box>

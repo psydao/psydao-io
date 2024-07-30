@@ -18,20 +18,23 @@ const RevenueSplitSection = ({
       p={6}
       gap={4}
       borderY="1px"
-      alignItems="center"
+      alignItems={{ base: "row", sm: "center" }}
       borderColor="#F2BEBE"
+      direction={{ base: "column", sm: "row" }}
+      flexWrap={"wrap"}
     >
       <FormLabel fontSize="18" htmlFor={label} mb="0">
         {label}
       </FormLabel>
-      <Box
-        display="flex"
+      <Flex
         bg="#FBF6F8"
+        justifyContent={"space-between"}
         alignItems="center"
         borderRadius="xl"
-        boxShadow="inner"
+        boxShadow="-2px 2px 4px 0px #0000001F inset"
         gap={4}
         p="16px"
+        w={{ base: "100%", sm: "auto" }}
       >
         <Input
           type="number"
@@ -42,11 +45,16 @@ const RevenueSplitSection = ({
           onChange={(e) => setValue(e.target.value)}
           required
           fontSize="22px"
+          border={"none"}
+          focusBorderColor="transparent"
+          onWheel={(e) => e.currentTarget.blur()}
+          position={"relative"}
+          zIndex={1}
         />
-        <Text bg={"#F2BEBE1A"} p={4} rounded={"18px"} fontSize={"xl"}>
+        <Text bg={"#F2BEBE1A"} p={"0px 8px"} rounded={"32px"} fontSize={"xl"}>
           %
         </Text>
-      </Box>
+      </Flex>
     </Flex>
   );
 };
