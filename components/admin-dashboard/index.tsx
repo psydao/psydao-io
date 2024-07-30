@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Box, Image, useMediaQuery, Text } from "@chakra-ui/react";
 import { Window } from "@/components/ui/window";
 import { useWindowManager } from "../ui/window-manager";
@@ -10,6 +10,8 @@ import { type Sale, type GetAllSalesWithTokensData } from "@/lib/types";
 import EditSaleHeader from "./edit-sale/edit-sale-header";
 import { getAllSalesWithTokens } from "@/services/graph";
 import { useQuery } from "@apollo/client";
+import { whitelistedAddresses } from "./whitelisted-addresses";
+import { useAccount } from "wagmi";
 
 const AdminDashboardWidget = ({
   triggerNftSaleUpdate
@@ -19,8 +21,8 @@ const AdminDashboardWidget = ({
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
   const [openCreateSale, setOpenCreateSale] = useState(false);
   const [openEditSale, setOpenEditSale] = useState(false);
-  const { state } = useWindowManager();
-
+  const { state, dispatch } = useWindowManager();
+  const { address } = useAccount();
   const [selectedSale, setSelectedSale] = useState<Sale | undefined>(undefined);
   const { data, loading, refetch } = useQuery<GetAllSalesWithTokensData>(
     getAllSalesWithTokens
@@ -28,6 +30,12 @@ const AdminDashboardWidget = ({
   const fullScreenWindow = useMemo(() => {
     return state.fullScreen === "admin-dashboard";
   }, [state]);
+
+  useEffect(() => {
+    if (!whitelistedAddresses.includes(address ?? "0x")) {
+      dispatch({ type: "close", id: "admin-dashboard" });
+    }
+  }, [address, dispatch]);
 
   return (
     <Window
