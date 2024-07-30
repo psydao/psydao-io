@@ -49,26 +49,26 @@ export const useCreateSale = (
         showDefaultErrorToast("Please connect your wallet first");
         return;
       }
-      if (!newWhitelistedAddresses) {
-        showErrorToast("Please enter at least one whitelisted address", width);
-        return;
-      }
       setIsSubmitting(true);
-      let isSuccess = true;
 
       const splitNewWhitelistedAddresses = splitAndValidateAddresses(
         newWhitelistedAddresses,
         (message) => {
           setIsSubmitting(false);
-          isSuccess = false;
           showErrorToast(message, width);
         }
       );
 
-      if (!isSuccess) return;
+      if (splitNewWhitelistedAddresses.length < 2) {
+        showErrorToast(
+          "Please enter at least two addresses to whitelist",
+          width
+        );
+        setIsSubmitting(false);
+        return;
+      }
 
       if (parseFloat(floorPrice) > parseFloat(ceilingPrice)) {
-        isSuccess = false;
         setIsSubmitting(false);
         showErrorToast(
           "Please make sure the floor price is less than or equal to the ceiling price",
@@ -79,7 +79,6 @@ export const useCreateSale = (
 
       const saleStartTime = toUnixTimestamp(startDate, startTime);
       if (saleStartTime < Math.floor(Date.now() / 1000)) {
-        isSuccess = false;
         setIsSubmitting(false);
         showErrorToast(
           "The date cannot be in the past. Please select a valid date.",
@@ -95,29 +94,26 @@ export const useCreateSale = (
       const ceilingPriceWei = toWei(ceilingPrice);
       const ipfsHash = await uploadAddresses(splitNewWhitelistedAddresses);
 
-      {
-        try {
-          const args = [
-            tokenIds,
-            saleStartTime,
-            floorPriceWei,
-            ceilingPriceWei,
-            merkleRoot,
-            ipfsHash
-          ];
-          console.log("Calling writeContract with args:", args);
-          writeContract({
-            ...coreContractConfig,
-            functionName: "createSaleBatchPsycSale",
-            args
-          });
-          console.log("writeContract called");
-        } catch (error) {
-          const message = (error as Error).message || "An error occurred";
-          showCustomErrorToast(message, width);
-
-          setIsSubmitting(false);
-        }
+      try {
+        const args = [
+          tokenIds,
+          saleStartTime,
+          floorPriceWei,
+          ceilingPriceWei,
+          merkleRoot,
+          ipfsHash
+        ];
+        console.log("Calling writeContract with args:", args);
+        writeContract({
+          ...coreContractConfig,
+          functionName: "createSaleBatchPsycSale",
+          args
+        });
+        console.log("writeContract called");
+      } catch (error) {
+        const message = (error as Error).message || "An error occurred";
+        showCustomErrorToast(message, width);
+        setIsSubmitting(false);
       }
     },
     [

@@ -17,7 +17,6 @@ import type { Sale, GetSaleByIdData } from "@/lib/types";
 import { useQuery } from "@apollo/client";
 import { getSaleById } from "@/services/graph";
 import { InterimState } from "../commons/interim-state";
-import AdminDashboardEmptyState from "../admin-dashboard/admin-dashboard-empty";
 import NFTSaleWidgetEmptyState from "./layout/nft-sale-widget-empty";
 
 export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {

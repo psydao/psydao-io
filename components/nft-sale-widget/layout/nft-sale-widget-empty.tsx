@@ -1,6 +1,5 @@
 import { Box, Flex, GridItem, Image, Text } from "@chakra-ui/react";
 import DiagonalRectangle from "../commons/diagonal-rectangle";
-import PsyButton from "@/components/ui/psy-button";
 
 const NFTSaleWidgetEmptyState = () => {
   return (

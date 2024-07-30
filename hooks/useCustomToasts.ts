@@ -5,6 +5,8 @@ import { Zoom } from "react-toastify";
 const ERROR_MESSAGES = {
   "User rejected": "User rejected transaction request.",
   "Sale Paused": "Sale Paused By Owner.",
+  "insufficient funds": "Insufficient funds.",
+  "No tokens are owned by the contract": "Admin owns no tokens in batch",
   "Invalid Price":
     "The floor price cannot be greater than or equal to the current floor price.",
   "Limit Identical":

@@ -17,11 +17,19 @@ interface UseFetchTokenOwnerResult {
   error: ApolloError | undefined;
 }
 
-const useFetchTokenOwners = (tokenIds: string[]): UseFetchTokenOwnerResult => {
+const useFetchTokenOwners = (
+  contractAddress: string,
+  tokenIds: string[]
+): UseFetchTokenOwnerResult => {
+  const lowerCasedContractAddress = contractAddress.toLowerCase();
+  const ids = tokenIds.map(
+    (tokenId) => `${lowerCasedContractAddress}/${tokenId}`
+  );
+
   const { data, loading, error } = useQuery<TokenOwnerData, TokenOwnerVars>(
     getTokensOwners,
     {
-      variables: { ids: tokenIds }
+      variables: { ids }
     }
   );
 
@@ -30,6 +38,9 @@ const useFetchTokenOwners = (tokenIds: string[]): UseFetchTokenOwnerResult => {
   useEffect(() => {
     if (data?.tokens) {
       setOwners(data.tokens);
+      console.log(contractAddress, "contractAdd");
+      console.log("ids", ids);
+      console.log("owners", owners);
     }
   }, [data]);
 
