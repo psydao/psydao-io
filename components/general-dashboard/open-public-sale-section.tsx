@@ -27,7 +27,7 @@ const OpenPublicSaleSection = (
       <Switch
         id="openPublicSale"
         isChecked={false}
-        // isDisabled={true}
+        isDisabled={true}
         // onChange={() => setOpenPublicSale(!openPublicSale)}
       />
     </Flex>
