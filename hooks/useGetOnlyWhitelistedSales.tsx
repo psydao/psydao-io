@@ -30,7 +30,10 @@ const useGetOnlyWhitelistedSales = (address: Address | undefined) => {
           (sale) => sale !== null
         ) as Sale[];
         setWhitelistedSales(filteredSales);
-        console.log(filteredSales, "whitelistedSales after filtering");
+      }
+
+      if (!address) {
+        setWhitelistedSales([]);
       }
     };
 

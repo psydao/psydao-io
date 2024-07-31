@@ -79,26 +79,32 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
               isOriginal={isOriginal}
               setIsOriginal={setIsOriginal}
             />
-            {loading ? (
-              <InterimState type="loading" />
-            ) : error ? (
-              <InterimState type="error" />
-            ) : whitelistedSales ? (
-              <TabPanels>
-                <TabPanel px={0}>
-                  <PsycSaleContent
-                    isFullScreen={fullScreenWindow}
-                    activeSale={activeSale}
-                    isOriginal={isOriginal}
-                  />
-                </TabPanel>
-                <TabPanel h="100%" w="100%">
-                  <OwnedNftsContent isFullScreen={fullScreenWindow} />
-                </TabPanel>
-              </TabPanels>
+            {address ? (
+              loading ? (
+                <InterimState type="loading" />
+              ) : error ? (
+                <InterimState type="error" />
+              ) : data ? (
+                <TabPanels>
+                  <TabPanel px={0}>
+                    <PsycSaleContent
+                      isFullScreen={fullScreenWindow}
+                      activeSale={activeSale}
+                      isOriginal={isOriginal}
+                    />
+                  </TabPanel>
+                  <TabPanel h="100%" w="100%">
+                    <OwnedNftsContent isFullScreen={fullScreenWindow} />
+                  </TabPanel>
+                </TabPanels>
+              ) : (
+                <Grid h={"100%"} w={"100%"} gridTemplateRows={"30% 1fr"}>
+                  <NFTSaleWidgetEmptyState address={address} />
+                </Grid>
+              )
             ) : (
-              <Grid h={"100%"} w={"100%"} gridTemplateRows={"30% 1fr"}>
-                <NFTSaleWidgetEmptyState />
+              <Grid h={"100%"} w={"100%"} gridTemplateRows={"20% 1fr"}>
+                <NFTSaleWidgetEmptyState address={address} />
               </Grid>
             )}
           </Tabs>

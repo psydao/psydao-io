@@ -39,7 +39,7 @@ const NftSalesDropdown = (props: NftSalesDropdownProps) => {
             borderRadius={"8px"}
             p={"8px 16px"}
           >
-            {props.activeSale
+            {props.activeSale && address
               ? `Batch ${props.activeSale.batchID}`
               : "Select Batch"}
           </MenuButton>

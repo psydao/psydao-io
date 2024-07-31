@@ -67,17 +67,6 @@ const PsycItem = ({
   const isWhitelisted = address ? item.whitelist.includes(address) : false;
   const modalNeeded = !address || (!isWhitelisted && isOriginal);
 
-  useEffect(() => {
-    if (
-      address &&
-      modalNeeded &&
-      item.whitelist.length > 0 &&
-      !isAddressesLoading
-    ) {
-      handleModal();
-    }
-  }, [modalNeeded, isAddressesLoading]);
-
   const handleMint = async () => {
     await buyNft(
       parseInt(item.batchId),
