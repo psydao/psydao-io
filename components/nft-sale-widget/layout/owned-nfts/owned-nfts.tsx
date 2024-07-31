@@ -1,4 +1,4 @@
-import { Box, Grid } from "@chakra-ui/react";
+import { Box, Flex, Grid } from "@chakra-ui/react";
 import { useAccount } from "wagmi";
 import { countNumberOfCopies } from "@/utils/countNumberOfCopies";
 import { OwnedNFTItem } from "./owned-nft-item";
@@ -18,7 +18,7 @@ const OwnedNfts = (props: OwnedNftsProps) => {
   }
 
   return (
-    <Box textAlign="left" py={4} px={4} maxWidth="170px">
+    <Flex justifyContent={"center"} py={4} px={4}>
       <Grid
         templateColumns={{
           base: "1fr",
@@ -43,7 +43,7 @@ const OwnedNfts = (props: OwnedNftsProps) => {
           />
         ))}
       </Grid>
-    </Box>
+    </Flex>
   );
 };
 
