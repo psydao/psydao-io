@@ -1,4 +1,4 @@
-import { createRef, useEffect, useMemo, useState } from "react";
+import { createRef, useCallback, useEffect, useMemo, useState } from "react";
 import {
   Image,
   useMediaQuery,
@@ -20,17 +20,37 @@ import { getSaleById } from "@/services/graph";
 import { InterimState } from "../commons/interim-state";
 import AdminDashboardEmptyState from "../admin-dashboard/admin-dashboard-empty";
 import NFTSaleWidgetEmptyState from "./layout/nft-sale-widget-empty";
+import { useAccount } from "wagmi";
+import useGetOnlyWhitelistedSales from "@/hooks/useGetOnlyWhitelistedSales";
 
 export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
   const [activeSale, setActiveSale] = useState<Sale>();
   const [isOriginal, setIsOriginal] = useState<boolean>(true);
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
+  const [whitelistedSales, setWhitelistedSales] = useState<{
+    [key: string]: string[];
+  }>({});
   const { data, loading, error, refetch } = useQuery<GetSaleByIdData>(
     getSaleById,
     {
       variables: { id: activeSale ? activeSale.id : "1" }
     }
   );
+
+  const { address } = useAccount();
+
+  const { getOnlyWhitelistedSales, isLoading } =
+    useGetOnlyWhitelistedSales(address);
+
+  useEffect(() => {
+    const getWhitelists = async () => {
+      const whitelistedSalesObtained = await getOnlyWhitelistedSales();
+      if (!isLoading) {
+        setWhitelistedSales(whitelistedSalesObtained);
+      }
+    };
+    getWhitelists().catch(console.error);
+  }, []);
 
   useEffect(() => {
     if (data) {
