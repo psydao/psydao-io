@@ -8,14 +8,12 @@ type PsycSaleContentProps = {
   isFullScreen: boolean;
   activeSale: Sale | undefined;
   isOriginal: boolean;
-  elementRef: React.RefObject<HTMLDivElement>;
 };
 
 const PsycSaleContent = ({
   isFullScreen,
   activeSale,
-  isOriginal,
-  elementRef
+  isOriginal
 }: PsycSaleContentProps) => {
   return (
     <>
@@ -24,7 +22,6 @@ const PsycSaleContent = ({
         isRandom={true}
         activeSale={activeSale}
         isOriginal={isOriginal}
-        elementRef={elementRef}
       />
       <Divider
         h={"1px"}
@@ -38,7 +35,6 @@ const PsycSaleContent = ({
         isRandom={false}
         activeSale={activeSale}
         isOriginal={isOriginal}
-        elementRef={elementRef}
       />
     </>
   );

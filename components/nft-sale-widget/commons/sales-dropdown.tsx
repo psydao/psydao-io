@@ -1,8 +1,10 @@
+import useGetOnlyWhitelistedSales from "@/hooks/useGetOnlyWhitelistedSales";
 import { type GetAllSalesWithTokensData, type Sale } from "@/lib/types";
 import { getAllSalesWithTokens } from "@/services/graph";
 import { useQuery } from "@apollo/client";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { useAccount } from "wagmi";
 
 type NftSalesDropdownProps = {
   setActiveSale: (sale: Sale) => void;
@@ -14,9 +16,14 @@ const NftSalesDropdown = (props: NftSalesDropdownProps) => {
     getAllSalesWithTokens
   );
 
+  const { address } = useAccount();
+
+  const { whitelistedSales, loading: whitelistedSalesLoading } =
+    useGetOnlyWhitelistedSales(address);
+
   return (
     <>
-      {!loading && data && (
+      {!loading && data && whitelistedSales && !whitelistedSalesLoading && (
         <Menu>
           <MenuButton
             as={Button}
@@ -42,7 +49,7 @@ const NftSalesDropdown = (props: NftSalesDropdownProps) => {
             fontSize={"14px"}
             color={"#585858"}
           >
-            {data.sales.map((sale) => {
+            {whitelistedSales.map((sale) => {
               return (
                 <MenuItem
                   key={sale.id}

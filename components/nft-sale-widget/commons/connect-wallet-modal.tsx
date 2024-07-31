@@ -14,28 +14,15 @@ import { useAccount } from "wagmi";
 type ConnectWalletModalProps = {
   isOpen: boolean;
   onClose: () => void;
-
-  elementRef: React.RefObject<HTMLDivElement>;
 };
 
-const ConnectWalletModal = ({
-  elementRef,
-  isOpen,
-  onClose
-}: ConnectWalletModalProps) => {
+const ConnectWalletModal = ({ isOpen, onClose }: ConnectWalletModalProps) => {
   const { openConnectModal } = useConnectModal();
   const { address } = useAccount();
-  const targetRect = elementRef.current?.getBoundingClientRect();
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
-      <ModalOverlay
-        height={{ base: "100%", lg: targetRect ? targetRect.height : "100%" }}
-        width={{ base: "100%", lg: targetRect ? targetRect.width : "100%" }}
-        top={{ base: 0, lg: targetRect ? targetRect.top : "100%" }}
-        left={{ base: 0, lg: targetRect ? targetRect.left : "100%" }}
-        bg={"#27272724"}
-      />
+      <ModalOverlay />
       <ModalContent
         p={6}
         bg={"white"}

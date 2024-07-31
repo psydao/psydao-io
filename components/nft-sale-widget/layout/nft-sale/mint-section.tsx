@@ -22,7 +22,6 @@ interface MintSectionProps {
   activeSale: Sale | undefined;
   isFullscreen?: boolean;
   isOriginal: boolean;
-  elementRef: React.RefObject<HTMLDivElement>;
 }
 
 interface WhitelistedTokenItem extends TokenItem {
@@ -40,8 +39,7 @@ interface UserCopyBalance {
 const MintSection = ({
   isRandom,
   activeSale,
-  isOriginal,
-  elementRef
+  isOriginal
 }: MintSectionProps) => {
   const { loading, error, data } = useQuery<GetAllSalesWithTokensData>(
     getAllSalesWithTokens
@@ -252,11 +250,7 @@ const MintSection = ({
           ))}
         </Grid>
       )}
-      <ConnectWalletModal
-        isOpen={isOpen}
-        onClose={handleModal}
-        elementRef={elementRef}
-      />
+      <ConnectWalletModal isOpen={isOpen} onClose={handleModal} />
     </Flex>
   );
 };
