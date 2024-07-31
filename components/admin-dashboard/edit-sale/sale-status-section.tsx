@@ -17,7 +17,7 @@ const SaleStatusSection = (props: {
       w={"100%"}
     >
       <Text fontFamily={"Inter"} fontSize={18} color={"black"}>
-        Sale Status
+        Original Sale Status
       </Text>
       {props.isComplete ? (
         <Box

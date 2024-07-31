@@ -4,14 +4,16 @@ import NftTokensSection from "../admin-dashboard/create-sale/nft-tokens";
 import SetTokenPrice from "../admin-dashboard/create-sale/set-token-price";
 import WhiteListedAddressesSection from "../admin-dashboard/create-sale/whitelisted-addresses";
 import SaleStatusSection from "../admin-dashboard/edit-sale/sale-status-section";
+import CopySaleActivation from "../admin-dashboard/edit-sale/copy-sale-activation";
 
 import useActivateSale from "@/hooks/useActivateSale";
 
 import type { Sale } from "@/lib/types";
-import { psycSaleSepolia } from "@/constants/contracts";
+import { psycSaleSepolia, psyNFTSepolia } from "@/constants/contracts";
 import useFetchTokenOwners from "@/hooks/useFetchTokenOwner";
-import MintButton from "../ui/mint-button";
 import { getSaleComplete } from "@/utils/getSaleComplete";
+import { useCustomToasts } from "@/hooks/useCustomToasts";
+import { useResize } from "@/hooks/useResize";
 
 interface EditSaleWindowProps {
   selectedSale: Sale | undefined;
@@ -50,36 +52,46 @@ const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
   }
 
   const { activateSale, isPending: isLoading } = useActivateSale();
-
+  const { showCustomErrorToast } = useCustomToasts();
+  const { width } = useResize();
   const tokenIds = selectedSale
     ? selectedSale.tokensOnSale
         .map((x) => x.tokenID)
         .sort((a, b) => parseInt(a) - parseInt(b))
     : [];
 
-  const { owners, loading, error } = useFetchTokenOwners(tokenIds);
+  const contractAddress = psyNFTSepolia;
+  const { owners, loading, error } = useFetchTokenOwners(
+    contractAddress,
+    tokenIds
+  );
 
   const handleActivateSale = async () => {
-    console.log("Contract Address:", psycSaleSepolia);
-    console.log("Owners:", owners);
+    try {
+      const tokensOwnedByContract = owners
+        .filter((owner) => {
+          const isOwnedByContract =
+            owner.owner.toLowerCase() === psycSaleSepolia.toLowerCase();
+          console.log(
+            `Token ID ${owner.id} is owned by contract: ${isOwnedByContract}`
+          );
+          return isOwnedByContract;
+        })
+        .map((token) => {
+          const tokenIdPart = token.id.split("/").pop() ?? "";
+          return parseInt(tokenIdPart, 10);
+        });
 
-    const tokensOwnedByContract = owners
-      .filter((owner) => {
-        const isOwnedByContract =
-          owner.owner.toLowerCase() === psycSaleSepolia.toLowerCase();
-        console.log(
-          `Token ID ${owner.id} is owned by contract: ${isOwnedByContract}`
-        );
-        return isOwnedByContract;
-      })
-      .map((token) => parseInt(token.id));
+      console.log("tokensOwnedByContract:", tokensOwnedByContract);
 
-    console.log("tokensOwnedByContract:", tokensOwnedByContract);
-
-    if (tokensOwnedByContract.length > 0) {
-      await activateSale(tokensOwnedByContract);
-    } else {
-      console.error("No tokens are owned by the contract address.");
+      if (tokensOwnedByContract.length > 0) {
+        await activateSale(tokensOwnedByContract);
+      } else {
+        console.error("No tokens are owned by the contract address.");
+      }
+    } catch (error) {
+      const message = (error as Error).message || "An error occurred";
+      showCustomErrorToast(message, width);
     }
   };
 
@@ -87,7 +99,7 @@ const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
     if (loading) {
       console.log("Loading token owners...");
     } else if (error) {
-      console.error("Error fetching token owners:", error);
+      console.error(error);
     } else {
       console.log("Token owners fetched:", owners);
     }
@@ -103,20 +115,12 @@ const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
       overflowY={"auto"}
       alignItems={"start"}
     >
-      <MintButton
-        onClick={handleActivateSale}
-        isDisabled={isButtonDisabled}
-        customStyle={{
-          position: "absolute",
-          top: "80px",
-          right: "40px",
-          px: "10px"
-        }}
-      >
-        {isLoading ? "Activating..." : "Activate Sale"}
-      </MintButton>
-
       <NftTokensSection tokenIds={tokenIds.map((id) => parseInt(id))} />
+      <CopySaleActivation
+        handleActivateSale={handleActivateSale}
+        isButtonDisabled={isButtonDisabled}
+        isLoading={isLoading}
+      />
       <SaleStatusSection
         isPaused={isPaused}
         setIsPaused={setIsPaused}

@@ -36,6 +36,19 @@ export const OwnedNFTItem = (props: OwnedNFTItemProps) => {
         h="100%"
         objectFit="cover"
       />
+      <Flex
+        alignItems="center"
+        position="absolute"
+        bottom="10px"
+        left="10px"
+        bg="white"
+        px={2}
+        py={1}
+        borderRadius="10px"
+        fontWeight="bold"
+      >
+        <Text> You own token {props.item.tokenId} </Text>
+      </Flex>
       {props.isOwned && !props.isPrivateSale && (
         <Flex
           position={"absolute"}
