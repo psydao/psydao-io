@@ -15,6 +15,7 @@ import { useGetAddresses } from "@/hooks/useGetAddresses";
 import usePrivateSale from "@/hooks/usePrivateSale";
 import { useAccount } from "wagmi";
 import ConnectWalletModal from "../../commons/connect-wallet-modal";
+import useGetOnlyWhitelistedSales from "@/hooks/useGetOnlyWhitelistedSales";
 
 interface MintSectionProps {
   isRandom: boolean;
@@ -56,6 +57,8 @@ const MintSection = ({
 
   const { isLoading: isAddressesLoading, getAddresses } = useGetAddresses();
 
+  useGetOnlyWhitelistedSales(address);
+
   const fetchUserBalance = async (
     client: ApolloClient<NormalizedCacheObject>,
     tokenId: string,
@@ -70,7 +73,7 @@ const MintSection = ({
         variables: { id: concatenatedId },
         fetchPolicy: "network-only"
       });
-      console.log(data.userCopyBalance, "copyBalance");
+      // console.log(data.userCopyBalance, "copyBalance");
       return data.userCopyBalance;
     } catch (error) {
       console.error("Error fetching user balance:", error);
@@ -102,7 +105,7 @@ const MintSection = ({
           {} as { [key: string]: string }
         );
         setBalances(balancesMap);
-        console.log("Updated balances:", balancesMap);
+        // console.log("Updated balances:", balancesMap);
       } catch (error) {
         console.error("Error fetching user balances:", error);
       }
@@ -120,7 +123,7 @@ const MintSection = ({
 
   useEffect(() => {
     refetchAllBalances().catch(console.error);
-    console.log("Refetched balances");
+    // console.log("Refetched balances");
   }, []);
 
   const images = useMemo(() => {

@@ -9,36 +9,37 @@ const useGetOnlyWhitelistedSales = (address: Address | undefined) => {
   const { data, loading } = useQuery<GetAllSalesWithTokensData>(
     getAllSalesWithTokens
   );
+  const { getAddresses, isLoading: addressesLoading } = useGetAddresses();
 
-  const { getAddresses, isLoading } = useGetAddresses();
-
-  const [allIpfsHashes, setAllIpfsHashes] = useState<string[]>([]);
-  const [whitelist, setWhitelist] = useState<{ [key: string]: string[] }>({});
+  const [whitelistedSales, setWhitelistedSales] = useState<Sale[]>([]);
 
   useEffect(() => {
-    if (data && !loading) {
-      setAllIpfsHashes(data.sales.map((sale) => sale.ipfsHash));
-    }
-  }, [data, loading]);
+    const fetchWhitelistedSales = async () => {
+      if (address && data && !loading) {
+        const salesWithWhitelist = await Promise.all(
+          data.sales.map(async (sale) => {
+            const addresses = await getAddresses(sale.ipfsHash);
+            if (addresses.includes(address)) {
+              return sale;
+            }
+            return null;
+          })
+        );
 
-  const getOnlyWhitelistedSales = async () => {
-    if (address && allIpfsHashes.length > 0) {
-      for (const ipfsHash of allIpfsHashes) {
-        const addresses = await getAddresses(ipfsHash);
-        if (addresses && !isLoading && addresses.includes(address)) {
-          console.log("We is whitelisted");
-          setWhitelist((prev) => ({
-            ...prev,
-            [ipfsHash]: addresses
-          }));
-        }
+        const filteredSales = salesWithWhitelist.filter(
+          (sale) => sale !== null
+        ) as Sale[];
+        setWhitelistedSales(filteredSales);
+        console.log(filteredSales, "whitelistedSales after filtering");
       }
-    }
-    return whitelist;
-  };
+    };
+
+    fetchWhitelistedSales().catch(console.error);
+  }, [address, data, loading, getAddresses]);
+
   return {
-    isLoading,
-    getOnlyWhitelistedSales
+    whitelistedSales,
+    loading: loading || addressesLoading
   };
 };
 
