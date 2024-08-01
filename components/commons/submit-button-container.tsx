@@ -11,11 +11,12 @@ const SubmitButtonContainer = (props: SubmitButtonContainerProps) => {
       position="fixed"
       bottom={0}
       bg="white"
-      p={4}
       left={0}
+      p={4}
       boxShadow={"0px -2px 25.6px 0px #00000040"}
       alignItems={"center"}
       justifyContent={"center"}
+      zIndex={2}
     >
       {props.children}
     </Flex>

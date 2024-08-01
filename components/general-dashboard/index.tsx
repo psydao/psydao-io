@@ -17,7 +17,7 @@ const GeneralDashboard = ({
   const { address } = useAccount();
 
   const fullScreenWindow = useMemo(() => {
-    return state.fullScreen === "admin-dashboard";
+    return state.fullScreen === "general-dashboard";
   }, [state]);
 
   useEffect(() => {
