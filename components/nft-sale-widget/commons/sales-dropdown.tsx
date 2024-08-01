@@ -9,6 +9,7 @@ import { useAccount } from "wagmi";
 type NftSalesDropdownProps = {
   setActiveSale: (sale: Sale) => void;
   activeSale: Sale | undefined;
+  isOriginal: boolean;
 };
 
 const NftSalesDropdown = (props: NftSalesDropdownProps) => {
@@ -21,47 +22,52 @@ const NftSalesDropdown = (props: NftSalesDropdownProps) => {
   const { whitelistedSales, loading: whitelistedSalesLoading } =
     useGetOnlyWhitelistedSales(address);
 
+  const displayedSales = props.isOriginal
+    ? whitelistedSales
+    : data?.sales ?? [];
+
   return (
     <>
-      {!loading && data && whitelistedSales && !whitelistedSalesLoading && (
-        <Menu>
-          <MenuButton
-            as={Button}
-            rightIcon={<ChevronDownIcon />}
-            variant={"unstyled"}
-            display={"flex"}
-            alignItems={"center"}
-            fontFamily={"Inter Medium"}
-            fontSize={"14px"}
-            fontWeight={500}
-            color={"#585858"}
-            border={"1px solid #E9BDBD"}
-            borderRadius={"8px"}
-            p={"8px 16px"}
-          >
-            {props.activeSale && address
-              ? `Batch ${props.activeSale.batchID}`
-              : "Select Batch"}
-          </MenuButton>
-          <MenuList
-            zIndex={10}
-            fontFamily={"Inter Medium"}
-            fontSize={"14px"}
-            color={"#585858"}
-          >
-            {whitelistedSales.map((sale) => {
-              return (
+      {!loading &&
+        data &&
+        displayedSales.length > 0 &&
+        !whitelistedSalesLoading && (
+          <Menu>
+            <MenuButton
+              as={Button}
+              rightIcon={<ChevronDownIcon />}
+              variant={"unstyled"}
+              display={"flex"}
+              alignItems={"center"}
+              fontFamily={"Inter Medium"}
+              fontSize={"14px"}
+              fontWeight={500}
+              color={"#585858"}
+              border={"1px solid #E9BDBD"}
+              borderRadius={"8px"}
+              p={"8px 16px"}
+            >
+              {props.activeSale && address
+                ? `Batch ${props.activeSale.batchID}`
+                : "Select Batch"}
+            </MenuButton>
+            <MenuList
+              zIndex={10}
+              fontFamily={"Inter Medium"}
+              fontSize={"14px"}
+              color={"#585858"}
+            >
+              {displayedSales.map((sale) => (
                 <MenuItem
                   key={sale.id}
                   onClick={() => props.setActiveSale(sale)}
                 >
                   Batch {sale.batchID}
                 </MenuItem>
-              );
-            })}
-          </MenuList>
-        </Menu>
-      )}
+              ))}
+            </MenuList>
+          </Menu>
+        )}
     </>
   );
 };
