@@ -15,6 +15,7 @@ import { getAddresses } from "@/lib/server-utils";
 import usePrivateSale from "@/hooks/usePrivateSale";
 import { useAccount } from "wagmi";
 import ConnectWalletModal from "../../commons/connect-wallet-modal";
+import getAvailableTokenIds from "@/utils/getAvailableTokenIds";
 
 interface MintSectionProps {
   isRandom: boolean;
@@ -66,7 +67,7 @@ const MintSection = ({
         variables: { id: concatenatedId },
         fetchPolicy: "network-only"
       });
-      console.log(data.userCopyBalance, "copyBalance");
+      // console.log(data.userCopyBalance, "copyBalance");
       return data.userCopyBalance;
     } catch (error) {
       console.error("Error fetching user balance:", error);
@@ -98,7 +99,7 @@ const MintSection = ({
           {} as { [key: string]: string }
         );
         setBalances(balancesMap);
-        console.log("Updated balances:", balancesMap);
+        // console.log("Updated balances:", balancesMap);
       } catch (error) {
         console.error("Error fetching user balances:", error);
       }
@@ -131,7 +132,8 @@ const MintSection = ({
 
   const activeTokens = useMemo(() => {
     if (!activeSale) return [];
-    return activeSale.tokensOnSale.map((token, index) => ({
+    const availableTokens = getAvailableTokenIds(activeSale, isOriginal);
+    return availableTokens.map((token, index) => ({
       src: images[index] ?? "",
       price: `${formatUnits(BigInt(activeSale.floorPrice), 18)}`,
       isSold: false,
@@ -206,6 +208,7 @@ const MintSection = ({
             loading={loading}
             refetchBalances={refetchAllBalances}
             handleModal={handleModal}
+            soldOut={activeTokens.length === 0}
           />
         </Flex>
       ) : (

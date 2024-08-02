@@ -47,6 +47,7 @@ export const getSaleById = gql`
       tokensOnSale {
         id
         tokenID
+        buyer
       }
     }
   }

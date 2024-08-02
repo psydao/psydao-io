@@ -22,6 +22,7 @@ interface PsycItemProps {
   loading: boolean;
   refetchBalances: () => void;
   handleModal: () => void;
+  soldOut?: boolean;
 }
 
 const PsycItem = ({
@@ -32,7 +33,8 @@ const PsycItem = ({
   isOriginal,
   // loading
   refetchBalances,
-  handleModal
+  handleModal,
+  soldOut
 }: PsycItemProps) => {
   const { buyNft, isPending, isConfirming, isMinting } = useBuyNft(
     isPrivateSale,
@@ -72,7 +74,12 @@ const PsycItem = ({
   const isButtonDisabled =
     isOriginal && !isRandom && isSold
       ? true
-      : isPending || isConfirming || isMinting || isSoldLoading || isPaused;
+      : isPending ||
+        isConfirming ||
+        isMinting ||
+        isSoldLoading ||
+        isPaused ||
+        (isRandom && soldOut);
 
   const modalNeeded = !address || (!isWhitelisted && isOriginal);
 
@@ -106,6 +113,24 @@ const PsycItem = ({
           fill
           objectFit="cover"
         />
+        {soldOut && isRandom && isOriginal && (
+          <Box
+            position="absolute"
+            top="0"
+            left="0"
+            width="100%"
+            height="100%"
+            bg={"#00000026"}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            backdropFilter={"blur(2px)"}
+          >
+            <Text color="white" fontWeight="bold">
+              Sold Out
+            </Text>
+          </Box>
+        )}
         {isOriginal && isSold && !isRandom && (
           <Box
             position="absolute"
@@ -131,6 +156,7 @@ const PsycItem = ({
           <MintButton
             customStyle={{
               width: "100%",
+              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
               opacity: isButtonDisabled || modalNeeded ? 0.5 : 1,
               cursor: modalNeeded ? "help" : "default"
             }}
@@ -145,6 +171,8 @@ const PsycItem = ({
               </>
             ) : isPaused ? (
               "Paused"
+            ) : soldOut ? (
+              "Sold Out"
             ) : (
               "Mint"
             )}
