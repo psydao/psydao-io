@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Box, Text, Spinner, Flex } from "@chakra-ui/react";
+import Image from "next/image";
+import { useAccount } from "wagmi";
 import NFTPrice from "@/components/commons/nftprice";
 import MintButton from "@/components/ui/mint-button";
+import MintCount from "@/components/commons/mint-count";
+import FullSizeImageModal from "@/components/commons/image-modal";
 import useBuyNft from "@/hooks/useBuyNft";
-import { useAccount } from "wagmi";
-import { type TokenItem } from "@/lib/types";
 import { useTokenSoldState } from "@/hooks/useTokenSoldState";
 import useFetchProof from "@/hooks/useFetchProof";
-import { useTokenContext } from "@/providers/TokenContext";
-import Image from "next/image";
-import FullSizeImageModal from "../commons/image-modal";
-
-import MintCount from "../commons/mint-count";
 import usePausedSale from "@/hooks/usePausedSale";
+import { useTokenContext } from "@/providers/TokenContext";
+import { type TokenItem } from "@/lib/types";
 
 interface PsycItemProps {
   item: TokenItem & {
@@ -128,24 +127,6 @@ const PsycItem = ({
             </Text>
           </Box>
         )}
-        {/* {showMintedText && (
-          <Box
-            position="absolute"
-            top="0"
-            left="0"
-            width="100%"
-            height="100%"
-            bg={"#00000066"}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Text color="white" fontWeight="bold">
-              You have Minted{" "}
-              {item.balance === "1" ? "Once" : `${item.balance} times`}
-            </Text>
-          </Box>
-        )} */}
         {showMintedText && <MintCount count={item.balance} />}
         <NFTPrice price={item.price} />
       </Box>

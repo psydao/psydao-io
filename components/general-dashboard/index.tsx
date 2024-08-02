@@ -1,9 +1,11 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Image, useMediaQuery } from "@chakra-ui/react";
 import { useWindowManager } from "../ui/window-manager";
 import { Window } from "../ui/window";
 import GeneralDashboardHeader from "./general-dashboard-header";
 import GeneralSettingsSection from "./general-settings-section";
+import { whitelistedAddresses } from "../admin-dashboard/whitelisted-addresses";
+import { useAccount } from "wagmi";
 
 const GeneralDashboard = ({
   triggerNftSaleUpdate
@@ -11,11 +13,18 @@ const GeneralDashboard = ({
   triggerNftSaleUpdate: () => void;
 }) => {
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
-  const { state } = useWindowManager();
+  const { state, dispatch } = useWindowManager();
+  const { address } = useAccount();
 
   const fullScreenWindow = useMemo(() => {
-    return state.fullScreen === "admin-dashboard";
+    return state.fullScreen === "general-dashboard";
   }, [state]);
+
+  useEffect(() => {
+    if (!whitelistedAddresses.includes(address ?? "0x")) {
+      dispatch({ type: "close", id: "general-dashboard" });
+    }
+  }, [address, dispatch]);
 
   return (
     <Window

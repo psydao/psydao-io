@@ -1,5 +1,6 @@
 import { Box, Button, Flex, GridItem, Image, Text } from "@chakra-ui/react";
 import DiagonalRectangle from "../commons/diagonal-rectangle";
+
 import type { Address } from "viem";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 

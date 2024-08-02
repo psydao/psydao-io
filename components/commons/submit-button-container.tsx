@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 
 type SubmitButtonContainerProps = {
   children: React.ReactNode;
@@ -6,17 +6,20 @@ type SubmitButtonContainerProps = {
 
 const SubmitButtonContainer = (props: SubmitButtonContainerProps) => {
   return (
-    <Box
+    <Flex
       width="100%"
       position="fixed"
       bottom={0}
       bg="white"
-      ml="-4px"
+      left={0}
       p={4}
       boxShadow={"0px -2px 25.6px 0px #00000040"}
+      alignItems={"center"}
+      justifyContent={"center"}
+      zIndex={2}
     >
       {props.children}
-    </Box>
+    </Flex>
   );
 };
 

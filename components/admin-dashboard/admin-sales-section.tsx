@@ -108,7 +108,7 @@ export const AdminSalesSection = ({
             : null}
           <SubmitButtonContainer>
             <PsyButton
-              customStyle={{ width: "100%" }}
+              customStyle={{ width: "100%", maxWidth: "550px" }}
               onClick={() => setOpenCreateSale(true)}
               isDisabled={!address}
             >
