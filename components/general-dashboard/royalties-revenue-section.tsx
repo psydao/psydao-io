@@ -20,8 +20,10 @@ const RoyaltiesRevenueSection = ({ revenue }: RoyaltiesRevenueSectionProps) => {
         p={6}
         gap={4}
         borderY="1px"
-        alignItems="center"
+        alignItems={{ base: "start", sm: "center" }}
         borderColor="#F2BEBE"
+        direction={{ base: "column", sm: "row" }}
+        flexWrap={"wrap"}
       >
         <Text fontSize="18">Royalties Revenue</Text>
         <Box
@@ -32,6 +34,7 @@ const RoyaltiesRevenueSection = ({ revenue }: RoyaltiesRevenueSectionProps) => {
           boxShadow="inner"
           gap={1}
           p="16px"
+          w={{ base: "100%", sm: "auto" }}
         >
           <Text color={"#000000E5"} fontFamily={"Inter"} fontSize={"22px"}>
             {revenue}
@@ -48,6 +51,7 @@ const RoyaltiesRevenueSection = ({ revenue }: RoyaltiesRevenueSectionProps) => {
               fontSize={{ base: 16, sm: 18 }}
               onClick={openModal}
               textColor="purple"
+              variant={"unstyled"}
             >
               Withdraw
             </Button>
