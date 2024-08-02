@@ -5,7 +5,7 @@ import { psycSaleContractConfig } from "@/lib/sale-contract-config";
 import { useCustomToasts } from "@/hooks/useCustomToasts";
 import { useResize } from "@/hooks/useResize";
 import { type Address, parseUnits } from "viem";
-import { getAddresses, uploadAddresses } from "@/lib/server-utils";
+import { uploadAddresses } from "@/lib/server-utils";
 import { getMerkleRoot, getNewAddresses } from "@/utils/saleUtils";
 import { useGetCurrentSaleValues } from "./useGetCurrentSaleValues";
 
@@ -14,7 +14,8 @@ export const useEditSaleForm = (
   setOpenEditSale: React.Dispatch<React.SetStateAction<boolean>>,
   id: string,
   triggerNftSaleUpdate: () => void,
-  refetchSalesData: () => void
+  refetchSalesData: () => void,
+  getAddresses: (ipfsHash: string) => Promise<string[]>
 ) => {
   const toast = useToast();
   const { width } = useResize();
@@ -78,6 +79,8 @@ export const useEditSaleForm = (
     }
     setIsSubmitting(true);
 
+    const currentAddresses = await getAddresses(currentIpfsHash);
+
     const ceilingPriceHasChanged =
       parseUnits(newCeilingPrice, 18).toString() !== currentCeilingPrice;
     const floorPriceHasChanged =
@@ -96,8 +99,6 @@ export const useEditSaleForm = (
     );
 
     try {
-      const currentAddresses = await getAddresses(currentIpfsHash);
-
       if (
         !ceilingPriceHasChanged &&
         !floorPriceHasChanged &&

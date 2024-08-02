@@ -32,6 +32,7 @@ import { NftSaleWidget } from "@/components/nft-sale-widget";
 import WalletConnectHome from "@/components/connectWalletHome";
 import AdminDashboardWidget from "@/components/admin-dashboard";
 import GeneralDashboard from "@/components/general-dashboard";
+import useGetOnlyWhitelistedSales from "@/hooks/useGetOnlyWhitelistedSales";
 // import SaleWidgetProvider from "@/providers/SaleWidgetContext";
 
 // TODO Extract Pill component since it seems it will become a basic primitive

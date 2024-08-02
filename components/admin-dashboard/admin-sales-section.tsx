@@ -11,6 +11,7 @@ import SubmitSaleButton from "../commons/submit-sale-button";
 import { useEditSaleForm } from "@/hooks/useEditSaleForm";
 import { useResize } from "@/hooks/useResize";
 import { getSaleComplete } from "@/utils/getSaleComplete";
+import { useGetAddresses } from "@/hooks/useGetAddresses";
 
 export const AdminSalesSection = ({
   setOpenCreateSale,
@@ -33,12 +34,14 @@ export const AdminSalesSection = ({
 }) => {
   const { width } = useResize();
   const { address } = useAccount();
+  const { getAddresses } = useGetAddresses();
   const { handleEditSale, isSubmitting } = useEditSaleForm(
     address,
     setOpenEditSale,
     selectedSale?.batchID ?? "",
     triggerNftSaleUpdate,
-    refetchSalesData
+    refetchSalesData,
+    getAddresses
   );
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const [existingWhitelistedAddresses, setExistingWhitelistedAddresses] =
@@ -68,6 +71,7 @@ export const AdminSalesSection = ({
     <Box textAlign={"start"} py={4} px={4} position="relative">
       {!openEditSale ? (
         <Flex
+          key={0}
           justifyContent="center"
           gap={5}
           flexDirection="column"

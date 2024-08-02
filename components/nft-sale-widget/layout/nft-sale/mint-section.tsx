@@ -11,10 +11,11 @@ import type { TokenItem, GetAllSalesWithTokensData, Sale } from "@/lib/types";
 import { formatUnits } from "viem";
 import PsycItem from "../../psyc-item";
 import useRandomImage from "@/hooks/useRandomImage";
-import { getAddresses } from "@/lib/server-utils";
+import { useGetAddresses } from "@/hooks/useGetAddresses";
 import usePrivateSale from "@/hooks/usePrivateSale";
 import { useAccount } from "wagmi";
 import ConnectWalletModal from "../../commons/connect-wallet-modal";
+import useGetOnlyWhitelistedSales from "@/hooks/useGetOnlyWhitelistedSales";
 import getAvailableTokenIds from "@/utils/getAvailableTokenIds";
 
 interface MintSectionProps {
@@ -52,6 +53,10 @@ const MintSection = ({
   );
   const [whitelist, setWhitelist] = useState<{ [key: string]: string[] }>({});
   const { isLoading, isPrivateSale } = usePrivateSale();
+
+  const { isLoading: isAddressesLoading, getAddresses } = useGetAddresses();
+
+  useGetOnlyWhitelistedSales(address);
 
   const [isSoldOut, setIsSoldOut] = useState(false);
 
@@ -108,10 +113,9 @@ const MintSection = ({
     }
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [isOpen, setIsOpen] = useState(false);
   const handleModal = () => {
-    setIsModalOpen((prev) => !prev);
+    setIsOpen((prev) => !prev);
   };
 
   const refetchAllBalances = async () => {
@@ -120,7 +124,7 @@ const MintSection = ({
 
   useEffect(() => {
     refetchAllBalances().catch(console.error);
-    console.log("Refetched balances");
+    // console.log("Refetched balances");
   }, []);
 
   const images = useMemo(() => {
@@ -156,10 +160,12 @@ const MintSection = ({
     if (activeSale) {
       try {
         const addresses = await getAddresses(activeSale.ipfsHash);
-        setWhitelist((prev) => ({
-          ...prev,
-          [activeSale.ipfsHash]: addresses
-        }));
+        if (addresses && !isAddressesLoading) {
+          setWhitelist((prev) => ({
+            ...prev,
+            [activeSale.ipfsHash]: addresses
+          }));
+        }
       } catch (error) {
         console.error("Error fetching whitelist addresses:", error);
       }
@@ -219,6 +225,7 @@ const MintSection = ({
             loading={loading}
             refetchBalances={refetchAllBalances}
             handleModal={handleModal}
+            isAddressesLoading={isAddressesLoading}
             soldOut={isSoldOut}
           />
         </Flex>
@@ -252,11 +259,12 @@ const MintSection = ({
               loading={loading}
               refetchBalances={refetchAllBalances}
               handleModal={handleModal}
+              isAddressesLoading={isAddressesLoading}
             />
           ))}
         </Grid>
       )}
-      <ConnectWalletModal isOpen={isModalOpen} onClose={handleModal} />
+      <ConnectWalletModal isOpen={isOpen} onClose={handleModal} />
     </Flex>
   );
 };

@@ -18,15 +18,20 @@ import { useQuery } from "@apollo/client";
 import { getSaleById } from "@/services/graph";
 import { InterimState } from "../commons/interim-state";
 import NFTSaleWidgetEmptyState from "./layout/nft-sale-widget-empty";
+import useGetOnlyWhitelistedSales from "@/hooks/useGetOnlyWhitelistedSales";
+import { useAccount } from "wagmi";
 
 export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
+  const { address } = useAccount();
+  const { whitelistedSales } = useGetOnlyWhitelistedSales(address);
   const [activeSale, setActiveSale] = useState<Sale>();
   const [isOriginal, setIsOriginal] = useState<boolean>(true);
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
+
   const { data, loading, error, refetch } = useQuery<GetSaleByIdData>(
     getSaleById,
     {
-      variables: { id: activeSale ? activeSale.id : "1" }
+      variables: { id: activeSale ? activeSale.id : whitelistedSales[0]?.id }
     }
   );
 
@@ -74,26 +79,32 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
               isOriginal={isOriginal}
               setIsOriginal={setIsOriginal}
             />
-            {loading ? (
-              <InterimState type="loading" />
-            ) : error ? (
-              <InterimState type="error" />
-            ) : data?.sale ? (
-              <TabPanels>
-                <TabPanel px={0}>
-                  <PsycSaleContent
-                    isFullScreen={fullScreenWindow}
-                    activeSale={activeSale}
-                    isOriginal={isOriginal}
-                  />
-                </TabPanel>
-                <TabPanel h="100%" w="100%">
-                  <OwnedNftsContent isFullScreen={fullScreenWindow} />
-                </TabPanel>
-              </TabPanels>
+            {address ? (
+              loading ? (
+                <InterimState type="loading" />
+              ) : error ? (
+                <InterimState type="error" />
+              ) : data ? (
+                <TabPanels>
+                  <TabPanel px={0}>
+                    <PsycSaleContent
+                      isFullScreen={fullScreenWindow}
+                      activeSale={activeSale}
+                      isOriginal={isOriginal}
+                    />
+                  </TabPanel>
+                  <TabPanel h="100%" w="100%">
+                    <OwnedNftsContent isFullScreen={fullScreenWindow} />
+                  </TabPanel>
+                </TabPanels>
+              ) : (
+                <Grid h={"100%"} w={"100%"} gridTemplateRows={"30% 1fr"}>
+                  <NFTSaleWidgetEmptyState address={address} />
+                </Grid>
+              )
             ) : (
-              <Grid h={"100%"} w={"100%"} gridTemplateRows={"30% 1fr"}>
-                <NFTSaleWidgetEmptyState />
+              <Grid h={"100%"} w={"100%"} gridTemplateRows={"20% 1fr"}>
+                <NFTSaleWidgetEmptyState address={address} />
               </Grid>
             )}
           </Tabs>

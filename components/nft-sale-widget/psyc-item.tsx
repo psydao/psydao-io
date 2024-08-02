@@ -14,7 +14,10 @@ import { useTokenContext } from "@/providers/TokenContext";
 import { type TokenItem } from "@/lib/types";
 
 interface PsycItemProps {
-  item: TokenItem & { whitelist: string[]; balance: string };
+  item: TokenItem & {
+    whitelist: string[];
+    balance: string;
+  };
   index: number;
   isRandom: boolean;
   isPrivateSale: boolean;
@@ -22,6 +25,7 @@ interface PsycItemProps {
   loading: boolean;
   refetchBalances: () => void;
   handleModal: () => void;
+  isAddressesLoading: boolean;
   soldOut?: boolean;
 }
 
@@ -34,6 +38,7 @@ const PsycItem = ({
   // loading
   refetchBalances,
   handleModal,
+  isAddressesLoading,
   soldOut
 }: PsycItemProps) => {
   const { buyNft, isPending, isConfirming, isMinting } = useBuyNft(
@@ -61,6 +66,7 @@ const PsycItem = ({
   const proof = useFetchProof(address, item.ipfsHash, isPrivateSale);
 
   const isWhitelisted = address ? item.whitelist.includes(address) : false;
+  const modalNeeded = !address || (!isWhitelisted && isOriginal);
 
   const handleMint = async () => {
     await buyNft(
@@ -79,9 +85,7 @@ const PsycItem = ({
         isMinting ||
         isSoldLoading ||
         isPaused ||
-        (isRandom && soldOut);
-
-  const modalNeeded = !address || (!isWhitelisted && isOriginal);
+        (isRandom && soldOut && isOriginal);
 
   const [isImageOpen, setIsImageOpen] = useState(false);
 
@@ -158,7 +162,7 @@ const PsycItem = ({
               width: "100%",
               // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
               opacity: isButtonDisabled || modalNeeded ? 0.5 : 1,
-              cursor: modalNeeded ? "help" : "default"
+              cursor: modalNeeded ? "help" : "pointer"
             }}
             onClick={modalNeeded ? handleModal : handleMint}
             isRandom={isRandom}
