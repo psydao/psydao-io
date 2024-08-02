@@ -16,6 +16,7 @@ import usePrivateSale from "@/hooks/usePrivateSale";
 import { useAccount } from "wagmi";
 import ConnectWalletModal from "../../commons/connect-wallet-modal";
 import useGetOnlyWhitelistedSales from "@/hooks/useGetOnlyWhitelistedSales";
+import getAvailableTokenIds from "@/utils/getAvailableTokenIds";
 
 interface MintSectionProps {
   isRandom: boolean;
@@ -56,6 +57,8 @@ const MintSection = ({
   const { isLoading: isAddressesLoading, getAddresses } = useGetAddresses();
 
   useGetOnlyWhitelistedSales(address);
+
+  const [isSoldOut, setIsSoldOut] = useState(false);
 
   const fetchUserBalance = async (
     client: ApolloClient<NormalizedCacheObject>,
@@ -135,7 +138,13 @@ const MintSection = ({
 
   const activeTokens = useMemo(() => {
     if (!activeSale) return [];
-    return activeSale.tokensOnSale.map((token, index) => ({
+    const availableTokens = getAvailableTokenIds(activeSale, isOriginal);
+    if (availableTokens.length === 0) {
+      setIsSoldOut(true);
+    } else {
+      setIsSoldOut(false);
+    }
+    return availableTokens.map((token, index) => ({
       src: images[index] ?? "",
       price: `${formatUnits(BigInt(activeSale.floorPrice), 18)}`,
       isSold: false,
@@ -145,7 +154,7 @@ const MintSection = ({
       whitelist: whitelist[activeSale.ipfsHash] ?? [],
       balance: balances[token.tokenID] ?? "0"
     }));
-  }, [activeSale, images, whitelist, balances]);
+  }, [activeSale, images, whitelist, balances, isSoldOut]);
 
   const fetchWhitelist = async () => {
     if (activeSale) {
@@ -162,13 +171,6 @@ const MintSection = ({
       }
     }
   };
-  useEffect(() => {
-    console.log(!isLoading && isPrivateSale, "isPrivateSale");
-  }, [isPrivateSale]);
-
-  useEffect(() => {
-    console.log(data?.sales, "sales");
-  }, [data]);
 
   useEffect(() => {
     if (address && activeSale) {
@@ -191,6 +193,17 @@ const MintSection = ({
       setRandomToken(
         activeTokens[currentImageIndex % activeTokens.length] ?? null
       );
+    } else if (isRandom && activeTokens.length === 0 && activeSale) {
+      setRandomToken({
+        src: `/psyc${(currentImageIndex % 3) + 1}.webp`,
+        price: `${formatUnits(BigInt(activeSale.floorPrice), 18)}`,
+        isSold: false,
+        batchId: activeSale.batchID,
+        tokenId: "0",
+        ipfsHash: activeSale.ipfsHash,
+        whitelist: whitelist[activeSale.ipfsHash] ?? [],
+        balance: "0"
+      });
     }
   }, [activeTokens, currentImageIndex, isRandom]);
 
@@ -213,6 +226,7 @@ const MintSection = ({
             refetchBalances={refetchAllBalances}
             handleModal={handleModal}
             isAddressesLoading={isAddressesLoading}
+            soldOut={isSoldOut}
           />
         </Flex>
       ) : (

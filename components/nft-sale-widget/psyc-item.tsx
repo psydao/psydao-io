@@ -26,6 +26,7 @@ interface PsycItemProps {
   refetchBalances: () => void;
   handleModal: () => void;
   isAddressesLoading: boolean;
+  soldOut?: boolean;
 }
 
 const PsycItem = ({
@@ -37,7 +38,8 @@ const PsycItem = ({
   // loading
   refetchBalances,
   handleModal,
-  isAddressesLoading
+  isAddressesLoading,
+  soldOut
 }: PsycItemProps) => {
   const { buyNft, isPending, isConfirming, isMinting } = useBuyNft(
     isPrivateSale,
@@ -78,7 +80,12 @@ const PsycItem = ({
   const isButtonDisabled =
     isOriginal && !isRandom && isSold
       ? true
-      : isPending || isConfirming || isMinting || isSoldLoading || isPaused;
+      : isPending ||
+        isConfirming ||
+        isMinting ||
+        isSoldLoading ||
+        isPaused ||
+        (isRandom && soldOut && isOriginal);
 
   const [isImageOpen, setIsImageOpen] = useState(false);
 
@@ -110,6 +117,24 @@ const PsycItem = ({
           fill
           objectFit="cover"
         />
+        {soldOut && isRandom && isOriginal && (
+          <Box
+            position="absolute"
+            top="0"
+            left="0"
+            width="100%"
+            height="100%"
+            bg={"#00000026"}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            backdropFilter={"blur(2px)"}
+          >
+            <Text color="white" fontWeight="bold">
+              Sold Out
+            </Text>
+          </Box>
+        )}
         {isOriginal && isSold && !isRandom && (
           <Box
             position="absolute"
@@ -135,6 +160,7 @@ const PsycItem = ({
           <MintButton
             customStyle={{
               width: "100%",
+              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
               opacity: isButtonDisabled || modalNeeded ? 0.5 : 1,
               cursor: modalNeeded ? "help" : "pointer"
             }}
@@ -149,6 +175,8 @@ const PsycItem = ({
               </>
             ) : isPaused ? (
               "Paused"
+            ) : soldOut ? (
+              "Sold Out"
             ) : (
               "Mint"
             )}
