@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getMerkleProof } from "@/services/merkleRootProofs";
-import { getAddresses } from "@/lib/server-utils";
+import { useGetAddresses } from "./useGetAddresses";
 
 const useFetchProof = (
   address: string | undefined,
@@ -8,6 +8,8 @@ const useFetchProof = (
   isPrivateSale: boolean
 ) => {
   const [proof, setProof] = useState<string[]>([]);
+
+  const { getAddresses } = useGetAddresses();
 
   useEffect(() => {
     const fetchWhitelistAndSetProof = async () => {

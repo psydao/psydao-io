@@ -19,6 +19,7 @@ type ConnectWalletModalProps = {
 const ConnectWalletModal = ({ isOpen, onClose }: ConnectWalletModalProps) => {
   const { openConnectModal } = useConnectModal();
   const { address } = useAccount();
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />

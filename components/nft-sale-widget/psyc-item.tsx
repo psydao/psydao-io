@@ -14,7 +14,10 @@ import { useTokenContext } from "@/providers/TokenContext";
 import { type TokenItem } from "@/lib/types";
 
 interface PsycItemProps {
-  item: TokenItem & { whitelist: string[]; balance: string };
+  item: TokenItem & {
+    whitelist: string[];
+    balance: string;
+  };
   index: number;
   isRandom: boolean;
   isPrivateSale: boolean;
@@ -22,6 +25,7 @@ interface PsycItemProps {
   loading: boolean;
   refetchBalances: () => void;
   handleModal: () => void;
+  isAddressesLoading: boolean;
 }
 
 const PsycItem = ({
@@ -32,7 +36,8 @@ const PsycItem = ({
   isOriginal,
   // loading
   refetchBalances,
-  handleModal
+  handleModal,
+  isAddressesLoading
 }: PsycItemProps) => {
   const { buyNft, isPending, isConfirming, isMinting } = useBuyNft(
     isPrivateSale,
@@ -59,6 +64,7 @@ const PsycItem = ({
   const proof = useFetchProof(address, item.ipfsHash, isPrivateSale);
 
   const isWhitelisted = address ? item.whitelist.includes(address) : false;
+  const modalNeeded = !address || (!isWhitelisted && isOriginal);
 
   const handleMint = async () => {
     await buyNft(
@@ -73,8 +79,6 @@ const PsycItem = ({
     isOriginal && !isRandom && isSold
       ? true
       : isPending || isConfirming || isMinting || isSoldLoading || isPaused;
-
-  const modalNeeded = !address || (!isWhitelisted && isOriginal);
 
   const [isImageOpen, setIsImageOpen] = useState(false);
 
@@ -132,7 +136,7 @@ const PsycItem = ({
             customStyle={{
               width: "100%",
               opacity: isButtonDisabled || modalNeeded ? 0.5 : 1,
-              cursor: modalNeeded ? "help" : "default"
+              cursor: modalNeeded ? "help" : "pointer"
             }}
             onClick={modalNeeded ? handleModal : handleMint}
             isRandom={isRandom}

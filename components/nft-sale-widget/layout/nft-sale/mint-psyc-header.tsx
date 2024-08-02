@@ -58,6 +58,7 @@ const MintPsycHeader = (props: {
             <NftSalesDropdown
               activeSale={props.activeSale}
               setActiveSale={props.setActiveSale}
+              isOriginal={props.isOriginal}
             />
             <SaleTypeSwitch
               isOriginal={props.isOriginal}

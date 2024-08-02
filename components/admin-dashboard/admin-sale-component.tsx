@@ -1,5 +1,5 @@
 import usePausedSale from "@/hooks/usePausedSale";
-import { getAddresses } from "@/lib/server-utils";
+import { useGetAddresses } from "@/hooks/useGetAddresses";
 import { type Sale } from "@/lib/types";
 import { Box, Flex, Icon, Text } from "@chakra-ui/react";
 import { FaAngleRight } from "react-icons/fa";
@@ -16,6 +16,7 @@ type AdminSaleComponentProps = {
 };
 
 const AdminSaleComponent = (props: AdminSaleComponentProps) => {
+  const { getAddresses } = useGetAddresses();
   const onClickHandler = async () => {
     const whitelistedAddresses = await getAddresses(props.sale.ipfsHash);
     props.setWhitelistedAddresses(whitelistedAddresses);
