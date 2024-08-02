@@ -53,6 +53,8 @@ const MintSection = ({
   const [whitelist, setWhitelist] = useState<{ [key: string]: string[] }>({});
   const { isLoading, isPrivateSale } = usePrivateSale();
 
+  const [isSoldOut, setIsSoldOut] = useState(false);
+
   const fetchUserBalance = async (
     client: ApolloClient<NormalizedCacheObject>,
     tokenId: string,
@@ -133,6 +135,11 @@ const MintSection = ({
   const activeTokens = useMemo(() => {
     if (!activeSale) return [];
     const availableTokens = getAvailableTokenIds(activeSale, isOriginal);
+    if (availableTokens.length === 0) {
+      setIsSoldOut(true);
+    } else {
+      setIsSoldOut(false);
+    }
     return availableTokens.map((token, index) => ({
       src: images[index] ?? "",
       price: `${formatUnits(BigInt(activeSale.floorPrice), 18)}`,
@@ -143,7 +150,7 @@ const MintSection = ({
       whitelist: whitelist[activeSale.ipfsHash] ?? [],
       balance: balances[token.tokenID] ?? "0"
     }));
-  }, [activeSale, images, whitelist, balances]);
+  }, [activeSale, images, whitelist, balances, isSoldOut]);
 
   const fetchWhitelist = async () => {
     if (activeSale) {
@@ -158,13 +165,6 @@ const MintSection = ({
       }
     }
   };
-  useEffect(() => {
-    console.log(!isLoading && isPrivateSale, "isPrivateSale");
-  }, [isPrivateSale]);
-
-  useEffect(() => {
-    console.log(data?.sales, "sales");
-  }, [data]);
 
   useEffect(() => {
     if (address && activeSale) {
@@ -187,6 +187,17 @@ const MintSection = ({
       setRandomToken(
         activeTokens[currentImageIndex % activeTokens.length] ?? null
       );
+    } else if (isRandom && activeTokens.length === 0 && activeSale) {
+      setRandomToken({
+        src: `/psyc${(currentImageIndex % 3) + 1}.webp`,
+        price: `${formatUnits(BigInt(activeSale.floorPrice), 18)}`,
+        isSold: false,
+        batchId: activeSale.batchID,
+        tokenId: "0",
+        ipfsHash: activeSale.ipfsHash,
+        whitelist: whitelist[activeSale.ipfsHash] ?? [],
+        balance: "0"
+      });
     }
   }, [activeTokens, currentImageIndex, isRandom]);
 
@@ -208,7 +219,7 @@ const MintSection = ({
             loading={loading}
             refetchBalances={refetchAllBalances}
             handleModal={handleModal}
-            soldOut={activeTokens.length === 0}
+            soldOut={isSoldOut}
           />
         </Flex>
       ) : (
