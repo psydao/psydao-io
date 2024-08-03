@@ -1,12 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { Box, Flex, Grid } from "@chakra-ui/react";
-import {
-  type ApolloClient,
-  type NormalizedCacheObject,
-  useApolloClient,
-  useQuery
-} from "@apollo/client";
-import { getAllSalesWithTokens, getUserCopyBalance } from "@/services/graph";
+import { useQuery } from "@apollo/client";
+import { getAllSalesWithTokens } from "@/services/graph";
 import type { TokenItem, GetAllSalesWithTokensData, Sale } from "@/lib/types";
 import { formatUnits } from "viem";
 import PsycItem from "../../psyc-item";
@@ -30,13 +25,6 @@ interface WhitelistedTokenItem extends TokenItem {
   balance: string;
 }
 
-interface UserCopyBalance {
-  balance: string;
-  id: string;
-  originalTokenId: string;
-  user: string;
-}
-
 const MintSection = ({
   isRandom,
   activeSale,
@@ -45,87 +33,22 @@ const MintSection = ({
   const { loading, error, data } = useQuery<GetAllSalesWithTokensData>(
     getAllSalesWithTokens
   );
-  const client = useApolloClient() as ApolloClient<NormalizedCacheObject>;
   const { address } = useAccount();
-  const [balances, setBalances] = useState<{ [key: string]: string }>({});
   const [randomToken, setRandomToken] = useState<WhitelistedTokenItem | null>(
     null
   );
   const [whitelist, setWhitelist] = useState<{ [key: string]: string[] }>({});
   const { isLoading, isPrivateSale } = usePrivateSale();
-
   const { isLoading: isAddressesLoading, getAddresses } = useGetAddresses();
 
   useGetOnlyWhitelistedSales(address);
 
   const [isSoldOut, setIsSoldOut] = useState(false);
 
-  const fetchUserBalance = async (
-    client: ApolloClient<NormalizedCacheObject>,
-    tokenId: string,
-    address: string
-  ): Promise<UserCopyBalance | null> => {
-    const concatenatedId = `${address.toLowerCase()}-${tokenId}`;
-    try {
-      const { data } = await client.query<{
-        userCopyBalance: UserCopyBalance | null;
-      }>({
-        query: getUserCopyBalance,
-        variables: { id: concatenatedId },
-        fetchPolicy: "network-only"
-      });
-      // console.log(data.userCopyBalance, "copyBalance");
-      return data.userCopyBalance;
-    } catch (error) {
-      console.error("Error fetching user balance:", error);
-      return null;
-    }
-  };
-
-  const fetchBalances = async () => {
-    if (address && activeSale) {
-      try {
-        const balancesPromises = activeSale.tokensOnSale.map(async (token) => {
-          const userBalance = await fetchUserBalance(
-            client,
-            token.tokenID,
-            address
-          );
-
-          return {
-            tokenId: token.tokenID,
-            balance: userBalance?.balance ?? "0"
-          };
-        });
-        const balancesData = await Promise.all(balancesPromises);
-        const balancesMap = balancesData.reduce(
-          (acc, { tokenId, balance }) => {
-            acc[tokenId] = balance;
-            return acc;
-          },
-          {} as { [key: string]: string }
-        );
-        setBalances(balancesMap);
-        // console.log("Updated balances:", balancesMap);
-      } catch (error) {
-        console.error("Error fetching user balances:", error);
-      }
-    }
-  };
-
   const [isOpen, setIsOpen] = useState(false);
   const handleModal = () => {
     setIsOpen((prev) => !prev);
   };
-
-  const refetchAllBalances = async () => {
-    await fetchBalances();
-  };
-
-  useEffect(() => {
-    refetchAllBalances().catch(console.error);
-    // console.log("Refetched balances");
-  }, []);
 
   const images = useMemo(() => {
     if (!activeSale) return [];
@@ -152,9 +75,9 @@ const MintSection = ({
       tokenId: token.tokenID,
       ipfsHash: activeSale.ipfsHash,
       whitelist: whitelist[activeSale.ipfsHash] ?? [],
-      balance: balances[token.tokenID] ?? "0"
+      balance: "0" // Default balance for mint section
     }));
-  }, [activeSale, images, whitelist, balances, isSoldOut]);
+  }, [activeSale, images, whitelist]);
 
   const fetchWhitelist = async () => {
     if (activeSale) {
@@ -171,14 +94,6 @@ const MintSection = ({
       }
     }
   };
-
-  useEffect(() => {
-    if (address && activeSale) {
-      fetchBalances().catch((error) => {
-        console.error("Error fetching balances:", error);
-      });
-    }
-  }, [address, activeSale, client]);
 
   useEffect(() => {
     if (activeSale) {
@@ -223,7 +138,8 @@ const MintSection = ({
             isPrivateSale={privateSaleStatus}
             isOriginal={isOriginal}
             loading={loading}
-            refetchBalances={refetchAllBalances}
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            refetchBalances={() => {}}
             handleModal={handleModal}
             isAddressesLoading={isAddressesLoading}
             soldOut={isSoldOut}
@@ -250,14 +166,15 @@ const MintSection = ({
                 tokenId: token.tokenID,
                 ipfsHash: activeSale.ipfsHash,
                 whitelist: whitelist[activeSale.ipfsHash] ?? [],
-                balance: balances[token.tokenID] ?? "0"
+                balance: "0" // Default balance for mint section
               }}
               index={parseInt(token.id, 10)}
               isRandom={isRandom}
               isPrivateSale={privateSaleStatus}
               isOriginal={isOriginal}
               loading={loading}
-              refetchBalances={refetchAllBalances}
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
+              refetchBalances={() => {}}
               handleModal={handleModal}
               isAddressesLoading={isAddressesLoading}
             />

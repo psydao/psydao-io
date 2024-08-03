@@ -16,12 +16,13 @@ import { type TokenItem } from "@/lib/types";
 interface PsycItemProps {
   item: TokenItem & {
     whitelist: string[];
-    balance: string;
+    balance?: string;
   };
   index: number;
   isRandom: boolean;
   isPrivateSale: boolean;
   isOriginal: boolean;
+  isOwnedView?: boolean;
   loading: boolean;
   refetchBalances: () => void;
   handleModal: () => void;
@@ -35,7 +36,7 @@ const PsycItem = ({
   isRandom,
   isPrivateSale,
   isOriginal,
-  // loading
+  isOwnedView = false,
   refetchBalances,
   handleModal,
   isAddressesLoading,
@@ -89,7 +90,7 @@ const PsycItem = ({
 
   const [isImageOpen, setIsImageOpen] = useState(false);
 
-  const showMintedText = !isRandom && !isOriginal && item.balance !== "0";
+  const showMintedText = isOwnedView && !isOriginal && item.balance !== "0";
 
   return (
     <Flex
@@ -135,7 +136,7 @@ const PsycItem = ({
             </Text>
           </Box>
         )}
-        {isOriginal && isSold && !isRandom && (
+        {isOriginal && isSold && !isRandom && !isOwnedView && (
           <Box
             position="absolute"
             top="0"
@@ -152,16 +153,31 @@ const PsycItem = ({
             </Text>
           </Box>
         )}
+        {isOwnedView && isOriginal && (
+          <Flex
+            alignItems="center"
+            position="absolute"
+            bottom="10px"
+            left="10px"
+            bg="white"
+            px={2}
+            py={1}
+            borderRadius="10px"
+            fontWeight="bold"
+          >
+            <Text>You own token {item.tokenId}</Text>
+          </Flex>
+        )}
         {showMintedText && <MintCount count={item.balance} />}
-        <NFTPrice price={item.price} />
+        {(!isOwnedView || !isOriginal) && <NFTPrice price={item.price} />}
       </Box>
-      {isOriginal && (
+
+      {(!isOwnedView || !isOriginal) && (
         <Flex justifyContent="center" w="100%">
           <MintButton
             customStyle={{
               width: "100%",
-              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-              opacity: isButtonDisabled || modalNeeded ? 0.5 : 1,
+              opacity: isButtonDisabled ?? modalNeeded ? 0.5 : 1,
               cursor: modalNeeded ? "help" : "pointer"
             }}
             onClick={modalNeeded ? handleModal : handleMint}
@@ -177,27 +193,6 @@ const PsycItem = ({
               "Paused"
             ) : soldOut ? (
               "Sold Out"
-            ) : (
-              "Mint"
-            )}
-          </MintButton>
-        </Flex>
-      )}
-      {!isOriginal && (
-        <Flex justifyContent="center" w="100%">
-          <MintButton
-            customStyle={{ width: "100%", opacity: isButtonDisabled ? 0.5 : 1 }}
-            onClick={modalNeeded ? handleModal : handleMint}
-            isDisabled={isButtonDisabled}
-            isRandom={isRandom}
-          >
-            {isMinting ? (
-              <>
-                <Spinner size="sm" mr={2} />
-                Minting
-              </>
-            ) : isPaused ? (
-              "Paused"
             ) : (
               "Mint"
             )}

@@ -94,7 +94,11 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
                     />
                   </TabPanel>
                   <TabPanel h="100%" w="100%">
-                    <OwnedNftsContent isFullScreen={fullScreenWindow} />
+                    <OwnedNftsContent
+                      isFullScreen={fullScreenWindow}
+                      isOriginal={isOriginal}
+                      activeSale={activeSale}
+                    />
                   </TabPanel>
                 </TabPanels>
               ) : (
