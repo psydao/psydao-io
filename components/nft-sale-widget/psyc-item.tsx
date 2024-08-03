@@ -16,16 +16,18 @@ import { type TokenItem } from "@/lib/types";
 interface PsycItemProps {
   item: TokenItem & {
     whitelist: string[];
-    balance: string;
+    balance?: string;
   };
   index: number;
   isRandom: boolean;
   isPrivateSale: boolean;
   isOriginal: boolean;
+  isOwnedView?: boolean;
   loading: boolean;
   refetchBalances: () => void;
   handleModal: () => void;
   isAddressesLoading: boolean;
+  soldOut?: boolean;
 }
 
 const PsycItem = ({
@@ -34,10 +36,10 @@ const PsycItem = ({
   isRandom,
   isPrivateSale,
   isOriginal,
-  // loading
+  isOwnedView = false,
   refetchBalances,
   handleModal,
-  isAddressesLoading
+  soldOut
 }: PsycItemProps) => {
   const { buyNft, isPending, isConfirming, isMinting } = useBuyNft(
     isPrivateSale,
@@ -78,11 +80,16 @@ const PsycItem = ({
   const isButtonDisabled =
     isOriginal && !isRandom && isSold
       ? true
-      : isPending || isConfirming || isMinting || isSoldLoading || isPaused;
+      : isPending ||
+        isConfirming ||
+        isMinting ||
+        isSoldLoading ||
+        isPaused ||
+        (isRandom && soldOut && isOriginal);
 
   const [isImageOpen, setIsImageOpen] = useState(false);
 
-  const showMintedText = !isRandom && !isOriginal && item.balance !== "0";
+  const showMintedText = isOwnedView && !isOriginal && item.balance !== "0";
 
   return (
     <Flex
@@ -110,7 +117,25 @@ const PsycItem = ({
           fill
           objectFit="cover"
         />
-        {isOriginal && isSold && !isRandom && (
+        {soldOut && isRandom && isOriginal && (
+          <Box
+            position="absolute"
+            top="0"
+            left="0"
+            width="100%"
+            height="100%"
+            bg={"#00000026"}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            backdropFilter={"blur(2px)"}
+          >
+            <Text color="white" fontWeight="bold">
+              Sold Out
+            </Text>
+          </Box>
+        )}
+        {isOriginal && isSold && !isRandom && !isOwnedView && (
           <Box
             position="absolute"
             top="0"
@@ -127,15 +152,31 @@ const PsycItem = ({
             </Text>
           </Box>
         )}
+        {isOwnedView && isOriginal && (
+          <Flex
+            alignItems="center"
+            position="absolute"
+            bottom="10px"
+            left="10px"
+            bg="white"
+            px={2}
+            py={1}
+            borderRadius="10px"
+            fontWeight="bold"
+          >
+            <Text>You own token {item.tokenId}</Text>
+          </Flex>
+        )}
         {showMintedText && <MintCount count={item.balance} />}
-        <NFTPrice price={item.price} />
+        {(!isOwnedView || !isOriginal) && <NFTPrice price={item.price} />}
       </Box>
-      {isOriginal && (
+
+      {(!isOwnedView || !isOriginal) && (
         <Flex justifyContent="center" w="100%">
           <MintButton
             customStyle={{
               width: "100%",
-              opacity: isButtonDisabled || modalNeeded ? 0.5 : 1,
+              opacity: isButtonDisabled ?? modalNeeded ? 0.5 : 1,
               cursor: modalNeeded ? "help" : "pointer"
             }}
             onClick={modalNeeded ? handleModal : handleMint}
@@ -149,27 +190,8 @@ const PsycItem = ({
               </>
             ) : isPaused ? (
               "Paused"
-            ) : (
-              "Mint"
-            )}
-          </MintButton>
-        </Flex>
-      )}
-      {!isOriginal && (
-        <Flex justifyContent="center" w="100%">
-          <MintButton
-            customStyle={{ width: "100%", opacity: isButtonDisabled ? 0.5 : 1 }}
-            onClick={modalNeeded ? handleModal : handleMint}
-            isDisabled={isButtonDisabled}
-            isRandom={isRandom}
-          >
-            {isMinting ? (
-              <>
-                <Spinner size="sm" mr={2} />
-                Minting
-              </>
-            ) : isPaused ? (
-              "Paused"
+            ) : soldOut ? (
+              "Sold Out"
             ) : (
               "Mint"
             )}

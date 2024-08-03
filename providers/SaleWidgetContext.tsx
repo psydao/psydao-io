@@ -21,16 +21,8 @@ interface SaleWidgetProviderProps {
 const SaleWidgetProvider: React.FC<SaleWidgetProviderProps> = ({
   children
 }) => {
-  const [updateNftSaleTrigger, setUpdateNftSaleTrigger] = useState(0);
-
-  const triggerNftSaleUpdate = () => {
-    setUpdateNftSaleTrigger((prev) => prev + 1);
-  };
-
   return (
-    <SaleWidgetContext.Provider
-      value={{ updateNftSaleTrigger, triggerNftSaleUpdate }}
-    >
+    <SaleWidgetContext.Provider value={{}}>
       {children}
     </SaleWidgetContext.Provider>
   );

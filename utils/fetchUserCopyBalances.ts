@@ -29,6 +29,5 @@ export const fetchUserCopyBalances = async (
     },
     {} as { [key: string]: string }
   );
-
   return balancesMap;
 };
