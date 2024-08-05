@@ -1,9 +1,10 @@
-import { Flex, Grid, Box, Text } from "@chakra-ui/react";
+import { Flex, Grid } from "@chakra-ui/react";
 import { useAccount } from "wagmi";
 import { type GetTokensByOwnerData, type Sale } from "@/lib/types";
 import PsycItem from "../../psyc-item";
 import useUserCopyBalances from "@/hooks/useUserCopyBalances";
 import { formatUnits } from "viem";
+import OwnedNftsEmptyState from "./owned-nfts-empty-state";
 
 type OwnedNftsProps = {
   nftData: GetTokensByOwnerData | undefined;
@@ -26,6 +27,12 @@ const OwnedNfts = (props: OwnedNftsProps) => {
     props.activeSale?.tokensOnSale.filter(
       (token) => parseInt(copyBalances[token.tokenID] ?? "0", 10) > 0
     ) ?? [];
+
+  const EmptyStateText = (
+    <>
+      You don't own copies in this <br /> batch yet
+    </>
+  );
 
   const showEmptyState = !props.isOriginal && filteredCopyTokens.length === 0;
 
@@ -92,11 +99,7 @@ const OwnedNfts = (props: OwnedNftsProps) => {
               />
             ))}
 
-        {showEmptyState && (
-          <Box>
-            <Text>No copies owned in this batch.</Text>
-          </Box>
-        )}
+        {showEmptyState && <OwnedNftsEmptyState text={EmptyStateText} />}
       </Grid>
     </Flex>
   );

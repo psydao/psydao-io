@@ -39,7 +39,6 @@ const PsycItem = ({
   isOwnedView = false,
   refetchBalances,
   handleModal,
-  isAddressesLoading,
   soldOut
 }: PsycItemProps) => {
   const { buyNft, isPending, isConfirming, isMinting } = useBuyNft(

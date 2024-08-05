@@ -26,6 +26,12 @@ const OwnedNftsContent = ({
     }
   }, [address, data, setTokenCount]);
 
+  const EmptyStateText = (
+    <>
+      You don't own any <br /> PSYCs yet
+    </>
+  );
+
   if (loading) return <Box textAlign="center">Loading...</Box>;
   if (error) return <Box textAlign="center">Error loading data</Box>;
 
@@ -49,7 +55,7 @@ const OwnedNftsContent = ({
             md: isFullScreen ? "75% 100%" : "15% 100%"
           }}
         >
-          <OwnedNftsEmptyState />
+          <OwnedNftsEmptyState text={EmptyStateText} />
         </Grid>
       )}
     </>

@@ -5,10 +5,7 @@ import React, {
   useContext
 } from "react";
 
-interface SaleWidgetContextType {
-  updateNftSaleTrigger: number;
-  triggerNftSaleUpdate: () => void;
-}
+interface SaleWidgetContextType {}
 
 const SaleWidgetContext = createContext<SaleWidgetContextType | undefined>(
   undefined
