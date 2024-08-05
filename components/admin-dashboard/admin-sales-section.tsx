@@ -107,7 +107,7 @@ export const AdminSalesSection = ({
               );
             })
           ) : (
-            <AdminDashboardEmptyState setOpenCreateSale={setOpenCreateSale} />
+            <AdminDashboardEmptyState />
           )}
           <SubmitButtonContainer>
             <PsyButton
