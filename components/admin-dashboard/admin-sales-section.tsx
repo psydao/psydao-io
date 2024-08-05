@@ -38,6 +38,7 @@ export const AdminSalesSection = ({
   const { handleEditSale, isSubmitting } = useEditSaleForm(
     address,
     setOpenEditSale,
+    setSelectedSale,
     selectedSale?.batchID ?? "",
     triggerNftSaleUpdate,
     refetchSalesData,
@@ -53,11 +54,26 @@ export const AdminSalesSection = ({
   const [floorPrice, setFloorPrice] = useState<string>("");
   const [ceilingPrice, setCeilingPrice] = useState<string>("");
   const [saleComplete, setSaleComplete] = useState<boolean>(false);
+  const [addressesToDisplay, setAddressesToDisplay] = useState<string[]>([]);
 
   const splitNewWhitelistedAddresses =
     newWhitelistedAddresses.length > 0
       ? newWhitelistedAddresses.split(", ")
       : [];
+
+  useEffect(() => {
+    if (existingWhitelistedAddresses.length > 0) {
+      setAddressesToDisplay(existingWhitelistedAddresses);
+    }
+
+    if (addressesToRemove.length > 0) {
+      setAddressesToDisplay(
+        existingWhitelistedAddresses.filter(
+          (address) => !addressesToRemove.includes(address)
+        )
+      );
+    }
+  }, [existingWhitelistedAddresses, addressesToRemove]);
 
   useEffect(() => {
     if (selectedSale) {
@@ -154,6 +170,7 @@ export const AdminSalesSection = ({
               setIsPaused={setIsPaused}
               isPaused={isPaused}
               isComplete={saleComplete}
+              addressesToDisplay={addressesToDisplay}
             />
             <SubmitButtonContainer>
               <SubmitSaleButton

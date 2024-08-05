@@ -1,5 +1,5 @@
 import { useToast } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { psycSaleContractConfig } from "@/lib/sale-contract-config";
 import { useCustomToasts } from "@/hooks/useCustomToasts";
@@ -8,10 +8,12 @@ import { type Address, parseUnits } from "viem";
 import { uploadAddresses } from "@/lib/server-utils";
 import { getMerkleRoot, getNewAddresses } from "@/utils/saleUtils";
 import { useGetCurrentSaleValues } from "./useGetCurrentSaleValues";
+import type { Sale } from "@/lib/types";
 
 export const useEditSaleForm = (
   address: string | undefined,
   setOpenEditSale: React.Dispatch<React.SetStateAction<boolean>>,
+  setSelectedSale: React.Dispatch<React.SetStateAction<Sale | undefined>>,
   id: string,
   triggerNftSaleUpdate: () => void,
   refetchSalesData: () => void,
@@ -199,6 +201,7 @@ export const useEditSaleForm = (
       refetchSalesData();
       setIsSubmitting(false);
       setOpenEditSale(false);
+      setSelectedSale(undefined);
       setFloorAndCeilingPriceHash(undefined);
       setMerkleRootHash(undefined);
       setSwitchSaleStatusHash(undefined);

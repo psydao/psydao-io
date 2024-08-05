@@ -8,6 +8,7 @@ type WhiteListedAddressesSectionProps = {
   setWhitelistedAddresses: React.Dispatch<React.SetStateAction<string>>;
   addressArray: string[];
   saleComplete?: boolean;
+  addressesToDisplay?: string[];
 };
 
 const WhiteListedAddressesSection = (
@@ -56,7 +57,7 @@ const WhiteListedAddressesSection = (
         />
       )}
       <Flex gap={2} flexWrap={"wrap"}>
-        {props.addressArray.map((address, index) => {
+        {props.addressesToDisplay?.map((address, index) => {
           return (
             <ValueContainer
               key={index}
