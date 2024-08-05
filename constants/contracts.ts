@@ -17,10 +17,10 @@ export const psycNFTCopiesSepolia =
 export const ERC1155Sepolia = "0x120f3Ef6A952f5553Ca88106d1e87290cDB50abA";
 
 //Treasury
-export const TreasurySepolia = "0x8c5f378d28d93Bda5FC684a1B8b6376E45195cf8";
+export const TreasurySepolia = "0x54faea6eaa5679d047c8ed4c1e1e29834d285ef6";
 
 //Core
-export const CoreSepolia = "0xb8326E205182A607FebE7081cA888486E2ca6260";
+export const CoreSepolia = "0x9834ee21ab877627fa91b79568195654c4952b88";
 
 //PSYC Sale
-export const psycSaleSepolia = "0xbAeC4f684E22932046d2e5E3e0A4650ace6fbd4C";
+export const psycSaleSepolia = "0x682255b1b799a7c5d42d769cbbd7e9a75b2825fa";

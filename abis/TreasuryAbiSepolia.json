@@ -176,7 +176,7 @@
   },
   {
     "inputs": [],
-    "name": "receiveERC721Profit",
+    "name": "receiveRageQuitProfit",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"

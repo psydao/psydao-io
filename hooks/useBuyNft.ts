@@ -16,6 +16,7 @@ import { psycSaleContractConfig } from "@/lib/sale-contract-config";
 import { toWei } from "@/utils/saleUtils";
 import { useCustomToasts } from "./useCustomToasts";
 import graphClient from "@/config/graphql";
+import { formatUnits, parseUnits } from "viem";
 
 type ArgsType =
   | [number, string[]]
@@ -74,6 +75,7 @@ const useBuyNft = (
         price,
         proof
       });
+
       try {
         setIsMinting(true);
 
@@ -111,6 +113,8 @@ const useBuyNft = (
         }
 
         const parsedAmount = toWei(price);
+
+        console.log("Parsed Amount: ", parsedAmount);
 
         await writeContractAsync({
           ...psycSaleContractConfig,
