@@ -11,16 +11,16 @@ export const psyNFTSepolia = "0xcB37ff2846fB09614Dc9C9B394f7145396Aa8783";
 
 //psyNFTCopies
 export const psycNFTCopiesSepolia =
-  "0x7cdf34bea27a671159bb61a5c230a35e9625a67f";
+  "0xFe0aBbde62e029B2834b5F12CAF7Ff1E46e81947";
 
 // ERC1155
-export const ERC1155Sepolia = "0x7cdf34bea27a671159bb61a5c230a35e9625a67f";
+export const ERC1155Sepolia = "0xFe0aBbde62e029B2834b5F12CAF7Ff1E46e81947";
 
 //Treasury
-export const TreasurySepolia = "0x54faea6eaa5679d047c8ed4c1e1e29834d285ef6";
+export const TreasurySepolia = "0x163F8283e8df70f7D8017D542e769f93E8Bb81C7";
 
 //Core
-export const CoreSepolia = "0x9834ee21ab877627fa91b79568195654c4952b88";
+export const CoreSepolia = "0x24EF732d1Af97de13fbF3E30d356cD5D8AC72774";
 
 //PSYC Sale
-export const psycSaleSepolia = "0x682255b1b799a7c5d42d769cbbd7e9a75b2825fa";
+export const psycSaleSepolia = "0x9f4B7769bb4a868e70edb734E6fF0bBdCcB5FAa0";
