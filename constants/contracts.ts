@@ -11,10 +11,10 @@ export const psyNFTSepolia = "0xcB37ff2846fB09614Dc9C9B394f7145396Aa8783";
 
 //psyNFTCopies
 export const psycNFTCopiesSepolia =
-  "0x120f3Ef6A952f5553Ca88106d1e87290cDB50abA";
+  "0x7cdf34bea27a671159bb61a5c230a35e9625a67f";
 
 // ERC1155
-export const ERC1155Sepolia = "0x120f3Ef6A952f5553Ca88106d1e87290cDB50abA";
+export const ERC1155Sepolia = "0x7cdf34bea27a671159bb61a5c230a35e9625a67f";
 
 //Treasury
 export const TreasurySepolia = "0x54faea6eaa5679d047c8ed4c1e1e29834d285ef6";

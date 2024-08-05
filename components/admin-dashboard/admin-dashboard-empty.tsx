@@ -44,21 +44,6 @@ const AdminDashboardEmptyState = ({
           <DiagonalRectangle position="right" />
         </Flex>
       </Box>
-      <Box width="270px">
-        <PsyButton
-          onClick={() => {
-            setOpenCreateSale(true);
-          }}
-          customStyle={{
-            width: "100%",
-            fontFamily: "Poppins",
-            fontWeight: 600,
-            fontSize: 14
-          }}
-        >
-          Add a new Sale
-        </PsyButton>
-      </Box>
     </Flex>
   );
 };
