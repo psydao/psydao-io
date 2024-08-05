@@ -31,7 +31,8 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
   const { data, loading, error, refetch } = useQuery<GetSaleByIdData>(
     getSaleById,
     {
-      variables: { id: activeSale ? activeSale.id : whitelistedSales[0]?.id }
+      variables: { id: activeSale ? activeSale.id : whitelistedSales[0]?.id },
+      skip: !activeSale && whitelistedSales.length === 0
     }
   );
 
