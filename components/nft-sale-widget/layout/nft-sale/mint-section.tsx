@@ -8,9 +8,7 @@ import PsycItem from "../../psyc-item";
 import useRandomImage from "@/hooks/useRandomImage";
 import { useGetAddresses } from "@/hooks/useGetAddresses";
 import usePrivateSale from "@/hooks/usePrivateSale";
-import { useAccount } from "wagmi";
 import ConnectWalletModal from "../../commons/connect-wallet-modal";
-import useGetOnlyWhitelistedSales from "@/hooks/useGetOnlyWhitelistedSales";
 import getAvailableTokenIds from "@/utils/getAvailableTokenIds";
 
 interface MintSectionProps {
@@ -33,15 +31,12 @@ const MintSection = ({
   const { loading, error, data } = useQuery<GetAllSalesWithTokensData>(
     getAllSalesWithTokens
   );
-  const { address } = useAccount();
   const [randomToken, setRandomToken] = useState<WhitelistedTokenItem | null>(
     null
   );
   const [whitelist, setWhitelist] = useState<{ [key: string]: string[] }>({});
   const { isLoading, isPrivateSale } = usePrivateSale();
   const { isLoading: isAddressesLoading, getAddresses } = useGetAddresses();
-
-  useGetOnlyWhitelistedSales(address);
 
   const [isSoldOut, setIsSoldOut] = useState(false);
 
@@ -166,7 +161,7 @@ const MintSection = ({
                 tokenId: token.tokenID,
                 ipfsHash: activeSale.ipfsHash,
                 whitelist: whitelist[activeSale.ipfsHash] ?? [],
-                balance: "0" // Default balance for mint section
+                balance: "0"
               }}
               index={parseInt(token.id, 10)}
               isRandom={isRandom}

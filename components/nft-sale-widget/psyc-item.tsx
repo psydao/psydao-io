@@ -190,7 +190,7 @@ const PsycItem = ({
               </>
             ) : isPaused ? (
               "Paused"
-            ) : soldOut ? (
+            ) : soldOut && isOriginal ? (
               "Sold Out"
             ) : (
               "Mint"
