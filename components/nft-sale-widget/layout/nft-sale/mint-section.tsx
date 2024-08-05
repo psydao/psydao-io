@@ -70,7 +70,7 @@ const MintSection = ({
       tokenId: token.tokenID,
       ipfsHash: activeSale.ipfsHash,
       whitelist: whitelist[activeSale.ipfsHash] ?? [],
-      balance: "0" // Default balance for mint section
+      balance: "0"
     }));
   }, [activeSale, images, whitelist]);
 
