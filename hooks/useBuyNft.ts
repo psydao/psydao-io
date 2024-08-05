@@ -114,8 +114,6 @@ const useBuyNft = (
 
         const parsedAmount = toWei(price);
 
-        console.log("Parsed Amount: ", parsedAmount);
-
         await writeContractAsync({
           ...psycSaleContractConfig,
           functionName: functionName,

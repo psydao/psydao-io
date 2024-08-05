@@ -51,8 +51,6 @@ const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
     isComplete = getSaleComplete(selectedSale);
   }
 
-  console.log("Selected sale:", selectedSale);
-
   const { activateSale, isPending: isLoading } = useActivateSale();
   const { showCustomErrorToast } = useCustomToasts();
   const { width } = useResize();
