@@ -12,6 +12,7 @@ import { useEditSaleForm } from "@/hooks/useEditSaleForm";
 import { useResize } from "@/hooks/useResize";
 import { getSaleComplete } from "@/utils/getSaleComplete";
 import { useGetAddresses } from "@/hooks/useGetAddresses";
+import AdminDashboardEmptyState from "./admin-dashboard-empty";
 
 export const AdminSalesSection = ({
   setOpenCreateSale,
@@ -80,32 +81,34 @@ export const AdminSalesSection = ({
           height="100%"
           overflowY="auto"
         >
-          {saleData.length > 0
-            ? saleData.map((sale, index: number) => {
-                const isComplete = getSaleComplete(sale);
-                return (
-                  <>
-                    <AdminSaleComponent
-                      key={index}
-                      sale={sale}
-                      index={index}
-                      setWhitelistedAddresses={setExistingWhitelistedAddresses}
-                      setSelectedSale={setSelectedSale}
-                      setOpenEditSale={setOpenEditSale}
-                      isComplete={isComplete}
-                      isPaused={isPaused}
-                      setIsPaused={setIsPaused}
-                    />
-                    <Divider
-                      border={"none"}
-                      height={"1px"}
-                      bg={"#F2BEBE"}
-                      width={"100%"}
-                    />
-                  </>
-                );
-              })
-            : null}
+          {saleData.length > 0 ? (
+            saleData.map((sale, index: number) => {
+              const isComplete = getSaleComplete(sale);
+              return (
+                <>
+                  <AdminSaleComponent
+                    key={index}
+                    sale={sale}
+                    index={index}
+                    setWhitelistedAddresses={setExistingWhitelistedAddresses}
+                    setSelectedSale={setSelectedSale}
+                    setOpenEditSale={setOpenEditSale}
+                    isComplete={isComplete}
+                    isPaused={isPaused}
+                    setIsPaused={setIsPaused}
+                  />
+                  <Divider
+                    border={"none"}
+                    height={"1px"}
+                    bg={"#F2BEBE"}
+                    width={"100%"}
+                  />
+                </>
+              );
+            })
+          ) : (
+            <AdminDashboardEmptyState />
+          )}
           <SubmitButtonContainer>
             <PsyButton
               customStyle={{ width: "100%", maxWidth: "550px" }}

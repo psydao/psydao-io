@@ -95,9 +95,7 @@ const AdminDashboardWidget = ({
                   refetchSalesData={refetch}
                 />
               ) : (
-                <AdminDashboardEmptyState
-                  setOpenCreateSale={setOpenCreateSale}
-                />
+                <AdminDashboardEmptyState />
               )}
             </Box>
           </>
