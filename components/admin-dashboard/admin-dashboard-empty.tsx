@@ -1,12 +1,7 @@
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import DiagonalRectangle from "../nft-sale-widget/commons/diagonal-rectangle";
-import PsyButton from "../ui/psy-button";
 
-const AdminDashboardEmptyState = ({
-  setOpenCreateSale
-}: {
-  setOpenCreateSale: React.Dispatch<React.SetStateAction<boolean>>;
-}) => {
+const AdminDashboardEmptyState = () => {
   return (
     <Flex
       direction={"column"}
@@ -43,21 +38,6 @@ const AdminDashboardEmptyState = ({
           </Text>
           <DiagonalRectangle position="right" />
         </Flex>
-      </Box>
-      <Box width="270px">
-        <PsyButton
-          onClick={() => {
-            setOpenCreateSale(true);
-          }}
-          customStyle={{
-            width: "100%",
-            fontFamily: "Poppins",
-            fontWeight: 600,
-            fontSize: 14
-          }}
-        >
-          Add a new Sale
-        </PsyButton>
       </Box>
     </Flex>
   );
