@@ -4,9 +4,13 @@ import WithdrawalModal from "../modals/withdrawal-modal";
 
 type RoyaltiesRevenueSectionProps = {
   revenue: string;
+  onDashboardClose: () => void;
 };
 
-const RoyaltiesRevenueSection = ({ revenue }: RoyaltiesRevenueSectionProps) => {
+const RoyaltiesRevenueSection = ({
+  revenue,
+  onDashboardClose
+}: RoyaltiesRevenueSectionProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
@@ -58,7 +62,11 @@ const RoyaltiesRevenueSection = ({ revenue }: RoyaltiesRevenueSectionProps) => {
           </Flex>
         </Box>
       </Flex>
-      <WithdrawalModal isOpen={isModalOpen} onClose={closeModal} />
+      <WithdrawalModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onDashboardClose={onDashboardClose}
+      />
     </>
   );
 };

@@ -176,7 +176,8 @@ const PsycItem = ({
           <MintButton
             customStyle={{
               width: "100%",
-              opacity: isButtonDisabled ?? modalNeeded ? 0.5 : 1,
+              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+              opacity: isButtonDisabled || modalNeeded ? 0.5 : 1,
               cursor: modalNeeded ? "help" : "pointer"
             }}
             onClick={modalNeeded ? handleModal : handleMint}

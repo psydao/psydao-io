@@ -23,7 +23,8 @@ import { useAccount } from "wagmi";
 
 export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
   const { address } = useAccount();
-  const { whitelistedSales } = useGetOnlyWhitelistedSales(address);
+  const { whitelistedSales, loading: whitelistedSalesLoading } =
+    useGetOnlyWhitelistedSales(address);
   const [activeSale, setActiveSale] = useState<Sale>();
   const [isOriginal, setIsOriginal] = useState<boolean>(true);
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
@@ -32,7 +33,9 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
     getSaleById,
     {
       variables: { id: activeSale ? activeSale.id : whitelistedSales[0]?.id },
-      skip: !activeSale && whitelistedSales.length === 0
+      skip:
+        !activeSale &&
+        (whitelistedSalesLoading || whitelistedSales.length === 0)
     }
   );
 
@@ -43,18 +46,32 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
   }, [data, setActiveSale]);
 
   useEffect(() => {
+    if (
+      !whitelistedSalesLoading &&
+      whitelistedSales.length > 0 &&
+      !activeSale
+    ) {
+      setActiveSale(whitelistedSales[0]);
+    }
+  }, [whitelistedSalesLoading, whitelistedSales, activeSale]);
+
+  useEffect(() => {
     const refetchData = async () => {
-      await refetch();
-      console.log("Refetched data");
+      if (activeSale) {
+        await refetch();
+        console.log("Refetched data");
+      }
     };
     refetchData().catch(console.error);
-  }, [updateTrigger, refetch]);
+  }, [updateTrigger, refetch, activeSale]);
 
   const { state } = useWindowManager();
 
   const fullScreenWindow = useMemo(() => {
     return state.fullScreen === "nft-sale";
   }, [state]);
+
+  const isLoading = whitelistedSalesLoading || loading;
 
   return (
     <Window
@@ -81,7 +98,7 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
               setIsOriginal={setIsOriginal}
             />
             {address ? (
-              loading ? (
+              isLoading ? (
                 <InterimState type="loading" />
               ) : error ? (
                 <InterimState type="error" />
