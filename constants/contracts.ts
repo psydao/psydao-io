@@ -21,7 +21,6 @@ export const TreasurySepolia = "0x31f2e68D6bBD403F070d6BeCfc3Cd428d9a100CB";
 
 //Core
 export const CoreSepolia = "0x24EF732d1Af97de13fbF3E30d356cD5D8AC72774";
-//! TODO!!!!!! UPDATE ABIS
-//! NB NB NB NB
+
 //PSYC Sale
 export const psycSaleSepolia = "0xa68868Ba3A9fFFFff13c1Cd8eb9BedDd7cBd0900";
