@@ -1,47 +1,105 @@
-import { Box, Flex, Grid } from "@chakra-ui/react";
+import { Flex, Grid } from "@chakra-ui/react";
 import { useAccount } from "wagmi";
-import { countNumberOfCopies } from "@/utils/countNumberOfCopies";
-import { OwnedNFTItem } from "./owned-nft-item";
-import { type GetTokensByOwnerData } from "@/lib/types";
+import { type GetTokensByOwnerData, type Sale } from "@/lib/types";
+import PsycItem from "../../psyc-item";
+import useUserCopyBalances from "@/hooks/useUserCopyBalances";
+import { formatUnits } from "viem";
+import OwnedNftsEmptyState from "./owned-nfts-empty-state";
 
 type OwnedNftsProps = {
   nftData: GetTokensByOwnerData | undefined;
+  activeSale: Sale | undefined;
+  isOriginal: boolean;
 };
 
 const OwnedNfts = (props: OwnedNftsProps) => {
   const images = ["/psyc1.webp", "/psyc2.webp", "/psyc3.webp", "/psyc4.webp"];
   const { address } = useAccount();
-  const numberOfCopies = countNumberOfCopies(props.nftData ?? { tokens: [] });
+  const {
+    balances: copyBalances,
+    loading: balancesLoading,
+    refetchBalances
+  } = useUserCopyBalances(props.activeSale, address);
 
-  if (!address) {
-    return null;
-  }
+  if (!address) return null;
+
+  const filteredCopyTokens =
+    props.activeSale?.tokensOnSale.filter(
+      (token) => parseInt(copyBalances[token.tokenID] ?? "0", 10) > 0
+    ) ?? [];
+
+  const EmptyStateText = (
+    <>
+      You don't own copies in this <br /> batch yet
+    </>
+  );
+
+  const showEmptyState = !props.isOriginal && filteredCopyTokens.length === 0;
 
   return (
     <Flex justifyContent={"center"} py={4} px={4}>
       <Grid
         templateColumns={{
-          base: "1fr",
+          base: "minmax(170px, 1fr)",
           sm: "repeat(auto-fit, minmax(170px, 1fr))"
         }}
         gap={6}
-        justifyContent="left"
+        justifyItems={"center"}
+        maxW={"100%"}
       >
-        {props.nftData?.tokens.map((token, index) => (
-          <OwnedNFTItem
-            key={index}
-            item={{
-              src: images[index % images.length] ?? "",
-              owner: token.owner,
-              tokenId: token.tokenId
-            }}
-            copiesOwned={numberOfCopies[token.tokenId] ?? 0}
-            src={images[index % images.length] ?? ""}
-            index={index}
-            isPrivateSale={false}
-            isOwned={token.owner === address}
-          />
-        ))}
+        {props.isOriginal
+          ? props.nftData?.tokens.map((token, index) => (
+              <PsycItem
+                key={index}
+                item={{
+                  src: images[index % images.length] ?? "",
+                  tokenId: token.tokenId,
+                  whitelist: [],
+                  balance: "0",
+                  batchId: props.activeSale?.batchID ?? "",
+                  price: "0",
+                  isSold: false,
+                  ipfsHash: ""
+                }}
+                index={index}
+                isPrivateSale={false}
+                isOwnedView={true}
+                isOriginal={props.isOriginal}
+                refetchBalances={refetchBalances}
+                isRandom={false}
+                loading={false}
+                isAddressesLoading={false}
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                handleModal={() => {}}
+              />
+            ))
+          : filteredCopyTokens.map((token, index) => (
+              <PsycItem
+                key={index}
+                item={{
+                  src: images[index % images.length] ?? "",
+                  tokenId: token.tokenID,
+                  whitelist: [],
+                  balance: copyBalances[token.tokenID] ?? "0",
+                  batchId: props.activeSale?.batchID ?? "",
+                  price: `${formatUnits(BigInt(props?.activeSale?.ceilingPrice ?? 0), 18)}`,
+                  isSold: false,
+                  ipfsHash: ""
+                }}
+                index={index}
+                isPrivateSale={false}
+                isOwnedView={true}
+                isOriginal={props.isOriginal}
+                refetchBalances={refetchBalances}
+                isRandom={false}
+                loading={balancesLoading}
+                isAddressesLoading={false}
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                handleModal={() => {}}
+              />
+            ))}
+
+        {showEmptyState && <OwnedNftsEmptyState text={EmptyStateText} />}
       </Grid>
     </Flex>
   );

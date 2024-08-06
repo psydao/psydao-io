@@ -1,7 +1,12 @@
 import { Box, GridItem, Text, Image, Flex } from "@chakra-ui/react";
 import DiagonalRectangle from "../../commons/diagonal-rectangle";
+import { type ReactNode } from "react";
 
-const OwnedNftsEmptyState = () => {
+interface OwnedNftsEmptyStateProps {
+  text: ReactNode;
+}
+
+const OwnedNftsEmptyState = ({ text }: OwnedNftsEmptyStateProps) => {
   return (
     <GridItem gridRowStart={2}>
       <Box
@@ -27,7 +32,7 @@ const OwnedNftsEmptyState = () => {
             lineHeight={"26px"}
             textAlign={"center"}
           >
-            You don't own any <br /> PSYCs yet{" "}
+            {text}
           </Text>
           <DiagonalRectangle position="right" />
         </Flex>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -15,27 +15,54 @@ import WithdrawButton from "../general-dashboard/common/withdraw-button";
 type WithdrawalModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  onDashboardClose: () => void;
 };
 
-const WithdrawalModal = ({ isOpen, onClose }: WithdrawalModalProps) => {
+const WithdrawalModal = ({
+  isOpen,
+  onClose,
+  onDashboardClose
+}: WithdrawalModalProps) => {
   const [address, setAddress] = useState("");
-  const { withdrawRoyalties, isSubmitting } = useWithdrawRoyalties();
+  const { withdrawRoyalties, isSubmitting, transactionSuccess } =
+    useWithdrawRoyalties();
+  const [isWithdrawing, setIsWithdrawing] = useState(false);
 
   const handleWithdraw = async () => {
-    const success = await withdrawRoyalties(address);
-    if (success) {
+    if (!address.trim()) return;
+    setIsWithdrawing(true);
+    await withdrawRoyalties(address);
+    setIsWithdrawing(false);
+  };
+
+  const handleModalClose = () => {
+    if (!isWithdrawing && !isSubmitting) {
       onClose();
+      setAddress("");
     }
   };
 
+  useEffect(() => {
+    if (transactionSuccess) {
+      setAddress("");
+      onClose();
+      onDashboardClose();
+    }
+  }, [transactionSuccess, onClose]);
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal
+      isOpen={isOpen}
+      onClose={handleModalClose}
+      closeOnOverlayClick={false}
+      isCentered
+    >
       <ModalOverlay />
       <ModalContent borderRadius="lg" boxShadow="lg" p={4}>
         <ModalHeader textAlign="center" fontSize="lg">
           Enter your withdrawal address
         </ModalHeader>
-        <ModalCloseButton />
+        {!isWithdrawing && !isSubmitting && <ModalCloseButton />}
         <ModalBody>
           <Box display="flex" flexDirection="column" alignItems="center">
             <Input
@@ -44,13 +71,14 @@ const WithdrawalModal = ({ isOpen, onClose }: WithdrawalModalProps) => {
               onChange={(e) => setAddress(e.target.value)}
               mb={4}
               borderRadius="md"
+              isDisabled={isWithdrawing || isSubmitting}
             />
             <WithdrawButton
-              isConfirming={isSubmitting}
+              isConfirming={isSubmitting || isWithdrawing}
               onClick={handleWithdraw}
-              isDisabled={isSubmitting}
+              isDisabled={isSubmitting || isWithdrawing || !address.trim()}
             >
-              Withdraw
+              {isWithdrawing || isSubmitting ? "Withdrawing..." : "Withdraw"}
             </WithdrawButton>
           </Box>
         </ModalBody>

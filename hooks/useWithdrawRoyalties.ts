@@ -64,5 +64,5 @@ export const useWithdrawRoyalties = () => {
     }
   }, [error, transactionSuccess]);
 
-  return { withdrawRoyalties, isSubmitting };
+  return { withdrawRoyalties, isSubmitting, transactionSuccess };
 };
