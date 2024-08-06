@@ -7,20 +7,20 @@ export const chainLinkMainnet = "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419";
 export const chainLinkSepolia = "0x694AA1769357215DE4FAC081bf1f309aDC325306";
 
 // psyNFT
-export const psyNFTSepolia = "0x913a96022677512a48B29E0216CDAeDddb9D97b9";
+export const psyNFTSepolia = "0x64e78537782095a38E3785431bE3647856980FfA";
 
 //psyNFTCopies
 export const psycNFTCopiesSepolia =
-  "0x2D425db502280a01cab058a1A7f08F76CC52d78B";
+  "0xeE9Fa98ECda2Eb2210C04532C277ac3ab72ab0FD";
 
 // ERC1155
-export const ERC1155Sepolia = "0x2D425db502280a01cab058a1A7f08F76CC52d78B";
+export const ERC1155Sepolia = "0xeE9Fa98ECda2Eb2210C04532C277ac3ab72ab0FD";
 
 //Treasury
-export const TreasurySepolia = "0x31f2e68D6bBD403F070d6BeCfc3Cd428d9a100CB";
+export const TreasurySepolia = "0x777F1efBd3E847bE8D5e90f0B978652Ff9563947";
 
 //Core
-export const CoreSepolia = "0xd0fCF06C59d11fd8c264295C7c5dFe2f9e1aE9e8";
+export const CoreSepolia = "0x810A8025b3e8496dA04556735c85C19030216Cf8";
 
 //PSYC Sale
-export const psycSaleSepolia = "0xa68868Ba3A9fFFFff13c1Cd8eb9BedDd7cBd0900";
+export const psycSaleSepolia = "0xc0150e3eEF8230974f85779DEcF5cd4104Be9c4c";
