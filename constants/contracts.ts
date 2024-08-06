@@ -20,7 +20,7 @@ export const ERC1155Sepolia = "0x2D425db502280a01cab058a1A7f08F76CC52d78B";
 export const TreasurySepolia = "0x31f2e68D6bBD403F070d6BeCfc3Cd428d9a100CB";
 
 //Core
-export const CoreSepolia = "0x24EF732d1Af97de13fbF3E30d356cD5D8AC72774";
+export const CoreSepolia = "0xd0fCF06C59d11fd8c264295C7c5dFe2f9e1aE9e8";
 
 //PSYC Sale
 export const psycSaleSepolia = "0xa68868Ba3A9fFFFff13c1Cd8eb9BedDd7cBd0900";
