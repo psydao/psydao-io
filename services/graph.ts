@@ -65,6 +65,16 @@ export const getTokenById = gql`
   }
 `;
 
+export const getTokensMetadataForASale = gql`
+  query GetTokensMetadata($ids: [ID!]!) {
+    tokens {
+      id
+      uri
+      tokenId
+    }
+  }
+`;
+
 export const getTokensByOwner = gql`
   query GetTokensByOwner($owner: String!) {
     tokens(where: { owner: $owner }) {

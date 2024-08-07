@@ -10,6 +10,7 @@ import { useGetAddresses } from "@/hooks/useGetAddresses";
 import usePrivateSale from "@/hooks/usePrivateSale";
 import ConnectWalletModal from "../../commons/connect-wallet-modal";
 import getAvailableTokenIds from "@/utils/getAvailableTokenIds";
+import useImageData from "@/hooks/useImageData";
 
 interface MintSectionProps {
   isRandom: boolean;
@@ -97,6 +98,14 @@ const MintSection = ({
       });
     }
   }, [activeSale]);
+
+  const {
+    imageUris,
+    loading: sshie,
+    error: ejfbeufb
+  } = useImageData(activeTokens.map((token) => token.tokenId));
+
+  console.log(imageUris);
 
   useEffect(() => {
     if (isRandom && activeTokens.length > 0) {
