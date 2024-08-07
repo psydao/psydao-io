@@ -64,6 +64,8 @@ const PsycItem = ({
     item.tokenId
   );
 
+  const [isActive, setIsActive] = useState(true);
+
   useEffect(() => {
     if (floorAndCeilingPriceData && isRandom) {
       const floorPrice = formatEther(floorAndCeilingPriceData[0]);
@@ -72,7 +74,12 @@ const PsycItem = ({
       const ceilingPrice = formatEther(floorAndCeilingPriceData[1]);
       setCopyPrice(ceilingPrice);
     }
-  }, [floorAndCeilingPriceData]);
+
+    if (floorAndCeilingPriceData) {
+      setIsActive(floorAndCeilingPriceData[2]);
+      console.log(floorAndCeilingPriceData[2], "isActive");
+    }
+  }, [floorAndCeilingPriceData, isRandom]);
 
   useEffect(() => {
     if (isSold) {
@@ -102,8 +109,9 @@ const PsycItem = ({
         isMinting ||
         isSoldLoading ||
         isPaused ||
-        (isRandom && soldOut && isOriginal);
-
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+        (isRandom && soldOut && isOriginal) ||
+        (!isOriginal && !isActive);
   const [isImageOpen, setIsImageOpen] = useState(false);
 
   const showMintedText = isOwnedView && !isOriginal && item.balance !== "0";
@@ -208,7 +216,7 @@ const PsycItem = ({
                 <Spinner size="sm" mr={2} />
                 Minting
               </>
-            ) : isPaused ? (
+            ) : isPaused || (!isOriginal && !isActive) ? (
               "Paused"
             ) : soldOut && isOriginal ? (
               "Sold Out"
