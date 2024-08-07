@@ -77,7 +77,11 @@ export const AdminSalesSection = ({
         )
       );
     }
-  }, [existingWhitelistedAddresses, addressesToRemove, setAddressesToDisplay]);
+
+    if (!openEditSale && addressesToRemove.length > 0) {
+      setAddressesToRemove([]);
+    }
+  }, [existingWhitelistedAddresses, addressesToRemove, openEditSale]);
 
   useEffect(() => {
     if (selectedSale) {
