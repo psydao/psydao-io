@@ -17,7 +17,7 @@ export const InterimState = (props: { type: "loading" | "error" }) => {
         <Text fontSize={{ base: "14px", sm: "18px" }}>
           {props.type === "loading"
             ? "Loading, please wait..."
-            : "Error: Failed to load sales"}
+            : "Error Loading Sales, Please Refresh"}
         </Text>
       </Flex>
     </Flex>

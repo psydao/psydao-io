@@ -2,7 +2,7 @@ import React from "react";
 import { Flex, Text } from "@chakra-ui/react";
 
 interface MintCountProps {
-  count: string;
+  count?: string;
 }
 
 const MintCount = ({ count }: MintCountProps) => {

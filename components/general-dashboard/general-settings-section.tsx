@@ -12,9 +12,11 @@ import SubmitButtonContainer from "../commons/submit-button-container";
 import SaveButton from "./save-settings-button";
 
 const GeneralSettingsSection = ({
-  triggerNftSaleUpdate
+  triggerNftSaleUpdate,
+  onDashboardClose
 }: {
   triggerNftSaleUpdate: () => void;
+  onDashboardClose: () => void;
 }) => {
   const { address } = useAccount();
   const {
@@ -51,7 +53,10 @@ const GeneralSettingsSection = ({
   return (
     <form onSubmit={handleSaveSettings}>
       <Box position="relative" height="100%" mb={12} overflowY="auto">
-        <RoyaltiesRevenueSection revenue={revenue} />
+        <RoyaltiesRevenueSection
+          revenue={revenue}
+          onDashboardClose={onDashboardClose}
+        />
         <OpenPublicSaleSection
           openPublicSale={openPublicSale}
           setOpenPublicSale={setOpenPublicSale}

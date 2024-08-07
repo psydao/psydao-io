@@ -4,12 +4,19 @@ import OwnedNfts from "./owned-nfts";
 import { useTokenContext } from "@/providers/TokenContext";
 import { useEffect } from "react";
 import { useAccount } from "wagmi";
+import { type Sale } from "@/lib/types";
 
 type OwnedNftsContentProps = {
   isFullScreen: boolean;
+  isOriginal: boolean;
+  activeSale: Sale | undefined;
 };
 
-const OwnedNftsContent = ({ isFullScreen }: OwnedNftsContentProps) => {
+const OwnedNftsContent = ({
+  isFullScreen,
+  isOriginal,
+  activeSale
+}: OwnedNftsContentProps) => {
   const { data, loading, error, tokenCount, setTokenCount } = useTokenContext();
   const { address } = useAccount();
 
@@ -19,13 +26,23 @@ const OwnedNftsContent = ({ isFullScreen }: OwnedNftsContentProps) => {
     }
   }, [address, data, setTokenCount]);
 
+  const EmptyStateText = (
+    <>
+      You don't own any <br /> PSYCs yet
+    </>
+  );
+
   if (loading) return <Box textAlign="center">Loading...</Box>;
   if (error) return <Box textAlign="center">Error loading data</Box>;
 
   return (
     <>
       {tokenCount > 0 ? (
-        <OwnedNfts nftData={data} />
+        <OwnedNfts
+          nftData={data}
+          isOriginal={isOriginal}
+          activeSale={activeSale}
+        />
       ) : (
         <Grid
           minH={"100%"}
@@ -38,7 +55,7 @@ const OwnedNftsContent = ({ isFullScreen }: OwnedNftsContentProps) => {
             md: isFullScreen ? "75% 100%" : "15% 100%"
           }}
         >
-          <OwnedNftsEmptyState />
+          <OwnedNftsEmptyState text={EmptyStateText} />
         </Grid>
       )}
     </>

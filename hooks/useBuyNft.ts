@@ -72,7 +72,6 @@ const useBuyNft = (
         price,
         proof
       });
-
       try {
         setIsMinting(true);
 
