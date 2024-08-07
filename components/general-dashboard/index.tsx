@@ -26,6 +26,10 @@ const GeneralDashboard = ({
     }
   }, [address, dispatch]);
 
+  const handleCloseDashboard = () => {
+    dispatch({ type: "close", id: "general-dashboard" });
+  };
+
   return (
     <Window
       id="general-dashboard"
@@ -43,7 +47,10 @@ const GeneralDashboard = ({
       <Window.TitleBar />
       <Window.Content py={2}>
         <GeneralDashboardHeader />
-        <GeneralSettingsSection triggerNftSaleUpdate={triggerNftSaleUpdate} />
+        <GeneralSettingsSection
+          triggerNftSaleUpdate={triggerNftSaleUpdate}
+          onDashboardClose={handleCloseDashboard}
+        />
         <Image
           src="/windows/alchemist/clouds.png"
           alt=""
