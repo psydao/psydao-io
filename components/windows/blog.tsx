@@ -1,8 +1,8 @@
 import { useMemo } from "react";
 import { useMediaQuery } from "@chakra-ui/react";
-import { Window } from "@/components/window";
-import Iframe from "@/components/iframe";
-import { useWindowManager } from "@/components/window-manager";
+import { Window } from "@/components/ui/window";
+import Iframe from "@/components/ui/iframe";
+import { useWindowManager } from "@/components/ui/window-manager";
 
 export const Blog = () => {
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
@@ -21,9 +21,9 @@ export const Blog = () => {
   return (
     <Window
       id={id}
-      height={fullScreenWindow ? "100%" : isLargerThanMd ? "500px" : "80%"}
+      height={fullScreenWindow ? "100%" : isLargerThanMd ? "500px" : "65%"}
       width={fullScreenWindow ? "100%" : isLargerThanMd ? "655px" : "95%"}
-      transform={fullScreenWindow ? "translate(0, 0)" : "translate(-50%, -50%)"}
+      transform={fullScreenWindow ? "translate(0, 0)" : "translate(-50%, -40%)"}
       top={{
         base: fullScreenWindow ? "0" : "46%",
         md: fullScreenWindow ? "0" : "42%"

@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  images: {
+    domains: ["red-literary-tiglon-645.mypinata.cloud"]
+  },
   webpack(config) {
     // use SVGR for icons
     config.module.rules.push({
