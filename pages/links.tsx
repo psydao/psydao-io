@@ -13,8 +13,8 @@ import { FaDiscord, FaTwitter, FaYoutube } from "react-icons/fa";
 import { RiInstagramFill } from "react-icons/ri";
 import Link from "next/link";
 
-import { Head } from "@/components/head";
-import { MotionBox } from "@/components/motion-box";
+import { Head } from "@/components/ui/head";
+import { MotionBox } from "@/components/ui/motion-box";
 import linksPageData from "@/data/links-page-data.json";
 import backgroundImage from "@/public/links/background.png";
 import logo from "@/public/links/wordmark-purple-h.svg";

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Center,
@@ -12,15 +12,15 @@ import type { NextPage } from "next";
 import { FaDiscord, FaTwitter, FaYoutube } from "react-icons/fa";
 import { ToastContainer } from "react-toastify";
 
-import { BackgroundGrid } from "@/components/background-grid";
-import { Blobs } from "@/components/blobs";
-import { Csr } from "@/components/csr";
-import { Grid } from "@/components/grid";
-import { GridProvider } from "@/components/grid-context";
-import { Head } from "@/components/head";
-import { Marquee } from "@/components/marquee";
-import { Menu } from "@/components/menu";
-import { Open, WindowManager } from "@/components/window-manager";
+import { BackgroundGrid } from "@/components/ui/background-grid";
+import { Blobs } from "@/components/ui/blobs";
+import { Csr } from "@/components/ui/csr";
+import { Grid } from "@/components/ui/grid";
+import { GridProvider } from "@/components/ui/grid-context";
+import { Head } from "@/components/ui/head";
+import { Marquee } from "@/components/ui/marquee";
+import { Menu } from "@/components/ui/menu";
+import { Open, WindowManager } from "@/components/ui/window-manager";
 import { Manifesto } from "@/components/windows/manifesto";
 import { Radio } from "@/components/windows/radio";
 import { MixpanelTracking } from "@/services/mixpanel";
@@ -28,6 +28,12 @@ import { SwapWidget } from "@/components/windows/swap-widget";
 import { useRescrictedCountries } from "@/hooks/restrictedCountries";
 import { Blog } from "@/components/windows/blog";
 import "react-toastify/dist/ReactToastify.css";
+import { NftSaleWidget } from "@/components/nft-sale-widget";
+import WalletConnectHome from "@/components/connectWalletHome";
+import AdminDashboardWidget from "@/components/admin-dashboard";
+import GeneralDashboard from "@/components/general-dashboard";
+import useGetOnlyWhitelistedSales from "@/hooks/useGetOnlyWhitelistedSales";
+// import SaleWidgetProvider from "@/providers/SaleWidgetContext";
 
 // TODO Extract Pill component since it seems it will become a basic primitive
 // in our design
@@ -73,6 +79,12 @@ const Homepage: NextPage = () => {
   const fadeinAnimate = `${fadeIn} infinite 6s`;
 
   const SALE_ACTIVE = true;
+
+  const [updateNftSaleTrigger, setUpdateNftSaleTrigger] = useState(0);
+
+  const triggerNftSaleUpdate = () => {
+    setUpdateNftSaleTrigger((prev) => prev + 1);
+  };
 
   return (
     <>
@@ -159,7 +171,7 @@ const Homepage: NextPage = () => {
                       ]}
                     />
                   </Box>
-
+                  <WalletConnectHome />
                   <Menu />
                   <Open id="radio" gridArea="-4 / 1 / span 2 / span 2" p="3">
                     <Image
@@ -185,6 +197,15 @@ const Homepage: NextPage = () => {
                   >
                     <Blog />
                     <SwapWidget />
+
+                    <NftSaleWidget updateTrigger={updateNftSaleTrigger} />
+                    <AdminDashboardWidget
+                      triggerNftSaleUpdate={triggerNftSaleUpdate}
+                    />
+                    <GeneralDashboard
+                      triggerNftSaleUpdate={triggerNftSaleUpdate}
+                    />
+
                     <Radio />
                     <Manifesto />
                   </Box>

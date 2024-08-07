@@ -1,4 +1,4 @@
-import { CloseIcon, WarningIcon } from "@chakra-ui/icons";
+import { CloseIcon, WarningIcon, RepeatClockIcon } from "@chakra-ui/icons";
 import { Button, Flex, Text } from "@chakra-ui/react";
 import {
   type Id,
@@ -11,6 +11,7 @@ import CheckIcon from "public/icons/check.svg";
 interface BodyProps {
   mainText: string;
   type?: TypeOptions | null | undefined;
+  isPsyc?: boolean;
 }
 
 const CustomCloseButton = (props: {
@@ -37,6 +38,11 @@ const getIcon = (type: TypeOptions | null | undefined) => {
   if (type === "error") {
     return <WarningIcon color="red" w={{ base: "12px", md: "20px" }} />;
   }
+  if (type === "default") {
+    return (
+      <RepeatClockIcon color={"#9835BA"} w={{ base: "12px", md: "20px" }} />
+    );
+  }
 };
 
 const ToastBody = (props: BodyProps) => {
@@ -60,12 +66,9 @@ const ToastBody = (props: BodyProps) => {
             fontStyle={"italic"}
             fontFamily={"Amiri"}
             mt={"2px"}
-            maxW={{ base: props.type === "error" ? "100%" : "80%", md: "90%" }}
-            whiteSpace={{
-              base: "normal",
-              md: props.type === "error" ? "nowrap" : "normal"
-            }}
+            maxW={{ base: props.type === "error" ? "100%" : "80%", md: "100%" }}
           >
+            {props.isPsyc && props.type === "default"}
             {props.mainText}
           </Text>
         </Flex>
@@ -83,12 +86,13 @@ export function customToast(
     icon: options?.type && false,
     style: {
       background: "linear-gradient(#FFFFFF, #F3FFE9, #E7FEFF)",
-      width: "fit-content",
-      transform: isMobile ? "" : "translateX(-20%)"
+      width: isMobile ? "100%" : "fit-content",
+      transform: isMobile ? "" : "translateX(-20%)",
+      whiteSpace: "wrap"
     },
     closeButton: CustomCloseButton,
     position: "top-center",
-    autoClose: 3000,
+    autoClose: options && options.type === "default" ? 6000 : 3000,
     ...options
   });
 }
