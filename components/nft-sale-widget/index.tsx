@@ -20,6 +20,7 @@ import { InterimState } from "../commons/interim-state";
 import NFTSaleWidgetEmptyState from "./layout/nft-sale-widget-empty";
 import useGetOnlyWhitelistedSales from "@/hooks/useGetOnlyWhitelistedSales";
 import { useAccount } from "wagmi";
+import useImageData from "@/hooks/useImageData";
 
 export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
   const { address } = useAccount();

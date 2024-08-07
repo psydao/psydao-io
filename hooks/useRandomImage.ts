@@ -12,6 +12,8 @@ const useRandomImage = (isRandom: boolean, images: string[]) => {
     }
   }, [isRandom, images.length]);
 
+  console.log(currentImageIndex);
+
   return currentImageIndex;
 };
 

@@ -5,6 +5,7 @@ import PsycItem from "../../psyc-item";
 import useUserCopyBalances from "@/hooks/useUserCopyBalances";
 import { formatUnits } from "viem";
 import OwnedNftsEmptyState from "./owned-nfts-empty-state";
+import useImageData from "@/hooks/useImageData";
 
 type OwnedNftsProps = {
   nftData: GetTokensByOwnerData | undefined;
@@ -13,7 +14,10 @@ type OwnedNftsProps = {
 };
 
 const OwnedNfts = (props: OwnedNftsProps) => {
-  const images = ["/psyc1.webp", "/psyc2.webp", "/psyc3.webp", "/psyc4.webp"];
+  const imageIds =
+    props.activeSale?.tokensOnSale.map((token) => token.tokenID) ?? [];
+  const { imageUris } = useImageData(imageIds);
+
   const { address } = useAccount();
   const {
     balances: copyBalances,
@@ -52,7 +56,7 @@ const OwnedNfts = (props: OwnedNftsProps) => {
               <PsycItem
                 key={index}
                 item={{
-                  src: images[index % images.length] ?? "",
+                  src: imageUris[index % imageUris.length] ?? "",
                   tokenId: token.tokenId,
                   whitelist: [],
                   balance: "0",
@@ -77,7 +81,7 @@ const OwnedNfts = (props: OwnedNftsProps) => {
               <PsycItem
                 key={index}
                 item={{
-                  src: images[index % images.length] ?? "",
+                  src: imageUris[index % imageUris.length] ?? "",
                   tokenId: token.tokenID,
                   whitelist: [],
                   balance: copyBalances[token.tokenID] ?? "0",

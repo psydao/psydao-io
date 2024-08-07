@@ -6,6 +6,20 @@ export interface TokenOnSale {
   buyer: Address | null;
 }
 
+export interface TokenMetadata {
+  name: string;
+  imageURI: string;
+  description: string;
+}
+
+export interface SaleTokensMetadata {
+  tokens: {
+    id: string;
+    tokenId: string;
+    metadata: TokenMetadata;
+  }[];
+}
+
 export interface Sale {
   ipfsHash: string;
   batchID: string;
