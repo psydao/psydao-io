@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import { InMemoryCache } from "@apollo/client";
 import {
   useConnect,
   useWaitForTransactionReceipt,
@@ -8,7 +7,6 @@ import {
 } from "wagmi";
 import { customToast } from "@/components/toasts/SwapSuccess";
 import { useToast } from "@chakra-ui/react";
-import { Zoom } from "react-toastify";
 
 import { handleTransactionSuccess } from "@/utils/transactionHandlers";
 import { useResize } from "./useResize";
@@ -16,7 +14,6 @@ import { psycSaleContractConfig } from "@/lib/sale-contract-config";
 import { toWei } from "@/utils/saleUtils";
 import { useCustomToasts } from "./useCustomToasts";
 import graphClient from "@/config/graphql";
-import { formatUnits, parseUnits } from "viem";
 
 type ArgsType =
   | [number, string[]]
