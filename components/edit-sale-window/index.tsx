@@ -29,6 +29,7 @@ interface EditSaleWindowProps {
   isPaused: boolean;
   setIsPaused: React.Dispatch<React.SetStateAction<boolean>>;
   isComplete: boolean;
+  addressesToDisplay: string[];
 }
 
 const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
@@ -40,7 +41,7 @@ const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
   addressesToRemove,
   setAddressesToRemove,
   whitelistedArray,
-  // newWhitelistedAddresses,
+  addressesToDisplay,
   setNewWhitelistedAddresses,
   isPaused,
   setIsPaused
@@ -145,6 +146,7 @@ const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
         addressArray={whitelistedArray}
         setWhitelistedAddresses={setNewWhitelistedAddresses}
         saleComplete={isComplete}
+        addressesToDisplay={addressesToDisplay}
       />
     </Flex>
   );

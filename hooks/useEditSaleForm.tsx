@@ -1,5 +1,5 @@
 import { useToast } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { psycSaleContractConfig } from "@/lib/sale-contract-config";
 import { useCustomToasts } from "@/hooks/useCustomToasts";
@@ -8,14 +8,17 @@ import { type Address, parseUnits } from "viem";
 import { uploadAddresses } from "@/lib/server-utils";
 import { getMerkleRoot, getNewAddresses } from "@/utils/saleUtils";
 import { useGetCurrentSaleValues } from "./useGetCurrentSaleValues";
+import type { Sale } from "@/lib/types";
 
 export const useEditSaleForm = (
   address: string | undefined,
   setOpenEditSale: React.Dispatch<React.SetStateAction<boolean>>,
+  setSelectedSale: React.Dispatch<React.SetStateAction<Sale | undefined>>,
   id: string,
   triggerNftSaleUpdate: () => void,
   refetchSalesData: () => void,
-  getAddresses: (ipfsHash: string) => Promise<string[]>
+  getAddresses: (ipfsHash: string) => Promise<string[]>,
+  setAddressesToRemove: React.Dispatch<React.SetStateAction<string[]>>
 ) => {
   const toast = useToast();
   const { width } = useResize();
@@ -113,7 +116,8 @@ export const useEditSaleForm = (
 
       if (
         JSON.stringify(addressesToSubmit.sort()) !==
-        JSON.stringify(currentAddresses.sort())
+          JSON.stringify(currentAddresses.sort()) &&
+        addressesToSubmit.length >= 2
       ) {
         const newIpfsHash = await uploadAddresses(addressesToSubmit);
         const newMerkleRoot = getMerkleRoot(addressesToSubmit);
@@ -123,6 +127,17 @@ export const useEditSaleForm = (
           args: [batchID, newMerkleRoot, newIpfsHash]
         });
         setMerkleRootHash(merklerootResponse);
+      } else if (
+        JSON.stringify(addressesToSubmit.sort()) !==
+          JSON.stringify(currentAddresses.sort()) &&
+        addressesToSubmit.length < 2
+      ) {
+        showErrorToast(
+          "The whitelist must always contain two or more addresses",
+          width
+        );
+        setIsSubmitting(false);
+        return;
       }
 
       if (ceilingPriceHasChanged && floorPriceHasChanged) {
@@ -199,11 +214,13 @@ export const useEditSaleForm = (
       refetchSalesData();
       setIsSubmitting(false);
       setOpenEditSale(false);
+      setSelectedSale(undefined);
       setFloorAndCeilingPriceHash(undefined);
       setMerkleRootHash(undefined);
       setSwitchSaleStatusHash(undefined);
       setIsSuccess(false);
       setIsError(false);
+      setAddressesToRemove([]);
       showSuccessToast("Your sale has been edited!", width);
       return;
     }
@@ -215,6 +232,7 @@ export const useEditSaleForm = (
       setSwitchSaleStatusHash(undefined);
       setIsSuccess(false);
       setIsError(false);
+      setAddressesToRemove([]);
     }
   }, [isSuccess, isError]);
 
