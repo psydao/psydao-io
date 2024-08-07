@@ -9,20 +9,16 @@ const useImageData = (tokenIds: string[]) => {
     getTokensMetadataForASale,
     {
       variables: {
-        ids: tokenIds
+        tokenIds: tokenIds
       }
     }
   );
 
-  console.log(tokenIds);
-
   useEffect(() => {
     if (data && data.tokens.length > 0) {
-      setImageUris(data.tokens.map((token) => token.uri));
+      setImageUris(data.tokens.map((token) => token.metadata.imageURI));
     }
   }, [data]);
-
-  console.log(data, error?.message);
 
   return { imageUris, loading, error };
 };

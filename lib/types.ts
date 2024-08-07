@@ -7,13 +7,17 @@ export interface TokenOnSale {
 }
 
 export interface TokenMetadata {
-  id: string;
-  tokenId: string;
-  uri: string;
+  name: string;
+  imageURI: string;
+  description: string;
 }
 
 export interface SaleTokensMetadata {
-  tokens: TokenMetadata[];
+  tokens: {
+    id: string;
+    tokenId: string;
+    metadata: TokenMetadata;
+  }[];
 }
 
 export interface Sale {

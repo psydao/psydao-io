@@ -30,6 +30,11 @@ export const getAllSalesWithTokens = gql`
         id
         tokenID
         buyer
+        metadata {
+          name
+          imageURI
+          description
+        }
       }
     }
   }
@@ -66,11 +71,15 @@ export const getTokenById = gql`
 `;
 
 export const getTokensMetadataForASale = gql`
-  query GetTokensMetadata($ids: [ID!]!) {
-    tokens {
+  query GetTokensMetadata($tokenIds: [String!]!) {
+    tokens(where: { tokenId_in: $tokenIds }) {
       id
-      uri
       tokenId
+      metadata {
+        name
+        imageURI
+        description
+      }
     }
   }
 `;

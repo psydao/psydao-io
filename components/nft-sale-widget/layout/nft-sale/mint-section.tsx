@@ -46,14 +46,17 @@ const MintSection = ({
     setIsOpen((prev) => !prev);
   };
 
-  const images = useMemo(() => {
-    if (!activeSale) return [];
-    return activeSale.tokensOnSale.map(
-      (_, index) => `/psyc${(index % 3) + 1}.webp`
-    );
-  }, [activeSale]);
+  const {
+    imageUris,
+    loading: imagesLoading,
+    error: imagesError
+  } = useImageData(
+    activeSale?.tokensOnSale.map((token) => token.tokenID) ?? []
+  );
 
-  const currentImageIndex = useRandomImage(isRandom, images);
+  console.log(imageUris);
+
+  const currentImageIndex = useRandomImage(isRandom, imageUris);
 
   const activeTokens = useMemo(() => {
     if (!activeSale) return [];
@@ -64,7 +67,7 @@ const MintSection = ({
       setIsSoldOut(false);
     }
     return availableTokens.map((token, index) => ({
-      src: images[index] ?? "",
+      src: imageUris[index] ?? "",
       price: `${formatUnits(BigInt(activeSale.floorPrice), 18)}`,
       isSold: false,
       batchId: activeSale.batchID,
@@ -73,7 +76,7 @@ const MintSection = ({
       whitelist: whitelist[activeSale.ipfsHash] ?? [],
       balance: "0"
     }));
-  }, [activeSale, images, whitelist]);
+  }, [activeSale, imageUris, whitelist]);
 
   const fetchWhitelist = async () => {
     if (activeSale) {
@@ -99,14 +102,6 @@ const MintSection = ({
     }
   }, [activeSale]);
 
-  const {
-    imageUris,
-    loading: sshie,
-    error: ejfbeufb
-  } = useImageData(activeTokens.map((token) => token.tokenId));
-
-  console.log(imageUris);
-
   useEffect(() => {
     if (isRandom && activeTokens.length > 0) {
       setRandomToken(
@@ -114,7 +109,7 @@ const MintSection = ({
       );
     } else if (isRandom && activeTokens.length === 0 && activeSale) {
       setRandomToken({
-        src: `/psyc${(currentImageIndex % 3) + 1}.webp`,
+        src: imageUris[0] ?? "",
         price: `${formatUnits(BigInt(activeSale.floorPrice), 18)}`,
         isSold: false,
         batchId: activeSale.batchID,
@@ -163,7 +158,7 @@ const MintSection = ({
             <PsycItem
               key={token.id}
               item={{
-                src: `/psyc${(index % 3) + 1}.webp`,
+                src: imageUris[index] ?? "",
                 price: `${formatUnits(BigInt(activeSale.ceilingPrice), 18)}`,
                 isSold: false,
                 batchId: activeSale.batchID,
