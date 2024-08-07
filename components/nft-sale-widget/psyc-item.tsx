@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Box, Text, Spinner, Flex } from "@chakra-ui/react";
 import Image from "next/image";
 import { useAccount } from "wagmi";
@@ -12,6 +12,8 @@ import useFetchProof from "@/hooks/useFetchProof";
 import usePausedSale from "@/hooks/usePausedSale";
 import { useTokenContext } from "@/providers/TokenContext";
 import { type TokenItem } from "@/lib/types";
+import useReadFloorAndCeilingPrice from "@/hooks/useReadFloorAndCeilingPrice";
+import { formatEther } from "viem";
 
 interface PsycItemProps {
   item: TokenItem & {
@@ -49,6 +51,7 @@ const PsycItem = ({
   );
 
   const { address } = useAccount();
+  const [copyPrice, setCopyPrice] = useState("0.00");
   const { isSold, isLoading: isSoldLoading } = useTokenSoldState(
     parseInt(item.tokenId)
   );
@@ -56,6 +59,20 @@ const PsycItem = ({
   const { isPaused } = usePausedSale(item.batchId);
 
   const { refetch } = useTokenContext();
+
+  const { floorAndCeilingPriceData } = useReadFloorAndCeilingPrice(
+    item.tokenId
+  );
+
+  useEffect(() => {
+    if (floorAndCeilingPriceData && isRandom) {
+      const floorPrice = formatEther(floorAndCeilingPriceData[0]);
+      setCopyPrice(floorPrice);
+    } else if (floorAndCeilingPriceData && !isRandom) {
+      const ceilingPrice = formatEther(floorAndCeilingPriceData[1]);
+      setCopyPrice(ceilingPrice);
+    }
+  }, [floorAndCeilingPriceData]);
 
   useEffect(() => {
     if (isSold) {
@@ -72,7 +89,7 @@ const PsycItem = ({
     await buyNft(
       parseInt(item.batchId),
       parseInt(item.tokenId),
-      item.price,
+      isOriginal ? item.price : copyPrice ?? "0.00",
       proof
     );
   };
@@ -168,7 +185,9 @@ const PsycItem = ({
           </Flex>
         )}
         {showMintedText && <MintCount count={item.balance} />}
-        {(!isOwnedView || !isOriginal) && <NFTPrice price={item.price} />}
+        {(!isOwnedView || !isOriginal) && (
+          <NFTPrice price={isOriginal ? item.price : copyPrice ?? "0.00"} />
+        )}
       </Box>
 
       {(!isOwnedView || !isOriginal) && (
