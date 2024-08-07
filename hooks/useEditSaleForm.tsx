@@ -116,7 +116,8 @@ export const useEditSaleForm = (
 
       if (
         JSON.stringify(addressesToSubmit.sort()) !==
-        JSON.stringify(currentAddresses.sort())
+          JSON.stringify(currentAddresses.sort()) &&
+        addressesToSubmit.length >= 2
       ) {
         const newIpfsHash = await uploadAddresses(addressesToSubmit);
         const newMerkleRoot = getMerkleRoot(addressesToSubmit);
@@ -126,6 +127,17 @@ export const useEditSaleForm = (
           args: [batchID, newMerkleRoot, newIpfsHash]
         });
         setMerkleRootHash(merklerootResponse);
+      } else if (
+        JSON.stringify(addressesToSubmit.sort()) !==
+          JSON.stringify(currentAddresses.sort()) &&
+        addressesToSubmit.length < 2
+      ) {
+        showErrorToast(
+          "The whitelist must always contain two or more addresses",
+          width
+        );
+        setIsSubmitting(false);
+        return;
       }
 
       if (ceilingPriceHasChanged && floorPriceHasChanged) {
