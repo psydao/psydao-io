@@ -46,15 +46,9 @@ const MintSection = ({
     setIsOpen((prev) => !prev);
   };
 
-  const {
-    imageUris,
-    loading: imagesLoading,
-    error: imagesError
-  } = useImageData(
+  const { imageUris } = useImageData(
     activeSale?.tokensOnSale.map((token) => token.tokenID) ?? []
   );
-
-  console.log(imageUris);
 
   const currentImageIndex = useRandomImage(isRandom, imageUris);
 

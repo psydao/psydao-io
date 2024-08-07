@@ -74,12 +74,6 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
 
   const isLoading = whitelistedSalesLoading || loading;
 
-  const {
-    imageUris,
-    loading: sshie,
-    error: ejfbeufb
-  } = useImageData(["0", "1", "2"]);
-
   return (
     <Window
       id="nft-sale"
