@@ -1,7 +1,8 @@
 import { useCallback } from "react";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
-import { psycSaleSepolia } from "@/constants/contracts";
+import { psycSaleMainnet, psycSaleSepolia } from "@/constants/contracts";
 import { parseUnits } from "viem";
+import psycSaleAbi from "@/abis/psycSaleAbi.json";
 import psycSaleAbiSepolia from "@/abis/psycSaleAbiSepolia.json";
 export const useBuyRandomPsycPrivate = () => {
   const { data, writeContract, isPending, error } = useWriteContract();
@@ -15,9 +16,15 @@ export const useBuyRandomPsycPrivate = () => {
     async (randomFromBatchPrice: string, batchId: number, proof: string) => {
       const randomNftAmount = parseUnits(randomFromBatchPrice, 18);
       return writeContract({
-        address: psycSaleSepolia,
+        address:
+          process.env.NEXT_PUBLIC_CHAIN_ID === "1"
+            ? psycSaleMainnet
+            : psycSaleSepolia,
         functionName: "buyRandomFromBatch",
-        abi: psycSaleAbiSepolia,
+        abi:
+          process.env.NEXT_PUBLIC_CHAIN_ID === "1"
+            ? psycSaleAbi
+            : psycSaleAbiSepolia,
         args: [batchId, proof],
         value: randomNftAmount
       });

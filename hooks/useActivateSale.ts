@@ -1,8 +1,9 @@
 import { useCallback, useEffect } from "react";
 import { useWriteContract } from "wagmi";
 
-import psycSaleAbiSepolia from "../abis/psycSaleAbiSepolia.json";
-import { psycSaleSepolia } from "../constants/contracts";
+import psycSaleAbi from "../abis/psycSaleAbi.json";
+import psycSaleSepoliaAbi from "../abis/psycSaleAbiSepolia.json";
+import { psycSaleMainnet, psycSaleSepolia } from "../constants/contracts";
 import { useCustomToasts } from "./useCustomToasts";
 import { useResize } from "./useResize";
 
@@ -14,8 +15,14 @@ const useActivateSale = () => {
   const activateSale = useCallback(
     async (tokenIds: number[]) => {
       writeContract({
-        address: psycSaleSepolia,
-        abi: psycSaleAbiSepolia,
+        address:
+          process.env.NEXT_PUBLIC_CHAIN_ID === "1"
+            ? psycSaleMainnet
+            : psycSaleSepolia,
+        abi:
+          process.env.NEXT_PUBLIC_CHAIN_ID === "1"
+            ? psycSaleAbi
+            : psycSaleSepoliaAbi,
         functionName: "setSalesActive",
         args: [tokenIds]
       });
