@@ -36,15 +36,7 @@ export const AdminSalesSection = ({
   const { width } = useResize();
   const { address } = useAccount();
   const { getAddresses } = useGetAddresses();
-  const { handleEditSale, isSubmitting } = useEditSaleForm(
-    address,
-    setOpenEditSale,
-    setSelectedSale,
-    selectedSale?.batchID ?? "",
-    triggerNftSaleUpdate,
-    refetchSalesData,
-    getAddresses
-  );
+
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const [existingWhitelistedAddresses, setExistingWhitelistedAddresses] =
     useState<string[]>([]);
@@ -56,6 +48,17 @@ export const AdminSalesSection = ({
   const [ceilingPrice, setCeilingPrice] = useState<string>("");
   const [saleComplete, setSaleComplete] = useState<boolean>(false);
   const [addressesToDisplay, setAddressesToDisplay] = useState<string[]>([]);
+
+  const { handleEditSale, isSubmitting } = useEditSaleForm(
+    address,
+    setOpenEditSale,
+    setSelectedSale,
+    selectedSale?.batchID ?? "",
+    triggerNftSaleUpdate,
+    refetchSalesData,
+    getAddresses,
+    setAddressesToRemove
+  );
 
   const splitNewWhitelistedAddresses =
     newWhitelistedAddresses.length > 0
@@ -74,7 +77,7 @@ export const AdminSalesSection = ({
         )
       );
     }
-  }, [existingWhitelistedAddresses, addressesToRemove]);
+  }, [existingWhitelistedAddresses, addressesToRemove, setAddressesToDisplay]);
 
   useEffect(() => {
     if (selectedSale) {

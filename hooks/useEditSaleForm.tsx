@@ -17,7 +17,8 @@ export const useEditSaleForm = (
   id: string,
   triggerNftSaleUpdate: () => void,
   refetchSalesData: () => void,
-  getAddresses: (ipfsHash: string) => Promise<string[]>
+  getAddresses: (ipfsHash: string) => Promise<string[]>,
+  setAddressesToRemove: React.Dispatch<React.SetStateAction<string[]>>
 ) => {
   const toast = useToast();
   const { width } = useResize();
@@ -207,6 +208,7 @@ export const useEditSaleForm = (
       setSwitchSaleStatusHash(undefined);
       setIsSuccess(false);
       setIsError(false);
+      setAddressesToRemove([]);
       showSuccessToast("Your sale has been edited!", width);
       return;
     }
@@ -218,6 +220,7 @@ export const useEditSaleForm = (
       setSwitchSaleStatusHash(undefined);
       setIsSuccess(false);
       setIsError(false);
+      setAddressesToRemove([]);
     }
   }, [isSuccess, isError]);
 
