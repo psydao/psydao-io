@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
-import { psycSaleSepolia } from "@/constants/contracts";
+import { psycSaleMainnet, psycSaleSepolia } from "@/constants/contracts";
+import psycSaleAbi from "@/abis/psycSaleAbi.json";
 import psycSaleAbiSepolia from "@/abis/psycSaleAbiSepolia.json";
 import { parseUnits } from "viem";
 
@@ -24,9 +25,15 @@ export const useCreatePsycSale = () => {
       const floorPriceGwei = parseUnits(floorPrice, 18);
       const ceilingPriceGwei = parseUnits(ceilingPrice, 18);
       return writeContract({
-        address: psycSaleSepolia,
+        address:
+          process.env.NEXT_PUBLIC_CHAIN_ID === "1"
+            ? psycSaleMainnet
+            : psycSaleSepolia,
         functionName: "createSaleBatch",
-        abi: psycSaleAbiSepolia,
+        abi:
+          process.env.NEXT_PUBLIC_CHAIN_ID === "1"
+            ? psycSaleAbi
+            : psycSaleAbiSepolia,
         args: [
           tokenIds,
           saleStartTime,

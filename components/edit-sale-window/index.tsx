@@ -9,7 +9,12 @@ import CopySaleActivation from "../admin-dashboard/edit-sale/copy-sale-activatio
 import useActivateSale from "@/hooks/useActivateSale";
 
 import type { Sale } from "@/lib/types";
-import { psycSaleSepolia, psyNFTSepolia } from "@/constants/contracts";
+import {
+  psycSaleMainnet,
+  psycSaleSepolia,
+  psyNFTMainnet,
+  psyNFTSepolia
+} from "@/constants/contracts";
 import useFetchTokenOwners from "@/hooks/useFetchTokenOwner";
 import { getSaleComplete } from "@/utils/getSaleComplete";
 import { useCustomToasts } from "@/hooks/useCustomToasts";
@@ -61,7 +66,8 @@ const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
         .sort((a, b) => parseInt(a) - parseInt(b))
     : [];
 
-  const contractAddress = psyNFTSepolia;
+  const contractAddress =
+    process.env.NEXT_PUBLIC_CHAIN_ID === "1" ? psyNFTMainnet : psyNFTSepolia;
   const { owners, loading, error } = useFetchTokenOwners(
     contractAddress,
     tokenIds
@@ -72,7 +78,9 @@ const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
       const tokensOwnedByContract = owners
         .filter((owner) => {
           const isOwnedByContract =
-            owner.owner.toLowerCase() === psycSaleSepolia.toLowerCase();
+            process.env.NEXT_PUBLIC_CHAIN_ID === "1"
+              ? owner.owner.toLowerCase() === psycSaleMainnet.toLowerCase()
+              : owner.owner.toLowerCase() === psycSaleSepolia.toLowerCase();
           console.log(
             `Token ID ${owner.id} is owned by contract: ${isOwnedByContract}`
           );
