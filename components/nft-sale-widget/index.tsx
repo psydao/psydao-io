@@ -94,6 +94,7 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
       left={fullScreenWindow ? "0" : "50%"}
       transform={fullScreenWindow ? "translate(0, 0)" : "translate(-50%, -50%)"}
       fullScreenWindow={fullScreenWindow}
+      defaultIsOpen
     >
       <Window.TitleBar />
       <Window.Content py={2} px={0} height={"100%"} width={"100%"}>
