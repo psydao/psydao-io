@@ -13,55 +13,41 @@ import MintPsycHeader from "./layout/nft-sale/mint-psyc-header";
 import PsycSaleContent from "./layout/nft-sale/psyc-sale-content";
 import OwnedNftsContent from "./layout/owned-nfts/owned-nfts-section";
 import { TokenProvider } from "@/providers/TokenContext";
-import type {
-  Sale,
-  GetSaleByIdData,
-  GetAllSalesWithTokensData
-} from "@/lib/types";
+import type { Sale, GetSaleByIdData } from "@/lib/types";
 import { useQuery } from "@apollo/client";
-import { getAllSalesWithTokens, getSaleById } from "@/services/graph";
+import { getSaleById } from "@/services/graph";
 import { InterimState } from "../commons/interim-state";
 import NFTSaleWidgetEmptyState from "./layout/nft-sale-widget-empty";
 import useGetOnlyWhitelistedSales from "@/hooks/useGetOnlyWhitelistedSales";
 import { useAccount } from "wagmi";
-import useImageData from "@/hooks/useImageData";
 
 export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
   const { address } = useAccount();
-  // const { whitelistedSales, loading: whitelistedSalesLoading } =
-  //   useGetOnlyWhitelistedSales(address);
+  const { whitelistedSales, loading: whitelistedSalesLoading } =
+    useGetOnlyWhitelistedSales(address);
   const [activeSale, setActiveSale] = useState<Sale>();
-  const [isOriginal, setIsOriginal] = useState<boolean>(true);
+  const [isOriginal, setIsOriginal] = useState<boolean>(false);
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
 
-  const { data, loading, refetch, error } = useQuery<GetAllSalesWithTokensData>(
-    getAllSalesWithTokens
+  const { data, loading, error, refetch } = useQuery<GetSaleByIdData>(
+    getSaleById,
+    {
+      variables: { id: activeSale ? activeSale.id : whitelistedSales[0]?.id },
+      skip:
+        !activeSale &&
+        (whitelistedSalesLoading || whitelistedSales.length === 0)
+    }
   );
-  // const { data, loading, error, refetch } = useQuery<GetSaleByIdData>(
-  //   getSaleById,
-  //   {
-  //     variables: { id: activeSale ? activeSale.id : whitelistedSales[0]?.id },
-  //     skip:
-  //       !activeSale &&
-  //       (whitelistedSalesLoading || whitelistedSales.length === 0)
-  //   }
-  // );
 
   useEffect(() => {
-    if (data) {
-      setActiveSale(data.sales[0]);
+    if (
+      !whitelistedSalesLoading &&
+      whitelistedSales.length > 0 &&
+      !activeSale
+    ) {
+      setActiveSale(whitelistedSales[0]);
     }
-  }, [data, setActiveSale]);
-
-  // useEffect(() => {
-  //   if (
-  //     !whitelistedSalesLoading &&
-  //     whitelistedSales.length > 0 &&
-  //     !activeSale
-  //   ) {
-  //     setActiveSale(whitelistedSales[0]);
-  //   }
-  // }, [whitelistedSalesLoading, whitelistedSales, activeSale]);
+  }, [whitelistedSalesLoading, whitelistedSales, activeSale]);
 
   useEffect(() => {
     const refetchData = async () => {
