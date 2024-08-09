@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import useGetOnlyWhitelistedSales from "@/hooks/useGetOnlyWhitelistedSales";
 import { type GetAllSalesWithTokensData, type Sale } from "@/lib/types";
 import { getAllSalesWithTokens } from "@/services/graph";
@@ -25,6 +26,15 @@ const NftSalesDropdown = (props: NftSalesDropdownProps) => {
   const displayedSales = props.isOriginal
     ? whitelistedSales
     : data?.sales ?? [];
+
+  useEffect(() => {
+    if (displayedSales.length > 0 && !props.activeSale) {
+      const firstSale = displayedSales[0];
+      if (firstSale) {
+        props.setActiveSale(firstSale);
+      }
+    }
+  }, [displayedSales, props]);
 
   return (
     <>

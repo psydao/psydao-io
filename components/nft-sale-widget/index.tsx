@@ -20,14 +20,13 @@ import { InterimState } from "../commons/interim-state";
 import NFTSaleWidgetEmptyState from "./layout/nft-sale-widget-empty";
 import useGetOnlyWhitelistedSales from "@/hooks/useGetOnlyWhitelistedSales";
 import { useAccount } from "wagmi";
-import useImageData from "@/hooks/useImageData";
 
 export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
   const { address } = useAccount();
   const { whitelistedSales, loading: whitelistedSalesLoading } =
     useGetOnlyWhitelistedSales(address);
   const [activeSale, setActiveSale] = useState<Sale>();
-  const [isOriginal, setIsOriginal] = useState<boolean>(true);
+  const [isOriginal, setIsOriginal] = useState<boolean>(false);
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
 
   const { data, loading, error, refetch } = useQuery<GetSaleByIdData>(
@@ -39,12 +38,6 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
         (whitelistedSalesLoading || whitelistedSales.length === 0)
     }
   );
-
-  useEffect(() => {
-    if (data) {
-      setActiveSale(data.sale);
-    }
-  }, [data, setActiveSale]);
 
   useEffect(() => {
     if (
@@ -72,7 +65,7 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
     return state.fullScreen === "nft-sale";
   }, [state]);
 
-  const isLoading = whitelistedSalesLoading || loading;
+  const isLoading = loading;
 
   return (
     <Window
@@ -87,6 +80,7 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
       left={fullScreenWindow ? "0" : "50%"}
       transform={fullScreenWindow ? "translate(0, 0)" : "translate(-50%, -50%)"}
       fullScreenWindow={fullScreenWindow}
+      defaultIsOpen
     >
       <Window.TitleBar />
       <Window.Content py={2} px={0} height={"100%"} width={"100%"}>
