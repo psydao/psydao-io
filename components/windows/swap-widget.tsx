@@ -26,6 +26,7 @@ import useGetTokenBalances from "@/services/web3/useGetTokenBalances";
 import PsyButton from "../ui/psy-button";
 import { useWithdrawTokens } from "@/services/web3/useWithdrawTokens";
 import { useResize } from "@/hooks/useResize";
+import MintButton from "../ui/mint-button";
 
 const SwapWidgetTitle = () => (
   <Box p={4} pb={8}>
@@ -95,6 +96,7 @@ export const SwapWidget = () => {
     if (userBalance) {
       setTokensOwnedByUser(formatUnits(BigInt(userBalance), 18));
     }
+    console.log(userBalance, "lookie here");
   }, [userBalance]);
 
   const totalTokensForSaleValue = useMemo(() => {
@@ -205,7 +207,7 @@ export const SwapWidget = () => {
 
     return false;
   }, [state]);
-
+  const isButtonDisabled = !address || isPending;
   return (
     <Window
       id="swap"
@@ -326,7 +328,14 @@ export const SwapWidget = () => {
                           : "0"
                       }%`}
                     </Text>
-                    <Flex w={"100%"} justifyContent={"space-between"}>
+                    <Flex
+                      w={"100%"}
+                      direction={{ base: "column", sm: "row" }}
+                      justifyContent={"space-between"}
+                      alignItems={{ base: "start", sm: "center" }}
+                      flexWrap={"wrap"}
+                      gap={2}
+                    >
                       <Text
                         fontFamily={"Amiri"}
                         fontSize={{ base: "10px", sm: "16px" }}
@@ -340,12 +349,25 @@ export const SwapWidget = () => {
                             : "0"
                         }`}
                       </Text>
-                      <PsyButton
+                      <MintButton
                         onClick={withdrawTokens}
-                        isDisabled={isPending}
+                        isDisabled={isButtonDisabled}
+                        customStyle={{
+                          background: isButtonDisabled
+                            ? "gray.500"
+                            : "linear-gradient(90deg, #B14CE7 0%, #E09CA4 100%)",
+                          color: "white",
+                          borderRadius: "20px",
+                          padding: "10px 36px",
+                          fontSize: "16px",
+                          fontWeight: "bold",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center"
+                        }}
                       >
-                        {address ? "Withdraw" : "Connect Wallet"}
-                      </PsyButton>
+                        {isButtonDisabled ? "Unavailable" : "Withdraw"}
+                      </MintButton>
                     </Flex>
                     <Flex
                       direction={"column"}
