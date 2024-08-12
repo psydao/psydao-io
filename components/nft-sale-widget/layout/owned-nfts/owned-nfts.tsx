@@ -6,6 +6,9 @@ import useUserCopyBalances from "@/hooks/useUserCopyBalances";
 import { formatUnits } from "viem";
 import OwnedNftsEmptyState from "./owned-nfts-empty-state";
 import useImageData from "@/hooks/useImageData";
+import { useAddAssetToWallet } from "@/hooks/useAddAsset";
+import MintButton from "@/components/ui/mint-button";
+import SubmitButtonContainer from "@/components/commons/submit-button-container";
 
 type OwnedNftsProps = {
   nftData: GetTokensByOwnerData | undefined;
@@ -37,6 +40,24 @@ const OwnedNfts = (props: OwnedNftsProps) => {
       You don't own copies in this <br /> batch yet
     </>
   );
+
+  const { addAssetToWallet, isAdding } = useAddAssetToWallet();
+
+  const handleAddToWallet = async () => {
+    try {
+      if (props.nftData?.tokens) {
+        for (const token of props.nftData?.tokens) {
+          await addAssetToWallet("ERC721", {
+            address: token.tokenAddress,
+            tokenId: token.tokenId
+          });
+        }
+        console.log("All assets added to wallet successfully.");
+      }
+    } catch (error) {
+      console.error("Error adding asset to wallet:", error);
+    }
+  };
 
   const showEmptyState = !props.isOriginal && filteredCopyTokens.length === 0;
 
@@ -104,6 +125,30 @@ const OwnedNfts = (props: OwnedNftsProps) => {
             ))}
 
         {showEmptyState && <OwnedNftsEmptyState text={EmptyStateText} />}
+
+        {props.isOriginal && (
+          <SubmitButtonContainer>
+            <MintButton
+              onClick={handleAddToWallet}
+              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+              isDisabled={!props.activeSale || isAdding || false}
+              customStyle={{
+                width: "100%",
+                opacity: isAdding ? 0.5 : 1,
+                cursor: isAdding ? "not-allowed" : "pointer",
+                backgroundColor: isAdding ? "#b0b0b0" : "#4a90e2",
+                color: "#FFFFFF",
+                textAlign: "center",
+                padding: "12px 0",
+                borderRadius: "6px"
+              }}
+            >
+              {isAdding
+                ? "Adding to Wallet..."
+                : "Add PSYC NFTs to your wallet"}
+            </MintButton>
+          </SubmitButtonContainer>
+        )}
       </Grid>
     </Flex>
   );
