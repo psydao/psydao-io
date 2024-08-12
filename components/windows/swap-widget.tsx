@@ -96,7 +96,6 @@ export const SwapWidget = () => {
     if (userBalance) {
       setTokensOwnedByUser(formatUnits(BigInt(userBalance), 18));
     }
-    console.log(userBalance, "lookie here");
   }, [userBalance]);
 
   const totalTokensForSaleValue = useMemo(() => {
