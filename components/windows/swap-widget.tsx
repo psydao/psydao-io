@@ -22,6 +22,10 @@ import { useReadEthPrice } from "@/services/web3/useReadEthPrice";
 import { useReadTokenPriceInDollar } from "@/services/web3/useReadTokenPriceInDollar";
 import { useReadTotalTokensForSale } from "@/services/web3/useReadTotalTokensForSale";
 import { useWindowManager } from "@/components/ui/window-manager";
+import useGetTokenBalances from "@/services/web3/useGetTokenBalances";
+import PsyButton from "../ui/psy-button";
+import { useWithdrawTokens } from "@/services/web3/useWithdrawTokens";
+import { useResize } from "@/hooks/useResize";
 
 const SwapWidgetTitle = () => (
   <Box p={4} pb={8}>
@@ -58,6 +62,7 @@ export const SwapWidget = () => {
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
 
   const { state } = useWindowManager();
+  const { width } = useResize();
 
   const [focused, setFocused] = useState<string>("");
 
@@ -66,6 +71,7 @@ export const SwapWidget = () => {
   const [termsAndConditions, setTermsAndConditions] = useState(
     localStorage.getItem("acceptedTermsAndConditions") === "true"
   );
+  const [tokensOwnedByUser, setTokensOwnedByUser] = useState("0");
 
   const { address, chainId } = useAccount();
   const ethBalance = useBalance({
@@ -79,6 +85,17 @@ export const SwapWidget = () => {
   const ethPrice = useReadEthPrice();
   const { data: tokenPriceInDollar } = useReadTokenPriceInDollar();
   const { data: totalTokensForSale } = useReadTotalTokensForSale();
+
+  const { userBalance } = useGetTokenBalances();
+
+  useEffect(() => {
+    if (userBalance === 0) {
+      setTokensOwnedByUser("0");
+    }
+    if (userBalance) {
+      setTokensOwnedByUser(formatUnits(BigInt(userBalance), 18));
+    }
+  }, [userBalance]);
 
   const totalTokensForSaleValue = useMemo(() => {
     if (totalTokensForSale) {
@@ -174,7 +191,12 @@ export const SwapWidget = () => {
     calculatePriceAndToken(ethAmount, setTokenAmount, true);
   };
 
-  const isWrongNetwork = chainId !== 1;
+  const { withdrawTokens, isPending } = useWithdrawTokens(
+    Number(tokensOwnedByUser),
+    width
+  );
+
+  const isWrongNetwork = false;
 
   const fullScreenWindow = useMemo(() => {
     if (state.fullScreen === "swap") {
@@ -304,6 +326,27 @@ export const SwapWidget = () => {
                           : "0"
                       }%`}
                     </Text>
+                    <Flex w={"100%"} justifyContent={"space-between"}>
+                      <Text
+                        fontFamily={"Amiri"}
+                        fontSize={{ base: "10px", sm: "16px" }}
+                        color={"#C3767F"}
+                        fontStyle={"italic"}
+                      >
+                        PSY Tokens Available:{" "}
+                        {`${
+                          tokensOwnedByUser
+                            ? Math.floor(Number(tokensOwnedByUser))
+                            : "0"
+                        }`}
+                      </Text>
+                      <PsyButton
+                        onClick={withdrawTokens}
+                        isDisabled={isPending}
+                      >
+                        {address ? "Withdraw" : "Connect Wallet"}
+                      </PsyButton>
+                    </Flex>
                     <Flex
                       direction={"column"}
                       alignItems={"center"}
