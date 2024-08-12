@@ -23,7 +23,6 @@ import { useReadTokenPriceInDollar } from "@/services/web3/useReadTokenPriceInDo
 import { useReadTotalTokensForSale } from "@/services/web3/useReadTotalTokensForSale";
 import { useWindowManager } from "@/components/ui/window-manager";
 import useGetTokenBalances from "@/services/web3/useGetTokenBalances";
-import PsyButton from "../ui/psy-button";
 import { useWithdrawTokens } from "@/services/web3/useWithdrawTokens";
 import { useResize } from "@/hooks/useResize";
 import MintButton from "../ui/mint-button";
@@ -73,6 +72,7 @@ export const SwapWidget = () => {
     localStorage.getItem("acceptedTermsAndConditions") === "true"
   );
   const [tokensOwnedByUser, setTokensOwnedByUser] = useState("0");
+  const [tokenPurchaseSuccessful, setTokenPurchaseSuccessful] = useState(false);
 
   const { address, chainId } = useAccount();
   const ethBalance = useBalance({
@@ -86,17 +86,6 @@ export const SwapWidget = () => {
   const ethPrice = useReadEthPrice();
   const { data: tokenPriceInDollar } = useReadTokenPriceInDollar();
   const { data: totalTokensForSale } = useReadTotalTokensForSale();
-
-  const { userBalance } = useGetTokenBalances();
-
-  useEffect(() => {
-    if (userBalance === 0) {
-      setTokensOwnedByUser("0");
-    }
-    if (userBalance) {
-      setTokensOwnedByUser(formatUnits(BigInt(userBalance), 18));
-    }
-  }, [userBalance]);
 
   const totalTokensForSaleValue = useMemo(() => {
     if (totalTokensForSale) {
@@ -192,12 +181,29 @@ export const SwapWidget = () => {
     calculatePriceAndToken(ethAmount, setTokenAmount, true);
   };
 
-  const { withdrawTokens, isPending } = useWithdrawTokens(
-    Number(tokensOwnedByUser),
-    width
-  );
+  const {
+    withdrawTokens,
+    isPending,
+    isConfirming,
+    isConfirmed: withdrawalConfirmed
+  } = useWithdrawTokens(Number(tokensOwnedByUser), width);
 
   const isWrongNetwork = false;
+
+  const { userBalance } = useGetTokenBalances(
+    withdrawalConfirmed || tokenPurchaseSuccessful
+  );
+
+  console.log(withdrawalConfirmed, tokenPurchaseSuccessful);
+
+  useEffect(() => {
+    if (userBalance === 0) {
+      setTokensOwnedByUser("0.00");
+    }
+    if (userBalance) {
+      setTokensOwnedByUser(formatUnits(BigInt(userBalance), 18));
+    }
+  }, [userBalance]);
 
   const fullScreenWindow = useMemo(() => {
     if (state.fullScreen === "swap") {
@@ -206,7 +212,8 @@ export const SwapWidget = () => {
 
     return false;
   }, [state]);
-  const isButtonDisabled = !address || isPending;
+  const isButtonDisabled =
+    !address || isPending || isConfirming || !userBalance;
   return (
     <Window
       id="swap"
@@ -282,6 +289,7 @@ export const SwapWidget = () => {
                     totalTokensForSaleValue={totalTokensForSaleValue}
                     ethToSend={calculateEthAmount(tokenAmount)}
                     isWrongNetwork={isWrongNetwork}
+                    setTokenPurchaseSuccessful={setTokenPurchaseSuccessful}
                   />
                 </Flex>
               </>
@@ -344,8 +352,8 @@ export const SwapWidget = () => {
                         PSY Tokens Available:{" "}
                         {`${
                           tokensOwnedByUser
-                            ? Math.floor(Number(tokensOwnedByUser))
-                            : "0"
+                            ? Number(tokensOwnedByUser).toFixed(2)
+                            : "0.00"
                         }`}
                       </Text>
                       <MintButton
@@ -358,14 +366,18 @@ export const SwapWidget = () => {
                           color: "white",
                           borderRadius: "20px",
                           padding: "10px 36px",
-                          fontSize: "16px",
-                          fontWeight: "bold",
+                          fontSize: "14px",
                           display: "flex",
                           alignItems: "center",
-                          justifyContent: "center"
+                          justifyContent: "center",
+                          fontFamily: "Poppins Semibold"
                         }}
                       >
-                        {isButtonDisabled ? "Unavailable" : "Withdraw"}
+                        {isButtonDisabled
+                          ? isPending || isConfirming
+                            ? "Loading..."
+                            : "Unavailable"
+                          : "Withdraw"}
                       </MintButton>
                     </Flex>
                     <Flex

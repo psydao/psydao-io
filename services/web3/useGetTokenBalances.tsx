@@ -5,12 +5,12 @@ import {
   tokenSaleContract,
   tokenSaleContractSepolia
 } from "@/constants/contracts";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo } from "react";
 
-const useGetTokenBalances = () => {
+const useGetTokenBalances = (refetchNeeded: boolean) => {
   const { address } = useAccount();
-  const [userBalance, setUserBalance] = useState(0);
-  const { data, isLoading, isError } = useReadContract({
+  //   const [userBalance, setUserBalance] = useState(0);
+  const { data, isLoading, isError, refetch } = useReadContract({
     abi:
       process.env.NEXT_PUBLIC_CHAIN_ID === "1"
         ? tokenSaleAbi
@@ -23,15 +23,21 @@ const useGetTokenBalances = () => {
     args: [address ? address : "0x0000000000000000000000000000000000000000"]
   });
 
-  useEffect(() => {
+  const userBalance = useMemo(() => {
     if (data) {
-      setUserBalance(data as number);
+      return data as number;
     }
-    if (data === 0n) {
-      setUserBalance(0);
-    }
-    console.log("yeet", data, data === 0n);
-  }, [data, setUserBalance]);
+    return 0;
+  }, [data]);
+
+  useEffect(() => {
+    const refetchTokenbalances = async () => {
+      if (refetchNeeded) {
+        await refetch();
+      }
+    };
+    refetchTokenbalances().catch(console.error);
+  }, [refetchNeeded]);
 
   return {
     userBalance,

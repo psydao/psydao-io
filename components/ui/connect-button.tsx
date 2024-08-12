@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Zoom } from "react-toastify";
 import { Box } from "@chakra-ui/react";
 import { ConnectButton, useChainModal } from "@rainbow-me/rainbowkit";
@@ -15,6 +15,7 @@ interface ConnectWalletButtonProps {
   clearAmounts?: () => void;
   totalTokensForSaleValue?: string;
   isWrongNetwork?: boolean;
+  setTokenPurchaseSuccessful?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const ConnectWalletButton = ({
@@ -23,7 +24,8 @@ export const ConnectWalletButton = ({
   walletBalance,
   clearAmounts,
   totalTokensForSaleValue,
-  isWrongNetwork
+  isWrongNetwork,
+  setTokenPurchaseSuccessful
 }: ConnectWalletButtonProps) => {
   const { buyToken, isBlackListWallet, error, isConfirmed, isConfirming } =
     useBuyToken();
@@ -91,6 +93,10 @@ export const ConnectWalletButton = ({
         width <= 768
       );
     } else if (isConfirmed) {
+      if (setTokenPurchaseSuccessful) {
+        console.log("Setting token purchase successful");
+        setTokenPurchaseSuccessful(true);
+      }
       customToast(
         {
           mainText:
