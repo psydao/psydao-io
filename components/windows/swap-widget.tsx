@@ -194,8 +194,6 @@ export const SwapWidget = () => {
     withdrawalConfirmed || tokenPurchaseSuccessful
   );
 
-  console.log(withdrawalConfirmed, tokenPurchaseSuccessful);
-
   useEffect(() => {
     if (userBalance === 0) {
       setTokensOwnedByUser("0.00");

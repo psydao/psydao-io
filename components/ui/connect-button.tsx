@@ -94,7 +94,6 @@ export const ConnectWalletButton = ({
       );
     } else if (isConfirmed) {
       if (setTokenPurchaseSuccessful) {
-        console.log("Setting token purchase successful");
         setTokenPurchaseSuccessful(true);
       }
       customToast(
