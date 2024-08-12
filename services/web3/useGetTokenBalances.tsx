@@ -9,7 +9,6 @@ import { useEffect, useMemo } from "react";
 
 const useGetTokenBalances = (refetchNeeded: boolean) => {
   const { address } = useAccount();
-  //   const [userBalance, setUserBalance] = useState(0);
   const { data, isLoading, isError, refetch } = useReadContract({
     abi:
       process.env.NEXT_PUBLIC_CHAIN_ID === "1"
