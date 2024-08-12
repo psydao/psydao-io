@@ -289,7 +289,6 @@ export const SwapWidget = () => {
                     totalTokensForSaleValue={totalTokensForSaleValue}
                     ethToSend={calculateEthAmount(tokenAmount)}
                     isWrongNetwork={isWrongNetwork}
-                    setTokenPurchaseSuccessful={setTokenPurchaseSuccessful}
                   />
                 </Flex>
               </>
@@ -415,6 +414,7 @@ export const SwapWidget = () => {
                         ethToSend={calculateEthAmount(tokenAmount)}
                         isWrongNetwork={isWrongNetwork}
                         clearAmounts={clearAmounts}
+                        setTokenPurchaseSuccessful={setTokenPurchaseSuccessful}
                       />
                     </Flex>
                   </Flex>
