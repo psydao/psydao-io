@@ -32,7 +32,7 @@ export const useWithdrawTokens = (tokenBalance: number, width: number) => {
             : tokenSaleAbiSepolia
       });
     }
-  }, [writeContract]);
+  }, [writeContract, tokenBalance]);
 
   useEffect(() => {
     if (error) {
