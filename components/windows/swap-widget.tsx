@@ -188,7 +188,7 @@ export const SwapWidget = () => {
     isConfirmed: withdrawalConfirmed
   } = useWithdrawTokens(Number(tokensOwnedByUser), width);
 
-  const isWrongNetwork = false;
+  const isWrongNetwork = chainId !== 1;
 
   const { userBalance } = useGetTokenBalances(
     withdrawalConfirmed || tokenPurchaseSuccessful
