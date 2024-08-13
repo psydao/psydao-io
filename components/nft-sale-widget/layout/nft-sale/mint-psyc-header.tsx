@@ -54,7 +54,7 @@ const MintPsycHeader = (props: {
               <WhitepaperLink />
             </Flex>
           </Flex>
-          <Flex gap={6}>
+          <Flex gap={6} flexWrap={"wrap"}>
             <NftSalesDropdown
               activeSale={props.activeSale}
               setActiveSale={props.setActiveSale}
