@@ -35,23 +35,13 @@ export const SaleTypeSwitch = ({
       </Text>
       <Tooltip
         label={
-          isOriginal ? (
-            <Text>
-              Toggle to view{" "}
-              <Show breakpoint="(max-width: 480px)">
-                <br />
-              </Show>{" "}
-              NFT copies
-            </Text>
-          ) : (
-            <Text>
-              Toggle to view{" "}
-              <Show breakpoint="(max-width: 480px)">
-                <br />
-              </Show>{" "}
-              original NFTs
-            </Text>
-          )
+          <Text>
+            Toggle to view{" "}
+            <Show breakpoint="(max-width: 480px)">
+              <br />
+            </Show>{" "}
+            {isOriginal ? "NFT copies" : "original NFTs"}
+          </Text>
         }
         placement="bottom"
         hasArrow
