@@ -77,7 +77,6 @@ const PsycItem = ({
 
     if (floorAndCeilingPriceData) {
       setIsActive(floorAndCeilingPriceData[2]);
-      console.log(floorAndCeilingPriceData[2], "isActive");
     }
   }, [floorAndCeilingPriceData, isRandom]);
 
