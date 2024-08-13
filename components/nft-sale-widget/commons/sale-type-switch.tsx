@@ -1,5 +1,5 @@
 import { InfoOutlineIcon } from "@chakra-ui/icons";
-import { Flex, Switch, Text, Tooltip } from "@chakra-ui/react";
+import { Flex, Show, Switch, Text, Tooltip } from "@chakra-ui/react";
 import type { SetStateAction } from "react";
 
 interface SaleTypeSwitchProps {
@@ -34,15 +34,34 @@ export const SaleTypeSwitch = ({
         Original Sale
       </Text>
       <Tooltip
-        label="Toggle to view available copies"
+        label={
+          isOriginal ? (
+            <Text>
+              Toggle to view{" "}
+              <Show breakpoint="(max-width: 480px)">
+                <br />
+              </Show>{" "}
+              NFT copies
+            </Text>
+          ) : (
+            <Text>
+              Toggle to view{" "}
+              <Show breakpoint="(max-width: 480px)">
+                <br />
+              </Show>{" "}
+              original NFTs
+            </Text>
+          )
+        }
         placement="bottom"
         hasArrow
+        borderRadius={"8px"}
         color={"#585858"}
         bg={"#F9F9FA"}
         p={"8px 16px"}
         fontFamily={"Inter Medium"}
       >
-        <InfoOutlineIcon color={"#585858"} />
+        <InfoOutlineIcon color={"#585858"} h={"14px"} w={"14px"} />
       </Tooltip>
     </Flex>
   );
