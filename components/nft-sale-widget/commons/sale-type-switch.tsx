@@ -1,4 +1,5 @@
-import { Flex, Switch, Text } from "@chakra-ui/react";
+import { InfoOutlineIcon } from "@chakra-ui/icons";
+import { Flex, Switch, Text, Tooltip } from "@chakra-ui/react";
 import type { SetStateAction } from "react";
 
 interface SaleTypeSwitchProps {
@@ -24,6 +25,7 @@ export const SaleTypeSwitch = ({
           }
         }}
       />
+
       <Text
         fontFamily={"Inter Medium"}
         fontSize={{ base: 12, md: 14 }}
@@ -31,6 +33,17 @@ export const SaleTypeSwitch = ({
       >
         Original Sale
       </Text>
+      <Tooltip
+        label="Toggle to view available copies"
+        placement="bottom"
+        hasArrow
+        color={"#585858"}
+        bg={"#F9F9FA"}
+        p={"8px 16px"}
+        fontFamily={"Inter Medium"}
+      >
+        <InfoOutlineIcon color={"#585858"} />
+      </Tooltip>
     </Flex>
   );
 };
