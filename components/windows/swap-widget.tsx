@@ -26,6 +26,7 @@ import useGetTokenBalances from "@/services/web3/useGetTokenBalances";
 import { useWithdrawTokens } from "@/services/web3/useWithdrawTokens";
 import { useResize } from "@/hooks/useResize";
 import MintButton from "../ui/mint-button";
+import WrongNetworkWindow from "../commons/wrong-network";
 
 const SwapWidgetTitle = () => (
   <Box p={4} pb={8}>
@@ -188,7 +189,8 @@ export const SwapWidget = () => {
     isConfirmed: withdrawalConfirmed
   } = useWithdrawTokens(Number(tokensOwnedByUser), width);
 
-  const isWrongNetwork = chainId !== 1;
+  const CHAINID = process.env.NEXT_PUBLIC_CHAIN_ID ?? 1;
+  const isWrongNetwork = chainId !== Number(CHAINID);
 
   const { userBalance } = useGetTokenBalances(
     withdrawalConfirmed || tokenPurchaseSuccessful
@@ -254,42 +256,7 @@ export const SwapWidget = () => {
         ) : (
           <>
             {address && isWrongNetwork ? (
-              <>
-                <Flex p={2} pb={5} direction={"column"} gap={4}>
-                  <Text
-                    textColor="#269200"
-                    fontWeight="500"
-                    fontStyle="italic"
-                    mt="1"
-                    fontSize={{ base: "20px", sm: "36px" }}
-                    fontFamily={"Amiri"}
-                  >
-                    Wrong network!
-                  </Text>
-                  <Text
-                    textColor="#269200"
-                    fontWeight="500"
-                    fontStyle="italic"
-                    mt="1"
-                    fontSize={{ base: "14px", sm: "24px" }}
-                    fontFamily={"Amiri"}
-                  >
-                    Please switch to Ethereum mainnet
-                  </Text>
-                  <Image
-                    src="/windows/swap/restricted-countries.png"
-                    alt="Wrong network background"
-                  />
-
-                  <ConnectWalletButton
-                    tokenAmount={tokenAmount}
-                    walletBalance={formattedEthBalance}
-                    totalTokensForSaleValue={totalTokensForSaleValue}
-                    ethToSend={calculateEthAmount(tokenAmount)}
-                    isWrongNetwork={isWrongNetwork}
-                  />
-                </Flex>
-              </>
+              <WrongNetworkWindow />
             ) : (
               <>
                 {!fullScreenWindow && <SwapWidgetTitle />}

@@ -5,7 +5,9 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-  Grid
+  Grid,
+  Flex,
+  Text
 } from "@chakra-ui/react";
 import { Window } from "@/components/ui/window";
 import { useWindowManager } from "@/components/ui/window-manager";
@@ -23,9 +25,11 @@ import { getAllSalesWithTokens, getSaleById } from "@/services/graph";
 import { InterimState } from "../commons/interim-state";
 import NFTSaleWidgetEmptyState from "./layout/nft-sale-widget-empty";
 import { useAccount } from "wagmi";
+import WrongNetworkWindow from "../commons/wrong-network";
 
 export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
-  const { address } = useAccount();
+  const { address, chainId } = useAccount();
+
   const [activeSale, setActiveSale] = useState<Sale>();
   const [isOriginal, setIsOriginal] = useState<boolean>(false);
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
@@ -42,6 +46,9 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
       skip: !activeSale && (allSalesLoading || allSalesData?.sales.length === 0)
     }
   );
+
+  const CHAINID = process.env.NEXT_PUBLIC_CHAIN_ID ?? 1;
+  const isWrongNetwork = chainId !== Number(CHAINID);
 
   useEffect(() => {
     if (
@@ -89,46 +96,50 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
       <Window.TitleBar />
       <Window.Content py={2} px={0} height={"100%"} width={"100%"}>
         <TokenProvider>
-          <Tabs variant={"unstyled"}>
-            <MintPsycHeader
-              activeSale={activeSale}
-              setActiveSale={setActiveSale}
-              isOriginal={isOriginal}
-              setIsOriginal={setIsOriginal}
-            />
-            {address ? (
-              isLoading ? (
-                <InterimState type="loading" />
-              ) : error ? (
-                <InterimState type="error" />
-              ) : data ? (
-                <TabPanels>
-                  <TabPanel px={0}>
-                    <PsycSaleContent
-                      isFullScreen={fullScreenWindow}
-                      activeSale={activeSale}
-                      isOriginal={isOriginal}
-                    />
-                  </TabPanel>
-                  <TabPanel h="100%" w="100%">
-                    <OwnedNftsContent
-                      isFullScreen={fullScreenWindow}
-                      isOriginal={isOriginal}
-                      activeSale={activeSale}
-                    />
-                  </TabPanel>
-                </TabPanels>
+          {address && isWrongNetwork ? (
+            <WrongNetworkWindow />
+          ) : (
+            <Tabs variant={"unstyled"}>
+              <MintPsycHeader
+                activeSale={activeSale}
+                setActiveSale={setActiveSale}
+                isOriginal={isOriginal}
+                setIsOriginal={setIsOriginal}
+              />
+              {address ? (
+                isLoading ? (
+                  <InterimState type="loading" />
+                ) : error ? (
+                  <InterimState type="error" />
+                ) : data ? (
+                  <TabPanels>
+                    <TabPanel px={0}>
+                      <PsycSaleContent
+                        isFullScreen={fullScreenWindow}
+                        activeSale={activeSale}
+                        isOriginal={isOriginal}
+                      />
+                    </TabPanel>
+                    <TabPanel h="100%" w="100%">
+                      <OwnedNftsContent
+                        isFullScreen={fullScreenWindow}
+                        isOriginal={isOriginal}
+                        activeSale={activeSale}
+                      />
+                    </TabPanel>
+                  </TabPanels>
+                ) : (
+                  <Grid h={"100%"} w={"100%"} gridTemplateRows={"30% 1fr"}>
+                    <NFTSaleWidgetEmptyState address={address} />
+                  </Grid>
+                )
               ) : (
-                <Grid h={"100%"} w={"100%"} gridTemplateRows={"30% 1fr"}>
+                <Grid h={"100%"} w={"100%"} gridTemplateRows={"20% 1fr"}>
                   <NFTSaleWidgetEmptyState address={address} />
                 </Grid>
-              )
-            ) : (
-              <Grid h={"100%"} w={"100%"} gridTemplateRows={"20% 1fr"}>
-                <NFTSaleWidgetEmptyState address={address} />
-              </Grid>
-            )}
-          </Tabs>
+              )}
+            </Tabs>
+          )}
         </TokenProvider>
         <Image
           src="/windows/alchemist/clouds.png"
