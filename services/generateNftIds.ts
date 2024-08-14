@@ -20,14 +20,6 @@ export function generateNftIds(batchId: number, lastTokenId: number): number[] {
   if (batchId < 1 || isNaN(batchId) || isNaN(lastTokenId)) {
     throw new Error("Invalid batchId or lastTokenId");
   }
-
-  console.log(
-    "Generating NFT IDs for batchId:",
-    batchId,
-    "and lastTokenId:",
-    lastTokenId
-  );
-
   const fibNumber = fibonacci(batchId);
   const nftIds: number[] = [];
 

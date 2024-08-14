@@ -66,12 +66,6 @@ const useBuyNft = (
         }
         return;
       }
-      console.log({
-        batchId,
-        erc721TokenId,
-        price,
-        proof
-      });
       try {
         setIsMinting(true);
 
@@ -84,27 +78,19 @@ const useBuyNft = (
               ? "buyRandomFromBatch"
               : "buyRandomFromBatch";
             args = isPrivateSale ? [batchId, proof] : [batchId, []];
-            console.log("Function Name: ", functionName);
-            console.log("Arguments: ", args);
           } else {
             functionName = isPrivateSale ? "buyFromBatch" : "buyFromBatch";
             args = isPrivateSale
               ? [batchId, erc721TokenId, proof]
               : [batchId, erc721TokenId, []];
-            console.log("Function Name: ", functionName);
-            console.log("Arguments: ", args);
           }
         } else {
           if (isRandom) {
             functionName = "buyRandomNftCopyFromBatch";
             args = [batchId];
-            console.log("Function Name: ", functionName);
-            console.log("Arguments: ", args);
           } else {
             functionName = "buyNftCopyFromBatch";
             args = [batchId, erc721TokenId];
-            console.log("Function Name: ", functionName);
-            console.log("Arguments: ", args);
           }
         }
 
@@ -148,7 +134,6 @@ const useBuyNft = (
       });
       graphClient.cache.gc();
       refetchBalances();
-      console.log("Balances refetched after mint");
       setIsMinting(false);
       setIsModalOpen(false);
       setIsConfirmed(true);

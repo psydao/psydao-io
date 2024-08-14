@@ -1,5 +1,5 @@
 import { useToast } from "@chakra-ui/react";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { psycSaleContractConfig } from "@/lib/sale-contract-config";
 import { useCustomToasts } from "@/hooks/useCustomToasts";
@@ -180,7 +180,6 @@ export const useEditSaleForm = (
       setIsSubmitting(false);
       setFloorAndCeilingPriceHash(undefined);
       setMerkleRootHash(undefined);
-      console.log(message);
       console.error(message, "error");
       showCustomErrorToast(message, width);
     }

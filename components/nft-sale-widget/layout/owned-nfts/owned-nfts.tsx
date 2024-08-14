@@ -51,7 +51,6 @@ const OwnedNfts = (props: OwnedNftsProps) => {
             tokenId: token.tokenId
           });
         }
-        console.log("All assets added to wallet successfully.");
       }
     } catch (error) {
       console.error("Error adding asset to wallet:", error);

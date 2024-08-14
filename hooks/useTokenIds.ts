@@ -37,11 +37,8 @@ export const useTokenIds = () => {
     error: Error | null;
   };
 
-  console.log("Count Error Details:", countError && countErrorDetails);
-
   useEffect(() => {
     if (saleBatchCount != null) {
-      console.log("Setting lastBatchIndex:", saleBatchCount);
       setLastBatchIndex(saleBatchCount);
     }
   }, [saleBatchCount]);
@@ -62,8 +59,6 @@ export const useTokenIds = () => {
     error: Error | null;
   };
 
-  console.log("Batch Error Details:", batchErrorDetails);
-
   useEffect(() => {
     if (!batchLoading && !batchError && saleBatch && saleBatchCount !== null) {
       const batchArray = saleBatch as unknown as [
@@ -80,7 +75,6 @@ export const useTokenIds = () => {
       if (saleBatchCount >= 0 && !isNaN(lastTokenId)) {
         const newBatchCount = saleBatchCount + 1n;
         const newTokenIds = generateNftIds(Number(newBatchCount), lastTokenId);
-        console.log("Setting tokenIds:", newTokenIds);
         setTokenIds(newTokenIds);
       } else {
         console.error(

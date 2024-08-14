@@ -26,11 +26,6 @@ export const useUpdateRevenueSplits = () => {
         showDefaultErrorToast("Please connect your wallet first");
         return false;
       }
-      console.log({
-        royalties,
-        ownerPercentage,
-        treasury
-      });
 
       if (royalties + ownerPercentage + treasury !== 100) {
         showErrorToast("The total percentage must equal 100", width);
@@ -44,13 +39,13 @@ export const useUpdateRevenueSplits = () => {
         const scaledTreasury = BigInt(treasury * 100);
 
         const args = [scaledRoyalties, scaledOwnerPercentage, scaledTreasury];
-        console.log("Calling writeContract with args:", args);
+
         writeContract({
           ...psycSaleContractConfig,
           functionName: "updateRevenueSplits",
           args
         });
-        console.log("writeContract called");
+
         return true;
       } catch (error) {
         const message = (error as Error).message || "An error occurred";
@@ -68,7 +63,6 @@ export const useUpdateRevenueSplits = () => {
         showErrorToast("User rejected", width);
       } else {
         showErrorToast(error.message, width);
-        console.log("Transaction error:", error.message);
       }
       setIsSubmitting(false);
     } else if (transactionSuccess) {

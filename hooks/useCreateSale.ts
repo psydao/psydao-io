@@ -103,13 +103,12 @@ export const useCreateSale = (
           merkleRoot,
           ipfsHash
         ];
-        console.log("Calling writeContract with args:", args);
+
         writeContract({
           ...coreContractConfig,
           functionName: "createSaleBatchPsycSale",
           args
         });
-        console.log("writeContract called");
       } catch (error) {
         const message = (error as Error).message || "An error occurred";
         showCustomErrorToast(message, width);
@@ -135,7 +134,6 @@ export const useCreateSale = (
       showCustomErrorToast(error.message, width);
       setIsSubmitting(false);
     } else if (transactionSuccess) {
-      console.log("Sale created successfully");
       refetchSalesData();
       showSuccessToast("Success! Your sale has been created.", width);
       triggerNftSaleUpdate();
