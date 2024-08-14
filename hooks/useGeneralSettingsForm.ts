@@ -112,8 +112,6 @@ export const useGeneralSettingsForm = (
         });
         showSuccessToast("Buy limit updated successfully.", width);
       }
-
-      console.log("Success! Your settings have been saved.");
     } catch (error) {
       const message = (error as Error).message || "An error occurred";
       console.error(message, "error");

@@ -66,7 +66,6 @@ export const useCustomToasts = () => {
 
   const showCustomErrorToast = (message: string, width: number) => {
     const errorMessage = customErrorMessage(message);
-    console.log(message);
     customToast(
       {
         mainText: errorMessage,

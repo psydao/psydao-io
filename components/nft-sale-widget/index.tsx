@@ -5,9 +5,7 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-  Grid,
-  Flex,
-  Text
+  Grid
 } from "@chakra-ui/react";
 import { Window } from "@/components/ui/window";
 import { useWindowManager } from "@/components/ui/window-manager";
@@ -59,7 +57,6 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
     const refetchData = async () => {
       if (activeSale) {
         await refetch();
-        console.log("Refetched data");
       }
     };
     refetchData().catch(console.error);

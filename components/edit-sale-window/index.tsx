@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import { Flex } from "@chakra-ui/react";
 import NftTokensSection from "../admin-dashboard/create-sale/nft-tokens";
 import SetTokenPrice from "../admin-dashboard/create-sale/set-token-price";
@@ -81,17 +80,12 @@ const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
             process.env.NEXT_PUBLIC_CHAIN_ID === "1"
               ? owner.owner.toLowerCase() === psycSaleMainnet.toLowerCase()
               : owner.owner.toLowerCase() === psycSaleSepolia.toLowerCase();
-          console.log(
-            `Token ID ${owner.id} is owned by contract: ${isOwnedByContract}`
-          );
           return isOwnedByContract;
         })
         .map((token) => {
           const tokenIdPart = token.id.split("/").pop() ?? "";
           return parseInt(tokenIdPart, 10);
         });
-
-      console.log("tokensOwnedByContract:", tokensOwnedByContract);
 
       if (tokensOwnedByContract.length > 0) {
         await activateSale(tokensOwnedByContract);
@@ -103,16 +97,6 @@ const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
       showCustomErrorToast(message, width);
     }
   };
-
-  useEffect(() => {
-    if (loading) {
-      console.log("Loading token owners...");
-    } else if (error) {
-      console.error(error);
-    } else {
-      console.log("Token owners fetched:", owners);
-    }
-  }, [owners, loading, error]);
 
   const isButtonDisabled =
     loading || tokenIds.length === 0 || isLoading || isComplete;
