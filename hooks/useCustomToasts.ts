@@ -34,7 +34,10 @@ const ERROR_MESSAGES = {
   "Unable to decode signature":
     "Please run 'mintNextBatch' first before creating a sale",
   "Size of bytes": "Invalid wallet address(es) submitted",
-  "Invalid Ceiling Price": "Floor price cannot be greater than ceiling price."
+  "Invalid Ceiling Price": "Floor price cannot be greater than ceiling price.",
+  "TokenSale: Tokens Locked":
+    "Token withdrawal is locked. Please contact the administrator.",
+  "TokenSale: Insufficient funds": "You must have a token balance to withdraw"
 };
 
 export const customErrorMessage = (message: string): string => {

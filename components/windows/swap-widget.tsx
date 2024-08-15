@@ -22,6 +22,10 @@ import { useReadEthPrice } from "@/services/web3/useReadEthPrice";
 import { useReadTokenPriceInDollar } from "@/services/web3/useReadTokenPriceInDollar";
 import { useReadTotalTokensForSale } from "@/services/web3/useReadTotalTokensForSale";
 import { useWindowManager } from "@/components/ui/window-manager";
+import useGetTokenBalances from "@/services/web3/useGetTokenBalances";
+import { useWithdrawTokens } from "@/services/web3/useWithdrawTokens";
+import { useResize } from "@/hooks/useResize";
+import MintButton from "../ui/mint-button";
 
 const SwapWidgetTitle = () => (
   <Box p={4} pb={8}>
@@ -58,6 +62,7 @@ export const SwapWidget = () => {
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
 
   const { state } = useWindowManager();
+  const { width } = useResize();
 
   const [focused, setFocused] = useState<string>("");
 
@@ -66,6 +71,8 @@ export const SwapWidget = () => {
   const [termsAndConditions, setTermsAndConditions] = useState(
     localStorage.getItem("acceptedTermsAndConditions") === "true"
   );
+  const [tokensOwnedByUser, setTokensOwnedByUser] = useState("0");
+  const [tokenPurchaseSuccessful, setTokenPurchaseSuccessful] = useState(false);
 
   const { address, chainId } = useAccount();
   const ethBalance = useBalance({
@@ -174,7 +181,27 @@ export const SwapWidget = () => {
     calculatePriceAndToken(ethAmount, setTokenAmount, true);
   };
 
+  const {
+    withdrawTokens,
+    isPending,
+    isConfirming,
+    isConfirmed: withdrawalConfirmed
+  } = useWithdrawTokens(Number(tokensOwnedByUser), width);
+
   const isWrongNetwork = chainId !== 1;
+
+  const { userBalance } = useGetTokenBalances(
+    withdrawalConfirmed || tokenPurchaseSuccessful
+  );
+
+  useEffect(() => {
+    if (userBalance === 0) {
+      setTokensOwnedByUser("0.00");
+    }
+    if (userBalance) {
+      setTokensOwnedByUser(formatUnits(BigInt(userBalance), 18));
+    }
+  }, [userBalance]);
 
   const fullScreenWindow = useMemo(() => {
     if (state.fullScreen === "swap") {
@@ -183,7 +210,8 @@ export const SwapWidget = () => {
 
     return false;
   }, [state]);
-
+  const isButtonDisabled =
+    !address || isPending || isConfirming || !userBalance;
   return (
     <Window
       id="swap"
@@ -305,6 +333,51 @@ export const SwapWidget = () => {
                       }%`}
                     </Text>
                     <Flex
+                      w={"100%"}
+                      direction={{ base: "column", sm: "row" }}
+                      justifyContent={"space-between"}
+                      alignItems={{ base: "start", sm: "center" }}
+                      flexWrap={"wrap"}
+                      gap={2}
+                    >
+                      <Text
+                        fontFamily={"Amiri"}
+                        fontSize={{ base: "10px", sm: "16px" }}
+                        color={"#C3767F"}
+                        fontStyle={"italic"}
+                      >
+                        PSY Tokens Available:{" "}
+                        {`${
+                          tokensOwnedByUser
+                            ? Number(tokensOwnedByUser).toFixed(2)
+                            : "0.00"
+                        }`}
+                      </Text>
+                      <MintButton
+                        onClick={withdrawTokens}
+                        isDisabled={isButtonDisabled}
+                        customStyle={{
+                          background: isButtonDisabled
+                            ? "gray.500"
+                            : "linear-gradient(90deg, #B14CE7 0%, #E09CA4 100%)",
+                          color: "white",
+                          borderRadius: "20px",
+                          padding: "10px 36px",
+                          fontSize: "14px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontFamily: "Poppins Semibold"
+                        }}
+                      >
+                        {isButtonDisabled
+                          ? isPending || isConfirming
+                            ? "Loading..."
+                            : "Unavailable"
+                          : "Withdraw"}
+                      </MintButton>
+                    </Flex>
+                    <Flex
                       direction={"column"}
                       alignItems={"center"}
                       w={"full"}
@@ -339,6 +412,7 @@ export const SwapWidget = () => {
                         ethToSend={calculateEthAmount(tokenAmount)}
                         isWrongNetwork={isWrongNetwork}
                         clearAmounts={clearAmounts}
+                        setTokenPurchaseSuccessful={setTokenPurchaseSuccessful}
                       />
                     </Flex>
                   </Flex>
