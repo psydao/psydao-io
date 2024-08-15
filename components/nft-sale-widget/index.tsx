@@ -55,8 +55,9 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
 
   useEffect(() => {
     const refetchData = async () => {
-      if (activeSale) {
+      if (updateTrigger) {
         await refetch();
+        console.log("Refetching data");
       }
     };
     refetchData().catch(console.error);
