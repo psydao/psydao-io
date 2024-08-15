@@ -33,8 +33,8 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
   const CHAINID = Number(process.env.NEXT_PUBLIC_CHAIN_ID) ?? 1;
   const tokenURL =
     CHAINID === 1
-      ? `https://etherscan.io/nft/0x6c6Ab7b3215374dE4A65De63eAC9BC7A0c7f402d/${props.item.tokenId}`
-      : `https://sepolia.etherscan.io/nft/0x64e78537782095a38e3785431be3647856980ffa/${props.item.tokenId}`;
+      ? `${process.env.NEXT_PUBLIC_MAINNET_ETHERSCAN_BASE_URL}/${props.item.tokenId}`
+      : `${process.env.NEXT_PUBLIC_SEPOLIA_ETHERSCAN_BASE_URL}/${props.item.tokenId}`;
   const { buyNft, isPending, isConfirming, isMinting } = useBuyNft(
     props.isPrivateSale,
     false,
