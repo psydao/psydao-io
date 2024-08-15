@@ -5,7 +5,6 @@ import { ExternalLinkIcon } from "@chakra-ui/icons";
 import {
   Flex,
   Text,
-  Image,
   Link,
   Box,
   Grid,
@@ -13,6 +12,7 @@ import {
   Spinner
 } from "@chakra-ui/react";
 import { useState } from "react";
+import Image from "next/image";
 
 interface OwnedNftItemProps {
   item: TokenItem & {
@@ -82,8 +82,8 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
           <Image
             src="/icons/etherscan-icon.svg"
             alt="etherscan icon"
-            h={6}
-            w={6}
+            height={24}
+            width={24}
           />
           <Link
             href={`https://etherscan.io/token/${props.item.tokenId}`}
@@ -93,9 +93,29 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
           </Link>
         </Flex>
       </Flex>
-      <Box>IMAGE HERE HEWWOOO</Box>
+      <Box
+        w="100%"
+        h={"208px"}
+        borderRadius={"20px"}
+        overflow="hidden"
+        position="relative"
+        border="1px solid #e2e2e2"
+        boxShadow="md"
+        onClick={() => setIsImageOpen((prev) => !prev)}
+      >
+        <Image
+          src={props.item.src}
+          alt={`PSYC ${props.index + 1}`}
+          fill
+          objectFit="cover"
+        />
+      </Box>
       {!props.isOriginal && (
-        <Grid w={"100%"} gridTemplateColumns={"1fr 1fr"} gap={4}>
+        <Grid
+          w={"100%"}
+          gridTemplateColumns={{ base: "1fr", md: "1fr 1fr" }}
+          gap={4}
+        >
           <GridItem w={"100%"}>
             <Flex
               padding={"12px 48px"}
