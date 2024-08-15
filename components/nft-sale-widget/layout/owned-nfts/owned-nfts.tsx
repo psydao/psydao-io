@@ -9,6 +9,7 @@ import useImageData from "@/hooks/useImageData";
 import { useAddAssetToWallet } from "@/hooks/useAddAsset";
 import MintButton from "@/components/ui/mint-button";
 import SubmitButtonContainer from "@/components/commons/submit-button-container";
+import OwnedNftItem from "./owned-nft-item";
 
 type OwnedNftsProps = {
   nftData: GetTokensByOwnerData | undefined;
@@ -61,18 +62,33 @@ const OwnedNfts = (props: OwnedNftsProps) => {
 
   return (
     <Flex justifyContent={"center"} py={4} px={4}>
-      <Grid
-        templateColumns={{
-          base: "minmax(170px, 1fr)",
-          sm: "repeat(auto-fit, minmax(170px, 1fr))"
-        }}
-        gap={6}
-        justifyItems={"center"}
-        maxW={"100%"}
-      >
+      <Grid templateColumns={"1fr"} gap={6} justifyItems={"center"} w={"100%"}>
         {props.isOriginal
           ? props.nftData?.tokens.map((token, index) => (
-              <PsycItem
+              // <PsycItem
+              //   key={index}
+              //   item={{
+              //     src: imageUris[index % imageUris.length] ?? "",
+              //     tokenId: token.tokenId,
+              //     whitelist: [],
+              //     balance: "0",
+              //     batchId: props.activeSale?.batchID ?? "",
+              //     price: "0",
+              //     isSold: false,
+              //     ipfsHash: ""
+              //   }}
+              //   index={index}
+              //   isPrivateSale={false}
+              //   isOwnedView={true}
+              //   isOriginal={props.isOriginal}
+              //   refetchBalances={refetchBalances}
+              //   isRandom={false}
+              //   loading={false}
+              //   isAddressesLoading={false}
+              //   // eslint-disable-next-line @typescript-eslint/no-empty-function
+              //   handleModal={() => {}}
+              // />
+              <OwnedNftItem
                 key={index}
                 item={{
                   src: imageUris[index % imageUris.length] ?? "",
@@ -89,15 +105,35 @@ const OwnedNfts = (props: OwnedNftsProps) => {
                 isOwnedView={true}
                 isOriginal={props.isOriginal}
                 refetchBalances={refetchBalances}
-                isRandom={false}
                 loading={false}
                 isAddressesLoading={false}
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                handleModal={() => {}}
               />
             ))
           : filteredCopyTokens.map((token, index) => (
-              <PsycItem
+              // <PsycItem
+              //   key={index}
+              //   item={{
+              //     src: imageUris[index % imageUris.length] ?? "",
+              //     tokenId: token.tokenID,
+              //     whitelist: [],
+              //     balance: copyBalances[token.tokenID] ?? "0",
+              //     batchId: props.activeSale?.batchID ?? "",
+              //     price: `${formatUnits(BigInt(props?.activeSale?.ceilingPrice ?? 0), 18)}`,
+              //     isSold: false,
+              //     ipfsHash: ""
+              //   }}
+              //   index={index}
+              //   isPrivateSale={false}
+              //   isOwnedView={true}
+              //   isOriginal={props.isOriginal}
+              //   refetchBalances={refetchBalances}
+              //   isRandom={false}
+              //   loading={balancesLoading}
+              //   isAddressesLoading={false}
+              //   // eslint-disable-next-line @typescript-eslint/no-empty-function
+              //   handleModal={() => {}}
+              // />
+              <OwnedNftItem
                 key={index}
                 item={{
                   src: imageUris[index % imageUris.length] ?? "",
@@ -114,11 +150,8 @@ const OwnedNfts = (props: OwnedNftsProps) => {
                 isOwnedView={true}
                 isOriginal={props.isOriginal}
                 refetchBalances={refetchBalances}
-                isRandom={false}
                 loading={balancesLoading}
                 isAddressesLoading={false}
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                handleModal={() => {}}
               />
             ))}
 
