@@ -9,11 +9,13 @@ import useImageData from "@/hooks/useImageData";
 import { useAddAssetToWallet } from "@/hooks/useAddAsset";
 import MintButton from "@/components/ui/mint-button";
 import SubmitButtonContainer from "@/components/commons/submit-button-container";
+import SkeletonLayout from "../../commons/skeleton-card";
 
 type OwnedNftsProps = {
   nftData: GetTokensByOwnerData | undefined;
   activeSale: Sale | undefined;
   isOriginal: boolean;
+  isLoading: boolean;
 };
 
 const OwnedNfts = (props: OwnedNftsProps) => {
@@ -21,11 +23,10 @@ const OwnedNfts = (props: OwnedNftsProps) => {
   const { imageUris } = useImageData(imageIds);
 
   const { address } = useAccount();
-  const {
-    balances: copyBalances,
-    loading: balancesLoading,
-    refetchBalances
-  } = useUserCopyBalances(props.activeSale, address);
+  const { balances: copyBalances, refetchBalances } = useUserCopyBalances(
+    props.activeSale,
+    address
+  );
 
   if (!address) return null;
 
@@ -57,6 +58,9 @@ const OwnedNfts = (props: OwnedNftsProps) => {
     }
   };
 
+  if (props.isLoading) {
+    return <SkeletonLayout isRandom={false} />;
+  }
   const showEmptyState = !props.isOriginal && filteredCopyTokens.length === 0;
 
   return (
@@ -90,7 +94,6 @@ const OwnedNfts = (props: OwnedNftsProps) => {
                 isOriginal={props.isOriginal}
                 refetchBalances={refetchBalances}
                 isRandom={false}
-                loading={false}
                 isAddressesLoading={false}
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 handleModal={() => {}}
@@ -115,7 +118,6 @@ const OwnedNfts = (props: OwnedNftsProps) => {
                 isOriginal={props.isOriginal}
                 refetchBalances={refetchBalances}
                 isRandom={false}
-                loading={balancesLoading}
                 isAddressesLoading={false}
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 handleModal={() => {}}
@@ -128,8 +130,7 @@ const OwnedNfts = (props: OwnedNftsProps) => {
           <SubmitButtonContainer>
             <MintButton
               onClick={handleAddToWallet}
-              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-              isDisabled={!props.activeSale || isAdding || false}
+              isDisabled={!props.activeSale || isAdding}
               customStyle={{
                 width: "100%",
                 opacity: isAdding ? 0.5 : 1,

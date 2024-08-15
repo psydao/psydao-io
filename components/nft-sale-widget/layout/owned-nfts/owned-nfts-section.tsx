@@ -1,4 +1,4 @@
-import { Box, Grid } from "@chakra-ui/react";
+import { Grid } from "@chakra-ui/react";
 import OwnedNftsEmptyState from "./owned-nfts-empty-state";
 import OwnedNfts from "./owned-nfts";
 import { useTokenContext } from "@/providers/TokenContext";
@@ -10,14 +10,16 @@ type OwnedNftsContentProps = {
   isFullScreen: boolean;
   isOriginal: boolean;
   activeSale: Sale | undefined;
+  isLoading: boolean;
 };
 
 const OwnedNftsContent = ({
   isFullScreen,
   isOriginal,
-  activeSale
+  activeSale,
+  isLoading
 }: OwnedNftsContentProps) => {
-  const { data, loading, error, tokenCount, setTokenCount } = useTokenContext();
+  const { data, tokenCount, setTokenCount } = useTokenContext();
   const { address } = useAccount();
 
   useEffect(() => {
@@ -32,9 +34,6 @@ const OwnedNftsContent = ({
     </>
   );
 
-  if (loading) return <Box textAlign="center">Loading...</Box>;
-  if (error) return <Box textAlign="center">Error loading data</Box>;
-
   return (
     <>
       {tokenCount > 0 ? (
@@ -42,6 +41,7 @@ const OwnedNftsContent = ({
           nftData={data}
           isOriginal={isOriginal}
           activeSale={activeSale}
+          isLoading={isLoading}
         />
       ) : (
         <Grid
