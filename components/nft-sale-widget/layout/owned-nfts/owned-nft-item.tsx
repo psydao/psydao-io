@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import Image from "next/image";
+import FullSizeImageModal from "@/components/commons/image-modal";
 
 interface OwnedNftItemProps {
   item: TokenItem & {
@@ -29,6 +30,11 @@ interface OwnedNftItemProps {
 }
 
 const OwnedNftItem = (props: OwnedNftItemProps) => {
+  const CHAINID = Number(process.env.NEXT_PUBLIC_CHAIN_ID) ?? 1;
+  const tokenURL =
+    CHAINID === 1
+      ? `https://etherscan.io/nft/0x6c6Ab7b3215374dE4A65De63eAC9BC7A0c7f402d/${props.item.tokenId}`
+      : `https://sepolia.etherscan.io/nft/0x64e78537782095a38e3785431be3647856980ffa/${props.item.tokenId}`;
   const { buyNft, isPending, isConfirming, isMinting } = useBuyNft(
     props.isPrivateSale,
     false,
@@ -85,10 +91,7 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
             height={24}
             width={24}
           />
-          <Link
-            href={`https://etherscan.io/token/${props.item.tokenId}`}
-            isExternal
-          >
+          <Link href={tokenURL} isExternal>
             <ExternalLinkIcon color={"#DA7C7C"} h={"12px"} w={"12px"} />
           </Link>
         </Flex>
@@ -102,6 +105,7 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
         border="1px solid #e2e2e2"
         boxShadow="md"
         onClick={() => setIsImageOpen((prev) => !prev)}
+        cursor={"pointer"}
       >
         <Image
           src={props.item.src}
@@ -151,6 +155,13 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
           </GridItem>
         </Grid>
       )}
+      <FullSizeImageModal
+        isOpen={isImageOpen}
+        imageSrc={props.item.src}
+        onClose={() => {
+          setIsImageOpen((prev) => !prev);
+        }}
+      />
     </Flex>
   );
 };

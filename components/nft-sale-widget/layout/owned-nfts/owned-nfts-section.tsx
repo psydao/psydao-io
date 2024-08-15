@@ -42,6 +42,7 @@ const OwnedNftsContent = ({
           nftData={data}
           isOriginal={isOriginal}
           activeSale={activeSale}
+          isFullScreen={isFullScreen}
         />
       ) : (
         <Grid
