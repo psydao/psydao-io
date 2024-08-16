@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   useApolloClient,
   type ApolloClient,
@@ -24,7 +24,10 @@ const useUserCopyBalances = (
   const client = useApolloClient() as ApolloClient<NormalizedCacheObject>;
 
   const fetchBalances = useCallback(async () => {
-    if (!activeSale || !address) return;
+    if (!activeSale || !address) {
+      setLoading(false);
+      return;
+    }
 
     setLoading(true);
     setError(null);
@@ -62,14 +65,11 @@ const useUserCopyBalances = (
     }
   }, [client, activeSale, address]);
 
-  const refetchAllBalances = async () => {
-    await fetchBalances();
-  };
   useEffect(() => {
-    refetchAllBalances().catch(console.error);
-  }, [refetchAllBalances]);
+    void fetchBalances();
+  }, [fetchBalances]);
 
-  return { balances, refetchBalances: refetchAllBalances, loading, error };
+  return { balances, refetchBalances: fetchBalances, loading, error };
 };
 
 export default useUserCopyBalances;
