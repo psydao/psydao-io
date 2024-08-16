@@ -166,6 +166,7 @@ const MintSection = ({
               refetchBalances={() => {}}
               handleModal={handleModal}
               isAddressesLoading={isAddressesLoading}
+              soldOut={false}
             />
           ))}
         </Grid>
