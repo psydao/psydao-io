@@ -97,6 +97,7 @@ const OwnedNfts = (props: OwnedNftsProps) => {
                 isAddressesLoading={false}
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 handleModal={() => {}}
+                soldOut={false}
               />
             ))
           : filteredCopyTokens.map((token, index) => (
@@ -121,6 +122,7 @@ const OwnedNfts = (props: OwnedNftsProps) => {
                 isAddressesLoading={false}
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 handleModal={() => {}}
+                soldOut={false}
               />
             ))}
 
