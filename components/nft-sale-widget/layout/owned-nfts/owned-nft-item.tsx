@@ -14,6 +14,12 @@ import {
 import { useState } from "react";
 import Image from "next/image";
 import FullSizeImageModal from "@/components/commons/image-modal";
+import {
+  psycNFTCopiesMainnet,
+  psycNFTCopiesSepolia,
+  psyNFTMainnet,
+  psyNFTSepolia
+} from "@/constants/contracts";
 
 interface OwnedNftItemProps {
   item: TokenItem & {
@@ -31,10 +37,18 @@ interface OwnedNftItemProps {
 
 const OwnedNftItem = (props: OwnedNftItemProps) => {
   const CHAINID = Number(process.env.NEXT_PUBLIC_CHAIN_ID) ?? 1;
+  const contractAddress =
+    CHAINID === 1
+      ? props.isOriginal
+        ? psyNFTMainnet
+        : psycNFTCopiesMainnet
+      : props.isOriginal
+        ? psyNFTSepolia
+        : psycNFTCopiesSepolia;
   const tokenURL =
     CHAINID === 1
-      ? `${process.env.NEXT_PUBLIC_MAINNET_ETHERSCAN_BASE_URL}/${props.item.tokenId}`
-      : `${process.env.NEXT_PUBLIC_SEPOLIA_ETHERSCAN_BASE_URL}/${props.item.tokenId}`;
+      ? `${process.env.NEXT_PUBLIC_MAINNET_ETHERSCAN_BASE_URL}/${contractAddress}/${props.item.tokenId}`
+      : `${process.env.NEXT_PUBLIC_SEPOLIA_ETHERSCAN_BASE_URL}/${contractAddress}/${props.item.tokenId}`;
   const { buyNft, isPending, isConfirming, isMinting } = useBuyNft(
     props.isPrivateSale,
     false,
