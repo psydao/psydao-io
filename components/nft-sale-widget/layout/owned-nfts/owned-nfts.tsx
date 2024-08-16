@@ -8,12 +8,14 @@ import useImageData from "@/hooks/useImageData";
 import { useAddAssetToWallet } from "@/hooks/useAddAsset";
 import MintButton from "@/components/ui/mint-button";
 import SubmitButtonContainer from "@/components/commons/submit-button-container";
+import SkeletonLayout from "../../commons/skeleton-card";
 import OwnedNftItem from "./owned-nft-item";
 
 type OwnedNftsProps = {
   nftData: GetTokensByOwnerData | undefined;
   activeSale: Sale | undefined;
   isOriginal: boolean;
+  isLoading: boolean;
   isFullScreen: boolean;
 };
 
@@ -22,11 +24,10 @@ const OwnedNfts = (props: OwnedNftsProps) => {
   const { imageUris } = useImageData(imageIds);
 
   const { address } = useAccount();
-  const {
-    balances: copyBalances,
-    loading: balancesLoading,
-    refetchBalances
-  } = useUserCopyBalances(props.activeSale, address);
+  const { balances: copyBalances, refetchBalances } = useUserCopyBalances(
+    props.activeSale,
+    address
+  );
 
   if (!address) return null;
 
@@ -58,6 +59,9 @@ const OwnedNfts = (props: OwnedNftsProps) => {
     }
   };
 
+  if (props.isLoading) {
+    return <SkeletonLayout isRandom={false} />;
+  }
   const showEmptyState = !props.isOriginal && filteredCopyTokens.length === 0;
 
   return (
@@ -98,8 +102,6 @@ const OwnedNfts = (props: OwnedNftsProps) => {
                 isOwnedView={true}
                 isOriginal={props.isOriginal}
                 refetchBalances={refetchBalances}
-                loading={false}
-                isAddressesLoading={false}
               />
             ))
           : filteredCopyTokens.map((token, index) => (
@@ -120,8 +122,6 @@ const OwnedNfts = (props: OwnedNftsProps) => {
                 isOwnedView={true}
                 isOriginal={props.isOriginal}
                 refetchBalances={refetchBalances}
-                loading={balancesLoading}
-                isAddressesLoading={false}
               />
             ))}
 
@@ -131,8 +131,7 @@ const OwnedNfts = (props: OwnedNftsProps) => {
           <SubmitButtonContainer>
             <MintButton
               onClick={handleAddToWallet}
-              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-              isDisabled={!props.activeSale || isAdding || false}
+              isDisabled={!props.activeSale || isAdding}
               customStyle={{
                 width: "100%",
                 opacity: isAdding ? 0.5 : 1,

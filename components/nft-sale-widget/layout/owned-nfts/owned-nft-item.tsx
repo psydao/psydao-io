@@ -30,9 +30,7 @@ interface OwnedNftItemProps {
   isPrivateSale: boolean;
   isOriginal: boolean;
   isOwnedView?: boolean;
-  loading: boolean;
   refetchBalances: () => void;
-  isAddressesLoading: boolean;
 }
 
 const OwnedNftItem = (props: OwnedNftItemProps) => {

@@ -11,6 +11,7 @@ import usePrivateSale from "@/hooks/usePrivateSale";
 import ConnectWalletModal from "../../commons/connect-wallet-modal";
 import getAvailableTokenIds from "@/utils/getAvailableTokenIds";
 import useImageData from "@/hooks/useImageData";
+import SkeletonLayout from "../../commons/skeleton-card";
 
 interface MintSectionProps {
   isRandom: boolean;
@@ -29,9 +30,6 @@ const MintSection = ({
   activeSale,
   isOriginal
 }: MintSectionProps) => {
-  const { loading, error, data } = useQuery<GetAllSalesWithTokensData>(
-    getAllSalesWithTokens
-  );
   const [randomToken, setRandomToken] = useState<WhitelistedTokenItem | null>(
     null
   );
@@ -46,9 +44,9 @@ const MintSection = ({
     setIsOpen((prev) => !prev);
   };
 
-  const { imageUris } = useImageData(
-    activeSale?.tokensOnSale.map((token) => token.tokenID) ?? []
-  );
+  const imageIds = activeSale?.tokensOnSale.map((token) => token.tokenID) ?? [];
+
+  const { imageUris, loading: imageUrisLoading } = useImageData(imageIds);
 
   const currentImageIndex = useRandomImage(isRandom, imageUris);
 
@@ -87,7 +85,6 @@ const MintSection = ({
       }
     }
   };
-
   useEffect(() => {
     if (activeSale) {
       fetchWhitelist().catch((error) => {
@@ -115,8 +112,9 @@ const MintSection = ({
     }
   }, [activeTokens, currentImageIndex, isRandom]);
 
-  if (loading) return <Box textAlign="center">Loading...</Box>;
-  if (error) return <Box textAlign="center">Error loading data</Box>;
+  if (imageUrisLoading) {
+    return <SkeletonLayout isRandom={isRandom} />;
+  }
 
   const privateSaleStatus = !isLoading && isPrivateSale;
 
@@ -130,7 +128,6 @@ const MintSection = ({
             isRandom={true}
             isPrivateSale={privateSaleStatus}
             isOriginal={isOriginal}
-            loading={loading}
             // eslint-disable-next-line @typescript-eslint/no-empty-function
             refetchBalances={() => {}}
             handleModal={handleModal}
@@ -165,7 +162,6 @@ const MintSection = ({
               isRandom={isRandom}
               isPrivateSale={privateSaleStatus}
               isOriginal={isOriginal}
-              loading={loading}
               // eslint-disable-next-line @typescript-eslint/no-empty-function
               refetchBalances={() => {}}
               handleModal={handleModal}
