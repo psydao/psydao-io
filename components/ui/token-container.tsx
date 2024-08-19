@@ -63,7 +63,7 @@ export const TokenContainer = ({
         }
       }
     } catch (error) {
-      console.log("error estimateFeesPerGas", error);
+      console.error("error estimateFeesPerGas", error);
     }
 
     const valMinusGas = valueAsBigNumber - defaultGasEstimate;

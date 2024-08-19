@@ -41,10 +41,6 @@ export const useGetCurrentSaleValues = (id: string, width: number) => {
       showErrorToast("Error fetching data from subgraph", width);
     }
 
-    if (isPaused) {
-      console.log(isPaused, "saleBatchesData");
-    }
-
     if (pausedSaleError) {
       showErrorToast(
         "Error fetching current sale statuses from contract",

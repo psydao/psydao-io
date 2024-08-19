@@ -28,7 +28,6 @@ export const handleTransactionError = (error: unknown, width: number) => {
     }
   }
 
-  console.log("error", message);
   customToast(
     { mainText: message },
     { type: "error", transition: Zoom } as ToastOptions,

@@ -8,8 +8,8 @@ interface HeadProps {
 }
 
 export const Head = ({
-  title = "PsyDAO - A Psychedelics Research DAO",
-  description = "PsyDAO is forming a decentralised organisation with the goal of funding research at the intersection of psychedelics and mental health.",
+  title = "PsyDAO - A Psychedelics bioDAO",
+  description = "PsyDAO is a decentralized autonomous organization promoting progress in psychedelic science and art using tokenization.",
   image = "https://psydao.io/psydao-seo-image.png",
   children = null
 }: HeadProps) => {

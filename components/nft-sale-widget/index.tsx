@@ -13,54 +13,57 @@ import MintPsycHeader from "./layout/nft-sale/mint-psyc-header";
 import PsycSaleContent from "./layout/nft-sale/psyc-sale-content";
 import OwnedNftsContent from "./layout/owned-nfts/owned-nfts-section";
 import { TokenProvider } from "@/providers/TokenContext";
-import type { Sale, GetSaleByIdData } from "@/lib/types";
+import type {
+  Sale,
+  GetSaleByIdData,
+  GetAllSalesWithTokensData
+} from "@/lib/types";
 import { useQuery } from "@apollo/client";
-import { getSaleById } from "@/services/graph";
+import { getAllSalesWithTokens, getSaleById } from "@/services/graph";
 import { InterimState } from "../commons/interim-state";
 import NFTSaleWidgetEmptyState from "./layout/nft-sale-widget-empty";
-import useGetOnlyWhitelistedSales from "@/hooks/useGetOnlyWhitelistedSales";
 import { useAccount } from "wagmi";
-import useImageData from "@/hooks/useImageData";
+import WrongNetworkWindow from "../commons/wrong-network";
 
 export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
-  const { address } = useAccount();
-  const { whitelistedSales, loading: whitelistedSalesLoading } =
-    useGetOnlyWhitelistedSales(address);
+  const { address, chainId } = useAccount();
+
   const [activeSale, setActiveSale] = useState<Sale>();
-  const [isOriginal, setIsOriginal] = useState<boolean>(true);
+  const [isOriginal, setIsOriginal] = useState<boolean>(false);
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
+
+  const { data: allSalesData, loading: allSalesLoading } =
+    useQuery<GetAllSalesWithTokensData>(getAllSalesWithTokens);
 
   const { data, loading, error, refetch } = useQuery<GetSaleByIdData>(
     getSaleById,
     {
-      variables: { id: activeSale ? activeSale.id : whitelistedSales[0]?.id },
-      skip:
-        !activeSale &&
-        (whitelistedSalesLoading || whitelistedSales.length === 0)
+      variables: {
+        id: activeSale ? activeSale.id : allSalesData?.sales[0]?.id ?? "1"
+      },
+      skip: !activeSale && (allSalesLoading || allSalesData?.sales.length === 0)
     }
   );
 
-  useEffect(() => {
-    if (data) {
-      setActiveSale(data.sale);
-    }
-  }, [data, setActiveSale]);
+  const CHAINID = process.env.NEXT_PUBLIC_CHAIN_ID ?? 1;
+  const isWrongNetwork = chainId !== Number(CHAINID);
 
   useEffect(() => {
     if (
-      !whitelistedSalesLoading &&
-      whitelistedSales.length > 0 &&
+      !allSalesLoading &&
+      allSalesData &&
+      allSalesData.sales.length > 0 &&
       !activeSale
     ) {
-      setActiveSale(whitelistedSales[0]);
+      setActiveSale(allSalesData.sales[0]);
     }
-  }, [whitelistedSalesLoading, whitelistedSales, activeSale]);
+  }, [allSalesLoading, allSalesData, activeSale]);
 
   useEffect(() => {
     const refetchData = async () => {
-      if (activeSale) {
+      if (updateTrigger) {
         await refetch();
-        console.log("Refetched data");
+        console.log("Refetching data");
       }
     };
     refetchData().catch(console.error);
@@ -72,7 +75,7 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
     return state.fullScreen === "nft-sale";
   }, [state]);
 
-  const isLoading = whitelistedSalesLoading || loading;
+  const isLoading = loading || allSalesLoading;
 
   return (
     <Window
@@ -87,50 +90,57 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
       left={fullScreenWindow ? "0" : "50%"}
       transform={fullScreenWindow ? "translate(0, 0)" : "translate(-50%, -50%)"}
       fullScreenWindow={fullScreenWindow}
+      defaultIsOpen
     >
       <Window.TitleBar />
       <Window.Content py={2} px={0} height={"100%"} width={"100%"}>
         <TokenProvider>
-          <Tabs variant={"unstyled"}>
-            <MintPsycHeader
-              activeSale={activeSale}
-              setActiveSale={setActiveSale}
-              isOriginal={isOriginal}
-              setIsOriginal={setIsOriginal}
-            />
-            {address ? (
-              isLoading ? (
-                <InterimState type="loading" />
-              ) : error ? (
-                <InterimState type="error" />
-              ) : data ? (
-                <TabPanels>
-                  <TabPanel px={0}>
-                    <PsycSaleContent
-                      isFullScreen={fullScreenWindow}
-                      activeSale={activeSale}
-                      isOriginal={isOriginal}
-                    />
-                  </TabPanel>
-                  <TabPanel h="100%" w="100%">
-                    <OwnedNftsContent
-                      isFullScreen={fullScreenWindow}
-                      isOriginal={isOriginal}
-                      activeSale={activeSale}
-                    />
-                  </TabPanel>
-                </TabPanels>
+          {address && isWrongNetwork ? (
+            <WrongNetworkWindow />
+          ) : (
+            <Tabs variant={"unstyled"}>
+              <MintPsycHeader
+                activeSale={activeSale}
+                setActiveSale={setActiveSale}
+                isOriginal={isOriginal}
+                setIsOriginal={setIsOriginal}
+              />
+              {address ? (
+                isLoading ? (
+                  <InterimState type="loading" />
+                ) : error ? (
+                  <InterimState type="error" />
+                ) : data ? (
+                  <TabPanels>
+                    <TabPanel px={0}>
+                      <PsycSaleContent
+                        isFullScreen={fullScreenWindow}
+                        activeSale={activeSale}
+                        isOriginal={isOriginal}
+                        isLoading={isLoading}
+                      />
+                    </TabPanel>
+                    <TabPanel h="100%" w="100%">
+                      <OwnedNftsContent
+                        isFullScreen={fullScreenWindow}
+                        isOriginal={isOriginal}
+                        activeSale={activeSale}
+                        isLoading={isLoading}
+                      />
+                    </TabPanel>
+                  </TabPanels>
+                ) : (
+                  <Grid h={"100%"} w={"100%"} gridTemplateRows={"30% 1fr"}>
+                    <NFTSaleWidgetEmptyState address={address} />
+                  </Grid>
+                )
               ) : (
-                <Grid h={"100%"} w={"100%"} gridTemplateRows={"30% 1fr"}>
+                <Grid h={"100%"} w={"100%"} gridTemplateRows={"20% 1fr"}>
                   <NFTSaleWidgetEmptyState address={address} />
                 </Grid>
-              )
-            ) : (
-              <Grid h={"100%"} w={"100%"} gridTemplateRows={"20% 1fr"}>
-                <NFTSaleWidgetEmptyState address={address} />
-              </Grid>
-            )}
-          </Tabs>
+              )}
+            </Tabs>
+          )}
         </TokenProvider>
         <Image
           src="/windows/alchemist/clouds.png"

@@ -8,12 +8,14 @@ type PsycSaleContentProps = {
   isFullScreen: boolean;
   activeSale: Sale | undefined;
   isOriginal: boolean;
+  isLoading: boolean;
 };
 
 const PsycSaleContent = ({
   isFullScreen,
   activeSale,
   isOriginal
+  // isLoading
 }: PsycSaleContentProps) => {
   return (
     <>

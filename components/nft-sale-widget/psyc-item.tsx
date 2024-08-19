@@ -14,6 +14,8 @@ import { useTokenContext } from "@/providers/TokenContext";
 import { type TokenItem } from "@/lib/types";
 import useReadFloorAndCeilingPrice from "@/hooks/useReadFloorAndCeilingPrice";
 import { formatEther } from "viem";
+import SkeletonLayout from "./commons/skeleton-card";
+import { MintButtonComponent } from "./commons/mint-button-comp";
 
 interface PsycItemProps {
   item: TokenItem & {
@@ -25,11 +27,10 @@ interface PsycItemProps {
   isPrivateSale: boolean;
   isOriginal: boolean;
   isOwnedView?: boolean;
-  loading: boolean;
   refetchBalances: () => void;
   handleModal: () => void;
   isAddressesLoading: boolean;
-  soldOut?: boolean;
+  soldOut: boolean;
 }
 
 const PsycItem = ({
@@ -65,7 +66,7 @@ const PsycItem = ({
   );
 
   const [isActive, setIsActive] = useState(true);
-
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
   useEffect(() => {
     if (floorAndCeilingPriceData && isRandom) {
       const floorPrice = formatEther(floorAndCeilingPriceData[0]);
@@ -77,7 +78,6 @@ const PsycItem = ({
 
     if (floorAndCeilingPriceData) {
       setIsActive(floorAndCeilingPriceData[2]);
-      console.log(floorAndCeilingPriceData[2], "isActive");
     }
   }, [floorAndCeilingPriceData, isRandom]);
 
@@ -136,12 +136,23 @@ const PsycItem = ({
         boxShadow="md"
         onClick={() => setIsImageOpen((prev) => !prev)}
       >
-        <Image
-          src={item.src}
-          alt={`PSYC ${index + 1}`}
-          fill
-          objectFit="cover"
-        />
+        {item.src ? (
+          <Image
+            src={item.src}
+            alt={`PSYC ${index + 1}`}
+            objectFit="cover"
+            placeholder="blur"
+            fill
+            blurDataURL="/psyc3.webp"
+            quality={75}
+            priority={isRandom}
+            loading={isRandom ? "eager" : "lazy"}
+            onLoadingComplete={() => setIsImageLoaded(true)}
+            style={{ display: isImageLoaded ? "block" : "none" }}
+          />
+        ) : (
+          <SkeletonLayout isRandom={isRandom} />
+        )}
         {soldOut && isRandom && isOriginal && (
           <Box
             position="absolute"
@@ -199,32 +210,18 @@ const PsycItem = ({
       </Box>
 
       {(!isOwnedView || !isOriginal) && (
-        <Flex justifyContent="center" w="100%">
-          <MintButton
-            customStyle={{
-              width: "100%",
-              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-              opacity: isButtonDisabled || modalNeeded ? 0.5 : 1,
-              cursor: modalNeeded ? "help" : "pointer"
-            }}
-            onClick={modalNeeded ? handleModal : handleMint}
-            isRandom={isRandom}
-            isDisabled={isButtonDisabled}
-          >
-            {isMinting ? (
-              <>
-                <Spinner size="sm" mr={2} />
-                Minting
-              </>
-            ) : isPaused || (!isOriginal && !isActive) ? (
-              "Paused"
-            ) : soldOut && isOriginal ? (
-              "Sold Out"
-            ) : (
-              "Mint"
-            )}
-          </MintButton>
-        </Flex>
+        <MintButtonComponent
+          isButtonDisabled={isButtonDisabled}
+          modalNeeded={modalNeeded}
+          handleModal={handleModal}
+          handleMint={handleMint}
+          isMinting={isMinting}
+          isPaused={isPaused}
+          isActive={isActive}
+          soldOut={soldOut}
+          isOriginal={isOriginal}
+          isRandom={isRandom}
+        />
       )}
 
       <FullSizeImageModal
