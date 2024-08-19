@@ -21,13 +21,14 @@ type OwnedNftsProps = {
 
 const OwnedNfts = (props: OwnedNftsProps) => {
   const imageIds = props.nftData?.tokens.map((token) => token.tokenId) ?? [];
-  const { imageUris } = useImageData(imageIds);
+  const { imageUris, loading: imageUrisLoading } = useImageData(imageIds);
 
   const { address } = useAccount();
-  const { balances: copyBalances, refetchBalances } = useUserCopyBalances(
-    props.activeSale,
-    address
-  );
+  const {
+    balances: copyBalances,
+    refetchBalances,
+    loading: copyBalancesLoading
+  } = useUserCopyBalances(props.activeSale, address);
 
   if (!address) return null;
 
@@ -59,10 +60,18 @@ const OwnedNfts = (props: OwnedNftsProps) => {
     }
   };
 
-  if (props.isLoading) {
-    return <SkeletonLayout isRandom={false} />;
+  // Show skeleton loaders if images or copy balances are still loading
+  if (props.isLoading || imageUrisLoading || copyBalancesLoading) {
+    return <SkeletonLayout isOwnedNft={!props.isOriginal} />;
   }
-  const showEmptyState = !props.isOriginal && filteredCopyTokens.length === 0;
+
+  // Show the empty state only after the loading is complete and no tokens are found
+  const showEmptyState =
+    !props.isOriginal &&
+    filteredCopyTokens.length === 0 &&
+    !props.isLoading &&
+    !imageUrisLoading &&
+    !copyBalancesLoading;
 
   return (
     <Flex
