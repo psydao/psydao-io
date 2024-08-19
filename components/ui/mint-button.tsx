@@ -13,6 +13,7 @@ interface MintButtonProps {
   isConfirming?: boolean;
   isAccept?: boolean;
   isRandom?: boolean;
+  ownedView?: boolean;
 }
 
 export const MintButton: React.FC<MintButtonProps> = ({
@@ -22,7 +23,8 @@ export const MintButton: React.FC<MintButtonProps> = ({
   isConfirming,
   isDisabled,
   isAccept,
-  isRandom
+  isRandom,
+  ownedView
 }) => {
   return (
     <Button
@@ -37,7 +39,7 @@ export const MintButton: React.FC<MintButtonProps> = ({
       borderRadius={"full"}
       paddingX={12}
       paddingY={3}
-      height="36px"
+      height={ownedView ? "50px" : "36px"}
       display={"flex"}
       alignItems="center"
       justifyContent="center"

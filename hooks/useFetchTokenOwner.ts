@@ -38,9 +38,6 @@ const useFetchTokenOwners = (
   useEffect(() => {
     if (data?.tokens) {
       setOwners(data.tokens);
-      console.log(contractAddress, "contractAdd");
-      console.log("ids", ids);
-      console.log("owners", owners);
     }
   }, [data]);
 

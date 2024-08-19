@@ -31,13 +31,13 @@ export const useWithdrawRoyalties = () => {
       setIsSubmitting(true);
       try {
         const args = [receiverAddress];
-        console.log("Calling writeContract with args:", args);
+
         writeContract({
           ...psycSaleContractConfig,
           functionName: "withdrawRoyalties",
           args
         });
-        console.log("writeContract called");
+
         return true;
       } catch (error) {
         const message = (error as Error).message || "An error occurred";
@@ -55,7 +55,6 @@ export const useWithdrawRoyalties = () => {
         showErrorToast("User rejected", width);
       } else {
         showErrorToast(error.message, width);
-        console.log("Transaction error:", error.message);
       }
       setIsSubmitting(false);
     } else if (transactionSuccess) {

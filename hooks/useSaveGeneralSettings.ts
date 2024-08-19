@@ -40,13 +40,12 @@ export const useSaveGeneralSettings = () => {
       setIsSubmitting(true);
       try {
         const args = [royalties, ownerPercentage, treasury];
-        console.log("Calling writeContract with args:", args);
+
         writeContract({
           ...coreContractConfig,
           functionName: "updateRevenueSplits",
           args
         });
-        console.log("writeContract called");
       } catch (error) {
         const message = (error as Error).message || "An error occurred";
         showErrorToast(message, width);
@@ -62,7 +61,6 @@ export const useSaveGeneralSettings = () => {
         showErrorToast("User rejected", width);
       } else {
         showErrorToast(error.message, width);
-        console.log("Transaction error:", error.message);
       }
       setIsSubmitting(false);
     } else if (transactionSuccess) {
