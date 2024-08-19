@@ -102,12 +102,6 @@ const OwnedNfts = (props: OwnedNftsProps) => {
                 isOwnedView={true}
                 isOriginal={props.isOriginal}
                 refetchBalances={refetchBalances}
-                isRandom={false}
-                isAddressesLoading={false}
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                handleModal={() => {}}
-                soldOut={false}
-
               />
             ))
           : filteredCopyTokens.map((token, index) => (
@@ -128,11 +122,6 @@ const OwnedNfts = (props: OwnedNftsProps) => {
                 isOwnedView={true}
                 isOriginal={props.isOriginal}
                 refetchBalances={refetchBalances}
-                isRandom={false}
-                isAddressesLoading={false}
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                handleModal={() => {}}
-                soldOut={false}
               />
             ))}
 
