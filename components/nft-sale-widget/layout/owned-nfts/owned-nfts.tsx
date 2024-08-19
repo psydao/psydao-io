@@ -60,12 +60,10 @@ const OwnedNfts = (props: OwnedNftsProps) => {
     }
   };
 
-  // Show skeleton loaders if images or copy balances are still loading
   if (props.isLoading || imageUrisLoading || copyBalancesLoading) {
     return <SkeletonLayout isOwnedNft={!props.isOriginal} />;
   }
 
-  // Show the empty state only after the loading is complete and no tokens are found
   const showEmptyState =
     !props.isOriginal &&
     filteredCopyTokens.length === 0 &&
