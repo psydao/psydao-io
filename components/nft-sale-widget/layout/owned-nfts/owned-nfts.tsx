@@ -1,7 +1,6 @@
 import { Flex, Grid } from "@chakra-ui/react";
 import { useAccount } from "wagmi";
 import { type GetTokensByOwnerData, type Sale } from "@/lib/types";
-import PsycItem from "../../psyc-item";
 import useUserCopyBalances from "@/hooks/useUserCopyBalances";
 import { formatUnits } from "viem";
 import OwnedNftsEmptyState from "./owned-nfts-empty-state";
@@ -10,12 +9,14 @@ import { useAddAssetToWallet } from "@/hooks/useAddAsset";
 import MintButton from "@/components/ui/mint-button";
 import SubmitButtonContainer from "@/components/commons/submit-button-container";
 import SkeletonLayout from "../../commons/skeleton-card";
+import OwnedNftItem from "./owned-nft-item";
 
 type OwnedNftsProps = {
   nftData: GetTokensByOwnerData | undefined;
   activeSale: Sale | undefined;
   isOriginal: boolean;
   isLoading: boolean;
+  isFullScreen: boolean;
 };
 
 const OwnedNfts = (props: OwnedNftsProps) => {
@@ -64,19 +65,27 @@ const OwnedNfts = (props: OwnedNftsProps) => {
   const showEmptyState = !props.isOriginal && filteredCopyTokens.length === 0;
 
   return (
-    <Flex justifyContent={"center"} py={4} px={4}>
+    <Flex
+      justifyContent={"center"}
+      pt={4}
+      pb={props.isOriginal ? 12 : 4}
+      px={4}
+    >
       <Grid
         templateColumns={{
-          base: "minmax(170px, 1fr)",
-          sm: "repeat(auto-fit, minmax(170px, 1fr))"
+          base: "1fr",
+          sm: props.isFullScreen
+            ? "repeat(auto-fit, minmax(300px, 1fr))"
+            : "1fr"
         }}
         gap={6}
         justifyItems={"center"}
+        w={props.isFullScreen ? "auto" : "100%"}
         maxW={"100%"}
       >
         {props.isOriginal
           ? props.nftData?.tokens.map((token, index) => (
-              <PsycItem
+              <OwnedNftItem
                 key={index}
                 item={{
                   src: imageUris[index % imageUris.length] ?? "",
@@ -98,10 +107,11 @@ const OwnedNfts = (props: OwnedNftsProps) => {
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 handleModal={() => {}}
                 soldOut={false}
+
               />
             ))
           : filteredCopyTokens.map((token, index) => (
-              <PsycItem
+              <OwnedNftItem
                 key={index}
                 item={{
                   src: imageUris[index % imageUris.length] ?? "",
