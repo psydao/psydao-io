@@ -15,6 +15,7 @@ import { type TokenItem } from "@/lib/types";
 import useReadFloorAndCeilingPrice from "@/hooks/useReadFloorAndCeilingPrice";
 import { formatEther } from "viem";
 import SkeletonLayout from "./commons/skeleton-card";
+import { MintButtonComponent } from "./commons/mint-button-comp";
 
 interface PsycItemProps {
   item: TokenItem & {
@@ -29,7 +30,7 @@ interface PsycItemProps {
   refetchBalances: () => void;
   handleModal: () => void;
   isAddressesLoading: boolean;
-  soldOut?: boolean;
+  soldOut: boolean;
 }
 
 const PsycItem = ({
@@ -139,9 +140,9 @@ const PsycItem = ({
           <Image
             src={item.src}
             alt={`PSYC ${index + 1}`}
-            fill
             objectFit="cover"
             placeholder="blur"
+            fill
             blurDataURL="/psyc3.webp"
             quality={75}
             priority={isRandom}
@@ -209,32 +210,18 @@ const PsycItem = ({
       </Box>
 
       {(!isOwnedView || !isOriginal) && (
-        <Flex justifyContent="center" w="100%">
-          <MintButton
-            customStyle={{
-              width: "100%",
-              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-              opacity: isButtonDisabled || modalNeeded ? 0.5 : 1,
-              cursor: modalNeeded ? "help" : "pointer"
-            }}
-            onClick={modalNeeded ? handleModal : handleMint}
-            isRandom={isRandom}
-            isDisabled={isButtonDisabled}
-          >
-            {isMinting ? (
-              <>
-                <Spinner size="sm" mr={2} />
-                Minting
-              </>
-            ) : isPaused || (!isOriginal && !isActive) ? (
-              "Paused"
-            ) : soldOut && isOriginal ? (
-              "Sold Out"
-            ) : (
-              "Mint"
-            )}
-          </MintButton>
-        </Flex>
+        <MintButtonComponent
+          isButtonDisabled={isButtonDisabled}
+          modalNeeded={modalNeeded}
+          handleModal={handleModal}
+          handleMint={handleMint}
+          isMinting={isMinting}
+          isPaused={isPaused}
+          isActive={isActive}
+          soldOut={soldOut}
+          isOriginal={isOriginal}
+          isRandom={isRandom}
+        />
       )}
 
       <FullSizeImageModal
