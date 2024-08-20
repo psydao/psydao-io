@@ -93,7 +93,12 @@ const PsycItem = ({
 
   const proof = useFetchProof(address, item.ipfsHash, isPrivateSale);
 
-  const isWhitelisted = address ? item.whitelist.includes(address) : false;
+  const isWhitelisted = address
+    ? item.whitelist
+        .map((addr) => addr.toLowerCase())
+        .includes(address.toLowerCase())
+    : false;
+
   const modalNeeded = !address || (!isWhitelisted && isOriginal);
 
   const handleMint = async () => {
