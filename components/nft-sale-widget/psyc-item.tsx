@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Box, Text, Spinner, Flex } from "@chakra-ui/react";
+import { Box, Text, Spinner, Flex, Skeleton } from "@chakra-ui/react";
 import Image from "next/image";
 import { useAccount } from "wagmi";
 import NFTPrice from "@/components/commons/nftprice";
@@ -53,6 +53,7 @@ const PsycItem = ({
 
   const { address } = useAccount();
   const [copyPrice, setCopyPrice] = useState("0.00");
+  const [priceLoading, setPriceLoading] = useState(true);
   const { isSold, isLoading: isSoldLoading } = useTokenSoldState(
     parseInt(item.tokenId)
   );
@@ -67,13 +68,16 @@ const PsycItem = ({
 
   const [isActive, setIsActive] = useState(true);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
+
   useEffect(() => {
     if (floorAndCeilingPriceData && isRandom) {
       const floorPrice = formatEther(floorAndCeilingPriceData[0]);
       setCopyPrice(floorPrice);
+      setPriceLoading(false);
     } else if (floorAndCeilingPriceData && !isRandom) {
       const ceilingPrice = formatEther(floorAndCeilingPriceData[1]);
       setCopyPrice(ceilingPrice);
+      setPriceLoading(false);
     }
 
     if (floorAndCeilingPriceData) {
@@ -89,7 +93,12 @@ const PsycItem = ({
 
   const proof = useFetchProof(address, item.ipfsHash, isPrivateSale);
 
-  const isWhitelisted = address ? item.whitelist.includes(address) : false;
+  const isWhitelisted = address
+    ? item.whitelist
+        .map((addr) => addr.toLowerCase())
+        .includes(address.toLowerCase())
+    : false;
+
   const modalNeeded = !address || (!isWhitelisted && isOriginal);
 
   const handleMint = async () => {
@@ -135,6 +144,7 @@ const PsycItem = ({
         border="1px solid #e2e2e2"
         boxShadow="md"
         onClick={() => setIsImageOpen((prev) => !prev)}
+        cursor={"pointer"}
       >
         {item.src ? (
           <Image
@@ -204,9 +214,19 @@ const PsycItem = ({
           </Flex>
         )}
         {showMintedText && <MintCount count={item.balance} />}
-        {(!isOwnedView || !isOriginal) && (
-          <NFTPrice price={isOriginal ? item.price : copyPrice ?? "0.00"} />
-        )}
+        {(!isOwnedView || !isOriginal) &&
+          (priceLoading ? (
+            <Skeleton
+              height="30px"
+              width="100px"
+              position="absolute"
+              bottom="10px"
+              left="10px"
+              borderRadius="10px"
+            />
+          ) : (
+            <NFTPrice price={isOriginal ? item.price : copyPrice ?? "0.00"} />
+          ))}
       </Box>
 
       {(!isOwnedView || !isOriginal) && (
