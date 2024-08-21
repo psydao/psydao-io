@@ -8,12 +8,8 @@ import React, {
 } from "react";
 import { useQuery } from "@apollo/client";
 import { useAccount } from "wagmi";
-import { getAllSalesWithTokens, getSaleById } from "@/services/graph";
-import type {
-  Sale,
-  GetSaleByIdData,
-  GetAllSalesWithTokensData
-} from "@/lib/types";
+import { getAllSalesWithTokens } from "@/services/graph";
+import type { Sale, GetAllSalesWithTokensData } from "@/lib/types";
 import { useWindowManager } from "@/components/ui/window-manager";
 
 interface SaleWidgetContextType {
@@ -45,17 +41,12 @@ const SaleWidgetProvider: React.FC<SaleWidgetProviderProps> = ({
   const [activeSale, setActiveSale] = useState<Sale>();
   const [isOriginal, setIsOriginal] = useState<boolean>(false);
 
-  const { data: allSalesData, loading: allSalesLoading } =
-    useQuery<GetAllSalesWithTokensData>(getAllSalesWithTokens);
-  const { data, loading, error, refetch } = useQuery<GetSaleByIdData>(
-    getSaleById,
-    {
-      variables: {
-        id: activeSale ? activeSale.id : allSalesData?.sales[0]?.id ?? "1"
-      },
-      skip: !activeSale && (allSalesLoading || allSalesData?.sales.length === 0)
-    }
-  );
+  const {
+    data: allSalesData,
+    loading: allSalesLoading,
+    error,
+    refetch
+  } = useQuery<GetAllSalesWithTokensData>(getAllSalesWithTokens);
 
   const CHAINID = process.env.NEXT_PUBLIC_CHAIN_ID ?? 1;
   const isWrongNetwork = chainId !== Number(CHAINID);
@@ -86,7 +77,7 @@ const SaleWidgetProvider: React.FC<SaleWidgetProviderProps> = ({
     return state.fullScreen === "nft-sale";
   }, [state]);
 
-  const isLoading = loading || allSalesLoading;
+  const isLoading = allSalesLoading;
 
   return (
     <SaleWidgetContext.Provider

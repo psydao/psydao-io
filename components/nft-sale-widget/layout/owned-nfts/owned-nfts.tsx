@@ -61,7 +61,7 @@ const OwnedNfts = (props: OwnedNftsProps) => {
   };
 
   if (props.isLoading || imageUrisLoading || copyBalancesLoading) {
-    return <SkeletonLayout isOwnedNft={!props.isOriginal} />;
+    return <SkeletonLayout isOwnedNft={true} />;
   }
 
   const showEmptyState =
