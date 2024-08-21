@@ -1,9 +1,8 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Box, Text, Spinner, Flex, Skeleton } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { Box, Text, Flex, Skeleton } from "@chakra-ui/react";
 import Image from "next/image";
 import { useAccount } from "wagmi";
 import NFTPrice from "@/components/commons/nftprice";
-import MintButton from "@/components/ui/mint-button";
 import MintCount from "@/components/commons/mint-count";
 import FullSizeImageModal from "@/components/commons/image-modal";
 import useBuyNft from "@/hooks/useBuyNft";
@@ -12,7 +11,7 @@ import useFetchProof from "@/hooks/useFetchProof";
 import usePausedSale from "@/hooks/usePausedSale";
 import { useTokenContext } from "@/providers/TokenContext";
 import { type TokenItem } from "@/lib/types";
-import useReadFloorAndCeilingPrice from "@/hooks/useReadFloorAndCeilingPrice";
+import useReadTokenInformation from "@/hooks/useReadTokenInformation";
 import { formatEther } from "viem";
 import SkeletonLayout from "./commons/skeleton-card";
 import { MintButtonComponent } from "./commons/mint-button-comp";
@@ -62,28 +61,27 @@ const PsycItem = ({
 
   const { refetch } = useTokenContext();
 
-  const { floorAndCeilingPriceData } = useReadFloorAndCeilingPrice(
-    item.tokenId
-  );
+  const { tokenInformationData } = useReadTokenInformation(item.tokenId);
 
   const [isActive, setIsActive] = useState(true);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   useEffect(() => {
-    if (floorAndCeilingPriceData && isRandom) {
-      const floorPrice = formatEther(floorAndCeilingPriceData[0]);
+    if (tokenInformationData && isRandom) {
+      const floorPrice = formatEther(tokenInformationData[0]);
       setCopyPrice(floorPrice);
       setPriceLoading(false);
-    } else if (floorAndCeilingPriceData && !isRandom) {
-      const ceilingPrice = formatEther(floorAndCeilingPriceData[1]);
+      setIsActive(tokenInformationData[2]);
+    } else if (tokenInformationData && !isRandom) {
+      const ceilingPrice = formatEther(tokenInformationData[1]);
       setCopyPrice(ceilingPrice);
       setPriceLoading(false);
     }
 
-    if (floorAndCeilingPriceData) {
-      setIsActive(floorAndCeilingPriceData[2]);
+    if (tokenInformationData) {
+      setIsActive(tokenInformationData[2]);
     }
-  }, [floorAndCeilingPriceData, isRandom]);
+  }, [tokenInformationData, isRandom]);
 
   useEffect(() => {
     if (isSold) {
@@ -236,7 +234,7 @@ const PsycItem = ({
           handleModal={handleModal}
           handleMint={handleMint}
           isMinting={isMinting}
-          isPaused={isPaused}
+          isPaused={isPaused || (!isOriginal && !isActive)}
           isActive={isActive}
           soldOut={soldOut}
           isOriginal={isOriginal}
