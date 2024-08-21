@@ -29,7 +29,7 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
   const { address, chainId } = useAccount();
 
   const [activeSale, setActiveSale] = useState<Sale>();
-  const [isOriginal, setIsOriginal] = useState<boolean>(false);
+  const [isOriginal, setIsOriginal] = useState<boolean>(true);
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
 
   const { data: allSalesData, loading: allSalesLoading } =
