@@ -7,8 +7,8 @@ import OwnedNftsEmptyState from "./owned-nfts-empty-state";
 import useImageData from "@/hooks/useImageData";
 import { useAddAssetToWallet } from "@/hooks/useAddAsset";
 import MintButton from "@/components/ui/mint-button";
-import SubmitButtonContainer from "@/components/commons/submit-button-container";
-import SkeletonLayout from "../../commons/skeleton-card";
+import SubmitButtonContainer from "@/components/common/submit-button-container";
+import SkeletonLayout from "../../common/skeleton-card";
 import OwnedNftItem from "./owned-nft-item";
 
 type OwnedNftsProps = {
