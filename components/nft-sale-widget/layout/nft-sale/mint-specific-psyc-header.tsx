@@ -3,9 +3,6 @@ import DecorationFrame from "../../common/decoration-frame";
 import DiagonalRectangle from "../../common/diagonal-rectangle";
 import { useSaleWidget } from "@/providers/SaleWidgetContext";
 
-// type MintSpecificPsycHeaderProps = {
-//   isFullScreen: boolean;
-// };
 const MintSpecificPsycHeader = () => {
   const { fullScreenWindow: isFullScreen } = useSaleWidget();
 
