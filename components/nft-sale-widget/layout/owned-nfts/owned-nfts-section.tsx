@@ -2,31 +2,17 @@ import { Grid } from "@chakra-ui/react";
 import OwnedNftsEmptyState from "./owned-nfts-empty-state";
 import OwnedNfts from "./owned-nfts";
 import { useTokenContext } from "@/providers/TokenContext";
-import { useEffect } from "react";
-import { useAccount } from "wagmi";
-import { type Sale } from "@/lib/types";
+import { useSaleWidget } from "@/providers/SaleWidgetContext";
 
-type OwnedNftsContentProps = {
-  isFullScreen: boolean;
-  isOriginal: boolean;
-  activeSale: Sale | undefined;
-  isLoading: boolean;
-};
+const OwnedNftsContent = () => {
+  const { data, tokenCount } = useTokenContext();
 
-const OwnedNftsContent = ({
-  isFullScreen,
-  isOriginal,
-  activeSale,
-  isLoading
-}: OwnedNftsContentProps) => {
-  const { data, tokenCount, setTokenCount } = useTokenContext();
-  const { address } = useAccount();
-
-  useEffect(() => {
-    if (address && data) {
-      setTokenCount(data?.tokens.length ?? 0);
-    }
-  }, [address, data, setTokenCount]);
+  const {
+    activeSale,
+    isOriginal,
+    isLoading,
+    fullScreenWindow: isFullScreen
+  } = useSaleWidget();
 
   const EmptyStateText = (
     <>

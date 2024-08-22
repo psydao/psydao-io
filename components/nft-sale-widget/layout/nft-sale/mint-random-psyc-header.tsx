@@ -1,12 +1,10 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
-import DecorationFrame from "../../commons/decoration-frame";
-import DiagonalRectangle from "../../commons/diagonal-rectangle";
+import DecorationFrame from "../../common/decoration-frame";
+import DiagonalRectangle from "../../common/diagonal-rectangle";
+import { useSaleWidget } from "@/providers/SaleWidgetContext";
 
-type MintRandomPsycHeaderProps = {
-  isFullScreen: boolean;
-};
-
-const MintRandomPsycHeader = (props: MintRandomPsycHeaderProps) => {
+const MintRandomPsycHeader = () => {
+  const { fullScreenWindow: isFullScreen } = useSaleWidget();
   return (
     <Box position="relative" textAlign="center" py={4} px={2}>
       <Flex
@@ -16,7 +14,7 @@ const MintRandomPsycHeader = (props: MintRandomPsycHeaderProps) => {
         width="100%"
         gap={{ base: 2, sm: 6 }}
       >
-        <DecorationFrame position="left" isFullScreen={props.isFullScreen} />
+        <DecorationFrame position="left" isFullScreen={isFullScreen} />
         <Box
           display="inline-flex"
           alignItems="center"
@@ -41,7 +39,7 @@ const MintRandomPsycHeader = (props: MintRandomPsycHeaderProps) => {
           </Text>
           <DiagonalRectangle position="right" />
         </Box>
-        <DecorationFrame position="right" isFullScreen={props.isFullScreen} />
+        <DecorationFrame position="right" isFullScreen={isFullScreen} />
       </Flex>
     </Box>
   );

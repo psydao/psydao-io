@@ -1,23 +1,17 @@
 import { Box, Divider, Flex, Text } from "@chakra-ui/react";
-import { WhitepaperLink } from "../../commons/whitepaper-link";
-import { SaleTypeSwitch } from "../../commons/sale-type-switch";
+import { useAccount } from "wagmi";
+
+import { WhitepaperLink } from "../../common/whitepaper-link";
+import { SaleTypeSwitch } from "../../common/sale-type-switch";
+import NftSalesDropdown from "../../common/sales-dropdown";
+import { whitelistedAddresses } from "@/components/admin-dashboard/whitelisted-addresses";
 import NftSaleTabs from "../nft-sale-tabs";
+
 import { useTokenContext } from "@/providers/TokenContext";
 import { Open } from "@/components/ui/window-manager";
-import { useAccount } from "wagmi";
-import { whitelistedAddresses } from "@/components/admin-dashboard/whitelisted-addresses";
-import NftSalesDropdown from "../../commons/sales-dropdown";
-import type { Sale } from "@/lib/types";
-import type { SetStateAction } from "react";
 
-const MintPsycHeader = (props: {
-  activeSale: Sale | undefined;
-  setActiveSale: React.Dispatch<SetStateAction<Sale | undefined>>;
-  isOriginal: boolean;
-  setIsOriginal: React.Dispatch<SetStateAction<boolean>>;
-}) => {
+const MintPsycHeader = () => {
   const { tokenCount } = useTokenContext();
-
   const { address } = useAccount();
 
   const isWhitelisted = whitelistedAddresses.includes(address ?? "0x");
@@ -55,15 +49,8 @@ const MintPsycHeader = (props: {
             </Flex>
           </Flex>
           <Flex gap={6} flexWrap={"wrap"}>
-            <NftSalesDropdown
-              activeSale={props.activeSale}
-              setActiveSale={props.setActiveSale}
-              isOriginal={props.isOriginal}
-            />
-            <SaleTypeSwitch
-              isOriginal={props.isOriginal}
-              setIsOriginal={props.setIsOriginal}
-            />
+            <NftSalesDropdown />
+            <SaleTypeSwitch />
           </Flex>
         </Flex>
       </Box>
