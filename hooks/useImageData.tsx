@@ -3,6 +3,8 @@ import { getTokensMetadataForASale } from "@/services/graph";
 import { useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 
+const FALLBACK_IMAGE = "/psyc3.webp";
+
 const useImageData = (tokenIds: string[]) => {
   const [imageUris, setImageUris] = useState<string[]>([]);
   const { data, loading, error } = useQuery<SaleTokensMetadata>(
@@ -16,9 +18,13 @@ const useImageData = (tokenIds: string[]) => {
 
   useEffect(() => {
     if (data && data.tokens.length > 0) {
-      setImageUris(data.tokens.map((token) => token.metadata.imageURI));
+      setImageUris(
+        data.tokens.map((token) => token.metadata?.imageURI || FALLBACK_IMAGE)
+      );
+    } else {
+      setImageUris(Array(tokenIds.length).fill(FALLBACK_IMAGE));
     }
-  }, [data]);
+  }, [data, tokenIds]);
 
   return { imageUris, loading, error };
 };

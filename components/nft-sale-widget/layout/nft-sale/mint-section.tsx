@@ -1,21 +1,16 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React from "react";
 import { Flex, Grid } from "@chakra-ui/react";
 import { formatUnits } from "viem";
-
-import type { TokenItem } from "@/lib/types";
+import { useAccount } from "wagmi";
 
 import PsycItem from "../../psyc-item";
 import SkeletonLayout from "../../common/skeleton-card";
 import ConnectWalletModal from "../../common/connect-wallet-modal";
 
-import useRandomImage from "@/hooks/useRandomImage";
-import useImageData from "@/hooks/useImageData";
-import usePrivateSale from "@/hooks/usePrivateSale";
-import { useGetAddresses } from "@/hooks/useGetAddresses";
-import { useBatchSoldOut } from "@/hooks/useBatchSoldOut";
+import useUserCopyBalances from "@/hooks/useUserCopyBalances";
 
-import getAvailableTokenIds from "@/utils/getAvailableTokenIds";
-import { useSaleWidget } from "@/providers/SaleWidgetContext";
+import type { Sale, TokenItem } from "@/lib/types";
+import { useMintSection } from "../../hooks/useMintSection";
 interface MintSectionProps {
   isRandom: boolean;
 }
@@ -23,147 +18,148 @@ interface WhitelistedTokenItem extends TokenItem {
   whitelist: string[];
   balance: string;
 }
-
 const MintSection = ({ isRandom }: MintSectionProps) => {
-  const { activeSale, isOriginal } = useSaleWidget();
-  const [randomToken, setRandomToken] = useState<WhitelistedTokenItem | null>(
-    null
-  );
-  const [whitelist, setWhitelist] = useState<{ [key: string]: string[] }>({});
-  const { isLoading, isPrivateSale } = usePrivateSale();
-  const { isLoading: isAddressesLoading, getAddresses } = useGetAddresses();
+  const {
+    isOpen,
+    handleModal,
+    activeSale,
+    isOriginal,
+    randomToken,
+    imageUris,
+    imageUrisLoading,
+    privateSaleStatus,
+    isAddressesLoading,
+    isSoldOut,
+    whitelist,
+    currentImageIndex
+  } = useMintSection(isRandom);
 
-  const [isOpen, setIsOpen] = useState(false);
-  const handleModal = () => {
-    setIsOpen((prev) => !prev);
-  };
-
-  const imageIds = activeSale?.tokensOnSale.map((token) => token.tokenID) ?? [];
-
-  const { imageUris, loading: imageUrisLoading } = useImageData(imageIds);
-
-  const currentImageIndex = useRandomImage(isRandom, imageUris);
-  const isSoldOut = useBatchSoldOut(activeSale, isPrivateSale);
-
-  const activeTokens = useMemo(() => {
-    if (!activeSale) return [];
-    const availableTokens = getAvailableTokenIds(activeSale, isOriginal);
-    return availableTokens.map((token, index) => ({
-      src: imageUris[index] ?? "",
-      price: `${formatUnits(BigInt(activeSale.floorPrice), 18)}`,
-      isSold: false,
-      batchId: activeSale.batchID,
-      tokenId: token.tokenID,
-      ipfsHash: activeSale.ipfsHash,
-      whitelist: whitelist[activeSale.ipfsHash] ?? [],
-      balance: "0"
-    }));
-  }, [activeSale, imageUris, whitelist]);
-
-  const fetchWhitelist = async () => {
-    if (activeSale) {
-      try {
-        const addresses = await getAddresses(activeSale.ipfsHash);
-        if (addresses && !isAddressesLoading) {
-          setWhitelist((prev) => ({
-            ...prev,
-            [activeSale.ipfsHash]: addresses
-          }));
-        }
-      } catch (error) {
-        console.error("Error fetching whitelist addresses:", error);
-      }
-    }
-  };
-  useEffect(() => {
-    if (activeSale) {
-      fetchWhitelist().catch((error) => {
-        console.error("Error fetching whitelist:", error);
-      });
-    }
-  }, [activeSale]);
-
-  useEffect(() => {
-    if (isRandom && activeTokens.length > 0) {
-      setRandomToken(
-        activeTokens[currentImageIndex % activeTokens.length] ?? null
-      );
-    } else if (isRandom && activeTokens.length === 0 && activeSale) {
-      setRandomToken({
-        src: imageUris[0] ?? "",
-        price: `${formatUnits(BigInt(activeSale.floorPrice), 18)}`,
-        isSold: false,
-        batchId: activeSale.batchID,
-        tokenId: "0",
-        ipfsHash: activeSale.ipfsHash,
-        whitelist: whitelist[activeSale.ipfsHash] ?? [],
-        balance: "0"
-      });
-    }
-  }, [activeTokens, currentImageIndex, isRandom]);
+  const { address } = useAccount();
+  const { refetchBalances } = useUserCopyBalances(activeSale, address);
 
   if (imageUrisLoading) {
     return <SkeletonLayout isRandom={isRandom} />;
   }
 
-  const privateSaleStatus = !isLoading && isPrivateSale;
-
   return (
-    <Flex textAlign="center" py={4} px={4} justifyContent={"center"}>
+    <Flex textAlign="center" py={4} px={4} justifyContent="center">
       {isRandom && randomToken ? (
-        <Flex justifyContent="center" w={"100%"}>
-          <PsycItem
-            item={randomToken}
-            index={currentImageIndex}
-            isRandom={true}
-            isPrivateSale={privateSaleStatus}
-            isOriginal={isOriginal}
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            refetchBalances={() => {}}
-            handleModal={handleModal}
-            isAddressesLoading={isAddressesLoading}
-            soldOut={isSoldOut}
-          />
-        </Flex>
-      ) : (
-        <Grid
-          templateColumns={{
-            base: "minmax(170px, 1fr)",
-            sm: "repeat(auto-fit, minmax(170px, 1fr))"
-          }}
-          gap={6}
-          justifyItems={"center"}
-          maxW={"100%"}
-        >
-          {activeSale?.tokensOnSale.map((token, index) => (
-            <PsycItem
-              key={token.id}
-              item={{
-                src: imageUris[index] ?? "",
-                price: `${formatUnits(BigInt(activeSale.ceilingPrice), 18)}`,
-                isSold: false,
-                batchId: activeSale.batchID,
-                tokenId: token.tokenID,
-                ipfsHash: activeSale.ipfsHash,
-                whitelist: whitelist[activeSale.ipfsHash] ?? [],
-                balance: "0"
-              }}
-              index={parseInt(token.id, 10)}
-              isRandom={isRandom}
-              isPrivateSale={privateSaleStatus}
-              isOriginal={isOriginal}
-              // eslint-disable-next-line @typescript-eslint/no-empty-function
-              refetchBalances={() => {}}
-              handleModal={handleModal}
-              isAddressesLoading={isAddressesLoading}
-              soldOut={false}
-            />
-          ))}
-        </Grid>
-      )}
+        <RandomPsycItem
+          token={randomToken}
+          index={currentImageIndex}
+          privateSaleStatus={privateSaleStatus}
+          isOriginal={isOriginal}
+          handleModal={handleModal}
+          isAddressesLoading={isAddressesLoading}
+          isSoldOut={isSoldOut}
+          refetchBalances={refetchBalances}
+        />
+      ) : activeSale ? (
+        <SpecificPsycItems
+          tokens={activeSale?.tokensOnSale ?? []}
+          imageUris={imageUris}
+          activeSale={activeSale}
+          whitelist={whitelist}
+          privateSaleStatus={privateSaleStatus}
+          isOriginal={isOriginal}
+          handleModal={handleModal}
+          isAddressesLoading={isAddressesLoading}
+          refetchBalances={refetchBalances}
+        />
+      ) : null}
       <ConnectWalletModal isOpen={isOpen} onClose={handleModal} />
     </Flex>
   );
 };
+
+const RandomPsycItem: React.FC<{
+  token: WhitelistedTokenItem;
+  index: number;
+  privateSaleStatus: boolean;
+  isOriginal: boolean;
+  handleModal: () => void;
+  isAddressesLoading: boolean;
+  isSoldOut: boolean;
+  refetchBalances: () => void;
+}> = ({
+  token,
+  index,
+  privateSaleStatus,
+  isOriginal,
+  handleModal,
+  isAddressesLoading,
+  isSoldOut,
+  refetchBalances
+}) => (
+  <Flex justifyContent="center" w="100%">
+    <PsycItem
+      item={token}
+      index={index}
+      isRandom={true}
+      isPrivateSale={privateSaleStatus}
+      isOriginal={isOriginal}
+      handleModal={handleModal}
+      isAddressesLoading={isAddressesLoading}
+      soldOut={isSoldOut}
+      refetchBalances={refetchBalances}
+    />
+  </Flex>
+);
+
+const SpecificPsycItems: React.FC<{
+  tokens: { id: string; tokenID: string }[];
+  imageUris: string[];
+  activeSale: Sale;
+  whitelist: { [key: string]: string[] };
+  privateSaleStatus: boolean;
+  isOriginal: boolean;
+  handleModal: () => void;
+  isAddressesLoading: boolean;
+  refetchBalances: () => void;
+}> = ({
+  tokens,
+  imageUris,
+  activeSale,
+  whitelist,
+  privateSaleStatus,
+  isOriginal,
+  handleModal,
+  isAddressesLoading,
+  refetchBalances
+}) => (
+  <Grid
+    templateColumns={{
+      base: "minmax(170px, 1fr)",
+      sm: "repeat(auto-fit, minmax(170px, 1fr))"
+    }}
+    gap={6}
+    justifyItems="center"
+    maxW="100%"
+  >
+    {tokens.map((token, index) => (
+      <PsycItem
+        key={token.id}
+        item={{
+          src: imageUris[index] ?? "",
+          price: formatUnits(BigInt(activeSale.ceilingPrice), 18),
+          isSold: false,
+          batchId: activeSale.batchID,
+          tokenId: token.tokenID,
+          ipfsHash: activeSale.ipfsHash,
+          whitelist: whitelist[activeSale.ipfsHash] ?? [],
+          balance: "0"
+        }}
+        index={parseInt(token.id, 10)}
+        isRandom={false}
+        isPrivateSale={privateSaleStatus}
+        isOriginal={isOriginal}
+        handleModal={handleModal}
+        isAddressesLoading={isAddressesLoading}
+        soldOut={false}
+        refetchBalances={refetchBalances}
+      />
+    ))}
+  </Grid>
+);
 
 export default MintSection;
