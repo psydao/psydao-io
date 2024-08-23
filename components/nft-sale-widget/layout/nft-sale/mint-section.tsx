@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { Flex, Grid } from "@chakra-ui/react";
 import { formatUnits } from "viem";
 
-import type { Sale, TokenItem } from "@/lib/types";
+import type { TokenItem } from "@/lib/types";
 
 import PsycItem from "../../psyc-item";
 import SkeletonLayout from "../../common/skeleton-card";
@@ -14,9 +14,9 @@ import usePrivateSale from "@/hooks/usePrivateSale";
 import { useGetAddresses } from "@/hooks/useGetAddresses";
 import { useBatchSoldOut } from "@/hooks/useBatchSoldOut";
 
-import getAvailableTokenIds from "@/utils/getAvailableTokenIds";
 import { useSaleWidget } from "@/providers/SaleWidgetContext";
 import useGetRandomCopies from "@/hooks/useGetRandomCopies";
+import getRandomAndOriginalTokenIds from "@/utils/getRandomAndSpecificTokenIds";
 interface MintSectionProps {
   isRandom: boolean;
 }
@@ -24,38 +24,6 @@ interface WhitelistedTokenItem extends TokenItem {
   whitelist: string[];
   balance: string;
 }
-
-const getRandomAndOriginalTokenIds = (
-  isOriginal: boolean,
-  activeSale: Sale | undefined,
-  randomCopies: {
-    tokenID: string;
-    tokenActive: boolean;
-  }[]
-) => {
-  const specificTokenIds =
-    activeSale?.tokensOnSale.map((token) => token.tokenID) ?? [];
-  const randomCopiesFull = randomCopies.filter(
-    (token) => token.tokenActive === true
-  );
-  const randomCopiesIds = randomCopiesFull.map((token) => token.tokenID);
-
-  const availableRandomTokenIds = isOriginal
-    ? activeSale?.tokensOnSale
-        .filter((token) => token.buyer === null)
-        .map((token) => token.tokenID) ?? []
-    : randomCopiesIds;
-
-  const randomTokenIds =
-    availableRandomTokenIds.length === 0
-      ? activeSale?.tokensOnSale.map((token) => token.tokenID) ?? []
-      : availableRandomTokenIds;
-
-  return {
-    specificTokenIds,
-    randomTokenIds
-  };
-};
 
 const MintSection = ({ isRandom }: MintSectionProps) => {
   const { activeSale, isOriginal } = useSaleWidget();
@@ -73,7 +41,6 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
     setIsOpen((prev) => !prev);
   };
 
-  // const imageIds = activeSale?.tokensOnSale.map((token) => token.tokenID) ?? [];
   const { randomTokenIds, specificTokenIds } = getRandomAndOriginalTokenIds(
     isOriginal,
     activeSale,
