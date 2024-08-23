@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { Flex, Grid } from "@chakra-ui/react";
 import { formatUnits } from "viem";
 
-import type { TokenItem } from "@/lib/types";
+import type { Sale, TokenItem } from "@/lib/types";
 
 import PsycItem from "../../psyc-item";
 import SkeletonLayout from "../../common/skeleton-card";
@@ -16,6 +16,7 @@ import { useBatchSoldOut } from "@/hooks/useBatchSoldOut";
 
 import getAvailableTokenIds from "@/utils/getAvailableTokenIds";
 import { useSaleWidget } from "@/providers/SaleWidgetContext";
+import useGetRandomCopies from "@/hooks/useGetRandomCopies";
 interface MintSectionProps {
   isRandom: boolean;
 }
@@ -24,36 +25,77 @@ interface WhitelistedTokenItem extends TokenItem {
   balance: string;
 }
 
+const getRandomAndOriginalTokenIds = (
+  isOriginal: boolean,
+  activeSale: Sale | undefined,
+  randomCopies: {
+    tokenID: string;
+    tokenActive: boolean;
+  }[]
+) => {
+  const specificTokenIds =
+    activeSale?.tokensOnSale.map((token) => token.tokenID) ?? [];
+  const randomCopiesFull = randomCopies.filter(
+    (token) => token.tokenActive === true
+  );
+  const randomCopiesIds = randomCopiesFull.map((token) => token.tokenID);
+
+  const availableRandomTokenIds = isOriginal
+    ? activeSale?.tokensOnSale
+        .filter((token) => token.buyer === null)
+        .map((token) => token.tokenID) ?? []
+    : randomCopiesIds;
+
+  const randomTokenIds =
+    availableRandomTokenIds.length === 0
+      ? activeSale?.tokensOnSale.map((token) => token.tokenID) ?? []
+      : availableRandomTokenIds;
+
+  return {
+    specificTokenIds,
+    randomTokenIds
+  };
+};
+
 const MintSection = ({ isRandom }: MintSectionProps) => {
   const { activeSale, isOriginal } = useSaleWidget();
   const [randomToken, setRandomToken] = useState<WhitelistedTokenItem | null>(
     null
   );
+
   const [whitelist, setWhitelist] = useState<{ [key: string]: string[] }>({});
   const { isLoading, isPrivateSale } = usePrivateSale();
   const { isLoading: isAddressesLoading, getAddresses } = useGetAddresses();
+  const randomCopiesIds = useGetRandomCopies(activeSale, isRandom, isOriginal);
 
   const [isOpen, setIsOpen] = useState(false);
   const handleModal = () => {
     setIsOpen((prev) => !prev);
   };
 
-  const imageIds = activeSale?.tokensOnSale.map((token) => token.tokenID) ?? [];
+  // const imageIds = activeSale?.tokensOnSale.map((token) => token.tokenID) ?? [];
+  const { randomTokenIds, specificTokenIds } = getRandomAndOriginalTokenIds(
+    isOriginal,
+    activeSale,
+    randomCopiesIds
+  );
 
-  const { imageUris, loading: imageUrisLoading } = useImageData(imageIds);
+  const { imageUris, loading: imageUrisLoading } = useImageData(
+    isRandom ? randomTokenIds : specificTokenIds
+  );
 
   const currentImageIndex = useRandomImage(isRandom, imageUris);
   const isSoldOut = useBatchSoldOut(activeSale, isPrivateSale);
 
   const activeTokens = useMemo(() => {
     if (!activeSale) return [];
-    const availableTokens = getAvailableTokenIds(activeSale, isOriginal);
+    const availableTokens = isRandom ? randomTokenIds : specificTokenIds;
     return availableTokens.map((token, index) => ({
       src: imageUris[index] ?? "",
       price: `${formatUnits(BigInt(activeSale.floorPrice), 18)}`,
       isSold: false,
       batchId: activeSale.batchID,
-      tokenId: token.tokenID,
+      tokenId: token,
       ipfsHash: activeSale.ipfsHash,
       whitelist: whitelist[activeSale.ipfsHash] ?? [],
       balance: "0"
