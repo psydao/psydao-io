@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { Box, Text, Flex, Skeleton } from "@chakra-ui/react";
 import Image from "next/image";
+import { formatEther } from "viem";
 import { useAccount } from "wagmi";
-import NFTPrice from "@/components/commons/nftprice";
-import MintCount from "@/components/commons/mint-count";
-import FullSizeImageModal from "@/components/commons/image-modal";
+
+import NFTPrice from "@/components/common/nftprice";
+import MintCount from "@/components/common/mint-count";
+import FullSizeImageModal from "@/components/common/image-modal";
+
 import useBuyNft from "@/hooks/useBuyNft";
 import { useTokenSoldState } from "@/hooks/useTokenSoldState";
 import useFetchProof from "@/hooks/useFetchProof";
 import usePausedSale from "@/hooks/usePausedSale";
+
 import { useTokenContext } from "@/providers/TokenContext";
 import { type TokenItem } from "@/lib/types";
 import useReadTokenInformation from "@/hooks/useReadTokenInformation";
-import { formatEther } from "viem";
-import SkeletonLayout from "./commons/skeleton-card";
-import { MintButtonComponent } from "./commons/mint-button-comp";
-
+import SkeletonLayout from "./common/skeleton-card";
+import { MintButtonComponent } from "./common/mint-button-comp";
 interface PsycItemProps {
   item: TokenItem & {
     whitelist: string[];

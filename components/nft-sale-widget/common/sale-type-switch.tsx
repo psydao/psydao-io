@@ -1,16 +1,9 @@
+import { useSaleWidget } from "@/providers/SaleWidgetContext";
 import { InfoOutlineIcon } from "@chakra-ui/icons";
 import { Flex, Show, Switch, Text, Tooltip } from "@chakra-ui/react";
-import type { SetStateAction } from "react";
 
-interface SaleTypeSwitchProps {
-  isOriginal: boolean;
-  setIsOriginal: React.Dispatch<SetStateAction<boolean>>;
-}
-
-export const SaleTypeSwitch = ({
-  isOriginal,
-  setIsOriginal
-}: SaleTypeSwitchProps) => {
+export const SaleTypeSwitch = () => {
+  const { isOriginal, setIsOriginal } = useSaleWidget();
   return (
     <Flex alignItems={"center"} gap={2} mb={1}>
       <Switch

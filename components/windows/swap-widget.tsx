@@ -26,7 +26,7 @@ import useGetTokenBalances from "@/services/web3/useGetTokenBalances";
 import { useWithdrawTokens } from "@/services/web3/useWithdrawTokens";
 import { useResize } from "@/hooks/useResize";
 import MintButton from "../ui/mint-button";
-import WrongNetworkWindow from "../commons/wrong-network";
+import WrongNetworkWindow from "../common/wrong-network";
 
 const SwapWidgetTitle = () => (
   <Box p={4} pb={8}>

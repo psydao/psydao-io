@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import Image from "next/image";
-import FullSizeImageModal from "@/components/commons/image-modal";
+import FullSizeImageModal from "@/components/common/image-modal";
 import {
   psycNFTCopiesMainnet,
   psycNFTCopiesSepolia,

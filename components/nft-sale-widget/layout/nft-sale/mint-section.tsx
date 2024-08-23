@@ -1,44 +1,37 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { Box, Flex, Grid } from "@chakra-ui/react";
-import { useQuery } from "@apollo/client";
-import { getAllSalesWithTokens } from "@/services/graph";
-import type { TokenItem, GetAllSalesWithTokensData, Sale } from "@/lib/types";
+import { Flex, Grid } from "@chakra-ui/react";
 import { formatUnits } from "viem";
+
+import type { TokenItem } from "@/lib/types";
+
 import PsycItem from "../../psyc-item";
+import SkeletonLayout from "../../common/skeleton-card";
+import ConnectWalletModal from "../../common/connect-wallet-modal";
+
 import useRandomImage from "@/hooks/useRandomImage";
-import { useGetAddresses } from "@/hooks/useGetAddresses";
-import usePrivateSale from "@/hooks/usePrivateSale";
-import ConnectWalletModal from "../../commons/connect-wallet-modal";
-import getAvailableTokenIds from "@/utils/getAvailableTokenIds";
 import useImageData from "@/hooks/useImageData";
-import SkeletonLayout from "../../commons/skeleton-card";
+import usePrivateSale from "@/hooks/usePrivateSale";
+import { useGetAddresses } from "@/hooks/useGetAddresses";
 import { useBatchSoldOut } from "@/hooks/useBatchSoldOut";
 
+import getAvailableTokenIds from "@/utils/getAvailableTokenIds";
+import { useSaleWidget } from "@/providers/SaleWidgetContext";
 interface MintSectionProps {
   isRandom: boolean;
-  activeSale: Sale | undefined;
-  isFullscreen?: boolean;
-  isOriginal: boolean;
 }
-
 interface WhitelistedTokenItem extends TokenItem {
   whitelist: string[];
   balance: string;
 }
 
-const MintSection = ({
-  isRandom,
-  activeSale,
-  isOriginal
-}: MintSectionProps) => {
+const MintSection = ({ isRandom }: MintSectionProps) => {
+  const { activeSale, isOriginal } = useSaleWidget();
   const [randomToken, setRandomToken] = useState<WhitelistedTokenItem | null>(
     null
   );
   const [whitelist, setWhitelist] = useState<{ [key: string]: string[] }>({});
   const { isLoading, isPrivateSale } = usePrivateSale();
   const { isLoading: isAddressesLoading, getAddresses } = useGetAddresses();
-
-  // const [isSoldOut, setIsSoldOut] = useState(false);
 
   const [isOpen, setIsOpen] = useState(false);
   const handleModal = () => {
