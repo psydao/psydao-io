@@ -198,6 +198,23 @@ const PsycItem = ({
             </Text>
           </Box>
         )}
+        {!isOriginal && !isActive && !isOwnedView && (
+          <Box
+            position="absolute"
+            top="0"
+            left="0"
+            width="100%"
+            height="100%"
+            bg={"#00000066"}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Text color="white" fontWeight="bold">
+              Paused
+            </Text>
+          </Box>
+        )}
         {isOwnedView && isOriginal && (
           <Flex
             alignItems="center"
@@ -241,6 +258,7 @@ const PsycItem = ({
           soldOut={soldOut}
           isOriginal={isOriginal}
           isRandom={isRandom}
+          isSold={isSold ?? false}
         />
       )}
 
