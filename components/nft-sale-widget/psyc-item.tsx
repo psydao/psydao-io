@@ -141,6 +141,7 @@ const PsycItem: React.FC<PsycItemProps> = ({
         soldOut={soldOut}
         isOriginal={isOriginal}
         isRandom={isRandom}
+        isSold={isSold ?? false}
       />
     );
   }

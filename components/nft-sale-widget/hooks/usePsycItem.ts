@@ -46,25 +46,6 @@ export const usePsycItem = ({
   const { isPaused } = usePausedSale(item.batchId);
   const { tokenInformationData } = useReadTokenInformation(item.tokenId);
   const proof = useFetchProof(address, item.ipfsHash, isPrivateSale);
-  // const { floorAndCeilingPriceData } = useReadFloorAndCeilingPrice(
-  //   item.tokenId
-  // );
-
-  // const { copyPrice, priceLoading, isActive } = useMemo(() => {
-  //   if (!floorAndCeilingPriceData) {
-  //     return { copyPrice: "0.00", priceLoading: true, isActive: true };
-  //   }
-
-  //   const price = isRandom
-  //     ? formatEther(floorAndCeilingPriceData[0])
-  //     : formatEther(floorAndCeilingPriceData[1]);
-
-  //   return {
-  //     copyPrice: price,
-  //     priceLoading: false,
-  //     isActive: floorAndCeilingPriceData[2]
-  //   };
-  // }, [floorAndCeilingPriceData, isRandom]);
 
   const [copyPrice, setCopyPrice] = useState("0.00");
   const [priceLoading, setPriceLoading] = useState(true);
