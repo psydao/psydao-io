@@ -18,8 +18,8 @@ const MintPsycHeader = () => {
 
   return (
     <Box w={"100%"}>
-      <Box px={{ base: 2, md: 4 }} py={2} position={"relative"}>
-        <Flex justifyContent={"start"} direction={"column"} gap={"10px"}>
+      <Box px={{ base: 2, md: 4 }} pb={2} position={"relative"}>
+        <Flex justifyContent={"start"} direction={"column"} gap={"6px"}>
           <Flex
             alignItems={{ base: "start", md: "center" }}
             justifyContent={"space-between"}

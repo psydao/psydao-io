@@ -213,3 +213,4 @@ const PriceSkeleton = () => (
 );
 
 export default PsycItem;
+

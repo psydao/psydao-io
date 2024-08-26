@@ -74,13 +74,14 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
 
   return (
     <Flex
-      p={4}
+      px={4}
+      py={2}
       borderRadius={"21px"}
       border="1px solid #E9BDBD"
       w={"100%"}
       h={"100%"}
       direction={"column"}
-      gap={4}
+      gap={2}
     >
       <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
         <Text
