@@ -114,7 +114,7 @@ const PsycItem: React.FC<PsycItemProps> = ({
     if (isOriginal && isSold && !isRandom) {
       return <SoldOverlay />;
     }
-    if (!isActive) {
+    if (!isOriginal && !isActive) {
       return <PausedOverlay />;
     }
     return null;
@@ -214,4 +214,3 @@ const PriceSkeleton = () => (
 );
 
 export default PsycItem;
-
