@@ -28,7 +28,7 @@ export const useGetAddresses = () => {
 
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_PINATA_BASE_URL}/${ipfsHash}`
+          `${process.env.NEXT_PUBLIC_PINATA_BASE_URL}/ipfs/${ipfsHash}`
         );
 
         if (!res.ok) {
