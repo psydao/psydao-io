@@ -114,6 +114,9 @@ const PsycItem: React.FC<PsycItemProps> = ({
     if (isOriginal && isSold && !isRandom) {
       return <SoldOverlay />;
     }
+    if (!isActive) {
+      return <PausedOverlay />;
+    }
     return null;
   }
 
@@ -133,7 +136,7 @@ const PsycItem: React.FC<PsycItemProps> = ({
         handleModal={handleModal}
         handleMint={handleMint}
         isMinting={isMinting}
-        isPaused={isPaused}
+        isPaused={isPaused || (!isOriginal && !isActive)}
         isActive={isActive}
         soldOut={soldOut}
         isOriginal={isOriginal}
@@ -176,6 +179,24 @@ const SoldOverlay = () => (
   >
     <Text color="white" fontWeight="bold">
       Sold
+    </Text>
+  </Box>
+);
+
+const PausedOverlay = () => (
+  <Box
+    position="absolute"
+    top="0"
+    left="0"
+    width="100%"
+    height="100%"
+    bg="#00000066"
+    display="flex"
+    alignItems="center"
+    justifyContent="center"
+  >
+    <Text color="white" fontWeight="bold">
+      Paused
     </Text>
   </Box>
 );

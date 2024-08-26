@@ -6,7 +6,7 @@ import useBuyNft from "@/hooks/useBuyNft";
 import { useTokenSoldState } from "@/hooks/useTokenSoldState";
 import useFetchProof from "@/hooks/useFetchProof";
 import usePausedSale from "@/hooks/usePausedSale";
-import useReadFloorAndCeilingPrice from "@/hooks/useReadFloorAndCeilingPrice";
+import useReadTokenInformation from "@/hooks/useReadTokenInformation";
 import { type TokenItem } from "@/lib/types";
 
 interface UsePsycItemProps {
@@ -44,26 +44,48 @@ export const usePsycItem = ({
     parseInt(item.tokenId)
   );
   const { isPaused } = usePausedSale(item.batchId);
-  const { floorAndCeilingPriceData } = useReadFloorAndCeilingPrice(
-    item.tokenId
-  );
+  const { tokenInformationData } = useReadTokenInformation(item.tokenId);
   const proof = useFetchProof(address, item.ipfsHash, isPrivateSale);
+  // const { floorAndCeilingPriceData } = useReadFloorAndCeilingPrice(
+  //   item.tokenId
+  // );
 
-  const { copyPrice, priceLoading, isActive } = useMemo(() => {
-    if (!floorAndCeilingPriceData) {
-      return { copyPrice: "0.00", priceLoading: true, isActive: true };
+  // const { copyPrice, priceLoading, isActive } = useMemo(() => {
+  //   if (!floorAndCeilingPriceData) {
+  //     return { copyPrice: "0.00", priceLoading: true, isActive: true };
+  //   }
+
+  //   const price = isRandom
+  //     ? formatEther(floorAndCeilingPriceData[0])
+  //     : formatEther(floorAndCeilingPriceData[1]);
+
+  //   return {
+  //     copyPrice: price,
+  //     priceLoading: false,
+  //     isActive: floorAndCeilingPriceData[2]
+  //   };
+  // }, [floorAndCeilingPriceData, isRandom]);
+
+  const [copyPrice, setCopyPrice] = useState("0.00");
+  const [priceLoading, setPriceLoading] = useState(true);
+  const [isActive, setIsActive] = useState(true);
+
+  useEffect(() => {
+    if (tokenInformationData && isRandom) {
+      const floorPrice = formatEther(tokenInformationData[0]);
+      setCopyPrice(floorPrice);
+      setPriceLoading(false);
+      setIsActive(tokenInformationData[2]);
+    } else if (tokenInformationData && !isRandom) {
+      const ceilingPrice = formatEther(tokenInformationData[1]);
+      setCopyPrice(ceilingPrice);
+      setPriceLoading(false);
     }
 
-    const price = isRandom
-      ? formatEther(floorAndCeilingPriceData[0])
-      : formatEther(floorAndCeilingPriceData[1]);
-
-    return {
-      copyPrice: price,
-      priceLoading: false,
-      isActive: floorAndCeilingPriceData[2]
-    };
-  }, [floorAndCeilingPriceData, isRandom]);
+    if (tokenInformationData) {
+      setIsActive(tokenInformationData[2]);
+    }
+  }, [tokenInformationData, isRandom]);
 
   useEffect(() => {
     if (isSold) {
