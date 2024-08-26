@@ -28,7 +28,6 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
     imageUris,
     imageUrisLoading,
     privateSaleStatus,
-    isAddressesLoading,
     isSoldOut,
     whitelist,
     currentImageIndex
@@ -50,7 +49,6 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
           privateSaleStatus={privateSaleStatus}
           isOriginal={isOriginal}
           handleModal={handleModal}
-          isAddressesLoading={isAddressesLoading}
           isSoldOut={isSoldOut}
           refetchBalances={refetchBalances}
         />
@@ -63,7 +61,6 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
           privateSaleStatus={privateSaleStatus}
           isOriginal={isOriginal}
           handleModal={handleModal}
-          isAddressesLoading={isAddressesLoading}
           refetchBalances={refetchBalances}
         />
       ) : null}
@@ -78,7 +75,6 @@ const RandomPsycItem: React.FC<{
   privateSaleStatus: boolean;
   isOriginal: boolean;
   handleModal: () => void;
-  isAddressesLoading: boolean;
   isSoldOut: boolean;
   refetchBalances: () => void;
 }> = ({
@@ -87,7 +83,6 @@ const RandomPsycItem: React.FC<{
   privateSaleStatus,
   isOriginal,
   handleModal,
-  isAddressesLoading,
   isSoldOut,
   refetchBalances
 }) => (
@@ -99,7 +94,6 @@ const RandomPsycItem: React.FC<{
       isPrivateSale={privateSaleStatus}
       isOriginal={isOriginal}
       handleModal={handleModal}
-      isAddressesLoading={isAddressesLoading}
       soldOut={isSoldOut}
       refetchBalances={refetchBalances}
     />
@@ -114,7 +108,6 @@ const SpecificPsycItems: React.FC<{
   privateSaleStatus: boolean;
   isOriginal: boolean;
   handleModal: () => void;
-  isAddressesLoading: boolean;
   refetchBalances: () => void;
 }> = ({
   tokens,
@@ -124,7 +117,6 @@ const SpecificPsycItems: React.FC<{
   privateSaleStatus,
   isOriginal,
   handleModal,
-  isAddressesLoading,
   refetchBalances
 }) => (
   <Grid
@@ -154,7 +146,6 @@ const SpecificPsycItems: React.FC<{
         isPrivateSale={privateSaleStatus}
         isOriginal={isOriginal}
         handleModal={handleModal}
-        isAddressesLoading={isAddressesLoading}
         soldOut={false}
         refetchBalances={refetchBalances}
       />
