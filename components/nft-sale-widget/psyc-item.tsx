@@ -28,10 +28,10 @@ interface PsycItemProps {
   isPrivateSale: boolean;
   isOriginal: boolean;
   isOwnedView?: boolean;
-  refetchBalances: () => void;
   handleModal: () => void;
   isAddressesLoading: boolean;
   soldOut: boolean;
+  refetchBalances: () => void;
 }
 
 const PsycItem = ({
@@ -41,10 +41,12 @@ const PsycItem = ({
   isPrivateSale,
   isOriginal,
   isOwnedView = false,
-  refetchBalances,
   handleModal,
-  soldOut
+  soldOut,
+  refetchBalances
 }: PsycItemProps) => {
+  const { address } = useAccount();
+
   const { buyNft, isPending, isConfirming, isMinting } = useBuyNft(
     isPrivateSale,
     isRandom,
@@ -52,7 +54,6 @@ const PsycItem = ({
     refetchBalances
   );
 
-  const { address } = useAccount();
   const [copyPrice, setCopyPrice] = useState("0.00");
   const [priceLoading, setPriceLoading] = useState(true);
   const { isSold, isLoading: isSoldLoading } = useTokenSoldState(
