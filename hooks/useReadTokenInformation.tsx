@@ -4,25 +4,25 @@ import { useReadContract } from "wagmi";
 
 type FloorAndCeilingPriceReturn = [bigint, bigint, boolean];
 
-const useReadFloorAndCeilingPrice = (tokenId: string) => {
+const useReadTokenInformation = (tokenId: string) => {
   const {
     data,
-    isError: floorAndCeilingPriceError,
-    isLoading: floorAndCeilingPriceLoading
+    isError: tokenInformationError,
+    isLoading: tokenInformationLoading
   } = useReadContract({
     ...erc1155sContractConfig,
     functionName: "tokenInformation",
     args: [tokenId]
   });
 
-  const floorAndCeilingPriceData = useMemo(() => {
+  const tokenInformationData = useMemo(() => {
     return data as FloorAndCeilingPriceReturn;
   }, [data]);
   return {
-    floorAndCeilingPriceData,
-    floorAndCeilingPriceError,
-    floorAndCeilingPriceLoading
+    tokenInformationData,
+    tokenInformationError,
+    tokenInformationLoading
   };
 };
 
-export default useReadFloorAndCeilingPrice;
+export default useReadTokenInformation;

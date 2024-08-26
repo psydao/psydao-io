@@ -7,17 +7,17 @@ import { useAccount } from "wagmi";
 import NFTPrice from "@/components/common/nftprice";
 import MintCount from "@/components/common/mint-count";
 import FullSizeImageModal from "@/components/common/image-modal";
-import SkeletonLayout from "./common/skeleton-card";
-import { MintButtonComponent } from "./common/mint-button-comp";
 
 import useBuyNft from "@/hooks/useBuyNft";
 import { useTokenSoldState } from "@/hooks/useTokenSoldState";
 import useFetchProof from "@/hooks/useFetchProof";
 import usePausedSale from "@/hooks/usePausedSale";
-import useReadFloorAndCeilingPrice from "@/hooks/useReadFloorAndCeilingPrice";
 
 import { useTokenContext } from "@/providers/TokenContext";
 import { type TokenItem } from "@/lib/types";
+import useReadTokenInformation from "@/hooks/useReadTokenInformation";
+import SkeletonLayout from "./common/skeleton-card";
+import { MintButtonComponent } from "./common/mint-button-comp";
 interface PsycItemProps {
   item: TokenItem & {
     whitelist: string[];
@@ -64,28 +64,27 @@ const PsycItem = ({
 
   const { refetch } = useTokenContext();
 
-  const { floorAndCeilingPriceData } = useReadFloorAndCeilingPrice(
-    item.tokenId
-  );
+  const { tokenInformationData } = useReadTokenInformation(item.tokenId);
 
   const [isActive, setIsActive] = useState(true);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   useEffect(() => {
-    if (floorAndCeilingPriceData && isRandom) {
-      const floorPrice = formatEther(floorAndCeilingPriceData[0]);
+    if (tokenInformationData && isRandom) {
+      const floorPrice = formatEther(tokenInformationData[0]);
       setCopyPrice(floorPrice);
       setPriceLoading(false);
-    } else if (floorAndCeilingPriceData && !isRandom) {
-      const ceilingPrice = formatEther(floorAndCeilingPriceData[1]);
+      setIsActive(tokenInformationData[2]);
+    } else if (tokenInformationData && !isRandom) {
+      const ceilingPrice = formatEther(tokenInformationData[1]);
       setCopyPrice(ceilingPrice);
       setPriceLoading(false);
     }
 
-    if (floorAndCeilingPriceData) {
-      setIsActive(floorAndCeilingPriceData[2]);
+    if (tokenInformationData) {
+      setIsActive(tokenInformationData[2]);
     }
-  }, [floorAndCeilingPriceData, isRandom]);
+  }, [tokenInformationData, isRandom]);
 
   useEffect(() => {
     if (isSold) {
@@ -200,6 +199,23 @@ const PsycItem = ({
             </Text>
           </Box>
         )}
+        {!isOriginal && !isActive && !isOwnedView && (
+          <Box
+            position="absolute"
+            top="0"
+            left="0"
+            width="100%"
+            height="100%"
+            bg={"#00000066"}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Text color="white" fontWeight="bold">
+              Paused
+            </Text>
+          </Box>
+        )}
         {isOwnedView && isOriginal && (
           <Flex
             alignItems="center"
@@ -238,11 +254,12 @@ const PsycItem = ({
           handleModal={handleModal}
           handleMint={handleMint}
           isMinting={isMinting}
-          isPaused={isPaused}
+          isPaused={isPaused || (!isOriginal && !isActive)}
           isActive={isActive}
           soldOut={soldOut}
           isOriginal={isOriginal}
           isRandom={isRandom}
+          isSold={isSold ?? false}
         />
       )}
 
