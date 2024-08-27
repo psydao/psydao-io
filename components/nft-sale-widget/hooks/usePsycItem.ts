@@ -52,18 +52,13 @@ export const usePsycItem = ({
   const [isActive, setIsActive] = useState(true);
 
   useEffect(() => {
-    if (tokenInformationData && isRandom) {
-      const floorPrice = formatEther(tokenInformationData[0]);
-      setCopyPrice(floorPrice);
-      setPriceLoading(false);
-      setIsActive(tokenInformationData[2]);
-    } else if (tokenInformationData && !isRandom) {
-      const ceilingPrice = formatEther(tokenInformationData[1]);
-      setCopyPrice(ceilingPrice);
-      setPriceLoading(false);
-    }
-
     if (tokenInformationData) {
+      const price = isRandom
+        ? formatEther(tokenInformationData[0])
+        : formatEther(tokenInformationData[1]);
+
+      setCopyPrice(price);
+      setPriceLoading(false);
       setIsActive(tokenInformationData[2]);
     }
   }, [tokenInformationData, isRandom]);
