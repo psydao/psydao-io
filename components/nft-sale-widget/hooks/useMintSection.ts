@@ -42,7 +42,7 @@ export const useMintSection = (isRandom: boolean) => {
       whitelist: whitelist[activeSale.ipfsHash] ?? [],
       balance: "0"
     }));
-  }, [activeSale, isOriginal]);
+  }, [activeSale, imageUris, whitelist, isOriginal]);
 
   const randomToken = useMemo(() => {
     if (!isRandom) return null;
@@ -87,9 +87,9 @@ export const useMintSection = (isRandom: boolean) => {
         }
       }
     };
-
     void fetchWhitelist();
-  }, [activeSale, isAddressesLoading]);
+    console.log("Fetching whitelist addresses...");
+  }, [activeSale]);
 
   const privateSaleStatus = !isPrivateSaleLoading && isPrivateSale;
 

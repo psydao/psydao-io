@@ -15,7 +15,6 @@ const useImageData = (tokenIds: string[]) => {
       }
     }
   );
-
   useEffect(() => {
     if (data && data.tokens.length > 0) {
       setImageUris(
@@ -24,7 +23,7 @@ const useImageData = (tokenIds: string[]) => {
     } else {
       setImageUris(Array(tokenIds.length).fill(FALLBACK_IMAGE));
     }
-  }, [data]);
+  }, [data, tokenIds]);
 
   return { imageUris, loading, error };
 };
