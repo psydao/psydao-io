@@ -24,7 +24,7 @@ const useImageData = (tokenIds: string[]) => {
     } else {
       setImageUris(Array(tokenIds.length).fill(FALLBACK_IMAGE));
     }
-  }, [data, tokenIds]);
+  }, [data]);
 
   return { imageUris, loading, error };
 };
