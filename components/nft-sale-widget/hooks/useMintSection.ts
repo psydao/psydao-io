@@ -88,7 +88,6 @@ export const useMintSection = (isRandom: boolean) => {
       }
     };
     void fetchWhitelist();
-    console.log("Fetching whitelist addresses...");
   }, [activeSale]);
 
   const privateSaleStatus = !isPrivateSaleLoading && isPrivateSale;
