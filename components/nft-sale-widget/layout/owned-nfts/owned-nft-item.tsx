@@ -11,7 +11,7 @@ import {
   GridItem,
   Spinner
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import FullSizeImageModal from "@/components/common/image-modal";
 import {
@@ -20,9 +20,10 @@ import {
   psyNFTMainnet,
   psyNFTSepolia
 } from "@/constants/contracts";
-import useActivateSale from "@/hooks/useActivateSale";
 import { useCustomToasts } from "@/hooks/useCustomToasts";
 import { useResize } from "@/hooks/useResize";
+import useToggleCopySales from "@/hooks/useToggleCopySales"; // Updated hook name
+import useReadTokenInformation from "@/hooks/useReadTokenInformation";
 
 interface OwnedNftItemProps {
   item: TokenItem & {
@@ -75,15 +76,26 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
 
   const { showCustomErrorToast } = useCustomToasts();
   const { width } = useResize();
-  const { activateSale, isPending: isLoading } = useActivateSale();
+  const { toggleSaleStatus, isPending: isLoading } = useToggleCopySales(); // Updated hook
+  const { tokenInformationData } = useReadTokenInformation(props.item.tokenId);
+  const [isActive, setIsActive] = useState<boolean>();
 
-  const handleActivateSale = async () => {
-    console.log("activating copy sales for tokenId", props.item.tokenId);
+  useEffect(() => {
+    if (tokenInformationData) {
+      setIsActive(tokenInformationData[2]);
+    }
+  }, [tokenInformationData]);
+
+  const handleToggleSaleStatus = async () => {
+    console.log(
+      `${isActive ? "deactivating" : "activating"} copy sales for tokenId`,
+      props.item.tokenId
+    );
     try {
       if (props.isOriginal && props.item.tokenId) {
-        await activateSale([parseInt(props.item.tokenId)]);
+        await toggleSaleStatus([parseInt(props.item.tokenId)]);
       } else {
-        console.error("Sale Activation failed");
+        console.error("Sale status toggle failed");
       }
     } catch (error) {
       const message = (error as Error).message || "An error occurred";
@@ -191,7 +203,7 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
       )}
       {props.isOriginal && (
         <MintButton
-          onClick={handleActivateSale}
+          onClick={handleToggleSaleStatus}
           customStyle={{
             width: "100%"
           }}
@@ -200,8 +212,10 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
           {isLoading ? (
             <>
               <Spinner size="sm" mr={2} />
-              Activating
+              {isActive ? "Deactivating" : "Activating"}
             </>
+          ) : isActive ? (
+            "Deactivate Copy Sales"
           ) : (
             "Activate Copy Sales"
           )}
