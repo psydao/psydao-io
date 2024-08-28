@@ -8,8 +8,7 @@ import { useGetAddresses } from "@/hooks/useGetAddresses";
 import { useBatchSoldOut } from "@/hooks/useBatchSoldOut";
 import useImageData from "@/hooks/useImageData";
 import useRandomImage from "@/hooks/useRandomImage";
-
-import getAvailableTokenIds from "@/utils/getAvailableTokenIds";
+import useGetRandomIds from "@/hooks/useGetRandomIds";
 
 export const useMintSection = (isRandom: boolean) => {
   const { activeSale, isOriginal } = useSaleWidget();
@@ -20,10 +19,16 @@ export const useMintSection = (isRandom: boolean) => {
   const { isLoading: isAddressesLoading, getAddresses } = useGetAddresses();
   const isSoldOut = useBatchSoldOut(activeSale, isPrivateSale);
 
+  const availableRandomIds = useGetRandomIds(activeSale, isRandom, isOriginal);
+
   const imageIds = useMemo(
-    () => activeSale?.tokensOnSale.map((token) => token.tokenID) ?? [],
-    [activeSale]
+    () =>
+      isRandom && availableRandomIds.length > 0
+        ? availableRandomIds
+        : activeSale?.tokensOnSale.map((token) => token.tokenID) ?? [],
+    [activeSale, availableRandomIds, isOriginal]
   );
+
   const { imageUris, loading: imageUrisLoading } = useImageData(imageIds);
   const currentImageIndex = useRandomImage(isRandom, imageUris);
 
@@ -31,13 +36,13 @@ export const useMintSection = (isRandom: boolean) => {
 
   const activeTokens = useMemo(() => {
     if (!activeSale) return [];
-    const availableTokens = getAvailableTokenIds(activeSale, isOriginal);
+    const availableTokens = imageIds;
     return availableTokens.map((token, index) => ({
       src: imageUris[index] ?? "",
       price: formatUnits(BigInt(activeSale.floorPrice), 18),
       isSold: false,
       batchId: activeSale.batchID,
-      tokenId: token.tokenID,
+      tokenId: token,
       ipfsHash: activeSale.ipfsHash,
       whitelist: whitelist[activeSale.ipfsHash] ?? [],
       balance: "0"
