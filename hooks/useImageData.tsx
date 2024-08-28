@@ -15,7 +15,6 @@ const useImageData = (tokenIds: string[]) => {
       }
     }
   );
-
   useEffect(() => {
     if (data && data.tokens.length > 0) {
       setImageUris(

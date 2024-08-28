@@ -1,18 +1,20 @@
 import { ERC1155Mainnet, ERC1155Sepolia } from "@/constants/contracts";
 import ERC1155Abi from "@/abis/ERC1155Abi.json";
 import ERC1155SepoliaAbi from "@/abis/ERC115AbiSepolia.json";
-import { mainnetClient, sepoliaClient } from "@/constants/publicClient";
+import { sepoliaClient } from "@/constants/publicClient";
 import type { Sale } from "@/lib/types";
 import { useEffect, useState } from "react";
 
 export type TokenInformationReturn = [bigint, bigint, boolean];
 
-const useGetRandomIds = (
+const useGetRandomCopies = (
   activeSale: Sale | undefined,
   isRandom: boolean,
   isOriginal: boolean
 ) => {
-  const [availableRandomIds, setAvailableRandomIds] = useState<string[]>([]);
+  const [availableRandomCopies, setAvailableRandomCopies] = useState<
+    { tokenID: string; tokenActive: boolean }[]
+  >([]);
 
   useEffect(() => {
     const fetchRandomCopies = async () => {
@@ -20,7 +22,7 @@ const useGetRandomIds = (
         const randomCopies = await Promise.all(
           process.env.NEXT_PUBLIC_CHAIN_ID === "1"
             ? activeSale.tokensOnSale.map(async (token) => {
-                const currentTokenInfo = (await mainnetClient.readContract({
+                const currentTokenInfo = (await sepoliaClient.readContract({
                   address: ERC1155Mainnet,
                   abi: ERC1155Abi,
                   functionName: "tokenInformation",
@@ -45,22 +47,12 @@ const useGetRandomIds = (
                 };
               })
         );
-        setAvailableRandomIds(
-          randomCopies
-            .filter((token) => token.tokenActive === true)
-            .map((token) => token.tokenID)
-        );
-      } else if (activeSale && isRandom && isOriginal) {
-        setAvailableRandomIds(
-          activeSale.tokensOnSale
-            .filter((token) => token.buyer === null)
-            .map((token) => token.tokenID)
-        );
+        setAvailableRandomCopies(randomCopies);
       }
     };
     fetchRandomCopies().catch(console.error);
   }, [activeSale, isRandom, isOriginal]);
-  return availableRandomIds;
+  return availableRandomCopies;
 };
 
-export default useGetRandomIds;
+export default useGetRandomCopies;
