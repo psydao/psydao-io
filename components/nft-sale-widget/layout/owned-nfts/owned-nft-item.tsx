@@ -20,6 +20,9 @@ import {
   psyNFTMainnet,
   psyNFTSepolia
 } from "@/constants/contracts";
+import useActivateSale from "@/hooks/useActivateSale";
+import { useCustomToasts } from "@/hooks/useCustomToasts";
+import { useResize } from "@/hooks/useResize";
 
 interface OwnedNftItemProps {
   item: TokenItem & {
@@ -69,6 +72,24 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
     isMinting ||
     props.isOriginal ||
     props.isPrivateSale;
+
+  const { showCustomErrorToast } = useCustomToasts();
+  const { width } = useResize();
+  const { activateSale, isPending: isLoading } = useActivateSale();
+
+  const handleActivateSale = async () => {
+    console.log("activating copy sales for tokenId", props.item.tokenId);
+    try {
+      if (props.isOriginal && props.item.tokenId) {
+        await activateSale([parseInt(props.item.tokenId)]);
+      } else {
+        console.error("Sale Activation failed");
+      }
+    } catch (error) {
+      const message = (error as Error).message || "An error occurred";
+      showCustomErrorToast(message, width);
+    }
+  };
 
   const [isImageOpen, setIsImageOpen] = useState(false);
 
@@ -167,6 +188,24 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
             </MintButton>
           </GridItem>
         </Grid>
+      )}
+      {props.isOriginal && (
+        <MintButton
+          onClick={handleActivateSale}
+          customStyle={{
+            width: "100%"
+          }}
+          ownedView
+        >
+          {isLoading ? (
+            <>
+              <Spinner size="sm" mr={2} />
+              Activating
+            </>
+          ) : (
+            "Activate Copy Sales"
+          )}
+        </MintButton>
       )}
       <FullSizeImageModal
         isOpen={isImageOpen}
