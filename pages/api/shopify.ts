@@ -32,6 +32,7 @@ const SHOPIFY_API_ACCESS_TOKEN = process.env.SHOPIFY_API_ACCESS_TOKEN ?? "";
 const SHOPIFY_API_KEY = process.env.SHOPIFY_API_KEY ?? "";
 const SHOPIFY_API_SECRET = process.env.SHOPIFY_API_SECRET ?? "";
 const SHOPIFY_SHOP_NAME = process.env.SHOPIFY_SHOP_NAME ?? "";
+const SHOPIFY_PRODUCT_ID = process.env.SHOPIFY_PRODUCT_ID ?? "";
 
 const NFT_CONTRACT_ADDRESS =
   CHAIN_ID === "1"
@@ -165,7 +166,7 @@ async function generateShopifyProductDiscount(
         },
         items: {
           products: {
-            productsToAdd: ["gid://shopify/Product/8984181407961"] // Replace with actual Como Hat product ID
+            productsToAdd: [`gid://shopify/Product/${SHOPIFY_PRODUCT_ID}`]
           }
         }
       }
