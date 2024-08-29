@@ -22,7 +22,7 @@ import {
 } from "@/constants/contracts";
 import { useCustomToasts } from "@/hooks/useCustomToasts";
 import { useResize } from "@/hooks/useResize";
-import useToggleCopySales from "@/hooks/useToggleCopySales"; // Updated hook name
+import useToggleCopySales from "@/hooks/useToggleCopySales";
 import useReadTokenInformation from "@/hooks/useReadTokenInformation";
 
 interface OwnedNftItemProps {
