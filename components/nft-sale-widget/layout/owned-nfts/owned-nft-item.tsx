@@ -11,7 +11,7 @@ import {
   GridItem,
   Spinner
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import FullSizeImageModal from "@/components/common/image-modal";
 import {
@@ -76,26 +76,30 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
 
   const { showCustomErrorToast } = useCustomToasts();
   const { width } = useResize();
-  const { toggleSaleStatus, isPending: isLoading } = useToggleCopySales(); // Updated hook
   const { tokenInformationData } = useReadTokenInformation(props.item.tokenId);
   const [isActive, setIsActive] = useState<boolean>();
 
-  useEffect(() => {
+  const fetchSaleStatus = useCallback(() => {
     if (tokenInformationData) {
       setIsActive(tokenInformationData[2]);
     }
-  }, [tokenInformationData]);
+  }, [tokenInformationData, setIsActive]);
+
+  useEffect(() => {
+    fetchSaleStatus();
+  }, [fetchSaleStatus]);
+
+  const { toggleSaleStatus, isPending: isLoading } = useToggleCopySales({
+    refetchSaleStatus: fetchSaleStatus
+  });
 
   const handleToggleSaleStatus = async () => {
-    console.log(
-      `${isActive ? "deactivating" : "activating"} copy sales for tokenId`,
-      props.item.tokenId
-    );
     try {
       if (props.isOriginal && props.item.tokenId) {
         await toggleSaleStatus([parseInt(props.item.tokenId)]);
       } else {
         console.error("Sale status toggle failed");
+        showCustomErrorToast("Failed to toggle sale status", width);
       }
     } catch (error) {
       const message = (error as Error).message || "An error occurred";
@@ -204,8 +208,14 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
       {props.isOriginal && (
         <MintButton
           onClick={handleToggleSaleStatus}
+          isDisabled={isLoading}
           customStyle={{
-            width: "100%"
+            width: "100%",
+            background: isActive
+              ? "transparent"
+              : "linear-gradient(90deg, #B14CE7 0%, #E09CA4 100%)",
+            color: isActive ? "#B14CE7" : "white",
+            border: isActive ? "1px solid #B14CE7" : "1px solid #D6D6D6"
           }}
           ownedView
         >
@@ -215,9 +225,9 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
               {isActive ? "Deactivating" : "Activating"}
             </>
           ) : isActive ? (
-            "Deactivate Copy Sales"
+            "Deactivate Copy Sale"
           ) : (
-            "Activate Copy Sales"
+            "Activate Copy Sale"
           )}
         </MintButton>
       )}
