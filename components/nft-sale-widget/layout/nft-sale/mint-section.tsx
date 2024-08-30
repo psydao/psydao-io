@@ -52,7 +52,7 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
           isSoldOut={isSoldOut}
           refetchBalances={refetchBalances}
         />
-      ) : activeSale && !isRandom ? (
+      ) : activeSale ? (
         <SpecificPsycItems
           tokens={activeSale?.tokensOnSale ?? []}
           imageUris={imageUris}
