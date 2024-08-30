@@ -50,8 +50,7 @@ export const useMintSection = (isRandom: boolean) => {
 
   const activeTokens = useMemo(() => {
     if (!activeSale) return [];
-    const availableTokens = imageIds;
-    return availableTokens.map((token, index) => ({
+    return imageIds.map((token, index) => ({
       src: imageUris[index] ?? "",
       price: formatUnits(BigInt(activeSale.floorPrice), 18),
       isSold: false,
