@@ -25,7 +25,7 @@ export const useMintSection = (isRandom: boolean) => {
     isOriginal
   );
 
-  const randomImageIds = useMemo(() => {
+  const imageIds = useMemo(() => {
     if (!isRandomIdsLoading && availableRandomIds.length > 0 && isRandom) {
       return availableRandomIds;
     } else if (
@@ -34,16 +34,10 @@ export const useMintSection = (isRandom: boolean) => {
       isRandom
     ) {
       return activeSale?.tokensOnSale.map((token) => token.tokenID) ?? [];
+    } else if (!isRandom) {
+      return activeSale?.tokensOnSale.map((token) => token.tokenID) ?? [];
     } else return [];
   }, [availableRandomIds, isRandomIdsLoading, activeSale, isRandom]);
-
-  const specificimageIds = useMemo(() => {
-    return activeSale?.tokensOnSale.map((token) => token.tokenID) ?? [];
-  }, [activeSale]);
-
-  const imageIds = useMemo(() => {
-    return isRandom ? randomImageIds : specificimageIds;
-  }, [randomImageIds, specificimageIds]);
 
   const { imageUris, loading: imageUrisLoading } = useImageData(
     imageIds,
@@ -56,7 +50,7 @@ export const useMintSection = (isRandom: boolean) => {
 
   const activeTokens = useMemo(() => {
     if (!activeSale) return [];
-    const availableTokens = randomImageIds;
+    const availableTokens = imageIds;
     return availableTokens.map((token, index) => ({
       src: imageUris[index] ?? "",
       price: formatUnits(BigInt(activeSale.floorPrice), 18),

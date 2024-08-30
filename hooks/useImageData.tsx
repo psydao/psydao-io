@@ -37,8 +37,6 @@ const useImageData = (
     return tokenIds.map(() => FALLBACK_IMAGE);
   }, [data, tokenIds]);
 
-  console.log("imageUris", imageUris, isRandom);
-
   return { imageUris, loading, error };
 };
 

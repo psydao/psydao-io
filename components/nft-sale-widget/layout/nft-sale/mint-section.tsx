@@ -40,8 +40,6 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
     return <SkeletonLayout isRandom={isRandom} />;
   }
 
-  console.log(imageUris, isRandom);
-
   return (
     <Flex textAlign="center" py={4} px={4} justifyContent="center">
       {isRandom && randomToken ? (
