@@ -11,7 +11,7 @@ import {
   GridItem,
   Spinner
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import FullSizeImageModal from "@/components/common/image-modal";
 import {
@@ -20,6 +20,10 @@ import {
   psyNFTMainnet,
   psyNFTSepolia
 } from "@/constants/contracts";
+import { useCustomToasts } from "@/hooks/useCustomToasts";
+import { useResize } from "@/hooks/useResize";
+import useToggleCopySales from "@/hooks/useToggleCopySales";
+import useReadTokenInformation from "@/hooks/useReadTokenInformation";
 
 interface OwnedNftItemProps {
   item: TokenItem & {
@@ -69,6 +73,39 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
     isMinting ||
     props.isOriginal ||
     props.isPrivateSale;
+
+  const { showCustomErrorToast } = useCustomToasts();
+  const { width } = useResize();
+  const { tokenInformationData } = useReadTokenInformation(props.item.tokenId);
+  const [isActive, setIsActive] = useState<boolean>();
+
+  const fetchSaleStatus = useCallback(() => {
+    if (tokenInformationData) {
+      setIsActive(tokenInformationData[2]);
+    }
+  }, [tokenInformationData, setIsActive]);
+
+  useEffect(() => {
+    fetchSaleStatus();
+  }, [fetchSaleStatus]);
+
+  const { toggleSaleStatus, isPending: isLoading } = useToggleCopySales({
+    refetchSaleStatus: fetchSaleStatus
+  });
+
+  const handleToggleSaleStatus = async () => {
+    try {
+      if (props.isOriginal && props.item.tokenId) {
+        await toggleSaleStatus([parseInt(props.item.tokenId)]);
+      } else {
+        console.error("Sale status toggle failed");
+        showCustomErrorToast("Failed to toggle sale status", width);
+      }
+    } catch (error) {
+      const message = (error as Error).message || "An error occurred";
+      showCustomErrorToast(message, width);
+    }
+  };
 
   const [isImageOpen, setIsImageOpen] = useState(false);
 
@@ -167,6 +204,32 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
             </MintButton>
           </GridItem>
         </Grid>
+      )}
+      {props.isOriginal && (
+        <MintButton
+          onClick={handleToggleSaleStatus}
+          isDisabled={isLoading}
+          customStyle={{
+            width: "100%",
+            background: isActive
+              ? "transparent"
+              : "linear-gradient(90deg, #B14CE7 0%, #E09CA4 100%)",
+            color: isActive ? "#B14CE7" : "white",
+            border: isActive ? "1px solid #B14CE7" : "1px solid #D6D6D6"
+          }}
+          ownedView
+        >
+          {isLoading ? (
+            <>
+              <Spinner size="sm" mr={2} />
+              {isActive ? "Deactivating" : "Activating"}
+            </>
+          ) : isActive ? (
+            "Deactivate Copy Sale"
+          ) : (
+            "Activate Copy Sale"
+          )}
+        </MintButton>
       )}
       <FullSizeImageModal
         isOpen={isImageOpen}
