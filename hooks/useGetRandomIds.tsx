@@ -13,9 +13,13 @@ const useGetRandomIds = (
   isOriginal: boolean
 ) => {
   const [availableRandomIds, setAvailableRandomIds] = useState<string[]>([]);
+  const [isRandomIdsLoading, setIsRandomIdsLoading] = useState(false);
 
   useEffect(() => {
     const fetchRandomCopies = async () => {
+      if (activeSale && isRandom) {
+        setIsRandomIdsLoading(true);
+      }
       if (activeSale && isRandom && !isOriginal) {
         const randomCopies = await Promise.all(
           process.env.NEXT_PUBLIC_CHAIN_ID === "1"
@@ -45,22 +49,29 @@ const useGetRandomIds = (
                 };
               })
         );
+
         setAvailableRandomIds(
           randomCopies
             .filter((token) => token.tokenActive === true)
             .map((token) => token.tokenID)
         );
+        if (randomCopies.length === activeSale?.tokensOnSale.length) {
+          setIsRandomIdsLoading(false);
+        }
       } else if (activeSale && isRandom && isOriginal) {
         setAvailableRandomIds(
           activeSale.tokensOnSale
             .filter((token) => token.buyer === null)
             .map((token) => token.tokenID)
         );
+        setIsRandomIdsLoading(false);
       }
     };
-    fetchRandomCopies().catch(console.error);
-  }, [activeSale, isRandom, isOriginal]);
-  return availableRandomIds;
+    fetchRandomCopies().catch((error) => {
+      console.error(error);
+    });
+  }, [activeSale, isOriginal]);
+  return { availableRandomIds, isRandomIdsLoading };
 };
 
 export default useGetRandomIds;

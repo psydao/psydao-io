@@ -19,24 +19,44 @@ export const useMintSection = (isRandom: boolean) => {
   const { isLoading: isAddressesLoading, getAddresses } = useGetAddresses();
   const isSoldOut = useBatchSoldOut(activeSale, isPrivateSale);
 
-  const availableRandomIds = useGetRandomIds(activeSale, isRandom, isOriginal);
-
-  const imageIds = useMemo(
-    () =>
-      isRandom && availableRandomIds.length > 0
-        ? availableRandomIds
-        : activeSale?.tokensOnSale.map((token) => token.tokenID) ?? [],
-    [activeSale, availableRandomIds, isOriginal]
+  const { availableRandomIds, isRandomIdsLoading } = useGetRandomIds(
+    activeSale,
+    isRandom,
+    isOriginal
   );
 
-  const { imageUris, loading: imageUrisLoading } = useImageData(imageIds);
+  const randomImageIds = useMemo(() => {
+    if (!isRandomIdsLoading && availableRandomIds.length > 0 && isRandom) {
+      return availableRandomIds;
+    } else if (
+      !isRandomIdsLoading &&
+      availableRandomIds.length === 0 &&
+      isRandom
+    ) {
+      return activeSale?.tokensOnSale.map((token) => token.tokenID) ?? [];
+    } else return [];
+  }, [availableRandomIds, isRandomIdsLoading, activeSale, isRandom]);
+
+  const specificimageIds = useMemo(() => {
+    return activeSale?.tokensOnSale.map((token) => token.tokenID) ?? [];
+  }, [activeSale]);
+
+  const imageIds = useMemo(() => {
+    return isRandom ? randomImageIds : specificimageIds;
+  }, [randomImageIds, specificimageIds]);
+
+  const { imageUris, loading: imageUrisLoading } = useImageData(
+    imageIds,
+    isRandomIdsLoading,
+    isRandom
+  );
   const currentImageIndex = useRandomImage(isRandom, imageUris);
 
   const handleModal = useCallback(() => setIsOpen((prev) => !prev), []);
 
   const activeTokens = useMemo(() => {
     if (!activeSale) return [];
-    const availableTokens = imageIds;
+    const availableTokens = randomImageIds;
     return availableTokens.map((token, index) => ({
       src: imageUris[index] ?? "",
       price: formatUnits(BigInt(activeSale.floorPrice), 18),
@@ -50,8 +70,8 @@ export const useMintSection = (isRandom: boolean) => {
   }, [activeSale, imageUris, whitelist, isOriginal]);
 
   const randomToken = useMemo(() => {
-    if (!isRandom) return null;
-    if (activeTokens.length > 0) {
+    if (!isRandom || isRandomIdsLoading) return null;
+    if (activeTokens.length > 0 && isRandom && !isRandomIdsLoading) {
       return activeTokens[currentImageIndex % activeTokens.length] ?? null;
     }
     if (activeSale) {

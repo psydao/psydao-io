@@ -36,9 +36,11 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
   const { address } = useAccount();
   const { refetchBalances } = useUserCopyBalances(activeSale, address);
 
-  if (imageUrisLoading) {
+  if (imageUrisLoading || (isRandom && !randomToken)) {
     return <SkeletonLayout isRandom={isRandom} />;
   }
+
+  console.log(imageUris, isRandom);
 
   return (
     <Flex textAlign="center" py={4} px={4} justifyContent="center">
@@ -52,7 +54,7 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
           isSoldOut={isSoldOut}
           refetchBalances={refetchBalances}
         />
-      ) : activeSale ? (
+      ) : activeSale && !isRandom ? (
         <SpecificPsycItems
           tokens={activeSale?.tokensOnSale ?? []}
           imageUris={imageUris}

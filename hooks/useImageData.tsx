@@ -1,7 +1,7 @@
 import type { SaleTokensMetadata } from "@/lib/types";
 import { getTokensMetadataForASale } from "@/services/graph";
 import { useQuery } from "@apollo/client";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 
 const FALLBACK_IMAGE = "/psyc3.webp";
 
@@ -15,12 +15,16 @@ const FALLBACK_IMAGE = "/psyc3.webp";
  *   error: ApolloError | undefined
  * }} An object containing image URIs, loading state, and any error.
  */
-const useImageData = (tokenIds: string[]) => {
+const useImageData = (
+  tokenIds: string[],
+  isRandomIdsLoading?: boolean,
+  isRandom?: boolean
+) => {
   const { data, loading, error } = useQuery<SaleTokensMetadata>(
     getTokensMetadataForASale,
     {
       variables: { tokenIds },
-      skip: tokenIds.length === 0
+      skip: tokenIds.length === 0 || (isRandom && isRandomIdsLoading)
     }
   );
 
@@ -32,6 +36,8 @@ const useImageData = (tokenIds: string[]) => {
     }
     return tokenIds.map(() => FALLBACK_IMAGE);
   }, [data, tokenIds]);
+
+  console.log("imageUris", imageUris, isRandom);
 
   return { imageUris, loading, error };
 };
