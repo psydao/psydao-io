@@ -2,10 +2,11 @@ import { Flex, Text, Image } from "@chakra-ui/react";
 import SubmitButtonContainer from "./submit-button-container";
 import PsyButton from "../ui/psy-button";
 import { useChainModal } from "@rainbow-me/rainbowkit";
+import { env } from "@/config/env.mjs";
 
 const WrongNetworkWindow = () => {
   const { openChainModal } = useChainModal();
-  const CHAINID = Number(process.env.NEXT_PUBLIC_CHAIN_ID) ?? 1;
+  const CHAINID = env.NEXT_PUBLIC_CHAIN_ID ?? 1;
   return (
     <Flex p={2} pb={5} direction={"column"} gap={4}>
       <Text

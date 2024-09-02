@@ -18,6 +18,7 @@ import useFetchTokenOwners from "@/hooks/useFetchTokenOwner";
 import { getSaleComplete } from "@/utils/getSaleComplete";
 import { useCustomToasts } from "@/hooks/useCustomToasts";
 import { useResize } from "@/hooks/useResize";
+import { env } from "@/config/env.mjs";
 
 interface EditSaleWindowProps {
   selectedSale: Sale | undefined;
@@ -65,8 +66,9 @@ const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
         .sort((a, b) => parseInt(a) - parseInt(b))
     : [];
 
-  const contractAddress =
-    process.env.NEXT_PUBLIC_CHAIN_ID === "1" ? psyNFTMainnet : psyNFTSepolia;
+  const contractAddress = env.NEXT_PUBLIC_IS_MAINNET
+    ? psyNFTMainnet
+    : psyNFTSepolia;
   const { owners, loading, error } = useFetchTokenOwners(
     contractAddress,
     tokenIds
@@ -76,10 +78,9 @@ const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
     try {
       const tokensOwnedByContract = owners
         .filter((owner) => {
-          const isOwnedByContract =
-            process.env.NEXT_PUBLIC_CHAIN_ID === "1"
-              ? owner.owner.toLowerCase() === psycSaleMainnet.toLowerCase()
-              : owner.owner.toLowerCase() === psycSaleSepolia.toLowerCase();
+          const isOwnedByContract = env.NEXT_PUBLIC_IS_MAINNET
+            ? owner.owner.toLowerCase() === psycSaleMainnet.toLowerCase()
+            : owner.owner.toLowerCase() === psycSaleSepolia.toLowerCase();
           return isOwnedByContract;
         })
         .map((token) => {
