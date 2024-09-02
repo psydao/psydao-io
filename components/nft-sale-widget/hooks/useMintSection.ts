@@ -26,17 +26,13 @@ export const useMintSection = (isRandom: boolean) => {
   );
 
   const imageIds = useMemo(() => {
-    if (!isRandomIdsLoading && availableRandomIds.length > 0 && isRandom) {
+    if (isRandomIdsLoading) return [];
+
+    if (isRandom && availableRandomIds.length > 0) {
       return availableRandomIds;
-    } else if (
-      !isRandomIdsLoading &&
-      availableRandomIds.length === 0 &&
-      isRandom
-    ) {
-      return activeSale?.tokensOnSale.map((token) => token.tokenID) ?? [];
-    } else if (!isRandom) {
-      return activeSale?.tokensOnSale.map((token) => token.tokenID) ?? [];
-    } else return [];
+    }
+
+    return activeSale?.tokensOnSale.map((token) => token.tokenID) ?? [];
   }, [availableRandomIds, isRandomIdsLoading, activeSale, isRandom]);
 
   const { imageUris, loading: imageUrisLoading } = useImageData(
