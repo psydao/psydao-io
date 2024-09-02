@@ -35,6 +35,7 @@ interface OwnedNftItemProps {
   isOriginal: boolean;
   isOwnedView?: boolean;
   refetchBalances: () => void;
+  triggerReload: () => void;
 }
 
 const OwnedNftItem = (props: OwnedNftItemProps) => {
@@ -90,7 +91,10 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
   }, [fetchSaleStatus]);
 
   const { toggleSaleStatus, isPending: isLoading } = useToggleCopySales({
-    refetchSaleStatus: fetchSaleStatus
+    refetchSaleStatus: () => {
+      fetchSaleStatus();
+      props.triggerReload();
+    }
   });
 
   const handleToggleSaleStatus = async () => {
