@@ -15,6 +15,13 @@ const useGetRandomIds = (
   const [availableRandomIds, setAvailableRandomIds] = useState<string[]>([]);
   const [isRandomIdsLoading, setIsRandomIdsLoading] = useState(false);
 
+  const client =
+    process.env.NEXT_PUBLIC_CHAIN_ID === "1" ? mainnetClient : sepoliaClient;
+  const contractAddress =
+    process.env.NEXT_PUBLIC_CHAIN_ID === "1" ? ERC1155Mainnet : ERC1155Sepolia;
+  const contractAbi =
+    process.env.NEXT_PUBLIC_CHAIN_ID === "1" ? ERC1155Abi : ERC1155SepoliaAbi;
+
   useEffect(() => {
     const fetchRandomCopies = async () => {
       if (activeSale && isRandom) {
@@ -22,32 +29,19 @@ const useGetRandomIds = (
       }
       if (activeSale && isRandom && !isOriginal) {
         const randomCopies = await Promise.all(
-          process.env.NEXT_PUBLIC_CHAIN_ID === "1"
-            ? activeSale.tokensOnSale.map(async (token) => {
-                const currentTokenInfo = (await mainnetClient.readContract({
-                  address: ERC1155Mainnet,
-                  abi: ERC1155Abi,
-                  functionName: "tokenInformation",
-                  args: [token.tokenID]
-                })) as TokenInformationReturn;
-                return {
-                  tokenID: token.tokenID,
-                  tokenActive: currentTokenInfo[2]
-                };
-              })
-            : activeSale.tokensOnSale.map(async (token) => {
-                const currentTokenInfo = (await sepoliaClient.readContract({
-                  address: ERC1155Sepolia,
-                  abi: ERC1155SepoliaAbi,
-                  functionName: "tokenInformation",
-                  args: [token.tokenID]
-                })) as TokenInformationReturn;
+          activeSale.tokensOnSale.map(async (token) => {
+            const currentTokenInfo = (await client.readContract({
+              address: contractAddress,
+              abi: contractAbi,
+              functionName: "tokenInformation",
+              args: [token.tokenID]
+            })) as TokenInformationReturn;
 
-                return {
-                  tokenID: token.tokenID,
-                  tokenActive: currentTokenInfo[2]
-                };
-              })
+            return {
+              tokenID: token.tokenID,
+              tokenActive: currentTokenInfo[2]
+            };
+          })
         );
 
         setAvailableRandomIds(
