@@ -49,21 +49,21 @@ const useGetRandomIds = (
             .filter((token) => token.tokenActive === true)
             .map((token) => token.tokenID)
         );
-        if (randomCopies.length === activeSale?.tokensOnSale.length) {
-          setIsRandomIdsLoading(false);
-        }
       } else if (activeSale && isRandom && isOriginal) {
         setAvailableRandomIds(
           activeSale.tokensOnSale
             .filter((token) => token.buyer === null)
             .map((token) => token.tokenID)
         );
-        setIsRandomIdsLoading(false);
       }
     };
-    fetchRandomCopies().catch((error) => {
-      console.error(error);
-    });
+    fetchRandomCopies()
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        setIsRandomIdsLoading(false);
+      });
   }, [activeSale, isOriginal]);
   return { availableRandomIds, isRandomIdsLoading };
 };
