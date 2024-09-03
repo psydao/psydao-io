@@ -114,7 +114,7 @@ const PsycItem: React.FC<PsycItemProps> = ({
     if (isOriginal && isSold && !isRandom) {
       return <SoldOverlay />;
     }
-    if (!isOriginal && !isActive) {
+    if ((!isOriginal && !isActive) || isPaused) {
       return <PausedOverlay />;
     }
     return null;
