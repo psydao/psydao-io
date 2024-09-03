@@ -78,9 +78,12 @@ const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
     try {
       const tokensOwnedByContract = owners
         .filter((owner) => {
-          const isOwnedByContract = env.NEXT_PUBLIC_IS_MAINNET
-            ? owner.owner.toLowerCase() === psycSaleMainnet.toLowerCase()
-            : owner.owner.toLowerCase() === psycSaleSepolia.toLowerCase();
+          const isOwnedByContract =
+            owner.owner.toLowerCase() ===
+            (env.NEXT_PUBLIC_IS_MAINNET
+              ? psycSaleMainnet.toLowerCase()
+              : psycSaleSepolia.toLowerCase());
+
           return isOwnedByContract;
         })
         .map((token) => {

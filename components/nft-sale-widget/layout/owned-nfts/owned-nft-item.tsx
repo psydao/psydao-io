@@ -46,9 +46,12 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
     : props.isOriginal
       ? psyNFTSepolia
       : psycNFTCopiesSepolia;
-  const tokenURL = env.NEXT_PUBLIC_IS_MAINNET
-    ? `${env.NEXT_PUBLIC_MAINNET_ETHERSCAN_BASE_URL}/${contractAddress}/${props.item.tokenId}`
-    : `${env.NEXT_PUBLIC_SEPOLIA_ETHERSCAN_BASE_URL}/${contractAddress}/${props.item.tokenId}`;
+
+  const baseURL = env.NEXT_PUBLIC_IS_MAINNET
+    ? env.NEXT_PUBLIC_MAINNET_ETHERSCAN_BASE_URL
+    : env.NEXT_PUBLIC_SEPOLIA_ETHERSCAN_BASE_URL;
+  const tokenURL = `${baseURL}/${contractAddress}/${props.item.tokenId}`;
+
   const { buyNft, isPending, isConfirming, isMinting } = useBuyNft(
     props.isPrivateSale,
     false,

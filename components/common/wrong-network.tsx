@@ -6,7 +6,7 @@ import { env } from "@/config/env.mjs";
 
 const WrongNetworkWindow = () => {
   const { openChainModal } = useChainModal();
-  const CHAINID = env.NEXT_PUBLIC_CHAIN_ID ?? 1;
+
   return (
     <Flex p={2} pb={5} direction={"column"} gap={4}>
       <Text
@@ -27,7 +27,7 @@ const WrongNetworkWindow = () => {
         fontSize={{ base: "14px", sm: "24px" }}
         fontFamily={"Amiri"}
       >
-        {CHAINID === 1
+        {env.NEXT_PUBLIC_IS_MAINNET
           ? "Please switch to Ethereum mainnet"
           : "Please switch to Sepolia testnet"}
       </Text>
@@ -43,7 +43,7 @@ const WrongNetworkWindow = () => {
             openChainModal && openChainModal();
           }}
         >
-          {CHAINID === 1
+          {env.NEXT_PUBLIC_IS_MAINNET
             ? "Switch to Ethereum Mainnet"
             : "Switch to Sepolia Testnet"}
         </PsyButton>
