@@ -36,7 +36,7 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
   const { address } = useAccount();
   const { refetchBalances } = useUserCopyBalances(activeSale, address);
 
-  if (imageUrisLoading) {
+  if (imageUrisLoading || (isRandom && !randomToken)) {
     return <SkeletonLayout isRandom={isRandom} />;
   }
 
