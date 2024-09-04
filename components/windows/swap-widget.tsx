@@ -222,14 +222,14 @@ export const SwapWidget = () => {
         fullScreenWindow && termsAndConditions
           ? "100%"
           : isLargerThanMd
-            ? "500px"
+            ? "680px"
             : "80%"
       }
       width={
         fullScreenWindow && termsAndConditions
           ? "100%"
           : isLargerThanMd
-            ? "655px"
+            ? "600px"
             : "95%"
       }
       top={{

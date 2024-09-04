@@ -56,8 +56,8 @@ export const Manifesto = () => {
     <Window
       id="manifesto"
       height={{
-        base: fullScreenWindow ? "100%" : isLargerThanMd ? "500px" : "80%",
-        md: fullScreenWindow ? "100%" : isLargerThanMd ? "500px" : "70%"
+        base: fullScreenWindow ? "100%" : isLargerThanMd ? "680px" : "80%",
+        md: fullScreenWindow ? "100%" : isLargerThanMd ? "600px" : "70%"
       }}
       width={isLargerThanMd ? "655px" : "95%"}
       top={{
