@@ -66,7 +66,7 @@ const NftSaleWidgetContent = () => {
                   <InterimState type="error" />
                 ) : (
                   <TabPanels>
-                    <TabPanel px={0}>
+                    <TabPanel px={0} py={1}>
                       <PsycSaleContent />
                     </TabPanel>
                     <TabPanel h="100%" w="100%" py={2.5}>

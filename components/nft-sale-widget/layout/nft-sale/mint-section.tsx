@@ -41,7 +41,7 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
   }
 
   return (
-    <Flex textAlign="center" py={4} px={4} justifyContent="center">
+    <Flex textAlign="center" pb={4} px={4} justifyContent="center">
       {isRandom && randomToken ? (
         <RandomPsycItem
           token={randomToken}
@@ -119,14 +119,15 @@ const SpecificPsycItems: React.FC<{
   handleModal,
   refetchBalances
 }) => (
-  <Grid
-    templateColumns={{
-      base: "minmax(170px, 1fr)",
-      sm: "repeat(auto-fit, minmax(170px, 1fr))"
-    }}
-    gap={6}
-    justifyItems="center"
-    maxW="100%"
+  <Flex
+    // templateColumns={{
+    //   base: "minmax(170px, 1fr)",
+    //   sm: "repeat(auto-fit, minmax(170px, 1fr))"
+    // }}
+    gap={4}
+    justifyContent="center"
+    flexWrap={"wrap"}
+    maxW={"100%"}
   >
     {tokens.map((token, index) => (
       <PsycItem
@@ -150,7 +151,7 @@ const SpecificPsycItems: React.FC<{
         refetchBalances={refetchBalances}
       />
     ))}
-  </Grid>
+  </Flex>
 );
 
 export default MintSection;
