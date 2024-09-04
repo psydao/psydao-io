@@ -25,3 +25,8 @@ Newest subgraph link: https://api.studio.thegraph.com/query/42782/psy-sepolia-te
 - If this does not work, try again on etherscan to see where the problem lies. (https://sepolia.etherscan.io/ for testing environment or https://etherscan.io/ for mainnet deployments)
 
 - Edit your new sales and general dashboard to further test functionality
+
+### Env details:
+
+- The format for NEXT_PUBLIC_WHITELIST_ADDRESSES is as follows: "0x00, 0x01, ..."
+- The logic to split this into an array of whitelisted addresses resides in env.mjs in @/config
