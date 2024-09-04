@@ -119,12 +119,14 @@ const SpecificPsycItems: React.FC<{
   handleModal,
   refetchBalances
 }) => (
-  <Flex
-    gap={4}
-    justifyContent="center"
-    w={"100%"}
-    maxW={"550px"}
-    flexWrap={"wrap"}
+  <Grid
+    templateColumns={{
+      base: "minmax(170px, 1fr)",
+      sm: "repeat(auto-fit, minmax(170px, 1fr))"
+    }}
+    gap={6}
+    justifyItems="center"
+    maxW="100%"
   >
     {tokens.map((token, index) => (
       <PsycItem
@@ -148,7 +150,7 @@ const SpecificPsycItems: React.FC<{
         refetchBalances={refetchBalances}
       />
     ))}
-  </Flex>
+  </Grid>
 );
 
 export default MintSection;
