@@ -59,7 +59,7 @@ export const Manifesto = () => {
         base: fullScreenWindow ? "100%" : isLargerThanMd ? "600px" : "80%",
         md: fullScreenWindow ? "100%" : isLargerThanMd ? "600px" : "70%"
       }}
-      width={isLargerThanMd ? "655px" : "95%"}
+      width={isLargerThanMd ? "550px" : "95%"}
       top={{
         base: fullScreenWindow ? "0" : "60%",
         sm: fullScreenWindow ? "0" : "58%",
