@@ -27,6 +27,7 @@ import { useWithdrawTokens } from "@/services/web3/useWithdrawTokens";
 import { useResize } from "@/hooks/useResize";
 import MintButton from "../ui/mint-button";
 import WrongNetworkWindow from "../common/wrong-network";
+import { env } from "@/config/env.mjs";
 
 const SwapWidgetTitle = () => (
   <Box p={4} pb={8}>
@@ -189,7 +190,7 @@ export const SwapWidget = () => {
     isConfirmed: withdrawalConfirmed
   } = useWithdrawTokens(Number(tokensOwnedByUser), width);
 
-  const CHAINID = process.env.NEXT_PUBLIC_CHAIN_ID ?? 1;
+  const CHAINID = env.NEXT_PUBLIC_CHAIN_ID ?? 1;
   const isWrongNetwork = chainId !== Number(CHAINID);
 
   const { userBalance } = useGetTokenBalances(

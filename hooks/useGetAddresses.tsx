@@ -1,3 +1,4 @@
+import { env } from "@/config/env.mjs";
 import { CID } from "multiformats/cid";
 import { useCallback, useState } from "react";
 import type { Address } from "viem";
@@ -28,7 +29,7 @@ export const useGetAddresses = () => {
 
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_PINATA_BASE_URL}/ipfs/${ipfsHash}`
+          `${env.NEXT_PUBLIC_PINATA_BASE_URL}/ipfs/${ipfsHash}`
         );
 
         if (!res.ok) {
