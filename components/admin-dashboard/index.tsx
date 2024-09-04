@@ -40,7 +40,7 @@ const AdminDashboardWidget = ({
   return (
     <Window
       id="admin-dashboard"
-      height={fullScreenWindow ? "100%" : isLargerThanMd ? "680px" : "80%"}
+      height={fullScreenWindow ? "100%" : isLargerThanMd ? "600px" : "80%"}
       width={fullScreenWindow ? "100%" : isLargerThanMd ? "600px" : "95%"}
       top={{
         base: fullScreenWindow ? "0" : "60%",
