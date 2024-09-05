@@ -1,4 +1,4 @@
-import { Box, Flex, Text, useMediaQuery } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import { Window } from "../ui/window";
 import Image from "next/image";
 import PsyButton from "../ui/psy-button";
@@ -8,10 +8,10 @@ const ShopifyWidget = () => {
     <Window
       id="shopify-widget"
       defaultIsOpen
-      height={{ base: "75%", sm: "55%", md: "375px" }}
-      width={{ base: "92%", sm: "43%", md: "231px" }}
-      bottom={{ base: "5%", sm: "20%", md: "168px" }}
-      right={{ base: "5%", sm: "30%", md: "83px" }}
+      height={{ base: "75%", sm: "58%", lg: "375px" }}
+      width={{ base: "90%", sm: "50%", lg: "231px" }}
+      bottom={{ base: "5%", sm: "20%", lg: "168px" }}
+      right={{ base: "5%", sm: "25%", lg: "83px" }}
     >
       <Window.TitleBar />
       <Window.Content p={4}>
@@ -33,23 +33,27 @@ const ShopifyWidget = () => {
             <Flex direction={"column"} gap={1}>
               <Text
                 color={"#269200"}
-                fontSize={24}
+                fontSize={{ base: 20, md: 24 }}
                 fontFamily={"Amiri"}
                 lineHeight={"36px"}
               >
                 PsyDAO Camo Hat
               </Text>
-              <Text color={"#1A202C"} fontFamily={"Amiri"} fontSize={18}>
+              <Text
+                color={"#1A202C"}
+                fontFamily={"Amiri"}
+                fontSize={{ base: 16, md: 18 }}
+              >
                 Exclusive hat for top <br /> holders of PSYs
               </Text>
-              <PsyButton
-                onClick={() => {
-                  console.log("insert claim logic");
-                }}
-              >
-                Claim Here
-              </PsyButton>
             </Flex>
+            <PsyButton
+              onClick={() => {
+                console.log("insert claim logic");
+              }}
+            >
+              Claim Here
+            </PsyButton>
           </Flex>
         </Flex>
       </Window.Content>
