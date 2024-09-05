@@ -39,8 +39,8 @@ const NftSaleWidgetContent = () => {
   return (
     <Window
       id="nft-sale"
-      height={fullScreenWindow ? "100%" : isLargerThanMd ? "600px" : "80%"}
-      width={fullScreenWindow ? "100%" : isLargerThanMd ? "550px" : "95%"}
+      height={fullScreenWindow ? "100%" : isLargerThanMd ? "80%" : "80%"}
+      width={fullScreenWindow ? "100%" : isLargerThanMd ? "32%" : "95%"}
       top={{
         base: fullScreenWindow ? "0" : "60%",
         sm: fullScreenWindow ? "0" : "58%",
