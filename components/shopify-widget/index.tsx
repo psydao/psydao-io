@@ -10,8 +10,8 @@ const ShopifyWidget = () => {
       defaultIsOpen
       height={{ base: "75%", sm: "58%", lg: "385px" }}
       width={{ base: "90%", sm: "50%", lg: "231px" }}
-      bottom={{ base: "5%", sm: "20%", lg: "22%" }}
-      right={{ base: "5%", sm: "25%", lg: "4.6%" }}
+      bottom={{ base: "5%", sm: "20%", lg: "20%" }}
+      right={{ base: "5%", sm: "25%", lg: "6%" }}
     >
       <Window.TitleBar />
       <Window.Content p={4}>
