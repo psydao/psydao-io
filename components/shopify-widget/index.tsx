@@ -6,7 +6,7 @@ import ShopifyImageModal from "./shopify-image-modal";
 import { useState } from "react";
 
 const ShopifyWidget = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleModal = () => {
     setIsOpen((prev) => !prev);
@@ -30,6 +30,7 @@ const ShopifyWidget = () => {
                 alt="product"
                 width={200}
                 height={175}
+                quality={75}
               />
             </button>
 
