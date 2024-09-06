@@ -19,7 +19,6 @@
     "@chakra-ui/react": "^2.3.4",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
-    "@lit-protocol/lit-node-client": "^6.4.8",
     "@rainbow-me/rainbowkit": "^2.0.1",
     "@react-three/drei": "^9.31.1",
     "@react-three/fiber": "^8.7.4",
