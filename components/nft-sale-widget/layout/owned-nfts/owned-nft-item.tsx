@@ -11,15 +11,20 @@ import {
   GridItem,
   Spinner
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
-import FullSizeImageModal from "@/components/commons/image-modal";
+import FullSizeImageModal from "@/components/common/image-modal";
 import {
   psycNFTCopiesMainnet,
   psycNFTCopiesSepolia,
   psyNFTMainnet,
   psyNFTSepolia
 } from "@/constants/contracts";
+import { useCustomToasts } from "@/hooks/useCustomToasts";
+import { useResize } from "@/hooks/useResize";
+import useToggleCopySales from "@/hooks/useToggleCopySales";
+import useReadTokenInformation from "@/hooks/useReadTokenInformation";
+import { env } from "@/config/env.mjs";
 
 interface OwnedNftItemProps {
   item: TokenItem & {
@@ -34,19 +39,19 @@ interface OwnedNftItemProps {
 }
 
 const OwnedNftItem = (props: OwnedNftItemProps) => {
-  const CHAINID = Number(process.env.NEXT_PUBLIC_CHAIN_ID) ?? 1;
-  const contractAddress =
-    CHAINID === 1
-      ? props.isOriginal
-        ? psyNFTMainnet
-        : psycNFTCopiesMainnet
-      : props.isOriginal
-        ? psyNFTSepolia
-        : psycNFTCopiesSepolia;
-  const tokenURL =
-    CHAINID === 1
-      ? `${process.env.NEXT_PUBLIC_MAINNET_ETHERSCAN_BASE_URL}/${contractAddress}/${props.item.tokenId}`
-      : `${process.env.NEXT_PUBLIC_SEPOLIA_ETHERSCAN_BASE_URL}/${contractAddress}/${props.item.tokenId}`;
+  const contractAddress = env.NEXT_PUBLIC_IS_MAINNET
+    ? props.isOriginal
+      ? psyNFTMainnet
+      : psycNFTCopiesMainnet
+    : props.isOriginal
+      ? psyNFTSepolia
+      : psycNFTCopiesSepolia;
+
+  const baseURL = env.NEXT_PUBLIC_IS_MAINNET
+    ? env.NEXT_PUBLIC_MAINNET_ETHERSCAN_BASE_URL
+    : env.NEXT_PUBLIC_SEPOLIA_ETHERSCAN_BASE_URL;
+  const tokenURL = `${baseURL}/${contractAddress}/${props.item.tokenId}`;
+
   const { buyNft, isPending, isConfirming, isMinting } = useBuyNft(
     props.isPrivateSale,
     false,
@@ -70,17 +75,51 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
     props.isOriginal ||
     props.isPrivateSale;
 
+  const { showCustomErrorToast } = useCustomToasts();
+  const { width } = useResize();
+  const { tokenInformationData } = useReadTokenInformation(props.item.tokenId);
+  const [isActive, setIsActive] = useState<boolean>();
+
+  const fetchSaleStatus = useCallback(() => {
+    if (tokenInformationData) {
+      setIsActive(tokenInformationData[2]);
+    }
+  }, [tokenInformationData, setIsActive]);
+
+  useEffect(() => {
+    fetchSaleStatus();
+  }, [fetchSaleStatus]);
+
+  const { toggleSaleStatus, isPending: isLoading } = useToggleCopySales({
+    refetchSaleStatus: fetchSaleStatus
+  });
+
+  const handleToggleSaleStatus = async () => {
+    try {
+      if (props.isOriginal && props.item.tokenId) {
+        await toggleSaleStatus([parseInt(props.item.tokenId)]);
+      } else {
+        console.error("Sale status toggle failed");
+        showCustomErrorToast("Failed to toggle sale status", width);
+      }
+    } catch (error) {
+      const message = (error as Error).message || "An error occurred";
+      showCustomErrorToast(message, width);
+    }
+  };
+
   const [isImageOpen, setIsImageOpen] = useState(false);
 
   return (
     <Flex
-      p={4}
+      px={4}
+      py={2}
       borderRadius={"21px"}
       border="1px solid #E9BDBD"
       w={"100%"}
       h={"100%"}
       direction={"column"}
-      gap={4}
+      gap={2}
     >
       <Flex w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
         <Text
@@ -166,6 +205,32 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
             </MintButton>
           </GridItem>
         </Grid>
+      )}
+      {props.isOriginal && (
+        <MintButton
+          onClick={handleToggleSaleStatus}
+          isDisabled={isLoading}
+          customStyle={{
+            width: "100%",
+            background: isActive
+              ? "transparent"
+              : "linear-gradient(90deg, #B14CE7 0%, #E09CA4 100%)",
+            color: isActive ? "#B14CE7" : "white",
+            border: isActive ? "1px solid #B14CE7" : "1px solid #D6D6D6"
+          }}
+          ownedView
+        >
+          {isLoading ? (
+            <>
+              <Spinner size="sm" mr={2} />
+              {isActive ? "Deactivating" : "Activating"}
+            </>
+          ) : isActive ? (
+            "Deactivate Copy Sale"
+          ) : (
+            "Activate Copy Sale"
+          )}
+        </MintButton>
       )}
       <FullSizeImageModal
         isOpen={isImageOpen}

@@ -32,6 +32,7 @@ import { NftSaleWidget } from "@/components/nft-sale-widget";
 import WalletConnectHome from "@/components/connectWalletHome";
 import AdminDashboardWidget from "@/components/admin-dashboard";
 import GeneralDashboard from "@/components/general-dashboard";
+import ShopifyWidget from "@/components/shopify-widget";
 // import SaleWidgetProvider from "@/providers/SaleWidgetContext";
 
 // TODO Extract Pill component since it seems it will become a basic primitive
@@ -164,9 +165,9 @@ const Homepage: NextPage = () => {
                   <Box gridArea="-2 / 1 / -1 / -1">
                     <Marquee
                       text={[
-                        "WELCOME TO PSYDAO",
-                        "FUNDING RESEARCH AT THE INTERSECTION OF PSYCHEDELICS AND MENTAL HEALTH",
-                        "NOW ACCEPTING APPLICATIONS FOR RESEARCH PROJECT FUNDING AND ALCHEMIST GRANTS"
+                        "PSYDAO",
+                        "WHO CARES?",
+                        "NOW ACCEPTING ALCHEMIST GRANT APPLICATIONS"
                       ]}
                     />
                   </Box>
@@ -205,6 +206,7 @@ const Homepage: NextPage = () => {
                     <GeneralDashboard
                       triggerNftSaleUpdate={triggerNftSaleUpdate}
                     />
+                    <ShopifyWidget />
                   </Box>
                 </WindowManager>
                 <Link

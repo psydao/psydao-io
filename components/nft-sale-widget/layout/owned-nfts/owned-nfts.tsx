@@ -6,10 +6,10 @@ import { formatUnits } from "viem";
 import OwnedNftsEmptyState from "./owned-nfts-empty-state";
 import useImageData from "@/hooks/useImageData";
 import { useAddAssetToWallet } from "@/hooks/useAddAsset";
-import MintButton from "@/components/ui/mint-button";
-import SubmitButtonContainer from "@/components/commons/submit-button-container";
-import SkeletonLayout from "../../commons/skeleton-card";
+import SubmitButtonContainer from "@/components/common/submit-button-container";
+import SkeletonLayout from "../../common/skeleton-card";
 import OwnedNftItem from "./owned-nft-item";
+import PsyButton from "@/components/ui/psy-button";
 
 type OwnedNftsProps = {
   nftData: GetTokensByOwnerData | undefined;
@@ -61,7 +61,7 @@ const OwnedNfts = (props: OwnedNftsProps) => {
   };
 
   if (props.isLoading || imageUrisLoading || copyBalancesLoading) {
-    return <SkeletonLayout isOwnedNft={!props.isOriginal} />;
+    return <SkeletonLayout isOwnedNft={true} />;
   }
 
   const showEmptyState =
@@ -72,12 +72,7 @@ const OwnedNfts = (props: OwnedNftsProps) => {
     !copyBalancesLoading;
 
   return (
-    <Flex
-      justifyContent={"center"}
-      pt={4}
-      pb={props.isOriginal ? 12 : 4}
-      px={4}
-    >
+    <Flex justifyContent={"center"} pb={props.isOriginal ? 16 : 4} px={4}>
       <Grid
         templateColumns={{
           base: "1fr",
@@ -136,24 +131,24 @@ const OwnedNfts = (props: OwnedNftsProps) => {
 
         {props.isOriginal && (
           <SubmitButtonContainer>
-            <MintButton
+            <PsyButton
               onClick={handleAddToWallet}
               isDisabled={!props.activeSale || isAdding}
               customStyle={{
                 width: "100%",
+                maxWidth: "550px",
                 opacity: isAdding ? 0.5 : 1,
                 cursor: isAdding ? "not-allowed" : "pointer",
                 backgroundColor: isAdding ? "#b0b0b0" : "#4a90e2",
                 color: "#FFFFFF",
                 textAlign: "center",
-                padding: "12px 0",
-                borderRadius: "6px"
+                padding: "12px 0"
               }}
             >
               {isAdding
                 ? "Adding to Wallet..."
-                : "Add PSYC NFTs to your wallet"}
-            </MintButton>
+                : "Add PSYC NFTs to Your Wallet"}
+            </PsyButton>
           </SubmitButtonContainer>
         )}
       </Grid>
