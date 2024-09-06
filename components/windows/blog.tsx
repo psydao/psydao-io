@@ -21,8 +21,17 @@ export const Blog = () => {
   return (
     <Window
       id={id}
-      height={fullScreenWindow ? "100%" : isLargerThanMd ? "600px" : "65%"}
-      width={fullScreenWindow ? "100%" : isLargerThanMd ? "550px" : "95%"}
+      maxHeight={{
+        base: fullScreenWindow ? "100%" : "90%",
+        sm: fullScreenWindow ? "100%" : "80%",
+        md: fullScreenWindow ? "100%" : "650px"
+      }}
+      height={"100%"}
+      maxWidth={{
+        base: fullScreenWindow ? "100%" : "95%",
+        md: fullScreenWindow ? "100%" : "600px"
+      }}
+      width={"100%"}
       transform={fullScreenWindow ? "translate(0, 0)" : "translate(-50%, -40%)"}
       top={{
         base: fullScreenWindow ? "0" : "46%",

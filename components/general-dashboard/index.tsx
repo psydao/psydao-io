@@ -33,10 +33,19 @@ const GeneralDashboard = ({
   return (
     <Window
       id="general-dashboard"
-      height={fullScreenWindow ? "100%" : isLargerThanMd ? "600px" : "80%"}
-      width={fullScreenWindow ? "100%" : isLargerThanMd ? "550px" : "95%"}
+      maxHeight={{
+        base: fullScreenWindow ? "100%" : "90%",
+        sm: fullScreenWindow ? "100%" : "80%",
+        md: fullScreenWindow ? "100%" : "650px"
+      }}
+      height={"100%"}
+      maxWidth={{
+        base: fullScreenWindow ? "100%" : "95%",
+        md: fullScreenWindow ? "100%" : "600px"
+      }}
+      width={"100%"}
       top={{
-        base: fullScreenWindow ? "0" : "60%",
+        base: fullScreenWindow ? "0" : "55%",
         sm: fullScreenWindow ? "0" : "58%",
         md: fullScreenWindow ? "0" : "50%"
       }}
