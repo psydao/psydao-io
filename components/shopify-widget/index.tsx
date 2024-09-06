@@ -2,8 +2,15 @@ import { Box, Flex, Grid, Text } from "@chakra-ui/react";
 import { Window } from "../ui/window";
 import Image from "next/image";
 import PsyButton from "../ui/psy-button";
+import ShopifyImageModal from "./shopify-image-modal";
+import { useState } from "react";
 
 const ShopifyWidget = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleModal = () => {
+    setIsOpen((prev) => !prev);
+  };
   return (
     <Window
       id="shopify-widget"
@@ -17,12 +24,15 @@ const ShopifyWidget = () => {
       <Window.Content p={4}>
         <Grid placeItems={"center"} w={"100%"} h={"100%"}>
           <Box h={"fit-content"} position={"relative"}>
-            <Image
-              src={"/windows/shopify/shopify-hat.png"}
-              alt="product"
-              width={200}
-              height={175}
-            />
+            <button onClick={handleModal}>
+              <Image
+                src={"/windows/shopify/shopify-hat.png"}
+                alt="product"
+                width={200}
+                height={175}
+                quality={75}
+              />
+            </button>
 
             <Flex direction="column" gap={4}>
               <Flex
@@ -55,6 +65,13 @@ const ShopifyWidget = () => {
               </PsyButton>
             </Flex>
           </Box>
+          <ShopifyImageModal
+            imageSrc="/windows/shopify/shopify-hat.png"
+            isOpen={isOpen}
+            onClose={() => {
+              setIsOpen((prev) => !prev);
+            }}
+          />
         </Grid>
       </Window.Content>
     </Window>
