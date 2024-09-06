@@ -5,6 +5,7 @@ import { type Address, getAddress, createPublicClient, http } from "viem";
 import { mainnet } from "viem/chains";
 import { env } from "@/config/env.mjs";
 import { psyNFTMainnet, psyNFTSepolia } from "@/constants/contracts";
+import getPOAPStatus from "@/utils/getPOAPStatus";
 
 interface ShopifyResponse {
   discountCodeBasicCreate: {
@@ -74,6 +75,8 @@ async function validateNFT(ethAddress: Address): Promise<boolean> {
       functionName: "balanceOf",
       args: [ethAddress]
     });
+
+    await getPOAPStatus(ethAddress);
 
     if (nftBalance === 0n) {
       return false;
