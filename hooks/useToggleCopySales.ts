@@ -6,6 +6,7 @@ import ERC1155AbiSepolia from "../abis/ERC115AbiSepolia.json";
 import { ERC1155Mainnet, ERC1155Sepolia } from "../constants/contracts";
 import { useCustomToasts } from "./useCustomToasts";
 import { useResize } from "./useResize";
+import { env } from "@/config/env.mjs";
 
 interface ToggleCopySalesProps {
   refetchSaleStatus: () => void;
@@ -22,14 +23,8 @@ const useToggleCopySales = ({ refetchSaleStatus }: ToggleCopySalesProps) => {
   const toggleSaleStatus = useCallback(
     async (tokenIds: number[]) => {
       writeContract({
-        address:
-          process.env.NEXT_PUBLIC_CHAIN_ID === "1"
-            ? ERC1155Mainnet
-            : ERC1155Sepolia,
-        abi:
-          process.env.NEXT_PUBLIC_CHAIN_ID === "1"
-            ? ERC1155Abi
-            : ERC1155AbiSepolia,
+        address: env.NEXT_PUBLIC_IS_MAINNET ? ERC1155Mainnet : ERC1155Sepolia,
+        abi: env.NEXT_PUBLIC_IS_MAINNET ? ERC1155Abi : ERC1155AbiSepolia,
         functionName: "switchSaleStatus",
         args: [tokenIds]
       });
