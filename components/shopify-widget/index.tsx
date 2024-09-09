@@ -2,8 +2,17 @@ import { Box, Flex, Grid, Text } from "@chakra-ui/react";
 import { Window } from "../ui/window";
 import Image from "next/image";
 import PsyButton from "../ui/psy-button";
+import getPOAPStatus from "@/utils/getPOAPStatus";
+import { Address } from "viem";
+import { useAccount } from "wagmi";
+
+const handlePoapLogic = async (address: Address | undefined) => {
+  await getPOAPStatus(address);
+};
 
 const ShopifyWidget = () => {
+  const { address } = useAccount();
+
   return (
     <Window
       id="shopify-widget"
@@ -47,8 +56,8 @@ const ShopifyWidget = () => {
                 </Text>
               </Flex>
               <PsyButton
-                onClick={() => {
-                  console.log("insert claim logic");
+                onClick={async () => {
+                  await handlePoapLogic(address);
                 }}
               >
                 Claim Here

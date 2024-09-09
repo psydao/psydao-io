@@ -114,7 +114,7 @@ async function generateShopifyProductDiscount(
     apiVersion: LATEST_API_VERSION
   });
 
-  const discountCode = `PSYDAO-${ethAddress.slice(2, 8)}-${Date.now()}`;
+  const discountCode = `PSYDAO-${ethAddress.slice(2, 8)}-${Date.now()}`; // get discount codes
 
   const mutation = `
       mutation discountCodeBasicCreate($basicCodeDiscount: DiscountCodeBasicInput!) {

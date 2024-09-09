@@ -1,10 +1,10 @@
 import type { Address } from "viem";
 
-const getPOAPStatus = async (address: Address) => {
+const getPOAPStatus = async (address: Address | undefined) => {
   try {
-    const poapRes = await fetch("/api/poap", {
-      method: "GET",
-      body: JSON.stringify({ address })
+    if (!address) return;
+    const poapRes = await fetch(`/api/poap/${address}`, {
+      method: "GET"
     });
 
     if (!poapRes.ok) {
