@@ -7,13 +7,13 @@ const MintSpecificPsycHeader = () => {
   const { fullScreenWindow: isFullScreen } = useSaleWidget();
 
   return (
-    <Box position="relative" textAlign="center" py={4} px={2}>
+    <Box position="relative" textAlign="center" py={4}>
       <Flex
         position="relative"
         alignItems="center"
         justifyContent="center"
         width="100%"
-        gap={{ base: 2, sm: 6 }}
+        gap={{ base: 2, sm: 3 }}
       >
         <DecorationFrame position="left" isFullScreen={isFullScreen} />
         <Box

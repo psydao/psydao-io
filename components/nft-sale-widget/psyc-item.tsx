@@ -72,7 +72,6 @@ const PsycItem: React.FC<PsycItemProps> = ({
         overflow="hidden"
         position="relative"
         border="1px solid #e2e2e2"
-        boxShadow="md"
         onClick={() => setIsImageOpen(true)}
         cursor="pointer"
       >

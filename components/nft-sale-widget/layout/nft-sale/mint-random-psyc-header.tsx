@@ -6,7 +6,7 @@ import { useSaleWidget } from "@/providers/SaleWidgetContext";
 const MintRandomPsycHeader = () => {
   const { fullScreenWindow: isFullScreen } = useSaleWidget();
   return (
-    <Box position="relative" textAlign="center" py={4} px={2}>
+    <Box position="relative" textAlign="center" p={4}>
       <Flex
         position="relative"
         alignItems="center"
