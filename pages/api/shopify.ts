@@ -3,6 +3,8 @@ import "@shopify/shopify-api/adapters/node";
 import { shopifyApi, LATEST_API_VERSION } from "@shopify/shopify-api";
 import { type Address, getAddress, createPublicClient, http } from "viem";
 import { mainnet } from "viem/chains";
+import { env } from "@/config/env.mjs";
+import { psyNFTMainnet, psyNFTSepolia } from "@/constants/contracts";
 
 interface ShopifyResponse {
   discountCodeBasicCreate: {
@@ -21,24 +23,16 @@ interface ShopifyResponse {
   };
 }
 
-const MAINNET_NFT_CONTRACT_ADDRESS =
-  process.env.NEXT_PUBLIC_MAINNET_ERC721_CONTRACT_ADDRESS ?? "";
-const SEPOLIA_NFT_CONTRACT_ADDRESS =
-  process.env.NEXT_PUBLIC_SEPOLIA_ERC721_CONTRACT_ADDRESS ?? "";
+const SHOPIFY_API_ACCESS_TOKEN = env.SHOPIFY_API_ACCESS_TOKEN;
+const SHOPIFY_API_KEY = env.SHOPIFY_API_KEY;
+const SHOPIFY_API_SECRET = env.SHOPIFY_API_SECRET;
+const SHOPIFY_SHOP_NAME = env.SHOPIFY_SHOP_NAME;
+const SHOPIFY_PRODUCT_ID = env.SHOPIFY_PRODUCT_ID;
 
-const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID ?? "1";
-
-const SHOPIFY_API_ACCESS_TOKEN = process.env.SHOPIFY_API_ACCESS_TOKEN ?? "";
-const SHOPIFY_API_KEY = process.env.SHOPIFY_API_KEY ?? "";
-const SHOPIFY_API_SECRET = process.env.SHOPIFY_API_SECRET ?? "";
-const SHOPIFY_SHOP_NAME = process.env.SHOPIFY_SHOP_NAME ?? "";
-const SHOPIFY_PRODUCT_ID = process.env.SHOPIFY_PRODUCT_ID ?? "";
-
-const NFT_CONTRACT_ADDRESS =
-  CHAIN_ID === "1"
-    ? MAINNET_NFT_CONTRACT_ADDRESS
-    : SEPOLIA_NFT_CONTRACT_ADDRESS;
-const ETHEREUM_RPC_URL = process.env.NEXT_PUBLIC_MAINNET_CLIENT ?? "";
+const NFT_CONTRACT_ADDRESS = env.NEXT_PUBLIC_IS_MAINNET
+  ? psyNFTMainnet
+  : psyNFTSepolia;
+const ETHEREUM_RPC_URL = env.NEXT_PUBLIC_MAINNET_CLIENT;
 
 const publicClient = createPublicClient({
   chain: mainnet,
