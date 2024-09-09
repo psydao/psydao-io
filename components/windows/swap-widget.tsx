@@ -226,7 +226,7 @@ export const SwapWidget = () => {
       height={"100%"}
       maxWidth={{
         base: fullScreenWindow ? "100%" : "95%",
-        md: fullScreenWindow ? "100%" : "600px"
+        md: fullScreenWindow ? "100%" : "602px"
       }}
       width={"100%"}
       top={{
