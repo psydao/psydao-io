@@ -24,6 +24,7 @@ import { useCustomToasts } from "@/hooks/useCustomToasts";
 import { useResize } from "@/hooks/useResize";
 import useToggleCopySales from "@/hooks/useToggleCopySales";
 import useReadTokenInformation from "@/hooks/useReadTokenInformation";
+import { env } from "@/config/env.mjs";
 
 interface OwnedNftItemProps {
   item: TokenItem & {
@@ -39,19 +40,19 @@ interface OwnedNftItemProps {
 }
 
 const OwnedNftItem = (props: OwnedNftItemProps) => {
-  const CHAINID = Number(process.env.NEXT_PUBLIC_CHAIN_ID) ?? 1;
-  const contractAddress =
-    CHAINID === 1
-      ? props.isOriginal
-        ? psyNFTMainnet
-        : psycNFTCopiesMainnet
-      : props.isOriginal
-        ? psyNFTSepolia
-        : psycNFTCopiesSepolia;
-  const tokenURL =
-    CHAINID === 1
-      ? `${process.env.NEXT_PUBLIC_MAINNET_ETHERSCAN_BASE_URL}/${contractAddress}/${props.item.tokenId}`
-      : `${process.env.NEXT_PUBLIC_SEPOLIA_ETHERSCAN_BASE_URL}/${contractAddress}/${props.item.tokenId}`;
+  const contractAddress = env.NEXT_PUBLIC_IS_MAINNET
+    ? props.isOriginal
+      ? psyNFTMainnet
+      : psycNFTCopiesMainnet
+    : props.isOriginal
+      ? psyNFTSepolia
+      : psycNFTCopiesSepolia;
+
+  const baseURL = env.NEXT_PUBLIC_IS_MAINNET
+    ? env.NEXT_PUBLIC_MAINNET_ETHERSCAN_BASE_URL
+    : env.NEXT_PUBLIC_SEPOLIA_ETHERSCAN_BASE_URL;
+  const tokenURL = `${baseURL}/${contractAddress}/${props.item.tokenId}`;
+
   const { buyNft, isPending, isConfirming, isMinting } = useBuyNft(
     props.isPrivateSale,
     false,

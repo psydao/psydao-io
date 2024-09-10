@@ -72,7 +72,6 @@ const PsycItem: React.FC<PsycItemProps> = ({
         overflow="hidden"
         position="relative"
         border="1px solid #e2e2e2"
-        boxShadow="md"
         onClick={() => setIsImageOpen(true)}
         cursor="pointer"
       >
@@ -87,8 +86,19 @@ const PsycItem: React.FC<PsycItemProps> = ({
             quality={75}
             priority={isRandom}
             loading={isRandom ? "eager" : "lazy"}
-            onLoadingComplete={() => setIsImageLoaded(true)}
-            style={{ display: isImageLoaded ? "block" : "none" }}
+            style={{
+              visibility: isImageLoaded ? "visible" : "hidden",
+              maxHeight: isImageLoaded ? "none" : "0",
+              maxWidth: isImageLoaded ? "none" : "0"
+            }}
+            onLoadingComplete={() => {
+              setIsImageLoaded(true);
+            }}
+            onError={() => {
+              console.error(
+                `Image failed to load. Src: ${item.src}; TokenID ${item.tokenId}`
+              );
+            }}
           />
         ) : (
           <SkeletonLayout isRandom={isRandom} />
@@ -114,7 +124,7 @@ const PsycItem: React.FC<PsycItemProps> = ({
     if (isOriginal && isSold && !isRandom) {
       return <SoldOverlay />;
     }
-    if (!isOriginal && !isActive) {
+    if ((!isOriginal && !isActive) || isPaused) {
       return <PausedOverlay />;
     }
     return null;
