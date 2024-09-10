@@ -190,7 +190,7 @@ export const SwapWidget = () => {
     isConfirmed: withdrawalConfirmed
   } = useWithdrawTokens(Number(tokensOwnedByUser), width);
 
-  const CHAINID = env.NEXT_PUBLIC_CHAIN_ID ?? 1;
+  const CHAINID = env.NEXT_PUBLIC_CHAIN_ID;
   const isWrongNetwork = chainId !== Number(CHAINID);
 
   const { userBalance } = useGetTokenBalances(
@@ -218,24 +218,21 @@ export const SwapWidget = () => {
   return (
     <Window
       id="swap"
-      height={
-        fullScreenWindow && termsAndConditions
-          ? "100%"
-          : isLargerThanMd
-            ? "500px"
-            : "80%"
-      }
-      width={
-        fullScreenWindow && termsAndConditions
-          ? "100%"
-          : isLargerThanMd
-            ? "655px"
-            : "95%"
-      }
+      maxHeight={{
+        base: fullScreenWindow ? "100%" : "90%",
+        sm: fullScreenWindow ? "100%" : "80%",
+        md: fullScreenWindow ? "100%" : "650px"
+      }}
+      height={"100%"}
+      maxWidth={{
+        base: fullScreenWindow ? "100%" : "95%",
+        md: fullScreenWindow ? "100%" : "602px"
+      }}
+      width={"100%"}
       top={{
-        base: fullScreenWindow && termsAndConditions ? "0" : "60%",
-        sm: fullScreenWindow && termsAndConditions ? "0" : "58%",
-        md: fullScreenWindow && termsAndConditions ? "0" : "56%"
+        base: fullScreenWindow ? "0" : "55%",
+        sm: fullScreenWindow ? "0" : "58%",
+        md: fullScreenWindow ? "0" : "50%"
       }}
       left={fullScreenWindow && termsAndConditions ? "0" : "50%"}
       transform={
@@ -244,7 +241,6 @@ export const SwapWidget = () => {
           : "translate(-50%, -50%)"
       }
       fullScreenWindow={fullScreenWindow}
-      defaultIsOpen
     >
       <Window.TitleBar />
       <Window.Content p={2}>

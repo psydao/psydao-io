@@ -34,17 +34,25 @@ const NftSaleWidgetContent = () => {
   const { isWrongNetwork, isLoading, error, fullScreenWindow } =
     useSaleWidget();
   const { address } = useAccount();
-  const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
 
   return (
     <Window
       id="nft-sale"
-      height={fullScreenWindow ? "100%" : isLargerThanMd ? "500px" : "80%"}
-      width={fullScreenWindow ? "100%" : isLargerThanMd ? "655px" : "95%"}
+      maxHeight={{
+        base: fullScreenWindow ? "100%" : "90%",
+        sm: fullScreenWindow ? "100%" : "80%",
+        md: fullScreenWindow ? "100%" : "650px"
+      }}
+      height={"100%"}
+      maxWidth={{
+        base: fullScreenWindow ? "100%" : "95%",
+        md: fullScreenWindow ? "100%" : "602px"
+      }}
+      width={"100%"}
       top={{
-        base: fullScreenWindow ? "0" : "60%",
+        base: fullScreenWindow ? "0" : "55%",
         sm: fullScreenWindow ? "0" : "58%",
-        md: fullScreenWindow ? "0" : "56%"
+        md: fullScreenWindow ? "0" : "50%"
       }}
       left={fullScreenWindow ? "0" : "50%"}
       transform={fullScreenWindow ? "translate(0, 0)" : "translate(-50%, -50%)"}
@@ -66,7 +74,7 @@ const NftSaleWidgetContent = () => {
                   <InterimState type="error" />
                 ) : (
                   <TabPanels>
-                    <TabPanel px={0}>
+                    <TabPanel px={0} py={1}>
                       <PsycSaleContent />
                     </TabPanel>
                     <TabPanel h="100%" w="100%" py={2.5}>
