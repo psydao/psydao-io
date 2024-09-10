@@ -34,8 +34,8 @@ const useToggleCopySales = ({ refetchSaleStatus }: ToggleCopySalesProps) => {
 
   useEffect(() => {
     if (isSuccess) {
-      refetchSaleStatus();
       showSuccessToast("Success! Sale status has been toggled.", width);
+      refetchSaleStatus();
     } else if (error) {
       const message = (error as Error).message || "An error occurred";
       showCustomErrorToast(message, width);
