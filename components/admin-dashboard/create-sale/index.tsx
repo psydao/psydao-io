@@ -12,16 +12,9 @@ import { useSaleLocalStorage } from "@/hooks/useSaleLocalStorage";
 import { useAccount } from "wagmi";
 import { useCreateSale } from "@/hooks/useCreateSale";
 import SubmitSaleButton from "../../commons/submit-sale-button";
+import { useGlobalContext } from "@/contexts/globalContext";
 
-export const CreateSale = ({
-  setOpenCreateSale,
-  triggerNftSaleUpdate,
-  refetchSalesData
-}: {
-  setOpenCreateSale: React.Dispatch<React.SetStateAction<boolean>>;
-  triggerNftSaleUpdate: () => void;
-  refetchSalesData: () => void;
-}) => {
+export const CreateSale = () => {
   const {
     timeInputType,
     setTimeInputType,
@@ -41,6 +34,16 @@ export const CreateSale = ({
     setNewWhitelistedAddresses
   } = useFormState();
   const { tokenIds, isLoading } = useTokenIds();
+
+  const { setOpenCreateSale, refetchSalesData } = useGlobalContext();
+
+  const { setUpdateNftSaleTrigger } = useGlobalContext() as {
+    setUpdateNftSaleTrigger: React.Dispatch<React.SetStateAction<number>>;
+  };
+
+  const triggerNftSaleUpdate = () => {
+    setUpdateNftSaleTrigger((prev) => prev + 1);
+  };
 
   const { getWhitelistedAddresses } = useSaleLocalStorage();
   const whitelistedArray = getWhitelistedAddresses();

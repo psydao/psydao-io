@@ -11,8 +11,6 @@ type AdminSaleComponentProps = {
   setSelectedSale: React.Dispatch<React.SetStateAction<Sale | undefined>>;
   setOpenEditSale: React.Dispatch<React.SetStateAction<boolean>>;
   isComplete: boolean;
-  isPaused: boolean;
-  setIsPaused: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const AdminSaleComponent = (props: AdminSaleComponentProps) => {

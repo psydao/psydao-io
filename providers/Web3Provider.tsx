@@ -1,47 +1,23 @@
 import "@rainbow-me/rainbowkit/styles.css";
 import {
-  darkTheme,
-  getDefaultWallets,
-  lightTheme,
   RainbowKitProvider,
-  getDefaultConfig
+  darkTheme,
+  lightTheme
 } from "@rainbow-me/rainbowkit";
-import {
-  argentWallet,
-  ledgerWallet,
-  trustWallet
-} from "@rainbow-me/rainbowkit/wallets";
-import { WagmiProvider, http } from "wagmi";
-import { mainnet, sepolia } from "wagmi/chains";
+import { WagmiProvider } from "wagmi";
 import { useColorMode } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-const { wallets } = getDefaultWallets();
-
-export const wagmiConfig = getDefaultConfig({
-  appName: process.env.NEXT_PUBLIC_APP_NAME ?? "",
-  projectId: process.env.NEXT_PUBLIC_PROJECT_ID ?? "",
-  wallets: [
-    ...wallets,
-    {
-      groupName: "Other",
-      wallets: [argentWallet, trustWallet, ledgerWallet]
-    }
-  ],
-  chains: [sepolia, mainnet],
-  transports: {
-    [sepolia.id]: http("https://sepolia.gateway.tenderly.co"),
-    [mainnet.id]: http()
-  },
-  ssr: true
-});
+import { useMemo } from "react";
+import { wagmiConfig } from "@/config/wagmi";
 
 export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
   const { colorMode } = useColorMode();
+  const queryClient = useMemo(() => new QueryClient(), []);
 
-  const theme = colorMode === "light" ? lightTheme() : darkTheme();
-
-  const queryClient = new QueryClient();
+  const theme = useMemo(
+    () => (colorMode === "light" ? lightTheme() : darkTheme()),
+    [colorMode]
+  );
 
   return (
     <WagmiProvider config={wagmiConfig}>

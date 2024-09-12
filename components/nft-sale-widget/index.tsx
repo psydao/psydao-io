@@ -24,8 +24,9 @@ import { InterimState } from "../commons/interim-state";
 import NFTSaleWidgetEmptyState from "./layout/nft-sale-widget-empty";
 import { useAccount } from "wagmi";
 import WrongNetworkWindow from "../commons/wrong-network";
+import { useGlobalContext } from "@/contexts/globalContext";
 
-export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
+export const NftSaleWidget = () => {
   const { address, chainId } = useAccount();
 
   const [activeSale, setActiveSale] = useState<Sale>();
@@ -39,7 +40,7 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
     getSaleById,
     {
       variables: {
-        id: activeSale ? activeSale.id : allSalesData?.sales[0]?.id ?? "1"
+        id: activeSale ? activeSale.id : (allSalesData?.sales[0]?.id ?? "1")
       },
       skip: !activeSale && (allSalesLoading || allSalesData?.sales.length === 0)
     }
@@ -47,6 +48,10 @@ export const NftSaleWidget = ({ updateTrigger }: { updateTrigger: number }) => {
 
   const CHAINID = process.env.NEXT_PUBLIC_CHAIN_ID ?? 1;
   const isWrongNetwork = chainId !== Number(CHAINID);
+
+  const { updateNftSaleTrigger } = useGlobalContext();
+
+  const updateTrigger = updateNftSaleTrigger;
 
   useEffect(() => {
     if (

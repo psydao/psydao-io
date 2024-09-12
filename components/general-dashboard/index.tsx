@@ -7,11 +7,7 @@ import GeneralSettingsSection from "./general-settings-section";
 import { whitelistedAddresses } from "../admin-dashboard/whitelisted-addresses";
 import { useAccount } from "wagmi";
 
-const GeneralDashboard = ({
-  triggerNftSaleUpdate
-}: {
-  triggerNftSaleUpdate: () => void;
-}) => {
+const GeneralDashboard = () => {
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
   const { state, dispatch } = useWindowManager();
   const { address } = useAccount();
@@ -25,10 +21,6 @@ const GeneralDashboard = ({
       dispatch({ type: "close", id: "general-dashboard" });
     }
   }, [address, dispatch]);
-
-  const handleCloseDashboard = () => {
-    dispatch({ type: "close", id: "general-dashboard" });
-  };
 
   return (
     <Window
@@ -47,10 +39,7 @@ const GeneralDashboard = ({
       <Window.TitleBar />
       <Window.Content py={2}>
         <GeneralDashboardHeader />
-        <GeneralSettingsSection
-          triggerNftSaleUpdate={triggerNftSaleUpdate}
-          onDashboardClose={handleCloseDashboard}
-        />
+        <GeneralSettingsSection />
         <Image
           src="/windows/alchemist/clouds.png"
           alt=""

@@ -58,7 +58,7 @@ const SwapWidgetTitle = () => (
   </Box>
 );
 
-export const SwapWidget = () => {
+const SwapWidget = () => {
   const isRescricted = useRescrictedCountries();
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
 
@@ -401,3 +401,5 @@ export const SwapWidget = () => {
     </Window>
   );
 };
+
+export default SwapWidget;

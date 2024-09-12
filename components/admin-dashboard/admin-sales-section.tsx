@@ -13,26 +13,18 @@ import { useResize } from "@/hooks/useResize";
 import { getSaleComplete } from "@/utils/getSaleComplete";
 import { useGetAddresses } from "@/hooks/useGetAddresses";
 import AdminDashboardEmptyState from "./admin-dashboard-empty";
+import { useGlobalContext } from "@/contexts/globalContext";
 
-export const AdminSalesSection = ({
-  setOpenCreateSale,
-  openEditSale,
-  setOpenEditSale,
-  setSelectedSale,
-  saleData,
-  selectedSale,
-  triggerNftSaleUpdate,
-  refetchSalesData
-}: {
-  selectedSale: Sale | undefined;
-  setOpenCreateSale: React.Dispatch<React.SetStateAction<boolean>>;
-  openEditSale: boolean;
-  setSelectedSale: React.Dispatch<React.SetStateAction<Sale | undefined>>;
-  setOpenEditSale: React.Dispatch<React.SetStateAction<boolean>>;
-  saleData: Sale[];
-  triggerNftSaleUpdate: () => void;
-  refetchSalesData: () => void;
-}) => {
+export const AdminSalesSection = () => {
+  const {
+    selectedSale,
+    setSelectedSale,
+    setOpenCreateSale,
+    openEditSale,
+    setOpenEditSale,
+    data,
+    refetchSalesData
+  } = useGlobalContext();
   const { width } = useResize();
   const { address } = useAccount();
   const { getAddresses } = useGetAddresses();
@@ -48,6 +40,14 @@ export const AdminSalesSection = ({
   const [ceilingPrice, setCeilingPrice] = useState<string>("");
   const [saleComplete, setSaleComplete] = useState<boolean>(false);
   const [addressesToDisplay, setAddressesToDisplay] = useState<string[]>([]);
+
+  const { setUpdateNftSaleTrigger } = useGlobalContext() as {
+    setUpdateNftSaleTrigger: React.Dispatch<React.SetStateAction<number>>;
+  };
+
+  const triggerNftSaleUpdate = () => {
+    setUpdateNftSaleTrigger((prev) => prev + 1);
+  };
 
   const { handleEditSale, isSubmitting } = useEditSaleForm(
     address,
@@ -104,21 +104,19 @@ export const AdminSalesSection = ({
           height="100%"
           overflowY="auto"
         >
-          {saleData.length > 0 ? (
-            saleData.map((sale, index: number) => {
+          {data && data.sales.length > 0 ? (
+            data.sales.map((sale, index: number) => {
               const isComplete = getSaleComplete(sale);
               return (
                 <>
                   <AdminSaleComponent
-                    key={index}
+                    key={sale.batchID}
                     sale={sale}
                     index={index}
                     setWhitelistedAddresses={setExistingWhitelistedAddresses}
                     setSelectedSale={setSelectedSale}
                     setOpenEditSale={setOpenEditSale}
                     isComplete={isComplete}
-                    isPaused={isPaused}
-                    setIsPaused={setIsPaused}
                   />
                   <Divider
                     border={"none"}

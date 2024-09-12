@@ -1,7 +1,19 @@
+import { useGlobalContext } from "@/contexts/globalContext";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { Box, Flex, Text } from "@chakra-ui/react";
 
-const EditSaleHeader = (props: { id: string; backToSales: () => void }) => {
+const EditSaleHeader = () => {
+  const { setSelectedSale, selectedSale, setOpenEditSale } = useGlobalContext();
+
+  if (!selectedSale) {
+    return null;
+  }
+
+  const onBackClick = () => {
+    setSelectedSale(undefined);
+    setOpenEditSale(false);
+  };
+
   return (
     <Box px={{ base: 2, md: 4 }} py={2}>
       <Flex
@@ -10,7 +22,7 @@ const EditSaleHeader = (props: { id: string; backToSales: () => void }) => {
         gap={2}
       >
         <Box
-          onClick={() => props.backToSales()}
+          onClick={onBackClick}
           display="flex"
           alignItems="center"
           gap="1"
@@ -25,7 +37,7 @@ const EditSaleHeader = (props: { id: string; backToSales: () => void }) => {
           lineHeight={{ base: "20px", sm: "40px" }}
           fontFamily={"Amiri"}
         >
-          {`Edit Sale (${props.id})`}
+          {`Edit Sale (${selectedSale.id})`}
         </Text>
       </Flex>
     </Box>

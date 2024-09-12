@@ -1,17 +1,9 @@
-import { useEffect, useState } from "react";
-import {
-  Box,
-  Center,
-  Icon,
-  Image,
-  Link,
-  Text,
-  keyframes
-} from "@chakra-ui/react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Box, Center, Image, Text, Link } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { FaDiscord, FaTwitter, FaYoutube } from "react-icons/fa";
 import { ToastContainer } from "react-toastify";
-
+import { debounce } from "lodash";
 import { BackgroundGrid } from "@/components/ui/background-grid";
 import { Blobs } from "@/components/ui/blobs";
 import { Csr } from "@/components/ui/csr";
@@ -24,66 +16,42 @@ import { Open, WindowManager } from "@/components/ui/window-manager";
 import { Manifesto } from "@/components/windows/manifesto";
 import { Radio } from "@/components/windows/radio";
 import { MixpanelTracking } from "@/services/mixpanel";
-import { SwapWidget } from "@/components/windows/swap-widget";
 import { useRescrictedCountries } from "@/hooks/restrictedCountries";
-import { Blog } from "@/components/windows/blog";
 import "react-toastify/dist/ReactToastify.css";
 import { NftSaleWidget } from "@/components/nft-sale-widget";
 import WalletConnectHome from "@/components/connectWalletHome";
-import AdminDashboardWidget from "@/components/admin-dashboard";
-import GeneralDashboard from "@/components/general-dashboard";
-// import SaleWidgetProvider from "@/providers/SaleWidgetContext";
+import { SocialLink } from "@/components/ui/SocialLink";
+import { fadeInAnimation } from "@/styles/animations";
+import dynamic from "next/dynamic";
 
-// TODO Extract Pill component since it seems it will become a basic primitive
-// in our design
-
-// TODO Improve theming. All these 1px to 2px border transformations should
-// probably a theme prop
+const Blog = dynamic(() => import("@/components/windows/blog"));
+const SwapWidget = dynamic(() => import("@/components/windows/swap-widget"));
+const AdminDashboardWidget = dynamic(
+  () => import("@/components/admin-dashboard")
+);
+const GeneralDashboard = dynamic(
+  () => import("@/components/general-dashboard")
+);
 
 const Homepage: NextPage = () => {
   useRescrictedCountries();
 
-  useEffect(() => {
-    const updateHeight = () => {
-      document.documentElement.style.setProperty(
-        "--app-height",
-        window.innerHeight + "px"
-      );
-      MixpanelTracking.getInstance().pageView();
-    };
-
-    updateHeight();
-    window.addEventListener("resize", updateHeight);
-    return () => window.removeEventListener("resize", updateHeight);
+  const updateHeight = useCallback(() => {
+    document.documentElement.style.setProperty(
+      "--app-height",
+      window.innerHeight + "px"
+    );
+    MixpanelTracking.getInstance().pageView();
   }, []);
 
-  const fadeIn = keyframes`
-   0% {
-    opacity: 1;
-  }
-  25% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  75% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-  `;
+  useEffect(() => {
+    const debouncedUpdateHeight = debounce(updateHeight, 300);
+    window.addEventListener("resize", debouncedUpdateHeight);
+    updateHeight();
+    return () => window.removeEventListener("resize", debouncedUpdateHeight);
+  }, [updateHeight]);
 
-  const fadeinAnimate = `${fadeIn} infinite 6s`;
-
-  const SALE_ACTIVE = true;
-
-  const [updateNftSaleTrigger, setUpdateNftSaleTrigger] = useState(0);
-
-  const triggerNftSaleUpdate = () => {
-    setUpdateNftSaleTrigger((prev) => prev + 1);
-  };
+  const SALE_ACTIVE = useMemo(() => true, []);
 
   return (
     <>
@@ -122,7 +90,6 @@ const Homepage: NextPage = () => {
               >
                 <WindowManager>
                   <Box gridArea="1 / 1 / 3 / 3">
-                    {/* TODO: temporary until I can find a better way to do this */}
                     <Open h="100%" w="100%" id="swap">
                       <Box
                         cursor="pointer"
@@ -145,7 +112,7 @@ const Homepage: NextPage = () => {
                               h={"100%"}
                               w={"100%"}
                               alt="logo"
-                              animation={`${fadeinAnimate}`}
+                              animation={fadeInAnimation}
                               position={"absolute"}
                               top={0}
                             />
@@ -198,60 +165,29 @@ const Homepage: NextPage = () => {
                     <SwapWidget />
                     <Radio />
                     <Manifesto />
-                    <NftSaleWidget updateTrigger={updateNftSaleTrigger} />
-                    <AdminDashboardWidget
-                      triggerNftSaleUpdate={triggerNftSaleUpdate}
-                    />
-                    <GeneralDashboard
-                      triggerNftSaleUpdate={triggerNftSaleUpdate}
-                    />
+                    <NftSaleWidget />
+                    <AdminDashboardWidget />
+                    <GeneralDashboard />
                   </Box>
                 </WindowManager>
-                <Link
+                <SocialLink
                   href="https://discord.gg/FJHQtBZYdp"
-                  target="_blank"
-                  gridArea="-3 / -4 / span 1 / span 1"
-                  p="30%"
+                  icon={<FaDiscord />}
                   color="#f2bebe"
-                  _hover={{
-                    color: "#E69CFF",
-                    backgroundImage:
-                      "linear-gradient(to bottom, #ffffff 0%, #f3ffe9 50.52%, #e7feff 100%)"
-                  }}
-                  transition="all 200ms ease"
-                >
-                  <Icon as={FaDiscord} boxSize="full" />
-                </Link>
-                <Link
+                  hoverColor="#E69CFF"
+                />
+                <SocialLink
                   href="https://twitter.com/psy_dao"
-                  target="_blank"
-                  gridArea="-3 / -3 / span 1 / span 1"
-                  p="30%"
+                  icon={<FaTwitter />}
                   color="#f2bebe"
-                  _hover={{
-                    color: "#a4ffff",
-                    backgroundImage:
-                      "linear-gradient(to bottom, #ffffff 0%, #f3ffe9 50.52%, #e7feff 100%)"
-                  }}
-                  transition="all 200ms ease"
-                >
-                  <Icon as={FaTwitter} boxSize="full" />
-                </Link>
-                <Link
+                  hoverColor="#a4ffff"
+                />
+                <SocialLink
                   href="https://www.youtube.com/channel/UC8bjrtWOPuHdvMfZ3ScAI-Q"
-                  target="_blank"
-                  gridArea="-3 / -2 / span 1 / span 1"
-                  p="30%"
+                  icon={<FaYoutube />}
                   color="#f2bebe"
-                  _hover={{
-                    color: "#dc4e4e",
-                    backgroundImage:
-                      "linear-gradient(to bottom, #ffffff 0%, #f3ffe9 50.52%, #e7feff 100%)"
-                  }}
-                  transition="all 200ms ease"
-                >
-                  <Icon as={FaYoutube} boxSize="full" />
-                </Link>
+                  hoverColor="#dc4e4e"
+                />
               </Grid>
             </Box>
           </Center>

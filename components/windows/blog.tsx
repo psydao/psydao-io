@@ -4,7 +4,7 @@ import { Window } from "@/components/ui/window";
 import Iframe from "@/components/ui/iframe";
 import { useWindowManager } from "@/components/ui/window-manager";
 
-export const Blog = () => {
+const Blog = () => {
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
 
   const { dispatch, state } = useWindowManager();
@@ -47,3 +47,5 @@ export const Blog = () => {
     </Window>
   );
 };
+
+export default Blog;

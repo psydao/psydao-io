@@ -10,14 +10,19 @@ import NftOwnersSection from "./revenue-split/nft-owners-section";
 import TreasurySection from "./revenue-split/treasury-section";
 import SubmitButtonContainer from "../commons/submit-button-container";
 import SaveButton from "./save-settings-button";
+import { useGlobalContext } from "@/contexts/globalContext";
+import { useWindowManager } from "../ui/window-manager";
+import SkeletonLoader from "../ui/skeleton-loader";
 
-const GeneralSettingsSection = ({
-  triggerNftSaleUpdate,
-  onDashboardClose
-}: {
-  triggerNftSaleUpdate: () => void;
-  onDashboardClose: () => void;
-}) => {
+const GeneralSettingsSection = () => {
+  const { setUpdateNftSaleTrigger } = useGlobalContext() as {
+    setUpdateNftSaleTrigger: React.Dispatch<React.SetStateAction<number>>;
+  };
+
+  const triggerNftSaleUpdate = () => {
+    setUpdateNftSaleTrigger((prev) => prev + 1);
+  };
+
   const { address } = useAccount();
   const {
     revenue,
@@ -38,7 +43,7 @@ const GeneralSettingsSection = ({
   } = useGeneralSettingsForm(address, triggerNftSaleUpdate);
 
   if (loading) {
-    return <Spinner size="xl" />;
+    return <SkeletonLoader />;
   }
 
   if (error) {
@@ -49,13 +54,18 @@ const GeneralSettingsSection = ({
       </Alert>
     );
   }
+  const { dispatch } = useWindowManager();
+
+  const handleCloseDashboard = () => {
+    dispatch({ type: "close", id: "general-dashboard" });
+  };
 
   return (
     <form onSubmit={handleSaveSettings}>
       <Box position="relative" height="100%" mb={12} overflowY="auto">
         <RoyaltiesRevenueSection
           revenue={revenue}
-          onDashboardClose={onDashboardClose}
+          onDashboardClose={handleCloseDashboard}
         />
         <OpenPublicSaleSection
           openPublicSale={openPublicSale}
