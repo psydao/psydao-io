@@ -41,18 +41,6 @@ const shopifyClient = shopifyApi({
   isTesting: true
 });
 
-// Check that user can access the shop based on their POAP status
-// async function returnPOAPStatus(ethAddress: Address): Promise<boolean> {
-//   try {
-//     // TODO: get res type
-//     const res = await getPOAPStatus(ethAddress);
-//     return true;
-//   } catch (error) {
-//     console.error("Error validating NFT:", error);
-//     throw new Error("Failed to validate NFT");
-//   }
-// }
-
 async function generateShopifyProductDiscount(
   ethAddress: Address
 ): Promise<string> {
