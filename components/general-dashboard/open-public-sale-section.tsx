@@ -1,16 +1,6 @@
 import { Flex, FormLabel, Switch } from "@chakra-ui/react";
 
-type OpenPublicSaleSectionProps = {
-  openPublicSale: boolean;
-  setOpenPublicSale: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-const OpenPublicSaleSection = (
-  {
-    // openPublicSale,
-    // setOpenPublicSale
-  }: OpenPublicSaleSectionProps
-) => {
+const OpenPublicSaleSection = () => {
   return (
     <Flex
       width="100%"
@@ -24,12 +14,7 @@ const OpenPublicSaleSection = (
       <FormLabel fontSize="18" htmlFor="openPublicSale" mb="0">
         Open Public Sale
       </FormLabel>
-      <Switch
-        id="openPublicSale"
-        isChecked={false}
-        isDisabled={true}
-        // onChange={() => setOpenPublicSale(!openPublicSale)}
-      />
+      <Switch id="openPublicSale" isChecked={false} isDisabled={true} />
     </Flex>
   );
 };

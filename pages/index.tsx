@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { Box, Center, Image, Text, Link } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { FaDiscord, FaTwitter, FaYoutube } from "react-icons/fa";
 import { ToastContainer } from "react-toastify";
-import { debounce } from "lodash";
 import { BackgroundGrid } from "@/components/ui/background-grid";
 import { Blobs } from "@/components/ui/blobs";
 import { Csr } from "@/components/ui/csr";
@@ -45,7 +44,7 @@ const Homepage: NextPage = () => {
   }, []);
 
   useEffect(() => {
-    const debouncedUpdateHeight = debounce(updateHeight, 300);
+    const debouncedUpdateHeight = updateHeight;
     window.addEventListener("resize", debouncedUpdateHeight);
     updateHeight();
     return () => window.removeEventListener("resize", debouncedUpdateHeight);

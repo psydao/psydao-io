@@ -1,11 +1,24 @@
+import { useGlobalContext } from "@/contexts/globalContext";
+import { useGeneralSettingsForm } from "@/hooks/useGeneralSettingsForm";
 import { Flex, FormLabel, Input, Box } from "@chakra-ui/react";
+import { useAccount } from "wagmi";
 
-type BuyLimitSectionProps = {
-  buyLimit: string;
-  setBuyLimit: React.Dispatch<React.SetStateAction<string>>;
-};
+const BuyLimitSection = () => {
+  const { setUpdateNftSaleTrigger } = useGlobalContext() as {
+    setUpdateNftSaleTrigger: React.Dispatch<React.SetStateAction<number>>;
+  };
 
-const BuyLimitSection = ({ buyLimit, setBuyLimit }: BuyLimitSectionProps) => {
+  const triggerNftSaleUpdate = () => {
+    setUpdateNftSaleTrigger((prev) => prev + 1);
+  };
+
+  const { address } = useAccount();
+
+  const { buyLimit, setBuyLimit } = useGeneralSettingsForm(
+    address,
+    triggerNftSaleUpdate
+  );
+
   return (
     <Flex
       width="100%"

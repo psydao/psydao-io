@@ -66,9 +66,7 @@ export const useEditSaleForm = (
     existingAddresses: string[],
     newFloorPrice: string,
     newCeilingPrice: string,
-    isPausedLocal: boolean,
-
-    width: number
+    isPausedLocal: boolean
   ) => {
     e.preventDefault();
     if (!address) {

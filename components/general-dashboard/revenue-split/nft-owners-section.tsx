@@ -1,14 +1,23 @@
+import { useGlobalContext } from "@/contexts/globalContext";
 import RevenueSplitSection from "./revenue-split-section";
+import { useGeneralSettingsForm } from "@/hooks/useGeneralSettingsForm";
+import { useAccount } from "wagmi";
 
-type NftOwnersSectionProps = {
-  ownerPercentage: string;
-  setOwnerPercentage: React.Dispatch<React.SetStateAction<string>>;
-};
+const NftOwnersSection = () => {
+  const { setUpdateNftSaleTrigger } = useGlobalContext() as {
+    setUpdateNftSaleTrigger: React.Dispatch<React.SetStateAction<number>>;
+  };
 
-const NftOwnersSection = ({
-  ownerPercentage,
-  setOwnerPercentage
-}: NftOwnersSectionProps) => {
+  const triggerNftSaleUpdate = () => {
+    setUpdateNftSaleTrigger((prev) => prev + 1);
+  };
+
+  const { address } = useAccount();
+  const { ownerPercentage, setOwnerPercentage } = useGeneralSettingsForm(
+    address,
+    triggerNftSaleUpdate
+  );
+
   return (
     <RevenueSplitSection
       label="Owner percentage"
