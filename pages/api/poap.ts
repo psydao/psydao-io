@@ -2,7 +2,7 @@ import { env } from "@/config/env.mjs";
 import type { NextApiRequest, NextApiResponse } from "next";
 import type { Address } from "viem";
 
-const POAP_EVENT_ID = env.NEXT_PUBLIC_POAP_EVENT_ID;
+const POAP_EVENT_ID = env.POAP_EVENT_ID;
 
 export default async function handler(
   req: NextApiRequest,
@@ -22,8 +22,12 @@ export default async function handler(
           method: "GET"
         }
       );
-      console.log(poapRes.json(), poapRes.body);
-      res.status(200).send(poapRes.json());
+      if (!poapRes.ok) {
+        res.status(poapRes.status).send(poapRes.statusText);
+      }
+      const jsonPoapResponse = await poapRes.json();
+      console.log(jsonPoapResponse);
+      res.status(200).send(jsonPoapResponse);
     } catch (error: unknown) {
       console.error("Error getting POAP status:", error);
       if (error instanceof Error) {

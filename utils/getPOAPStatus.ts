@@ -8,9 +8,10 @@ const getPOAPStatus = async (address: Address | undefined) => {
     });
 
     if (!poapRes.ok) {
-      throw new Error(`Failed to fetch POAP response: ${poapRes.statusText}`);
+      console.error(`Failed to fetch POAP response: ${poapRes.statusText}`);
     }
-    return poapRes.json();
+    const jsonPoapResponse = await poapRes.json();
+    return jsonPoapResponse;
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Unknown error";
