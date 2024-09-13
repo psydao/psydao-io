@@ -1,5 +1,8 @@
+import { env } from "@/config/env.mjs";
 import type { NextApiRequest, NextApiResponse } from "next";
 import type { Address } from "viem";
+
+const POAP_EVENT_ID = env.NEXT_PUBLIC_POAP_EVENT_ID;
 
 export default async function handler(
   req: NextApiRequest,
@@ -8,11 +11,14 @@ export default async function handler(
   if (req.method === "GET") {
     try {
       const { address } = req.query as { address: Address };
-      // TODO: add eventId to the envs and get type for POAP response body
+      // TODO: Get type for POAP response body
       const poapRes = await fetch(
-        `https://api.poap.tech/actions/scan/${address}/177622`,
+        `https://api.poap.tech/actions/scan/${address}/${POAP_EVENT_ID}`,
         {
-          headers: { accept: "application/json" },
+          headers: {
+            accept: "application/json",
+            "X-API-KEY": env.POAP_API_KEY
+          },
           method: "GET"
         }
       );

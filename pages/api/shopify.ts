@@ -53,41 +53,17 @@ const shopifyClient = shopifyApi({
   isTesting: true
 });
 
-/**
- * Validates that the user has a valid NFT
- * @param ethAddress The user's Ethereum address
- * @returns true if the user has a valid NFT, false otherwise
- * @throws Error if the validation fails
- */
-async function validateNFT(ethAddress: Address): Promise<boolean> {
-  try {
-    const nftBalance: bigint = await publicClient.readContract({
-      address: NFT_CONTRACT_ADDRESS as Address,
-      abi: [
-        {
-          name: "balanceOf",
-          type: "function",
-          inputs: [{ name: "owner", type: "address" }],
-          outputs: [{ name: "", type: "uint256" }],
-          stateMutability: "view"
-        }
-      ],
-      functionName: "balanceOf",
-      args: [ethAddress]
-    });
-
-    await getPOAPStatus(ethAddress);
-
-    if (nftBalance === 0n) {
-      return false;
-    }
-
-    return true;
-  } catch (error) {
-    console.error("Error validating NFT:", error);
-    throw new Error("Failed to validate NFT");
-  }
-}
+// Check that user can access the shop based on their POAP status
+// async function returnPOAPStatus(ethAddress: Address): Promise<boolean> {
+//   try {
+//     // TODO: get res type
+//     const res = await getPOAPStatus(ethAddress);
+//     return true;
+//   } catch (error) {
+//     console.error("Error validating NFT:", error);
+//     throw new Error("Failed to validate NFT");
+//   }
+// }
 
 async function generateShopifyProductDiscount(
   ethAddress: Address
@@ -230,7 +206,9 @@ export default async function handler(
       });
     }
 
-    const hasNFT = await validateNFT(ethAddress);
+    // Change this based on the POAP return type. This will take the place of tokengating (check if hasNFT) and checks if
+    // the user with this eth address holds this POAP with this event ID
+    const hasNFT = await getPOAPStatus(ethAddress);
     if (!hasNFT) {
       return res.status(403).json({
         message: "User does not have a valid NFT"

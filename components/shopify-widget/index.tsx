@@ -3,7 +3,7 @@ import { Window } from "../ui/window";
 import Image from "next/image";
 import PsyButton from "../ui/psy-button";
 import getPOAPStatus from "@/utils/getPOAPStatus";
-import { Address } from "viem";
+import type { Address } from "viem";
 import { useAccount } from "wagmi";
 
 const handlePoapLogic = async (address: Address | undefined) => {
