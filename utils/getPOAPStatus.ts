@@ -10,7 +10,10 @@ const getPOAPStatus = async (address: Address | undefined) => {
     if (!poapRes.ok) {
       console.error(`Failed to fetch POAP response: ${poapRes.statusText}`);
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const jsonPoapResponse = await poapRes.json();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return jsonPoapResponse;
   } catch (error) {
     const errorMessage =

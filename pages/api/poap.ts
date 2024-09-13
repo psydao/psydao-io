@@ -25,6 +25,7 @@ export default async function handler(
       if (!poapRes.ok) {
         res.status(poapRes.status).send(poapRes.statusText);
       }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const jsonPoapResponse = await poapRes.json();
       console.log(jsonPoapResponse);
       res.status(200).send(jsonPoapResponse);
