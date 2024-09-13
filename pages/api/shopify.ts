@@ -1,10 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import "@shopify/shopify-api/adapters/node";
 import { shopifyApi, LATEST_API_VERSION } from "@shopify/shopify-api";
-import { type Address, getAddress, createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { type Address, getAddress } from "viem";
 import { env } from "@/config/env.mjs";
-import { psyNFTMainnet, psyNFTSepolia } from "@/constants/contracts";
 import getPOAPStatus from "@/utils/getPOAPStatus";
 
 interface ShopifyResponse {
@@ -29,16 +27,6 @@ const SHOPIFY_API_KEY = env.SHOPIFY_API_KEY;
 const SHOPIFY_API_SECRET = env.SHOPIFY_API_SECRET;
 const SHOPIFY_SHOP_NAME = env.SHOPIFY_SHOP_NAME;
 const SHOPIFY_PRODUCT_ID = env.SHOPIFY_PRODUCT_ID;
-
-const NFT_CONTRACT_ADDRESS = env.NEXT_PUBLIC_IS_MAINNET
-  ? psyNFTMainnet
-  : psyNFTSepolia;
-const ETHEREUM_RPC_URL = env.NEXT_PUBLIC_MAINNET_CLIENT;
-
-const publicClient = createPublicClient({
-  chain: mainnet,
-  transport: http(ETHEREUM_RPC_URL)
-});
 
 console.debug("SHOPIFY_API_ACCESS_TOKEN => ", SHOPIFY_API_ACCESS_TOKEN);
 
@@ -208,6 +196,8 @@ export default async function handler(
 
     // Change this based on the POAP return type. This will take the place of tokengating (check if hasNFT) and checks if
     // the user with this eth address holds this POAP with this event ID
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const hasNFT = await getPOAPStatus(ethAddress);
     if (!hasNFT) {
       return res.status(403).json({
