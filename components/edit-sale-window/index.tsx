@@ -18,9 +18,9 @@ import useFetchTokenOwners from "@/hooks/useFetchTokenOwner";
 import { getSaleComplete } from "@/utils/getSaleComplete";
 import { useCustomToasts } from "@/hooks/useCustomToasts";
 import { useResize } from "@/hooks/useResize";
+import { useGlobalContext } from "@/contexts/globalContext";
 
 interface EditSaleWindowProps {
-  selectedSale: Sale | undefined;
   floorPrice: string;
   ceilingPrice: string;
   setFloorPrice: React.Dispatch<React.SetStateAction<string>>;
@@ -37,7 +37,6 @@ interface EditSaleWindowProps {
 }
 
 const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
-  selectedSale,
   floorPrice,
   ceilingPrice,
   setFloorPrice,
@@ -51,6 +50,8 @@ const EditSaleWindow: React.FC<EditSaleWindowProps> = ({
   setIsPaused
 }) => {
   let isComplete = false;
+
+  const { selectedSale } = useGlobalContext();
 
   if (selectedSale) {
     isComplete = getSaleComplete(selectedSale);

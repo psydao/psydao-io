@@ -3,23 +3,24 @@ import { useGetAddresses } from "@/hooks/useGetAddresses";
 import { type Sale } from "@/lib/types";
 import { Box, Flex, Icon, Text } from "@chakra-ui/react";
 import { FaAngleRight } from "react-icons/fa";
+import { useGlobalContext } from "@/contexts/globalContext";
+import { getSaleComplete } from "@/utils/getSaleComplete";
 
 type AdminSaleComponentProps = {
-  index: number;
   sale: Sale;
   setWhitelistedAddresses: React.Dispatch<React.SetStateAction<string[]>>;
-  setSelectedSale: React.Dispatch<React.SetStateAction<Sale | undefined>>;
-  setOpenEditSale: React.Dispatch<React.SetStateAction<boolean>>;
-  isComplete: boolean;
 };
 
 const AdminSaleComponent = (props: AdminSaleComponentProps) => {
+  const { setSelectedSale, setOpenEditSale } = useGlobalContext();
+  const isComplete = getSaleComplete(props.sale);
+
   const { getAddresses } = useGetAddresses();
   const onClickHandler = async () => {
     const whitelistedAddresses = await getAddresses(props.sale.ipfsHash);
     props.setWhitelistedAddresses(whitelistedAddresses);
-    props.setSelectedSale(props.sale);
-    props.setOpenEditSale(true);
+    setSelectedSale(props.sale);
+    setOpenEditSale(true);
   };
 
   const { isPaused } = usePausedSale(props.sale.batchID);
@@ -34,7 +35,6 @@ const AdminSaleComponent = (props: AdminSaleComponentProps) => {
       onClick={onClickHandler}
     >
       <Flex
-        key={props.index}
         width="100%"
         justifyContent="space-between"
         p={4}
@@ -46,11 +46,11 @@ const AdminSaleComponent = (props: AdminSaleComponentProps) => {
             rounded="full"
             w={3}
             h={3}
-            bg={props.isComplete ? "#999999" : isPaused ? "#E86969" : "#269200"}
+            bg={isComplete ? "#999999" : isPaused ? "#E86969" : "#269200"}
           />
           <Text
             fontSize="18"
-            color={props.isComplete ? "#727272" : "black"}
+            color={isComplete ? "#727272" : "black"}
             fontFamily={"Inter Medium"}
           >
             Sale ({props.sale.batchID})

@@ -1,16 +1,29 @@
 import { Flex, Box, Text, Button, Image } from "@chakra-ui/react";
 import { useState } from "react";
 import WithdrawalModal from "../modals/withdrawal-modal";
+import { useAccount } from "wagmi";
+import { useGeneralSettingsForm } from "@/hooks/useGeneralSettingsForm";
+import { useGlobalContext } from "@/contexts/globalContext";
 
 type RoyaltiesRevenueSectionProps = {
-  revenue: string;
   onDashboardClose: () => void;
 };
 
 const RoyaltiesRevenueSection = ({
-  revenue,
   onDashboardClose
 }: RoyaltiesRevenueSectionProps) => {
+  const { address } = useAccount();
+
+  const { setUpdateNftSaleTrigger } = useGlobalContext() as {
+    setUpdateNftSaleTrigger: React.Dispatch<React.SetStateAction<number>>;
+  };
+
+  const triggerNftSaleUpdate = () => {
+    setUpdateNftSaleTrigger((prev) => prev + 1);
+  };
+
+  const { revenue } = useGeneralSettingsForm(address, triggerNftSaleUpdate);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);

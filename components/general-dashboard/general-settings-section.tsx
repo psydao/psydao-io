@@ -24,23 +24,8 @@ const GeneralSettingsSection = () => {
   };
 
   const { address } = useAccount();
-  const {
-    revenue,
-    buyLimit,
-    setBuyLimit,
-    royalties,
-    setRoyalties,
-    treasury,
-    setTreasury,
-    ownerPercentage,
-    setOwnerPercentage,
-    openPublicSale,
-    setOpenPublicSale,
-    handleSaveSettings,
-    isSubmitting,
-    loading,
-    error
-  } = useGeneralSettingsForm(address, triggerNftSaleUpdate);
+  const { handleSaveSettings, isSubmitting, loading, error } =
+    useGeneralSettingsForm(address, triggerNftSaleUpdate);
 
   if (loading) {
     return <SkeletonLoader />;
@@ -63,15 +48,9 @@ const GeneralSettingsSection = () => {
   return (
     <form onSubmit={handleSaveSettings}>
       <Box position="relative" height="100%" mb={12} overflowY="auto">
-        <RoyaltiesRevenueSection
-          revenue={revenue}
-          onDashboardClose={handleCloseDashboard}
-        />
-        <OpenPublicSaleSection
-          openPublicSale={openPublicSale}
-          setOpenPublicSale={setOpenPublicSale}
-        />
-        <BuyLimitSection buyLimit={buyLimit} setBuyLimit={setBuyLimit} />
+        <RoyaltiesRevenueSection onDashboardClose={handleCloseDashboard} />
+        <OpenPublicSaleSection />
+        <BuyLimitSection />
         <Box
           width="100%"
           p={6}
@@ -81,12 +60,9 @@ const GeneralSettingsSection = () => {
         >
           Revenue Splits
         </Box>
-        <RoyaltiesSection royalties={royalties} setRoyalties={setRoyalties} />
-        <NftOwnersSection
-          ownerPercentage={ownerPercentage}
-          setOwnerPercentage={setOwnerPercentage}
-        />
-        <TreasurySection treasury={treasury} setTreasury={setTreasury} />
+        <RoyaltiesSection />
+        <NftOwnersSection />
+        <TreasurySection />
         <SubmitButtonContainer>
           <SaveButton address={address} isSubmitting={isSubmitting}>
             Save
