@@ -41,7 +41,7 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
   }
 
   return (
-    <Flex textAlign="center" py={4} px={4} justifyContent="center">
+    <Flex textAlign="center" pb={4} px={4} justifyContent="center">
       {isRandom && randomToken ? (
         <RandomPsycItem
           token={randomToken}

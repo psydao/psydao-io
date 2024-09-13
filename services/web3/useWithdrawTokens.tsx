@@ -8,6 +8,7 @@ import {
 import tokenSaleAbi from "@/abis/tokenSaleAbi.json";
 import tokenSaleAbiSepolia from "@/abis/tokenSaleAbiSepolia.json";
 import { useCustomToasts } from "@/hooks/useCustomToasts";
+import { env } from "@/config/env.mjs";
 
 export const useWithdrawTokens = (tokenBalance: number, width: number) => {
   const { data, writeContract, isPending, error } = useWriteContract();
@@ -21,15 +22,11 @@ export const useWithdrawTokens = (tokenBalance: number, width: number) => {
   const withdrawTokens = useCallback(async () => {
     if (tokenBalance > 0) {
       return writeContract({
-        address:
-          process.env.NEXT_PUBLIC_CHAIN_ID === "1"
-            ? tokenSaleContract
-            : tokenSaleContractSepolia,
+        address: env.NEXT_PUBLIC_IS_MAINNET
+          ? tokenSaleContract
+          : tokenSaleContractSepolia,
         functionName: "withdrawTokens",
-        abi:
-          process.env.NEXT_PUBLIC_CHAIN_ID === "1"
-            ? tokenSaleAbi
-            : tokenSaleAbiSepolia
+        abi: env.NEXT_PUBLIC_IS_MAINNET ? tokenSaleAbi : tokenSaleAbiSepolia
       });
     }
   }, [writeContract, tokenBalance]);
