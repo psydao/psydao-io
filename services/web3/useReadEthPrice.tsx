@@ -2,17 +2,12 @@ import { useReadContract } from "wagmi";
 import { chainLinkMainnet, chainLinkSepolia } from "@/constants/contracts";
 import chainLinkAbi from "@/abis/chainLinkAbi.json";
 import chainLinkAbiSepolia from "@/abis/chainLinkAbiSepolia.json";
+import { env } from "@/config/env.mjs";
 
 export const useReadEthPrice = () => {
   const { data, isPending, error }: any = useReadContract({
-    abi:
-      process.env.NEXT_PUBLIC_CHAIN_ID === "1"
-        ? chainLinkAbi
-        : chainLinkAbiSepolia,
-    address:
-      process.env.NEXT_PUBLIC_CHAIN_ID === "1"
-        ? chainLinkMainnet
-        : chainLinkSepolia,
+    abi: env.NEXT_PUBLIC_IS_MAINNET ? chainLinkAbi : chainLinkAbiSepolia,
+    address: env.NEXT_PUBLIC_IS_MAINNET ? chainLinkMainnet : chainLinkSepolia,
     functionName: "latestRoundData"
   });
 
