@@ -3,9 +3,12 @@ import type { Address } from "viem";
 const getPOAPStatus = async (address: Address | undefined) => {
   try {
     if (!address) return;
-    const poapRes = await fetch(`/api/poap?address=${address}`, {
-      method: "GET"
-    });
+    const poapRes = await fetch(
+      `/api/poap?address=${"0x1dB67D560813Ea7AbA48bD8A9429CBECBeB2118e"}`,
+      {
+        method: "GET"
+      }
+    );
 
     if (!poapRes.ok) {
       console.error(`Failed to fetch POAP response: ${poapRes.statusText}`);
