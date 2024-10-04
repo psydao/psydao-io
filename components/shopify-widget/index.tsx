@@ -5,20 +5,39 @@ import PsyButton from "../ui/psy-button";
 import getPOAPStatus from "@/utils/getPOAPStatus";
 import type { Address } from "viem";
 import { useAccount } from "wagmi";
+import ShopifyImageModal from "./shopify-image-modal";
+import { useEffect, useState } from "react";
 
 const handlePoapLogic = async (address: Address | undefined) => {
-  await getPOAPStatus(address);
+  const userPOAPStatus = await getPOAPStatus(address);
+
+  return userPOAPStatus;
 };
-import ShopifyImageModal from "./shopify-image-modal";
-import { useState } from "react";
 
 const ShopifyWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [userHoldsPOAPToken, setUserHoldsPoapToken] = useState(false);
+
+  const { address } = useAccount();
 
   const handleModal = () => {
     setIsOpen((prev) => !prev);
   };
-  const { address } = useAccount();
+
+  useEffect(() => {
+    const checkUserPOAPStatus = async () => {
+      const userPOAPData = await handlePoapLogic(address);
+
+      if (userPOAPData) {
+        setUserHoldsPoapToken(true);
+      } else {
+        setUserHoldsPoapToken(false);
+      }
+    };
+    checkUserPOAPStatus().catch(() =>
+      console.error("Error fetching POAP status")
+    );
+  }, [address]);
 
   return (
     <Window
@@ -67,10 +86,18 @@ const ShopifyWidget = () => {
               </Flex>
               <PsyButton
                 onClick={async () => {
-                  await handlePoapLogic(address);
+                  console.log("User has POAP");
                 }}
+                customStyle={{
+                  width: "100%"
+                }}
+                isDisabled={!userHoldsPOAPToken}
               >
-                Claim Here
+                {address
+                  ? userHoldsPOAPToken
+                    ? "Claim Here"
+                    : "Cannot Claim"
+                  : "Wallet Disconnected"}
               </PsyButton>
             </Flex>
           </Box>
