@@ -26,15 +26,16 @@ const getPOAPStatus = async (address: Address | undefined) => {
       method: "GET"
     });
 
-    if (poapRes.status === 404) return;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const jsonPoapResponse = await poapRes.json();
 
     if (!poapRes.ok) {
       console.error(`Failed to fetch POAP response: ${poapRes.statusText}`);
       return;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const jsonPoapResponse = await poapRes.json();
+    if (poapRes.status === 201) return;
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return jsonPoapResponse as PoapResponseType;
   } catch (error) {

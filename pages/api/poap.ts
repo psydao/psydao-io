@@ -57,7 +57,9 @@ export default async function handler(
         console.info(
           "User does not have POAP. They are either ineligible or have not claimed it yet."
         );
-        res.status(poapRes.status).send(poapRes.statusText);
+        res.status(201).send({
+          message: "User does not currently hold a valid POAP token"
+        });
       }
 
       if (poapRes.status !== 404 && !poapRes.ok) {
