@@ -182,13 +182,10 @@ export default async function handler(
       });
     }
 
-    // Change this based on the POAP return type. This will take the place of tokengating (check if hasNFT) and checks if
-    // the user with this eth address holds this POAP with this event ID
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const hasNFT = await getPOAPStatus(ethAddress);
-    if (!hasNFT) {
-      return res.status(403).json({
+    // Fallback in case the button is falsely active for some reason
+    const holdsPOAP = await getPOAPStatus(ethAddress);
+    if (!holdsPOAP) {
+      res.status(403).send({
         message: "User does not have a valid NFT"
       });
     }
