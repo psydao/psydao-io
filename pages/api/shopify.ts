@@ -22,19 +22,22 @@ interface ShopifyResponse {
   };
 }
 
+interface CartResponse {
+  data: {
+    cartCreate: {
+      cart: any;
+    };
+  };
+
+  userErrors: Array<{ field: string; message: string }>;
+}
+
 const SHOPIFY_API_ACCESS_TOKEN = env.SHOPIFY_API_ACCESS_TOKEN;
 const SHOPIFY_API_KEY = env.SHOPIFY_API_KEY;
 const SHOPIFY_API_SECRET = env.SHOPIFY_API_SECRET;
 const SHOPIFY_SHOP_NAME = env.SHOPIFY_SHOP_NAME;
 const SHOPIFY_PRODUCT_ID = env.SHOPIFY_PRODUCT_ID;
-
-console.debug(
-  "SHOPIFY_API_ACCESS_TOKEN => ",
-  SHOPIFY_API_ACCESS_TOKEN,
-  SHOPIFY_SHOP_NAME,
-  SHOPIFY_PRODUCT_ID,
-  SHOPIFY_API_KEY
-);
+const STOREFRONT_API_PUBLIC_ACCESS_TOKEN = env.STOREFRONT_PUBLIC_ACCESS_TOKEN;
 
 const shopifyClient = shopifyApi({
   apiKey: SHOPIFY_API_KEY,
@@ -49,78 +52,66 @@ const shopifyClient = shopifyApi({
 
 const session = shopifyClient.session.customAppSession(SHOPIFY_SHOP_NAME);
 session.accessToken = SHOPIFY_API_ACCESS_TOKEN;
-console.log("Session details -> ", {
-  shop: session.shop,
-  isActive: session.isActive([
-    "read_products",
-    "read_discounts",
-    "write_discounts"
-  ]),
-  accessToken: session.accessToken ? "Set" : "Not set",
-  scopes: session.scope,
-  configScope: shopifyClient.config.scopes,
-  configAPIKeySet: shopifyClient.config.adminApiAccessToken ? "Set" : "Not set"
-});
+
 const client = new shopifyClient.clients.Graphql({
   session,
   apiVersion: LATEST_API_VERSION
 });
 
-// async function createCart(discountCode: string) {
-//   const cartCreateMutation = `mutation {
-//   cartCreate(
-//     input: {
-//     discountCodes: ["${discountCode}"],
-//       lines: [
-//         {
-//           quantity: 1
-//           merchandiseId: "gid://shopify/test-product/9620572176708"
-//         }
-//       ],
-//     }
-//   ) {
-//     cart {
-//       id
-//       createdAt
-//       updatedAt
-//       lines(first: 10) {
-//         edges {
-//           node {
-//             id
-//             merchandise {
-//               ... on ProductVariant {
-//                 id
-//               }
-//             }
-//           }
-//         }
-//       }
-//       buyerIdentity {
-//         deliveryAddressPreferences {
-//           __typename
-//         }
-//         preferences {
-//           delivery {
-//             deliveryMethod
-//           }
-//         }
-//       }
-//       attributes {
-//         key
-//         value
-//       }
-//       }
-//     }
-//   }
-// }`;
-//   try {
-//     const response = await client.request(cartCreateMutation);
-//     console.log(response.data, response.errors);
-//     return response;
-//   } catch (error) {
-//     console.error("Error creating cart:", error);
-//   }
-// }
+async function createCart(discountCode: string, ethAddress: Address) {
+  const cartCreateMutation = `
+    mutation createCart($input: CartInput!) {
+      cartCreate(input: $input) {
+        cart {
+          id
+          checkoutUrl
+          discountCodes {
+            code
+            applicable
+          }
+           
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  const variables = {
+    input: {
+      lines: [
+        {
+          quantity: 1,
+          merchandiseId: "gid://shopify/ProductVariant/49402271400260"
+        }
+      ],
+      discountCodes: [discountCode]
+    }
+  };
+
+  try {
+    const response = await fetch(
+      `https://${SHOPIFY_SHOP_NAME}/api/${LATEST_API_VERSION}/graphql.json`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Shopify-Storefront-Access-Token":
+            STOREFRONT_API_PUBLIC_ACCESS_TOKEN
+        },
+        body: JSON.stringify({ query: cartCreateMutation, variables })
+      }
+    );
+
+    const resJSON = (await response.json()) as CartResponse;
+
+    return resJSON;
+  } catch (error) {
+    console.error("Error creating cart:", error);
+  }
+}
 
 async function generateShopifyProductDiscount(
   ethAddress: Address
@@ -157,13 +148,6 @@ async function generateShopifyProductDiscount(
     basicCodeDiscount: {
       title: `PsyDAO Como Hat Discount for ${ethAddress}`,
       code: discountCode,
-      metafields: [
-        {
-          key: "wallet_address",
-          value: ethAddress,
-          namespace: "psydao"
-        }
-      ],
       startsAt: new Date().toISOString(),
       customerSelection: {
         all: true
@@ -176,7 +160,7 @@ async function generateShopifyProductDiscount(
         },
         items: {
           products: {
-            productsToAdd: [`gid://shopify/Product/${SHOPIFY_PRODUCT_ID}`]
+            productsToAdd: [`gid://shopify/Product/9620572176708`]
           }
         }
       }
@@ -193,8 +177,6 @@ async function generateShopifyProductDiscount(
     const response = await client.request(discountMutation, {
       variables
     });
-
-    console.log(response.errors);
 
     if (response.data) {
       const result = response.data as ShopifyResponse;
@@ -257,11 +239,13 @@ export default async function handler(
 
     const discountCode = await generateShopifyProductDiscount(ethAddress);
 
-    // const cartResponse = await createCart(discountCode);
+    const cartResponse = await createCart(discountCode, ethAddress);
+
+    console.log("cart response: ", cartResponse);
 
     return res.status(200).json({
-      discountCode: discountCode
-      // cartResponse: cartResponse
+      discountCode: discountCode,
+      cartResponse: cartResponse
     });
   } catch (error) {
     console.error("Error generating discount code:", error);

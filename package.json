@@ -50,6 +50,7 @@
     "react-rnd": "^10.3.7",
     "react-toastify": "^10.0.5",
     "sharp": "^0.33.5",
+    "shopify-buy": "^2.22.0",
     "siwe": "^2.1.4",
     "swr": "^2.2.5",
     "three": "^0.142.0",
