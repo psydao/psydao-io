@@ -28,7 +28,13 @@ const SHOPIFY_API_SECRET = env.SHOPIFY_API_SECRET;
 const SHOPIFY_SHOP_NAME = env.SHOPIFY_SHOP_NAME;
 const SHOPIFY_PRODUCT_ID = env.SHOPIFY_PRODUCT_ID;
 
-console.debug("SHOPIFY_API_ACCESS_TOKEN => ", SHOPIFY_API_ACCESS_TOKEN);
+console.debug(
+  "SHOPIFY_API_ACCESS_TOKEN => ",
+  SHOPIFY_API_ACCESS_TOKEN,
+  SHOPIFY_SHOP_NAME,
+  SHOPIFY_PRODUCT_ID,
+  SHOPIFY_API_KEY
+);
 
 const shopifyClient = shopifyApi({
   apiKey: SHOPIFY_API_KEY,
@@ -41,34 +47,89 @@ const shopifyClient = shopifyApi({
   isTesting: true
 });
 
+const session = shopifyClient.session.customAppSession(SHOPIFY_SHOP_NAME);
+session.accessToken = SHOPIFY_API_ACCESS_TOKEN;
+console.log("Session details -> ", {
+  shop: session.shop,
+  isActive: session.isActive([
+    "read_products",
+    "read_discounts",
+    "write_discounts"
+  ]),
+  accessToken: session.accessToken ? "Set" : "Not set",
+  scopes: session.scope,
+  configScope: shopifyClient.config.scopes,
+  configAPIKeySet: shopifyClient.config.adminApiAccessToken ? "Set" : "Not set"
+});
+const client = new shopifyClient.clients.Graphql({
+  session,
+  apiVersion: LATEST_API_VERSION
+});
+
+// async function createCart(discountCode: string) {
+//   const cartCreateMutation = `mutation {
+//   cartCreate(
+//     input: {
+//     discountCodes: ["${discountCode}"],
+//       lines: [
+//         {
+//           quantity: 1
+//           merchandiseId: "gid://shopify/test-product/9620572176708"
+//         }
+//       ],
+//     }
+//   ) {
+//     cart {
+//       id
+//       createdAt
+//       updatedAt
+//       lines(first: 10) {
+//         edges {
+//           node {
+//             id
+//             merchandise {
+//               ... on ProductVariant {
+//                 id
+//               }
+//             }
+//           }
+//         }
+//       }
+//       buyerIdentity {
+//         deliveryAddressPreferences {
+//           __typename
+//         }
+//         preferences {
+//           delivery {
+//             deliveryMethod
+//           }
+//         }
+//       }
+//       attributes {
+//         key
+//         value
+//       }
+//       }
+//     }
+//   }
+// }`;
+//   try {
+//     const response = await client.request(cartCreateMutation);
+//     console.log(response.data, response.errors);
+//     return response;
+//   } catch (error) {
+//     console.error("Error creating cart:", error);
+//   }
+// }
+
 async function generateShopifyProductDiscount(
   ethAddress: Address
 ): Promise<string> {
   // generate a discount code for 100% off here
-  const session = shopifyClient.session.customAppSession(SHOPIFY_SHOP_NAME);
-  session.accessToken = SHOPIFY_API_ACCESS_TOKEN;
-  console.log("Session details -> ", {
-    shop: session.shop,
-    isActive: session.isActive([
-      "read_products",
-      "read_discounts",
-      "write_discounts"
-    ]),
-    accessToken: session.accessToken ? "Set" : "Not set",
-    scopes: session.scope,
-    configScope: shopifyClient.config.scopes,
-    configAPIKeySet: shopifyClient.config.adminApiAccessToken
-      ? "Set"
-      : "Not set"
-  });
-  const client = new shopifyClient.clients.Graphql({
-    session,
-    apiVersion: LATEST_API_VERSION
-  });
 
   const discountCode = `PSYDAO-${ethAddress.slice(2, 8)}-${Date.now()}`; // get discount codes
 
-  const mutation = `
+  const discountMutation = `
       mutation discountCodeBasicCreate($basicCodeDiscount: DiscountCodeBasicInput!) {
         discountCodeBasicCreate(basicCodeDiscount: $basicCodeDiscount) {
           codeDiscountNode {
@@ -129,9 +190,11 @@ async function generateShopifyProductDiscount(
     // });
 
     // Note: NEW WAY
-    const response = await client.request(mutation, {
+    const response = await client.request(discountMutation, {
       variables
     });
+
+    console.log(response.errors);
 
     if (response.data) {
       const result = response.data as ShopifyResponse;
@@ -182,6 +245,8 @@ export default async function handler(
       });
     }
 
+    console.log("Generating discount code for address:", ethAddress);
+
     // Fallback in case the button is falsely active for some reason
     const holdsPOAP = await getPOAPStatus(ethAddress);
     if (!holdsPOAP) {
@@ -192,8 +257,11 @@ export default async function handler(
 
     const discountCode = await generateShopifyProductDiscount(ethAddress);
 
+    // const cartResponse = await createCart(discountCode);
+
     return res.status(200).json({
       discountCode: discountCode
+      // cartResponse: cartResponse
     });
   } catch (error) {
     console.error("Error generating discount code:", error);

@@ -86,7 +86,7 @@ const ShopifyWidget = () => {
               </Flex>
               <PsyButton
                 onClick={async () => {
-                  console.log("User has POAP");
+                  await fetch(`/api/shopify?ethAddress=${address}`);
                 }}
                 customStyle={{
                   width: "100%"

@@ -22,9 +22,12 @@ interface PoapResponseType {
 const getPOAPStatus = async (address: Address | undefined) => {
   try {
     if (!address) return;
-    const poapRes = await fetch(`/api/poap?address=${address}`, {
-      method: "GET"
-    });
+    const poapRes = await fetch(
+      `http://localhost:3000/api/poap?address=${address}`,
+      {
+        method: "GET"
+      }
+    );
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const jsonPoapResponse = await poapRes.json();

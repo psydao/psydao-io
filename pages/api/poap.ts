@@ -9,8 +9,8 @@ import {
 } from "viem";
 import { mainnet, sepolia } from "viem/chains";
 
-const POAP_EVENT_ID = env.POAP_EVENT_ID;
-// const POAP_EVENT_ID = 177985;
+// const POAP_EVENT_ID = env.POAP_EVENT_ID;
+const POAP_EVENT_ID = 177985;
 
 const publicClient = createPublicClient({
   chain: env.NEXT_PUBLIC_IS_MAINNET ? mainnet : sepolia,
