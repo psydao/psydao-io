@@ -13,6 +13,7 @@ export const env = createEnv({
     SHOPIFY_API_SECRET: z.string().min(1),
     SHOPIFY_SHOP_NAME: z.string().min(1),
     SHOPIFY_PRODUCT_ID: z.string().min(1),
+    SHOPIFY_VARIANT_ID: z.string().min(1),
     POAP_API_KEY: z.string().min(1),
     POAP_EVENT_ID: z.string().min(1)
   },
@@ -44,6 +45,7 @@ export const env = createEnv({
     SHOPIFY_API_SECRET: process.env.SHOPIFY_API_SECRET,
     SHOPIFY_SHOP_NAME: process.env.SHOPIFY_SHOP_NAME,
     SHOPIFY_PRODUCT_ID: process.env.SHOPIFY_PRODUCT_ID,
+    SHOPIFY_VARIANT_ID: process.env.SHOPIFY_VARIANT_ID,
     POAP_API_KEY: process.env.POAP_API_KEY,
     POAP_EVENT_ID: process.env.POAP_EVENT_ID,
     NEXT_PUBLIC_IS_MAINNET: Number(process.env.NEXT_PUBLIC_CHAIN_ID) === 1,

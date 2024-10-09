@@ -25,7 +25,14 @@ interface ShopifyResponse {
 interface CartResponse {
   data: {
     cartCreate: {
-      cart: any;
+      cart: {
+        id: string;
+        checkoutUrl: string;
+        discountCodes: Array<{
+          code: string;
+          applicable: boolean;
+        }>;
+      } | null;
     };
   };
 
@@ -37,6 +44,7 @@ const SHOPIFY_API_KEY = env.SHOPIFY_API_KEY;
 const SHOPIFY_API_SECRET = env.SHOPIFY_API_SECRET;
 const SHOPIFY_SHOP_NAME = env.SHOPIFY_SHOP_NAME;
 const SHOPIFY_PRODUCT_ID = env.SHOPIFY_PRODUCT_ID;
+const SHOPIFY_VARIANT_ID = env.SHOPIFY_VARIANT_ID;
 const STOREFRONT_API_PUBLIC_ACCESS_TOKEN = env.STOREFRONT_PUBLIC_ACCESS_TOKEN;
 
 const shopifyClient = shopifyApi({
@@ -58,7 +66,7 @@ const client = new shopifyClient.clients.Graphql({
   apiVersion: LATEST_API_VERSION
 });
 
-async function createCart(discountCode: string, ethAddress: Address) {
+async function createCart(discountCode: string) {
   const cartCreateMutation = `
     mutation createCart($input: CartInput!) {
       cartCreate(input: $input) {
@@ -69,7 +77,6 @@ async function createCart(discountCode: string, ethAddress: Address) {
             code
             applicable
           }
-           
         }
         userErrors {
           field
@@ -84,7 +91,7 @@ async function createCart(discountCode: string, ethAddress: Address) {
       lines: [
         {
           quantity: 1,
-          merchandiseId: "gid://shopify/ProductVariant/49402271400260"
+          merchandiseId: `gid://shopify/ProductVariant/${SHOPIFY_VARIANT_ID}`
         }
       ],
       discountCodes: [discountCode]
@@ -160,7 +167,7 @@ async function generateShopifyProductDiscount(
         },
         items: {
           products: {
-            productsToAdd: [`gid://shopify/Product/9620572176708`]
+            productsToAdd: [`gid://shopify/Product/${SHOPIFY_PRODUCT_ID}`]
           }
         }
       }
@@ -227,8 +234,6 @@ export default async function handler(
       });
     }
 
-    console.log("Generating discount code for address:", ethAddress);
-
     // Fallback in case the button is falsely active for some reason
     const holdsPOAP = await getPOAPStatus(ethAddress);
     if (!holdsPOAP) {
@@ -239,7 +244,7 @@ export default async function handler(
 
     const discountCode = await generateShopifyProductDiscount(ethAddress);
 
-    const cartResponse = await createCart(discountCode, ethAddress);
+    const cartResponse = await createCart(discountCode);
 
     console.log("cart response: ", cartResponse);
 

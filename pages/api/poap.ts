@@ -42,7 +42,6 @@ export default async function handler(
       const { address } = req.query as { address: string };
       const normalizedAddress = await getAddressFromQuery(address);
 
-      // TODO: Get type for POAP response body
       const poapRes = await fetch(
         `https://api.poap.tech/actions/scan/${normalizedAddress}/${POAP_EVENT_ID}`,
         {
