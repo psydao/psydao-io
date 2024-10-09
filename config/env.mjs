@@ -11,7 +11,9 @@ export const env = createEnv({
     SHOPIFY_API_KEY: z.string().min(1),
     SHOPIFY_API_SECRET: z.string().min(1),
     SHOPIFY_SHOP_NAME: z.string().min(1),
-    SHOPIFY_PRODUCT_ID: z.string().min(1)
+    SHOPIFY_PRODUCT_ID: z.string().min(1),
+    POAP_API_KEY: z.string().min(1),
+    POAP_EVENT_ID: z.string().min(1)
   },
   client: {
     NEXT_PUBLIC_IS_MAINNET: z.coerce.boolean(),
@@ -40,6 +42,8 @@ export const env = createEnv({
     SHOPIFY_API_SECRET: process.env.SHOPIFY_API_SECRET,
     SHOPIFY_SHOP_NAME: process.env.SHOPIFY_SHOP_NAME,
     SHOPIFY_PRODUCT_ID: process.env.SHOPIFY_PRODUCT_ID,
+    POAP_API_KEY: process.env.POAP_API_KEY,
+    POAP_EVENT_ID: process.env.POAP_EVENT_ID,
     NEXT_PUBLIC_IS_MAINNET: Number(process.env.NEXT_PUBLIC_CHAIN_ID) === 1,
     NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
     NEXT_PUBLIC_CHAIN_ID: Number(process.env.NEXT_PUBLIC_CHAIN_ID),

@@ -1,10 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import "@shopify/shopify-api/adapters/node";
 import { shopifyApi, LATEST_API_VERSION } from "@shopify/shopify-api";
-import { type Address, getAddress, createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
+import { type Address, getAddress } from "viem";
 import { env } from "@/config/env.mjs";
-import { psyNFTMainnet, psyNFTSepolia } from "@/constants/contracts";
+import getPOAPStatus from "@/utils/getPOAPStatus";
 
 interface ShopifyResponse {
   discountCodeBasicCreate: {
@@ -29,18 +28,6 @@ const SHOPIFY_API_SECRET = env.SHOPIFY_API_SECRET;
 const SHOPIFY_SHOP_NAME = env.SHOPIFY_SHOP_NAME;
 const SHOPIFY_PRODUCT_ID = env.SHOPIFY_PRODUCT_ID;
 
-const NFT_CONTRACT_ADDRESS = env.NEXT_PUBLIC_IS_MAINNET
-  ? psyNFTMainnet
-  : psyNFTSepolia;
-const ETHEREUM_RPC_URL = env.NEXT_PUBLIC_MAINNET_CLIENT;
-
-const publicClient = createPublicClient({
-  chain: mainnet,
-  transport: http(ETHEREUM_RPC_URL)
-});
-
-console.debug("SHOPIFY_API_ACCESS_TOKEN => ", SHOPIFY_API_ACCESS_TOKEN);
-
 const shopifyClient = shopifyApi({
   apiKey: SHOPIFY_API_KEY,
   apiSecretKey: SHOPIFY_API_SECRET,
@@ -52,66 +39,19 @@ const shopifyClient = shopifyApi({
   isTesting: true
 });
 
-/**
- * Validates that the user has a valid NFT
- * @param ethAddress The user's Ethereum address
- * @returns true if the user has a valid NFT, false otherwise
- * @throws Error if the validation fails
- */
-async function validateNFT(ethAddress: Address): Promise<boolean> {
-  try {
-    const nftBalance: bigint = await publicClient.readContract({
-      address: NFT_CONTRACT_ADDRESS as Address,
-      abi: [
-        {
-          name: "balanceOf",
-          type: "function",
-          inputs: [{ name: "owner", type: "address" }],
-          outputs: [{ name: "", type: "uint256" }],
-          stateMutability: "view"
-        }
-      ],
-      functionName: "balanceOf",
-      args: [ethAddress]
-    });
-
-    if (nftBalance === 0n) {
-      return false;
-    }
-
-    return true;
-  } catch (error) {
-    console.error("Error validating NFT:", error);
-    throw new Error("Failed to validate NFT");
-  }
-}
-
 async function generateShopifyProductDiscount(
   ethAddress: Address
 ): Promise<string> {
   // generate a discount code for 100% off here
   const session = shopifyClient.session.customAppSession(SHOPIFY_SHOP_NAME);
   session.accessToken = SHOPIFY_API_ACCESS_TOKEN;
-  console.log("Session details -> ", {
-    shop: session.shop,
-    isActive: session.isActive([
-      "read_products",
-      "read_discounts",
-      "write_discounts"
-    ]),
-    accessToken: session.accessToken ? "Set" : "Not set",
-    scopes: session.scope,
-    configScope: shopifyClient.config.scopes,
-    configAPIKeySet: shopifyClient.config.adminApiAccessToken
-      ? "Set"
-      : "Not set"
-  });
+
   const client = new shopifyClient.clients.Graphql({
     session,
     apiVersion: LATEST_API_VERSION
   });
 
-  const discountCode = `PSYDAO-${ethAddress.slice(2, 8)}-${Date.now()}`;
+  const discountCode = `PSYDAO-${ethAddress.slice(2, 8)}-${Date.now()}`; // get discount codes
 
   const mutation = `
       mutation discountCodeBasicCreate($basicCodeDiscount: DiscountCodeBasicInput!) {
@@ -227,9 +167,10 @@ export default async function handler(
       });
     }
 
-    const hasNFT = await validateNFT(ethAddress);
-    if (!hasNFT) {
-      return res.status(403).json({
+    // Fallback in case the button is falsely active for some reason
+    const holdsPOAP = await getPOAPStatus(ethAddress);
+    if (!holdsPOAP) {
+      res.status(403).send({
         message: "User does not have a valid NFT"
       });
     }

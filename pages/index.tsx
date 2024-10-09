@@ -1,13 +1,6 @@
 import { useEffect, useState } from "react";
-import {
-  Box,
-  Center,
-  Icon,
-  Image,
-  Link,
-  Text,
-  keyframes
-} from "@chakra-ui/react";
+import { Box, Center, Icon, Image, Link, Text } from "@chakra-ui/react";
+import { keyframes } from "@emotion/react";
 import type { NextPage } from "next";
 import { FaDiscord, FaTwitter, FaYoutube } from "react-icons/fa";
 import { ToastContainer } from "react-toastify";
