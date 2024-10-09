@@ -85,9 +85,8 @@ const ShopifyWidget = () => {
                 </Text>
               </Flex>
               <PsyButton
-                onClick={async () => {
-                  console.log("User has POAP");
-                }}
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                onClick={() => {}}
                 customStyle={{
                   width: "100%"
                 }}

@@ -28,8 +28,8 @@ export interface PoapResponseType {
   };
 }
 
+//! USE TEST POAP ID FOR TESTING
 const POAP_EVENT_ID = env.POAP_EVENT_ID;
-// const POAP_EVENT_ID = 177985; <- use this for testing
 
 const publicClient = createPublicClient({
   chain: env.NEXT_PUBLIC_IS_MAINNET ? mainnet : sepolia,
@@ -71,32 +71,37 @@ export default async function handler(
           method: "GET"
         }
       );
+
       if (poapRes.status === 404) {
         console.info("User does not hold this POAP.");
-        res.status(201).send({
+        res.status(204).send({
           message: "User does not hold a valid POAP token"
         });
+        return;
       }
 
       if (poapRes.status !== 404 && !poapRes.ok) {
         res.status(poapRes.status).send(poapRes.statusText);
+        return;
       }
 
       const jsonPoapResponse = (await poapRes.json()) as PoapResponseType;
 
       res.status(200).send(jsonPoapResponse);
+      return;
     } catch (error: unknown) {
       console.error("Error getting POAP status:", error);
       if (error instanceof Error) {
-        console.log("Error:", error.message);
+        console.error("Error:", error.message);
         res.status(500).send(error.message);
       } else {
         res.status(500).send("Unknown error occurred");
       }
     }
   } else {
-    console.log("Method not allowed");
+    console.error("Method not allowed");
     res.setHeader("Allow", ["POST"]);
     res.status(405).end(`Method ${req.method} Not Allowed`);
+    return;
   }
 }

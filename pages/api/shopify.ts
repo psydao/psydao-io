@@ -28,8 +28,6 @@ const SHOPIFY_API_SECRET = env.SHOPIFY_API_SECRET;
 const SHOPIFY_SHOP_NAME = env.SHOPIFY_SHOP_NAME;
 const SHOPIFY_PRODUCT_ID = env.SHOPIFY_PRODUCT_ID;
 
-console.debug("SHOPIFY_API_ACCESS_TOKEN => ", SHOPIFY_API_ACCESS_TOKEN);
-
 const shopifyClient = shopifyApi({
   apiKey: SHOPIFY_API_KEY,
   apiSecretKey: SHOPIFY_API_SECRET,
@@ -47,20 +45,7 @@ async function generateShopifyProductDiscount(
   // generate a discount code for 100% off here
   const session = shopifyClient.session.customAppSession(SHOPIFY_SHOP_NAME);
   session.accessToken = SHOPIFY_API_ACCESS_TOKEN;
-  console.log("Session details -> ", {
-    shop: session.shop,
-    isActive: session.isActive([
-      "read_products",
-      "read_discounts",
-      "write_discounts"
-    ]),
-    accessToken: session.accessToken ? "Set" : "Not set",
-    scopes: session.scope,
-    configScope: shopifyClient.config.scopes,
-    configAPIKeySet: shopifyClient.config.adminApiAccessToken
-      ? "Set"
-      : "Not set"
-  });
+
   const client = new shopifyClient.clients.Graphql({
     session,
     apiVersion: LATEST_API_VERSION
