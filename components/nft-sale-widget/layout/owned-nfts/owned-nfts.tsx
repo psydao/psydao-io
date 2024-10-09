@@ -10,6 +10,7 @@ import SubmitButtonContainer from "@/components/common/submit-button-container";
 import SkeletonLayout from "../../common/skeleton-card";
 import OwnedNftItem from "./owned-nft-item";
 import PsyButton from "@/components/ui/psy-button";
+import { useEffect, useState } from "react";
 
 type OwnedNftsProps = {
   nftData: GetTokensByOwnerData | undefined;
@@ -22,6 +23,15 @@ type OwnedNftsProps = {
 const OwnedNfts = (props: OwnedNftsProps) => {
   const imageIds = props.nftData?.tokens.map((token) => token.tokenId) ?? [];
   const { imageUris, loading: imageUrisLoading } = useImageData(imageIds);
+  const [reloadTrigger, setReloadTrigger] = useState(0);
+
+  const triggerReload = () => {
+    setReloadTrigger((prev) => prev + 1);
+  };
+
+  useEffect(() => {
+    refetchBalances().catch(console.error);
+  }, [reloadTrigger]);
 
   const { address } = useAccount();
   const {
@@ -104,6 +114,7 @@ const OwnedNfts = (props: OwnedNftsProps) => {
                 isOwnedView={true}
                 isOriginal={props.isOriginal}
                 refetchBalances={refetchBalances}
+                triggerReload={triggerReload}
               />
             ))
           : filteredCopyTokens.map((token, index) => (
@@ -124,6 +135,7 @@ const OwnedNfts = (props: OwnedNftsProps) => {
                 isOwnedView={true}
                 isOriginal={props.isOriginal}
                 refetchBalances={refetchBalances}
+                triggerReload={triggerReload}
               />
             ))}
 
