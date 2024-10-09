@@ -13,7 +13,7 @@ const getPOAPStatus = async (address: Address | undefined) => {
       return;
     }
 
-    if (poapRes.status === 201) return;
+    if (poapRes.status === 204) return;
 
     const jsonPoapResponse = (await poapRes.json()) as PoapResponseType;
 

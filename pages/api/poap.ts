@@ -73,10 +73,7 @@ export default async function handler(
       );
 
       if (poapRes.status === 404) {
-        console.info("User does not hold this POAP.");
-        res.status(204).send({
-          message: "User does not hold a valid POAP token"
-        });
+        res.status(204).end();
         return;
       }
 
