@@ -95,7 +95,7 @@ async function createCart(discountCode: string) {
       lines: [
         {
           quantity: 1,
-          merchandiseId: `gid://shopify/ProductVariant/49402271400260}`
+          merchandiseId: `gid://shopify/ProductVariant/${SHOPIFY_VARIANT_ID}`
         }
       ],
       discountCodes: [discountCode]
@@ -104,7 +104,7 @@ async function createCart(discountCode: string) {
 
   try {
     const response = await fetch(
-      `https://${"SHOPIFY_SHOP_NAME"}/api/${LATEST_API_VERSION}/graphql.json`,
+      `https://${SHOPIFY_SHOP_NAME}/api/${LATEST_API_VERSION}/graphql.json`,
       {
         method: "POST",
         headers: {
@@ -117,8 +117,6 @@ async function createCart(discountCode: string) {
     );
 
     const resJSON = (await response.json()) as CartResponse;
-
-    console.log(resJSON, resJSON.data.cartCreate.cart);
 
     if (resJSON.userErrors?.length > 0) {
       throw new Error("Could not create cart.");
@@ -168,7 +166,7 @@ async function generateShopifyProductDiscount(
 
   const variables = {
     basicCodeDiscount: {
-      title: `PsyDAO Como Hat Discount for ${ethAddress}`,
+      title: `PsyDAO Camo Hat Discount for ${ethAddress}`,
       code: discountCode,
       startsAt: new Date().toISOString(),
       customerSelection: {

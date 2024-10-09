@@ -38,7 +38,7 @@ const useRedirectToShopify = () => {
       response.cartResponse.cart.discountCodes[0]?.applicable &&
       response.discountCode
     ) {
-      window.location.href = response.cartResponse.cart.checkoutUrl;
+      window.open(response.cartResponse.cart.checkoutUrl);
     } else {
       showCustomErrorToast("Could not create cart.", width);
       return;
