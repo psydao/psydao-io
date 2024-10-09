@@ -17,9 +17,9 @@ export const useBuyRandomPsycPrivate = () => {
     async (randomFromBatchPrice: string, batchId: number, proof: string) => {
       const randomNftAmount = parseUnits(randomFromBatchPrice, 18);
       return writeContract({
-        address: env.NEXT_PUBLIC_CHAIN_ID ? psycSaleMainnet : psycSaleSepolia,
+        address: env.NEXT_PUBLIC_IS_MAINNET ? psycSaleMainnet : psycSaleSepolia,
         functionName: "buyRandomFromBatch",
-        abi: env.NEXT_PUBLIC_CHAIN_ID ? psycSaleAbi : psycSaleAbiSepolia,
+        abi: env.NEXT_PUBLIC_IS_MAINNET ? psycSaleAbi : psycSaleAbiSepolia,
         args: [batchId, proof],
         value: randomNftAmount
       });
