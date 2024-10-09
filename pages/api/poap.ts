@@ -9,8 +9,27 @@ import {
 } from "viem";
 import { mainnet, sepolia } from "viem/chains";
 
-// const POAP_EVENT_ID = env.POAP_EVENT_ID;
-const POAP_EVENT_ID = 177985;
+export interface PoapResponseType {
+  event: {
+    id: number;
+    fancy_id: string;
+    name: string;
+    event_url: string;
+    image_url: string;
+    country: string;
+    city: string;
+    description: string;
+    year: number;
+    start_date: Date;
+    end_date: Date;
+    expiry_date: Date;
+    tokenId: string;
+    owner: string;
+  };
+}
+
+//! USE TEST POAP ID FOR TESTING
+const POAP_EVENT_ID = env.POAP_EVENT_ID;
 
 const publicClient = createPublicClient({
   chain: env.NEXT_PUBLIC_IS_MAINNET ? mainnet : sepolia,
@@ -52,34 +71,34 @@ export default async function handler(
           method: "GET"
         }
       );
+
       if (poapRes.status === 404) {
-        console.info(
-          "User does not have POAP. They are either ineligible or have not claimed it yet."
-        );
-        res.status(201).send({
-          message: "User does not currently hold a valid POAP token"
-        });
+        res.status(204).end();
+        return;
       }
 
       if (poapRes.status !== 404 && !poapRes.ok) {
         res.status(poapRes.status).send(poapRes.statusText);
+        return;
       }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const jsonPoapResponse = await poapRes.json();
+
+      const jsonPoapResponse = (await poapRes.json()) as PoapResponseType;
 
       res.status(200).send(jsonPoapResponse);
+      return;
     } catch (error: unknown) {
       console.error("Error getting POAP status:", error);
       if (error instanceof Error) {
-        console.log("Error:", error.message);
+        console.error("Error:", error.message);
         res.status(500).send(error.message);
       } else {
         res.status(500).send("Unknown error occurred");
       }
     }
   } else {
-    console.log("Method not allowed");
+    console.error("Method not allowed");
     res.setHeader("Allow", ["POST"]);
     res.status(405).end(`Method ${req.method} Not Allowed`);
+    return;
   }
 }

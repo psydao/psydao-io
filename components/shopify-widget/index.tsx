@@ -99,7 +99,7 @@ const ShopifyWidget = () => {
                 {address
                   ? userHoldsPOAPToken
                     ? "Claim Here"
-                    : "Cannot Claim"
+                    : "Ineligible to Claim"
                   : "Wallet Disconnected"}
               </PsyButton>
             </Flex>

@@ -137,6 +137,13 @@ async function generateShopifyProductDiscount(
   ethAddress: Address
 ): Promise<string> {
   // generate a discount code for 100% off here
+  const session = shopifyClient.session.customAppSession(SHOPIFY_SHOP_NAME);
+  session.accessToken = SHOPIFY_API_ACCESS_TOKEN;
+
+  const client = new shopifyClient.clients.Graphql({
+    session,
+    apiVersion: LATEST_API_VERSION
+  });
 
   const discountCode = `PSYDAO-${ethAddress.slice(2, 8)}-${Date.now()}`; // get discount codes
 
