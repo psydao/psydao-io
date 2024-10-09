@@ -9,8 +9,27 @@ import {
 } from "viem";
 import { mainnet, sepolia } from "viem/chains";
 
+export interface PoapResponseType {
+  event: {
+    id: number;
+    fancy_id: string;
+    name: string;
+    event_url: string;
+    image_url: string;
+    country: string;
+    city: string;
+    description: string;
+    year: number;
+    start_date: Date;
+    end_date: Date;
+    expiry_date: Date;
+    tokenId: string;
+    owner: string;
+  };
+}
+
 const POAP_EVENT_ID = env.POAP_EVENT_ID;
-// const POAP_EVENT_ID = 177985;
+// const POAP_EVENT_ID = 177985; <- use this for testing
 
 const publicClient = createPublicClient({
   chain: env.NEXT_PUBLIC_IS_MAINNET ? mainnet : sepolia,
@@ -42,7 +61,6 @@ export default async function handler(
       const { address } = req.query as { address: string };
       const normalizedAddress = await getAddressFromQuery(address);
 
-      // TODO: Get type for POAP response body
       const poapRes = await fetch(
         `https://api.poap.tech/actions/scan/${normalizedAddress}/${POAP_EVENT_ID}`,
         {
@@ -54,19 +72,17 @@ export default async function handler(
         }
       );
       if (poapRes.status === 404) {
-        console.info(
-          "User does not have POAP. They are either ineligible or have not claimed it yet."
-        );
+        console.info("User does not hold this POAP.");
         res.status(201).send({
-          message: "User does not currently hold a valid POAP token"
+          message: "User does not hold a valid POAP token"
         });
       }
 
       if (poapRes.status !== 404 && !poapRes.ok) {
         res.status(poapRes.status).send(poapRes.statusText);
       }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const jsonPoapResponse = await poapRes.json();
+
+      const jsonPoapResponse = (await poapRes.json()) as PoapResponseType;
 
       res.status(200).send(jsonPoapResponse);
     } catch (error: unknown) {

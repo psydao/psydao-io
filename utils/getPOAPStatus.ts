@@ -1,23 +1,5 @@
 import type { Address } from "viem";
-
-interface PoapResponseType {
-  event: {
-    id: number;
-    fancy_id: string;
-    name: string;
-    event_url: string;
-    image_url: string;
-    country: string;
-    city: string;
-    description: string;
-    year: number;
-    start_date: Date;
-    end_date: Date;
-    expiry_date: Date;
-    tokenId: string;
-    owner: string;
-  };
-}
+import type { PoapResponseType } from "@/pages/api/poap";
 
 const getPOAPStatus = async (address: Address | undefined) => {
   try {
@@ -26,9 +8,6 @@ const getPOAPStatus = async (address: Address | undefined) => {
       method: "GET"
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const jsonPoapResponse = await poapRes.json();
-
     if (!poapRes.ok) {
       console.error(`Failed to fetch POAP response: ${poapRes.statusText}`);
       return;
@@ -36,8 +15,9 @@ const getPOAPStatus = async (address: Address | undefined) => {
 
     if (poapRes.status === 201) return;
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return jsonPoapResponse as PoapResponseType;
+    const jsonPoapResponse = (await poapRes.json()) as PoapResponseType;
+
+    return jsonPoapResponse;
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Unknown error";
