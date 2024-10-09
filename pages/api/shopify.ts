@@ -66,6 +66,10 @@ const client = new shopifyClient.clients.Graphql({
   apiVersion: LATEST_API_VERSION
 });
 
+// TODO: see if discount code is applicable and if cart != null and redirect to new checkoutURL
+// TODO: put cart creation and discount code creation in util files
+// TODO: how can we prevent users from creating another one the next day and claiming again?
+
 async function createCart(discountCode: string) {
   const cartCreateMutation = `
     mutation createCart($input: CartInput!) {
@@ -114,7 +118,15 @@ async function createCart(discountCode: string) {
 
     const resJSON = (await response.json()) as CartResponse;
 
-    return resJSON;
+    if (!resJSON.data.cartCreate.cart) {
+      return {
+        id: "",
+        checkoutUrl: "",
+        discountCodes: [""]
+      };
+    } else {
+      return resJSON.data.cartCreate;
+    }
   } catch (error) {
     console.error("Error creating cart:", error);
   }
@@ -246,12 +258,11 @@ export default async function handler(
 
     const cartResponse = await createCart(discountCode);
 
-    console.log("cart response: ", cartResponse);
-
-    return res.status(200).json({
+    res.status(200).json({
       discountCode: discountCode,
       cartResponse: cartResponse
     });
+    return;
   } catch (error) {
     console.error("Error generating discount code:", error);
     return res.status(400).json({

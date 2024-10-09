@@ -7,6 +7,7 @@ import type { Address } from "viem";
 import { useAccount } from "wagmi";
 import ShopifyImageModal from "./shopify-image-modal";
 import { useEffect, useState } from "react";
+import redirectToShopify from "@/utils/redirectToShopify";
 
 const handlePoapLogic = async (address: Address | undefined) => {
   const userPOAPStatus = await getPOAPStatus(address);
@@ -86,7 +87,7 @@ const ShopifyWidget = () => {
               </Flex>
               <PsyButton
                 onClick={async () => {
-                  await fetch(`/api/shopify?ethAddress=${address}`);
+                  await redirectToShopify(address);
                 }}
                 customStyle={{
                   width: "100%"
