@@ -37,7 +37,8 @@ const ERROR_MESSAGES = {
   "Invalid Ceiling Price": "Floor price cannot be greater than ceiling price.",
   "TokenSale: Tokens Locked":
     "Token withdrawal is locked. Please contact the administrator.",
-  "TokenSale: Insufficient funds": "You must have a token balance to withdraw"
+  "TokenSale: Insufficient funds": "You must have a token balance to withdraw",
+  "Could not create cart": "Could not create cart for checkout."
 };
 
 export const customErrorMessage = (message: string): string => {
@@ -60,7 +61,7 @@ export const useCustomToasts = () => {
         type: "error",
         transition: Zoom
       },
-      width <= 768
+      width <= 600
     );
   };
 
@@ -75,7 +76,7 @@ export const useCustomToasts = () => {
         type: "error",
         transition: Zoom
       },
-      width <= 768
+      width <= 600
     );
   };
 
@@ -89,7 +90,7 @@ export const useCustomToasts = () => {
         type: "success",
         transition: Zoom
       },
-      width <= 768
+      width <= 600
     );
   };
 

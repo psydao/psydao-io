@@ -95,7 +95,7 @@ async function createCart(discountCode: string) {
       lines: [
         {
           quantity: 1,
-          merchandiseId: `gid://shopify/ProductVariant/${SHOPIFY_VARIANT_ID}`
+          merchandiseId: `gid://shopify/ProductVariant/49402271400260}`
         }
       ],
       discountCodes: [discountCode]
@@ -104,7 +104,7 @@ async function createCart(discountCode: string) {
 
   try {
     const response = await fetch(
-      `https://${SHOPIFY_SHOP_NAME}/api/${LATEST_API_VERSION}/graphql.json`,
+      `https://${"SHOPIFY_SHOP_NAME"}/api/${LATEST_API_VERSION}/graphql.json`,
       {
         method: "POST",
         headers: {
@@ -118,17 +118,20 @@ async function createCart(discountCode: string) {
 
     const resJSON = (await response.json()) as CartResponse;
 
+    console.log(resJSON, resJSON.data.cartCreate.cart);
+
+    if (resJSON.userErrors?.length > 0) {
+      throw new Error("Could not create cart.");
+    }
     if (!resJSON.data.cartCreate.cart) {
-      return {
-        id: "",
-        checkoutUrl: "",
-        discountCodes: [""]
-      };
+      throw new Error("Could not create cart.");
     } else {
       return resJSON.data.cartCreate;
     }
   } catch (error) {
+    // unknown error and return
     console.error("Error creating cart:", error);
+    return;
   }
 }
 
@@ -252,11 +255,18 @@ export default async function handler(
       res.status(403).send({
         message: "User does not have a valid NFT"
       });
+      return;
     }
 
     const discountCode = await generateShopifyProductDiscount(ethAddress);
 
     const cartResponse = await createCart(discountCode);
+
+    if (!discountCode || !cartResponse) {
+      res.status(400).json({
+        message: "Could not create cart"
+      });
+    }
 
     res.status(200).json({
       discountCode: discountCode,
@@ -264,7 +274,7 @@ export default async function handler(
     });
     return;
   } catch (error) {
-    console.error("Error generating discount code:", error);
+    console.error("Error creating cart:", error);
     return res.status(400).json({
       message: "An error has occurred",
       error: error instanceof Error ? error.message : String(error)
