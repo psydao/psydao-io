@@ -8228,6 +8228,11 @@ react-use-measure@^2.1.1:
   dependencies:
     debounce "^1.2.1"
 
+react-use-wizard@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/react-use-wizard/-/react-use-wizard-2.3.0.tgz#ee6cd7e479d6732e359485a7ba6d33365e3f6f1a"
+  integrity sha512-z06pQNZ18FvoK+ZDW50hOf0uOySo0Hhd7H4y0MLyk/tBCwpUKGBeULosORBVhipUaWihNLpLJxwH5f+85Qt5XA==
+
 react@^18.2.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react/-/react-18.2.0.tgz#555bd98592883255fa00de14f1151a917b5d77d5"
