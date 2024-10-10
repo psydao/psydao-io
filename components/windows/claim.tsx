@@ -43,9 +43,7 @@ export const Claim = () => {
         md: fullScreenWindow ? "0" : "50%"
       }}
       left={"50%"}
-      transform={
-        fullScreenWindow ? "translate(-50%, 0)" : "translate(-50%, -50%)"
-      }
+      transform={fullScreenWindow ? "translate(0, 0)" : "translate(-40%, -45%)"}
       fullScreenWindow={fullScreenWindow}
       defaultIsOpen
     >
