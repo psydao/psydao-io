@@ -81,6 +81,9 @@ export async function generateShopifyProductDiscount(
     basicCodeDiscount: {
       title: `PsyDAO Camo Hat Discount for ${ethAddress}`,
       code: discountCode,
+      combinesWith: {
+        shippingDiscounts: true
+      },
       startsAt: new Date().toISOString(),
       customerSelection: {
         all: true
