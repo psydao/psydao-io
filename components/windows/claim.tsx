@@ -6,7 +6,6 @@ import { whitelistedAddresses } from "../admin-dashboard/whitelisted-addresses";
 import { useAccount } from "wagmi";
 import ClaimableRewards from "../claim/claimable-rewards";
 import ViewClaims from "../claim/view-claims";
-import AddReward from "../claim/add-reward-claim";
 
 export const Claim = () => {
   const { state } = useWindowManager();
@@ -59,7 +58,6 @@ export const Claim = () => {
         >
           <ClaimableRewards isAdmin={isAdmin} />
           <ViewClaims />
-          <AddReward />
         </Wizard>
       </Window.Content>
     </Window>
