@@ -1,7 +1,7 @@
 import { type ClaimStatus } from "@/lib/types";
 import { Box, Button, Divider, Flex, Text } from "@chakra-ui/react";
 
-interface ClaimCardProps {
+export interface ClaimCardProps {
   amount: string;
   claimStatus: ClaimStatus;
   batchNumber: number;

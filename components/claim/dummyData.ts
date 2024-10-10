@@ -1,4 +1,6 @@
-export const dummyData = [
+import { type ClaimCardProps } from "./claim-card";
+
+export const dummyData: ClaimCardProps[] = [
     {
       amount: "978.88",
       claimStatus: "claimable",

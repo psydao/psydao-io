@@ -1,4 +1,4 @@
-import { Box, Text, Flex, Link, useMediaQuery, Grid } from "@chakra-ui/react";
+import { Box, Text, Flex, Link, Grid } from "@chakra-ui/react";
 import { type ClaimStatus } from "@/lib/types";
 import { Window } from "@/components/ui/window";
 import { useWindowManager } from "@/components/ui/window-manager";
