@@ -91,6 +91,7 @@ export async function hasNeverUsedADiscountCode(address: Address | undefined) {
     const hasNeverUsedDiscountCode = createdDiscountCodes.every(
       (codeDiscount) => codeDiscount.asyncUsageCount === 0
     );
+
     return {
       userHasNotUsedDiscountCode: hasNeverUsedDiscountCode
     };
@@ -111,7 +112,7 @@ export default async function handler(
   }
 
   try {
-    const address = req.query.ethAddress as Address;
+    const address = req.query.address as Address;
 
     const ethAddress = await getAddressFromQuery(address);
 

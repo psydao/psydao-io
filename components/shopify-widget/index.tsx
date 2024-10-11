@@ -35,7 +35,7 @@ const ShopifyWidget = () => {
 
       if (
         userEligibilityData.userPOAPStatus &&
-        userEligibilityData.userHasNotUsedDiscount
+        userEligibilityData.userHasNotUsedDiscount?.userHasNotUsedDiscountCode
       ) {
         setUserIsEligibleToClaim(true);
       } else {
