@@ -68,6 +68,10 @@ export async function createCart(discountCode: string) {
       }
     );
 
+    if (!response.ok) {
+      throw new Error("Could not create cart.");
+    }
+
     const resJSON = (await response.json()) as CartResponse;
 
     if (resJSON.userErrors?.length > 0) {

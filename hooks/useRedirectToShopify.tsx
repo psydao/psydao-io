@@ -30,6 +30,11 @@ const useRedirectToShopify = () => {
 
     const response = (await shopifyResponse.json()) as ShopifyResponse;
 
+    if (!shopifyResponse.ok) {
+      showCustomErrorToast("Could not create cart.", width);
+      return;
+    }
+
     if (!response.cartResponse?.cart) {
       showCustomErrorToast("Could not create cart.", width);
       return;

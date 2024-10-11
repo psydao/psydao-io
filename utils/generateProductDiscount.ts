@@ -104,12 +104,6 @@ export async function generateShopifyProductDiscount(
   };
 
   try {
-    // Note: OLD WAY (deprecated)
-    // const response = await client.query({
-    //   data: { query: mutation, variables }
-    // });
-
-    // Note: NEW WAY
     const response = await client.request(discountMutation, {
       variables
     });

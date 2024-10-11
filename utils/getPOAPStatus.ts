@@ -4,12 +4,9 @@ import type { PoapResponseType } from "@/pages/api/poap";
 const getPOAPStatus = async (address: Address | undefined) => {
   try {
     if (!address) return;
-    const poapRes = await fetch(
-      `http://localhost:3000/api/poap?address=${address}`,
-      {
-        method: "GET"
-      }
-    );
+    const poapRes = await fetch(`/api/poap?address=${address}`, {
+      method: "GET"
+    });
 
     if (!poapRes.ok) {
       console.error(`Failed to fetch POAP response: ${poapRes.statusText}`);
