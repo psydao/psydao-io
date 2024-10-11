@@ -34,7 +34,7 @@ const ShopifyWidget = () => {
       const userEligibilityData = await handleEligibilityLogic(address);
 
       if (
-        userEligibilityData.userPOAPStatus &&
+        userEligibilityData.userPOAPStatus?.hasValidPoap &&
         userEligibilityData.userHasNotUsedDiscount?.userHasNotUsedDiscountCode
       ) {
         setUserIsEligibleToClaim(true);

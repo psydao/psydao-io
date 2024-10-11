@@ -54,9 +54,7 @@ export default async function handler(
         return;
       }
 
-      const jsonPoapResponse = (await poapRes.json()) as PoapResponseType;
-
-      res.status(200).send(jsonPoapResponse);
+      res.status(200).send({ hasValidPoap: true });
       return;
     } catch (error: unknown) {
       console.error("Error getting POAP status:", error);

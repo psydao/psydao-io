@@ -25,7 +25,18 @@ export default async function handler(
 
     const cartResponse = await createCart(discountCode);
 
-    if (!discountCode || !cartResponse) {
+    const discountCodeMatches =
+      cartResponse?.cart?.discountCodes &&
+      cartResponse.cart.discountCodes?.find(
+        (code) => code.code === discountCode
+      );
+
+    if (
+      !discountCode ||
+      !cartResponse ||
+      !cartResponse.cart ||
+      !discountCodeMatches
+    ) {
       return res.status(400).json({
         message: "Could not create cart"
       });
@@ -33,7 +44,7 @@ export default async function handler(
 
     return res.status(200).json({
       discountCode: discountCode,
-      cartResponse: cartResponse
+      checkoutUrl: cartResponse.cart.checkoutUrl
     });
   } catch (error) {
     console.error("Error creating cart:", error);
