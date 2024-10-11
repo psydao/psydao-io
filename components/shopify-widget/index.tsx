@@ -7,6 +7,7 @@ import type { Address } from "viem";
 import { useAccount } from "wagmi";
 import ShopifyImageModal from "./shopify-image-modal";
 import { useEffect, useState } from "react";
+import useRedirectToShopify from "@/hooks/useRedirectToShopify";
 
 const handlePoapLogic = async (address: Address | undefined) => {
   const userPOAPStatus = await getPOAPStatus(address);
@@ -17,6 +18,8 @@ const handlePoapLogic = async (address: Address | undefined) => {
 const ShopifyWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [userHoldsPOAPToken, setUserHoldsPoapToken] = useState(false);
+
+  const { redirectToShopify } = useRedirectToShopify();
 
   const { address } = useAccount();
 
@@ -85,8 +88,9 @@ const ShopifyWidget = () => {
                 </Text>
               </Flex>
               <PsyButton
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                onClick={() => {}}
+                onClick={async () => {
+                  await redirectToShopify(address);
+                }}
                 customStyle={{
                   width: "100%"
                 }}
