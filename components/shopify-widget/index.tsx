@@ -8,16 +8,18 @@ import { useAccount } from "wagmi";
 import ShopifyImageModal from "./shopify-image-modal";
 import { useEffect, useState } from "react";
 import useRedirectToShopify from "@/hooks/useRedirectToShopify";
+import { determineDiscountCodeUsage } from "@/utils/determineDiscountCodeUsage";
 
-const handlePoapLogic = async (address: Address | undefined) => {
+const handleEligibilityLogic = async (address: Address | undefined) => {
+  const userHasNotUsedDiscount = await determineDiscountCodeUsage(address);
   const userPOAPStatus = await getPOAPStatus(address);
 
-  return userPOAPStatus;
+  return { userPOAPStatus, userHasNotUsedDiscount };
 };
 
 const ShopifyWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [userHoldsPOAPToken, setUserHoldsPoapToken] = useState(false);
+  const [userIsEligibleToClaim, setUserIsEligibleToClaim] = useState(false);
 
   const { redirectToShopify } = useRedirectToShopify();
 
@@ -28,17 +30,20 @@ const ShopifyWidget = () => {
   };
 
   useEffect(() => {
-    const checkUserPOAPStatus = async () => {
-      const userPOAPData = await handlePoapLogic(address);
+    const checkUserEligibilityStatus = async () => {
+      const userEligibilityData = await handleEligibilityLogic(address);
 
-      if (userPOAPData) {
-        setUserHoldsPoapToken(true);
+      if (
+        userEligibilityData.userPOAPStatus &&
+        userEligibilityData.userHasNotUsedDiscount
+      ) {
+        setUserIsEligibleToClaim(true);
       } else {
-        setUserHoldsPoapToken(false);
+        setUserIsEligibleToClaim(false);
       }
     };
-    checkUserPOAPStatus().catch(() =>
-      console.error("Error fetching POAP status")
+    checkUserEligibilityStatus().catch(() =>
+      console.error("Error fetching eligibility status")
     );
   }, [address]);
 
@@ -94,10 +99,10 @@ const ShopifyWidget = () => {
                 customStyle={{
                   width: "100%"
                 }}
-                isDisabled={!userHoldsPOAPToken}
+                isDisabled={!userIsEligibleToClaim}
               >
                 {address
-                  ? userHoldsPOAPToken
+                  ? userIsEligibleToClaim
                     ? "Claim Here"
                     : "Ineligible to Claim"
                   : "Wallet Disconnected"}
