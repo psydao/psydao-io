@@ -62,7 +62,7 @@ const GET_DISCOUNT_CODES = `
         }
       }
     }
-  }
+    }
 `;
 
 export async function hasNeverUsedADiscountCode(address: Address | undefined) {
@@ -76,6 +76,10 @@ export async function hasNeverUsedADiscountCode(address: Address | undefined) {
     const response = await shopifyAdminClient.request(GET_DISCOUNT_CODES, {
       variables: { query: `(code:*${nameQuery}*)` }
     });
+
+    if (!response.data) {
+      throw new Error("Could not fetch discount usage data");
+    }
 
     if (response.errors?.message || response.errors?.graphQLErrors?.length) {
       throw new Error("Could not fetch discount usage data");
@@ -107,8 +111,7 @@ export default async function handler(
 ) {
   if (req.method !== "GET") {
     res.setHeader("Allow", ["GET"]);
-    res.status(405).end(`Method ${req.method} not allowed`);
-    return;
+    return res.status(405).end(`Method ${req.method} not allowed`);
   }
 
   try {
@@ -119,13 +122,12 @@ export default async function handler(
     const hasNotUsedADiscountCode = await hasNeverUsedADiscountCode(ethAddress);
 
     if (!hasNotUsedADiscountCode) {
-      res.status(400).json({
+      return res.status(400).json({
         message: "Could not fetch discount code usage data"
       });
     }
 
-    res.status(200).json(hasNotUsedADiscountCode);
-    return;
+    return res.status(200).json(hasNotUsedADiscountCode);
   } catch (error) {
     console.error("Error creating cart:", error);
     return res.status(400).json({
