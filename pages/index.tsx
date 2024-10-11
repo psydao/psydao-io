@@ -26,6 +26,7 @@ import WalletConnectHome from "@/components/connectWalletHome";
 import AdminDashboardWidget from "@/components/admin-dashboard";
 import GeneralDashboard from "@/components/general-dashboard";
 import ShopifyWidget from "@/components/shopify-widget";
+import { Claim } from "@/components/windows/claim";
 // import SaleWidgetProvider from "@/providers/SaleWidgetContext";
 
 // TODO Extract Pill component since it seems it will become a basic primitive
@@ -200,6 +201,7 @@ const Homepage: NextPage = () => {
                       triggerNftSaleUpdate={triggerNftSaleUpdate}
                     />
                     <ShopifyWidget />
+                    <Claim />
                   </Box>
                 </WindowManager>
                 <Link

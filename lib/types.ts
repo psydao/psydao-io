@@ -75,3 +75,5 @@ export type GeneralSettings = {
   ownerPercentage: string;
   openPublicSale: boolean;
 };
+
+export type ClaimStatus = "claimable" | "claimed" | "expired";
