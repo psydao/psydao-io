@@ -1,5 +1,6 @@
 import { Fragment } from "react";
-import { Box, type BoxProps, keyframes, Text } from "@chakra-ui/react";
+import { Box, type BoxProps, Text } from "@chakra-ui/react";
+import { keyframes } from "@emotion/react";
 
 import { Logo } from "@/components/ui/icons";
 import { useDimensions } from "@/lib/hooks";

@@ -8,7 +8,7 @@ import BuyLimitSection from "./buy-limit-section";
 import RoyaltiesSection from "./revenue-split/royalties-section";
 import NftOwnersSection from "./revenue-split/nft-owners-section";
 import TreasurySection from "./revenue-split/treasury-section";
-import SubmitButtonContainer from "../commons/submit-button-container";
+import SubmitButtonContainer from "../common/submit-button-container";
 import SaveButton from "./save-settings-button";
 
 const GeneralSettingsSection = ({

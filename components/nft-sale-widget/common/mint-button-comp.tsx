@@ -13,6 +13,7 @@ interface MintButtonProps {
   soldOut: boolean;
   isOriginal: boolean;
   isRandom: boolean;
+  isSold: boolean;
 }
 
 export const MintButtonComponent = memo(
@@ -26,7 +27,8 @@ export const MintButtonComponent = memo(
     isActive,
     soldOut,
     isOriginal,
-    isRandom
+    isRandom,
+    isSold
   }: MintButtonProps) => {
     let buttonText = "Mint";
     let isDisabled = isButtonDisabled;
@@ -46,8 +48,8 @@ export const MintButtonComponent = memo(
         buttonText = "Minting";
       } else if (isPaused || (!isOriginal && !isActive)) {
         buttonText = "Paused";
-      } else if (soldOut && isOriginal) {
-        buttonText = "Sold Out";
+      } else if (isSold && isOriginal) {
+        buttonText = "Sold";
       }
     }
 

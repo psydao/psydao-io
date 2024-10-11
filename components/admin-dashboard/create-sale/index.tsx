@@ -6,12 +6,12 @@ import SaleStartTimeSection from "./start-time-section";
 import WhiteListedAddressesSection from "./whitelisted-addresses";
 import { useFormState } from "@/hooks/useFormState";
 
-import SubmitButtonContainer from "../../commons/submit-button-container";
+import SubmitButtonContainer from "../../common/submit-button-container";
 import { useTokenIds } from "@/hooks/useTokenIds";
 import { useSaleLocalStorage } from "@/hooks/useSaleLocalStorage";
 import { useAccount } from "wagmi";
 import { useCreateSale } from "@/hooks/useCreateSale";
-import SubmitSaleButton from "../../commons/submit-sale-button";
+import SubmitSaleButton from "../../common/submit-sale-button";
 
 export const CreateSale = ({
   setOpenCreateSale,
