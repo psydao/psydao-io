@@ -6,6 +6,7 @@ import psycSaleSepoliaAbi from "../abis/psycSaleAbiSepolia.json";
 import { psycSaleMainnet, psycSaleSepolia } from "../constants/contracts";
 import { useCustomToasts } from "./useCustomToasts";
 import { useResize } from "./useResize";
+import { env } from "@/config/env.mjs";
 
 const useActivateSale = () => {
   const { writeContract, isPending, isSuccess, error } = useWriteContract();
@@ -15,14 +16,8 @@ const useActivateSale = () => {
   const activateSale = useCallback(
     async (tokenIds: number[]) => {
       writeContract({
-        address:
-          process.env.NEXT_PUBLIC_CHAIN_ID === "1"
-            ? psycSaleMainnet
-            : psycSaleSepolia,
-        abi:
-          process.env.NEXT_PUBLIC_CHAIN_ID === "1"
-            ? psycSaleAbi
-            : psycSaleSepoliaAbi,
+        address: env.NEXT_PUBLIC_IS_MAINNET ? psycSaleMainnet : psycSaleSepolia,
+        abi: env.NEXT_PUBLIC_IS_MAINNET ? psycSaleAbi : psycSaleSepoliaAbi,
         functionName: "setSalesActive",
         args: [tokenIds]
       });

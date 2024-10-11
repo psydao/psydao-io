@@ -1,5 +1,5 @@
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
-import DiagonalRectangle from "../nft-sale-widget/commons/diagonal-rectangle";
+import DiagonalRectangle from "../nft-sale-widget/common/diagonal-rectangle";
 
 const AdminDashboardEmptyState = () => {
   return (

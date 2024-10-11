@@ -6,18 +6,15 @@ import {
   tokenSaleContractSepolia
 } from "@/constants/contracts";
 import { useEffect, useMemo } from "react";
+import { env } from "@/config/env.mjs";
 
 const useGetTokenBalances = (refetchNeeded: boolean) => {
   const { address } = useAccount();
   const { data, isLoading, isError, refetch } = useReadContract({
-    abi:
-      process.env.NEXT_PUBLIC_CHAIN_ID === "1"
-        ? tokenSaleAbi
-        : tokenSaleAbiSepolia,
-    address:
-      process.env.NEXT_PUBLIC_CHAIN_ID === "1"
-        ? tokenSaleContract
-        : tokenSaleContractSepolia,
+    abi: env.NEXT_PUBLIC_IS_MAINNET ? tokenSaleAbi : tokenSaleAbiSepolia,
+    address: env.NEXT_PUBLIC_IS_MAINNET
+      ? tokenSaleContract
+      : tokenSaleContractSepolia,
     functionName: "userBalances",
     args: [address ? address : "0x0000000000000000000000000000000000000000"]
   });
