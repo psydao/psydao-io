@@ -6,6 +6,7 @@ export interface ClaimCardProps {
   claimStatus: ClaimStatus;
   batchNumber: number;
   expiry: string;
+  totalClaimable?: string;
 }
 
 const ClaimCardText = ({ text }: { text: string }) => (

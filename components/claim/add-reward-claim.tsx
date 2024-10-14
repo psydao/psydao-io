@@ -161,7 +161,7 @@ const AddReward = () => {
                   const valueAsNumber = parseFloat(e.target.value) || 0;
                   setClaimInput({
                     ...claimInput,
-                    amount: valueAsNumber 
+                    amount: valueAsNumber
                   });
                 }}
                 required
@@ -183,7 +183,7 @@ const AddReward = () => {
                     alt="PSY icon"
                   />
                 </Box>
-                <Text fontWeight="semibold" fontFamily={"Poppins"}>
+                <Text fontSize={14} fontWeight="600" fontFamily={"Poppins"}>
                   PSY
                 </Text>
               </Flex>
