@@ -25,17 +25,21 @@ const Section = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
+type Claim = {
+  fromDate: Date | null;
+  toDate: Date | null;
+  claimDeadline: Date | null;
+  amount: number;
+};
+
 const AddReward = () => {
   const { previousStep } = useWizard();
-  const [fromDate, setFromDate] = useState<Date | null>(null);
-  const [toDate, setToDate] = useState<Date | null>(null);
-  const [claimDeadline, setClaimDeadline] = useState<Date | null>(null);
-  const [amount, setAmount] = useState<number>(0);
-
-  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
-    setAmount(parseFloat(e.target.value));
-  };
+  const [claimInput, setClaimInput] = useState<Claim>({
+    fromDate: null,
+    toDate: null,
+    claimDeadline: null,
+    amount: 0
+  });
 
   return (
     <Box height={"100%"}>
@@ -92,13 +96,23 @@ const AddReward = () => {
             <Flex gap={4}>
               <CustomDatePicker
                 label="From"
-                selectedDate={fromDate}
-                setSelectedDate={setFromDate}
+                selectedDate={claimInput.fromDate}
+                setSelectedDate={(date) =>
+                  setClaimInput({
+                    ...claimInput,
+                    fromDate: date
+                  })
+                }
               />
               <CustomDatePicker
                 label="To"
-                selectedDate={toDate}
-                setSelectedDate={setToDate}
+                selectedDate={claimInput.toDate}
+                setSelectedDate={(date) =>
+                  setClaimInput({
+                    ...claimInput,
+                    toDate: date
+                  })
+                }
               />
             </Flex>
           </Flex>
@@ -108,8 +122,13 @@ const AddReward = () => {
             <Text>Claim deadline</Text>
             <CustomDatePicker
               label="Date"
-              selectedDate={claimDeadline}
-              setSelectedDate={setClaimDeadline}
+              selectedDate={claimInput.claimDeadline}
+              setSelectedDate={(deadline) =>
+                setClaimInput({
+                  ...claimInput,
+                  claimDeadline: deadline
+                })
+              }
             />
           </Flex>
         </Section>
@@ -137,8 +156,14 @@ const AddReward = () => {
                 w={{ base: "100%" }}
                 fontSize="18px"
                 fontFamily={"Inter"}
-                value={amount}
-                onChange={handlePriceChange}
+                value={claimInput.amount}
+                onChange={(e) => {
+                  const valueAsNumber = parseFloat(e.target.value) || 0;
+                  setClaimInput({
+                    ...claimInput,
+                    amount: valueAsNumber 
+                  });
+                }}
                 required
                 border={"none"}
                 focusBorderColor="transparent"

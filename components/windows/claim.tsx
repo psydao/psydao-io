@@ -6,6 +6,7 @@ import { whitelistedAddresses } from "../admin-dashboard/whitelisted-addresses";
 import { useAccount } from "wagmi";
 import ClaimableRewards from "../claim/claimable-rewards";
 import ViewClaims from "../claim/view-claims";
+import AddReward from "../claim/add-reward-claim";
 
 export const Claim = () => {
   const { state } = useWindowManager();
@@ -32,7 +33,7 @@ export const Claim = () => {
       height={"100%"}
       maxWidth={{
         base: fullScreenWindow ? "100%" : "95%",
-        md: fullScreenWindow ? "100%" : "602px"
+        md: fullScreenWindow ? "100%" : "650px"
       }}
       width={"100%"}
       top={{
@@ -53,11 +54,10 @@ export const Claim = () => {
         p={0}
         overflowX={"hidden"}
       >
-        <Wizard
-          startIndex={0}
-        >
+        <Wizard startIndex={0}>
           <ClaimableRewards isAdmin={isAdmin} />
           <ViewClaims />
+          <AddReward />
         </Wizard>
       </Window.Content>
     </Window>
