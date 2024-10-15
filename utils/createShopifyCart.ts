@@ -1,4 +1,8 @@
-import { env } from "@/config/env.mjs";
+import {
+  SHOPIFY_SHOP_NAME,
+  SHOPIFY_VARIANT_ID,
+  STOREFRONT_API_PUBLIC_ACCESS_TOKEN
+} from "@/constants/shopifyWidget";
 import { LATEST_API_VERSION } from "@shopify/shopify-api";
 
 interface CartResponse {
@@ -17,10 +21,6 @@ interface CartResponse {
 
   userErrors: Array<{ field: string; message: string }>;
 }
-
-const SHOPIFY_SHOP_NAME = env.SHOPIFY_SHOP_NAME;
-const SHOPIFY_VARIANT_ID = env.SHOPIFY_VARIANT_ID;
-const STOREFRONT_API_PUBLIC_ACCESS_TOKEN = env.STOREFRONT_PUBLIC_ACCESS_TOKEN;
 
 export async function createCart(discountCode: string) {
   const cartCreateMutation = `
