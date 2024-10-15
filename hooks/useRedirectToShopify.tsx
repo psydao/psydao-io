@@ -3,16 +3,7 @@ import { useCustomToasts } from "@/hooks/useCustomToasts";
 import { useResize } from "./useResize";
 
 interface ShopifyResponse {
-  cartResponse: {
-    cart: {
-      id: string;
-      checkoutUrl: string;
-      discountCodes: Array<{
-        code: string;
-        applicable: boolean;
-      }>;
-    };
-  };
+  checkoutUrl: string;
   discountCode: string;
 }
 
@@ -35,15 +26,11 @@ const useRedirectToShopify = () => {
       return;
     }
 
-    if (!response.cartResponse?.cart) {
+    if (!response.checkoutUrl || !response.discountCode) {
       showCustomErrorToast("Could not create cart.", width);
       return;
-    } else if (
-      response.cartResponse.cart.checkoutUrl &&
-      response.cartResponse.cart.discountCodes[0]?.applicable &&
-      response.discountCode
-    ) {
-      window.open(response.cartResponse.cart.checkoutUrl);
+    } else if (response.checkoutUrl && response.discountCode) {
+      window.open(response.checkoutUrl, "_blank");
     } else {
       showCustomErrorToast("Could not create cart.", width);
       return;
