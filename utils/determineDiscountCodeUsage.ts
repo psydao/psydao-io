@@ -8,9 +8,11 @@ export const determineDiscountCodeUsage = async (
   address: Address | undefined
 ) => {
   try {
+    const baseUrl = window.location.origin;
+    console.log("baseUrl: ", baseUrl);
     if (!address) return;
     const discountUsageRes = await fetch(
-      `http://localhost:3000/api/discount-usage?address=${address}`,
+      `${baseUrl}/api/discount-usage?address=${address}`,
       {
         method: "GET"
       }
