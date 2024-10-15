@@ -10,7 +10,8 @@ import {
   Tr,
   Tbody,
   Td,
-  Switch
+  Switch,
+  Grid
 } from "@chakra-ui/react";
 import { useWizard } from "react-use-wizard";
 import CreateClaimButton from "./claim-button";
@@ -82,7 +83,7 @@ const PsyIcon = () => {
   );
 };
 
-const ViewClaims = () => {
+const AdminViewClaims = () => {
   const { previousStep, nextStep } = useWizard();
   //  remove showEmptyState when done
   const [showEmptyState, setShowEmptyState] = useState(false);
@@ -97,7 +98,7 @@ const ViewClaims = () => {
         <Flex
           width={"100%"}
           justifyContent={"flex-start"}
-          alignItems={"baseline"}
+          alignItems={"center"}
           direction={"row"}
           gap={1.5}
           py={6}
@@ -113,8 +114,12 @@ const ViewClaims = () => {
           </Button>
           <Text
             as="h2"
-            fontSize={{ base: "32px", sm: "40px" }}
-            lineHeight={{ base: "32px", sm: "40px" }}
+            fontSize={{ base: "24px", sm: "40px" }}
+            fontStyle={{
+              base: "italic",
+              sm: "normal"
+            }}
+            lineHeight={{ base: "24px", sm: "40px" }}
             color={"#269200"}
           >
             Create Claims
@@ -137,14 +142,29 @@ const ViewClaims = () => {
             <Table variant="simple">
               <Tbody>
                 {dummyClaims.map((claim, index) => (
-                  <Tr key={index} fontFamily={"Inter Medium"}>
-                    <Td padding={6}>Claim ({claim.batchNumber})</Td>
-                    <Td padding={6}>Expired</Td>
-                    <Td padding={6} isNumeric>
-                      <Flex justifyContent="flex-end" alignItems="center">
-                        {claim.totalClaimable} <PsyIcon />
-                      </Flex>
-                    </Td>
+                  <Tr key={index} fontFamily={"Inter Medium"} borderBottom={"1px solid #E9BDBD"}>
+                    <Grid
+                      templateColumns={{
+                        base: "minmax(170px, 1fr)",
+                        md: "repeat(auto-fit, minmax(170px, 1fr))"
+                      }}
+                      padding={6}
+                      justifyContent={"space-between"}
+                    >
+                      <Box>Claim ({claim.batchNumber})</Box>
+                      <Box>Expired</Box>
+                      <Box>
+                        <Flex
+                          justifyContent={{
+                            base: "flex-start",
+                            md: "flex-end"
+                          }}
+                          alignItems="center"
+                        >
+                          {claim.totalClaimable} <PsyIcon />
+                        </Flex>
+                      </Box>
+                    </Grid>
                   </Tr>
                 ))}
               </Tbody>
@@ -170,4 +190,4 @@ const ViewClaims = () => {
   );
 };
 
-export default ViewClaims;
+export default AdminViewClaims;

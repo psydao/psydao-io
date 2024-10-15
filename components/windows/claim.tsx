@@ -5,8 +5,8 @@ import { Wizard } from "react-use-wizard";
 import { whitelistedAddresses } from "../admin-dashboard/whitelisted-addresses";
 import { useAccount } from "wagmi";
 import ClaimableRewards from "../claim/claimable-rewards";
-import ViewClaims from "../claim/view-claims";
-import AddReward from "../claim/add-reward-claim";
+import CreateRewardClaim from "../claim/create-reward-claim";
+import AdminViewClaims from "../claim/admin-view-claims";
 
 export const Claim = () => {
   const { state } = useWindowManager();
@@ -56,8 +56,8 @@ export const Claim = () => {
       >
         <Wizard startIndex={0}>
           <ClaimableRewards isAdmin={isAdmin} />
-          <ViewClaims />
-          <AddReward />
+          <AdminViewClaims />
+          <CreateRewardClaim />
         </Wizard>
       </Window.Content>
     </Window>

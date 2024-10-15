@@ -75,6 +75,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const handleDateClick = (date: Date) => {
+    // todo: prevent default behavior of date click
     setSelectedDate(date);
     setIsOpen(false);
   };
@@ -90,7 +91,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   const calendar = generateCalendar(currentMonth);
 
   return (
-    <Box maxW={"180px"} w={'auto'}>
+    <Box maxW={"180px"} w={"auto"}>
       <Popover isOpen={isOpen} onClose={() => setIsOpen(false)}>
         <PopoverTrigger>
           <InputGroup>
@@ -120,31 +121,34 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
             />
           </InputGroup>
         </PopoverTrigger>
-        <PopoverContent>
+        <PopoverContent zIndex={20}>
           <PopoverArrow />
           <PopoverCloseButton />
           <PopoverBody>
             <Box
-              mb={4}
+              mb={2}
               display="flex"
               justifyContent="space-between"
               alignItems="center"
+              fontSize={"12px"}
             >
               <IconButton
+                size={"sm"}
                 aria-label="Previous month"
                 icon={<ChevronLeftIcon />}
                 onClick={handlePreviousMonth}
               />
-              <Box fontWeight="bold">{format(currentMonth, "MMMM yyyy")}</Box>
+              <Box fontWeight={600}>{format(currentMonth, "MMMM yyyy")}</Box>
               <IconButton
+                size={"sm"}
                 aria-label="Next month"
                 icon={<ChevronRightIcon />}
                 onClick={handleNextMonth}
               />
             </Box>
-            <Grid templateColumns="repeat(7, 1fr)" gap={2}>
+            <Grid templateColumns="repeat(7, 1fr)" gap={1} fontSize={"10px"}>
               {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-                <Box key={day} textAlign="center" fontWeight="bold">
+                <Box key={day} textAlign="center" fontWeight={600}>
                   {day}
                 </Box>
               ))}
@@ -152,8 +156,9 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
                 week.map((date, dayIndex) => (
                   <Button
                     key={`${index}-${dayIndex}`}
-                    size="sm"
+                    size="xs"
                     variant="outline"
+                    fontSize={"10px"}
                     onClick={() => date && handleDateClick(date)}
                     disabled={!date}
                   >

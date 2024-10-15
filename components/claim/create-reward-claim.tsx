@@ -15,10 +15,7 @@ const Section = ({ children }: { children: React.ReactNode }) => {
       }}
       fontFamily={"Inter Medium"}
       fontWeight={"400"}
-      p={{
-        base: "3",
-        md: "6"
-      }}
+      p={"6"}
     >
       {children}
     </Box>
@@ -32,7 +29,7 @@ type Claim = {
   amount: number;
 };
 
-const AddReward = () => {
+const CreateRewardClaim = () => {
   const { previousStep } = useWizard();
   const [claimInput, setClaimInput] = useState<Claim>({
     fromDate: null,
@@ -51,7 +48,7 @@ const AddReward = () => {
         <Flex
           width={"100%"}
           justifyContent={"flex-start"}
-          alignItems={"baseline"}
+          alignItems={"center"}
           direction={"row"}
           gap={1.5}
           py={6}
@@ -66,9 +63,14 @@ const AddReward = () => {
             <ArrowBackIcon h={6} w={6} color={"#F2BEBE"} />
           </Button>
           <Text
+            px={2}
             as="h2"
-            fontSize={{ base: "32px", sm: "40px" }}
-            lineHeight={{ base: "32px", sm: "40px" }}
+            fontSize={{ base: "24px", sm: "40px" }}
+            fontStyle={{
+              base: "italic",
+              sm: "normal"
+            }}
+            lineHeight={{ base: "24px", sm: "40px" }}
             color={"#269200"}
           >
             Add a new reward claim
@@ -77,7 +79,26 @@ const AddReward = () => {
       </Flex>
       <Box overflow={"scroll"} paddingBottom={"90px"}>
         <Section>
-          <Flex gap={3}>
+          <Flex
+            gap={3}
+            direction={{
+              sm: "column",
+              md: "row"
+            }}
+          >
+            {/* <Flex
+            alignItems={{
+              sm: "start",
+              md: "center"
+            }}
+            wrap={"wrap"}
+            gap={4}
+            direction={{
+              sm: "column",
+              md: "row"
+            }}
+            justifyContent={"space-between"}
+          > */}
             <Image width={6} src="/icons/alert-triangle.svg" />
             <Text color={"#E9B15B"}>
               Please note that once claim rewards are launched, there will be no
@@ -91,9 +112,28 @@ const AddReward = () => {
           </Text>
         </Section>
         <Section>
-          <Flex alignItems="center" justifyContent={"space-between"}>
+          <Flex
+            alignItems={{
+              sm: "start",
+              md: "center"
+            }}
+            wrap={"wrap"}
+            gap={4}
+            direction={{
+              sm: "column",
+              md: "row"
+            }}
+            justifyContent={"space-between"}
+          >
             <Text>Participation period</Text>
-            <Flex gap={4}>
+            <Flex
+              gap={4}
+              wrap={"wrap"}
+              direction={{
+                sm: "column",
+                md: "row"
+              }}
+            >
               <CustomDatePicker
                 label="From"
                 selectedDate={claimInput.fromDate}
@@ -118,7 +158,19 @@ const AddReward = () => {
           </Flex>
         </Section>
         <Section>
-          <Flex alignItems="center" justifyContent={"space-between"}>
+          <Flex
+            alignItems={{
+              sm: "start",
+              md: "center"
+            }}
+            wrap={"wrap"}
+            gap={4}
+            direction={{
+              sm: "column",
+              md: "row"
+            }}
+            justifyContent={"space-between"}
+          >
             <Text>Claim deadline</Text>
             <CustomDatePicker
               label="Date"
@@ -136,7 +188,12 @@ const AddReward = () => {
           <Grid
             alignItems="center"
             justifyContent={"space-between"}
-            templateColumns={"1fr 2fr"}
+            gap={4}
+            templateColumns={{
+              base: "1fr",
+              md: "1fr 2fr"
+            }}
+            // templateColumns={"1fr 2fr"}
           >
             <Text>Amount</Text>
             <Box
@@ -209,4 +266,4 @@ const AddReward = () => {
   );
 };
 
-export default AddReward;
+export default CreateRewardClaim;
