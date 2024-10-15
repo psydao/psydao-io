@@ -1,4 +1,10 @@
-import { env } from "@/config/env.mjs";
+import {
+  SHOPIFY_API_ACCESS_TOKEN,
+  SHOPIFY_API_KEY,
+  SHOPIFY_API_SECRET,
+  SHOPIFY_PRODUCT_ID,
+  SHOPIFY_SHOP_NAME
+} from "@/constants/shopify";
 import { LATEST_API_VERSION, shopifyApi } from "@shopify/shopify-api";
 import type { Address } from "viem";
 
@@ -18,12 +24,6 @@ interface ShopifyResponse {
     userErrors: Array<{ field: string; message: string }>;
   };
 }
-
-const SHOPIFY_API_ACCESS_TOKEN = env.SHOPIFY_API_ACCESS_TOKEN;
-const SHOPIFY_API_KEY = env.SHOPIFY_API_KEY;
-const SHOPIFY_API_SECRET = env.SHOPIFY_API_SECRET;
-const SHOPIFY_SHOP_NAME = env.SHOPIFY_SHOP_NAME;
-const SHOPIFY_PRODUCT_ID = env.SHOPIFY_PRODUCT_ID;
 
 const shopifyClient = shopifyApi({
   apiKey: SHOPIFY_API_KEY,

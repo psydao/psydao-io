@@ -2,8 +2,13 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import "@shopify/shopify-api/adapters/node";
 import { type Address } from "viem";
 import { getAddressFromQuery } from "@/utils/getAddressFromQuery";
-import { env } from "@/config/env.mjs";
 import { LATEST_API_VERSION, shopifyApi } from "@shopify/shopify-api";
+import {
+  SHOPIFY_API_ACCESS_TOKEN,
+  SHOPIFY_API_KEY,
+  SHOPIFY_API_SECRET,
+  SHOPIFY_SHOP_NAME
+} from "@/constants/shopify";
 
 interface DiscountReturnType {
   codeDiscountNodes: {
@@ -20,11 +25,6 @@ interface DiscountReturnType {
     }>;
   };
 }
-
-const SHOPIFY_API_ACCESS_TOKEN = env.SHOPIFY_API_ACCESS_TOKEN;
-const SHOPIFY_API_KEY = env.SHOPIFY_API_KEY;
-const SHOPIFY_API_SECRET = env.SHOPIFY_API_SECRET;
-const SHOPIFY_SHOP_NAME = env.SHOPIFY_SHOP_NAME;
 
 const shopify = shopifyApi({
   apiKey: SHOPIFY_API_KEY,

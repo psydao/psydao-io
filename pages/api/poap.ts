@@ -21,7 +21,6 @@ export interface PoapResponseType {
   };
 }
 
-//! USE TEST POAP ID FOR TESTING
 const POAP_EVENT_ID = env.POAP_EVENT_ID;
 
 export default async function handler(
