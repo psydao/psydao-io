@@ -4,7 +4,7 @@ import {
   SHOPIFY_API_SECRET,
   SHOPIFY_PRODUCT_ID,
   SHOPIFY_SHOP_NAME
-} from "@/constants/shopify";
+} from "@/constants/shopifyWidget";
 import { LATEST_API_VERSION, shopifyApi } from "@shopify/shopify-api";
 import type { Address } from "viem";
 

@@ -1,4 +1,5 @@
 import { env } from "@/config/env.mjs";
+import { POAP_EVENT_ID } from "@/constants/shopifyWidget";
 import { getAddressFromQuery } from "@/utils/getAddressFromQuery";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -20,8 +21,6 @@ export interface PoapResponseType {
     owner: string;
   };
 }
-
-const POAP_EVENT_ID = env.POAP_EVENT_ID;
 
 export default async function handler(
   req: NextApiRequest,

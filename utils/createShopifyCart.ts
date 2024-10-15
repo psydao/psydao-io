@@ -2,7 +2,7 @@ import {
   SHOPIFY_SHOP_NAME,
   SHOPIFY_VARIANT_ID,
   STOREFRONT_API_PUBLIC_ACCESS_TOKEN
-} from "@/constants/shopify";
+} from "@/constants/shopifyWidget";
 import { LATEST_API_VERSION } from "@shopify/shopify-api";
 
 interface CartResponse {

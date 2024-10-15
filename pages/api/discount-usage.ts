@@ -8,7 +8,7 @@ import {
   SHOPIFY_API_KEY,
   SHOPIFY_API_SECRET,
   SHOPIFY_SHOP_NAME
-} from "@/constants/shopify";
+} from "@/constants/shopifyWidget";
 
 interface DiscountReturnType {
   codeDiscountNodes: {
