@@ -17,6 +17,7 @@ import { useWizard } from "react-use-wizard";
 import CreateClaimButton from "./claim-button";
 import { dummyClaims } from "./dummyData";
 import { useState } from "react";
+import { getExpirationStatus } from "@/utils/getExpirationStatus";
 
 const EmptyState = () => {
   const { nextStep } = useWizard();
@@ -130,6 +131,7 @@ const AdminViewClaims = () => {
               isChecked={showEmptyState}
               onChange={() => setShowEmptyState(!showEmptyState)}
               id="show-empty-state"
+              ml={2}
             />
           </Box>
         </Flex>
@@ -152,7 +154,7 @@ const AdminViewClaims = () => {
                       justifyContent={"space-between"}
                     >
                       <Box>Claim ({claim.batchNumber})</Box>
-                      <Box>Expired</Box>
+                      <Box>{getExpirationStatus(claim.expiry)}</Box>
                       <Box>
                         <Flex
                           justifyContent={{

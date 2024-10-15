@@ -5,7 +5,7 @@ export interface ClaimCardProps {
   amount: string;
   claimStatus: ClaimStatus;
   batchNumber: number;
-  expiry: string;
+  expiry: string | Date;
   totalClaimable?: string;
 }
 
