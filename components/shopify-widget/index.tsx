@@ -7,16 +7,21 @@ import type { Address } from "viem";
 import { useAccount } from "wagmi";
 import ShopifyImageModal from "./shopify-image-modal";
 import { useEffect, useState } from "react";
+import useRedirectToShopify from "@/hooks/useRedirectToShopify";
+import { determineDiscountCodeUsage } from "@/utils/determineDiscountCodeUsage";
 
-const handlePoapLogic = async (address: Address | undefined) => {
+const handleEligibilityLogic = async (address: Address | undefined) => {
+  const userHasNotUsedDiscount = await determineDiscountCodeUsage(address);
   const userPOAPStatus = await getPOAPStatus(address);
 
-  return userPOAPStatus;
+  return { userPOAPStatus, userHasNotUsedDiscount };
 };
 
 const ShopifyWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [userHoldsPOAPToken, setUserHoldsPoapToken] = useState(false);
+  const [userIsEligibleToClaim, setUserIsEligibleToClaim] = useState(false);
+
+  const { redirectToShopify } = useRedirectToShopify();
 
   const { address } = useAccount();
 
@@ -25,18 +30,21 @@ const ShopifyWidget = () => {
   };
 
   useEffect(() => {
-    const checkUserPOAPStatus = async () => {
-      const userPOAPData = await handlePoapLogic(address);
+    const checkUserEligibilityStatus = async () => {
+      try {
+        const userEligibilityData = await handleEligibilityLogic(address);
 
-      if (userPOAPData) {
-        setUserHoldsPoapToken(true);
-      } else {
-        setUserHoldsPoapToken(false);
+        const isEligible =
+          !!userEligibilityData.userPOAPStatus &&
+          !!userEligibilityData.userHasNotUsedDiscount &&
+          userEligibilityData.userHasNotUsedDiscount.userHasNotUsedDiscountCode;
+
+        setUserIsEligibleToClaim(isEligible);
+      } catch (error) {
+        console.error("Error fetching eligibility status");
       }
     };
-    checkUserPOAPStatus().catch(() =>
-      console.error("Error fetching POAP status")
-    );
+    checkUserEligibilityStatus();
   }, [address]);
 
   return (
@@ -85,15 +93,16 @@ const ShopifyWidget = () => {
                 </Text>
               </Flex>
               <PsyButton
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                onClick={() => {}}
+                onClick={async () => {
+                  await redirectToShopify(address);
+                }}
                 customStyle={{
                   width: "100%"
                 }}
-                isDisabled={!userHoldsPOAPToken}
+                isDisabled={!userIsEligibleToClaim}
               >
                 {address
-                  ? userHoldsPOAPToken
+                  ? userIsEligibleToClaim
                     ? "Claim Here"
                     : "Ineligible to Claim"
                   : "Wallet Disconnected"}
