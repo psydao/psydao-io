@@ -31,20 +31,20 @@ const ShopifyWidget = () => {
 
   useEffect(() => {
     const checkUserEligibilityStatus = async () => {
-      const userEligibilityData = await handleEligibilityLogic(address);
+      try {
+        const userEligibilityData = await handleEligibilityLogic(address);
 
-      if (
-        userEligibilityData.userPOAPStatus &&
-        userEligibilityData.userHasNotUsedDiscount?.userHasNotUsedDiscountCode
-      ) {
-        setUserIsEligibleToClaim(true);
-      } else {
-        setUserIsEligibleToClaim(false);
+        const isEligible =
+          !!userEligibilityData.userPOAPStatus &&
+          !!userEligibilityData.userHasNotUsedDiscount &&
+          userEligibilityData.userHasNotUsedDiscount.userHasNotUsedDiscountCode;
+
+        setUserIsEligibleToClaim(isEligible);
+      } catch (error) {
+        console.error("Error fetching eligibility status");
       }
     };
-    checkUserEligibilityStatus().catch(() =>
-      console.error("Error fetching eligibility status")
-    );
+    checkUserEligibilityStatus();
   }, [address]);
 
   return (

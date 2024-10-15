@@ -71,10 +71,8 @@ export async function hasNeverUsedADiscountCode(address: Address | undefined) {
       throw new Error("No address provided");
     }
 
-    const nameQuery = address.slice(2, 8);
-
     const response = await shopifyAdminClient.request(GET_DISCOUNT_CODES, {
-      variables: { query: `(code:*${nameQuery}*)` }
+      variables: { query: `(title:*${address}*)` }
     });
 
     if (!response.data) {
