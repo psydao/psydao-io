@@ -68,13 +68,13 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
         maxW="100%"
         padding={{ base: "4", md: "8" }}
       >
-        {dummyData.map((index) => (
+        {dummyData.map((item, index) => (
           <ClaimCard
-            key={index.batchNumber}
-            amount={index.amount}
-            claimStatus={index.claimStatus as ClaimStatus}
-            batchNumber={index.batchNumber}
-            expiry={index.expiry}
+            key={index}
+            amount={item.amount}
+            claimStatus={item.claimStatus as ClaimStatus}
+            batchNumber={item.batchNumber}
+            expiry={item.expiry}
           />
         ))}
       </Grid>
