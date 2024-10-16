@@ -4,6 +4,7 @@ import { useWizard } from "react-use-wizard";
 import CreateClaimButton from "./claim-button";
 import React, { useState } from "react";
 import CustomDatePicker from "./date-time-input";
+import { start } from "repl";
 
 const Section = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -26,17 +27,52 @@ type Claim = {
   fromDate: Date | null;
   toDate: Date | null;
   claimDeadline: Date | null;
-  amount: number;
+  amount: string;
 };
 
 const CreateRewardClaim = () => {
   const { previousStep } = useWizard();
+  const [loading, setLoading] = useState(false);
   const [claimInput, setClaimInput] = useState<Claim>({
     fromDate: null,
     toDate: null,
     claimDeadline: null,
-    amount: 0
+    amount: ""
   });
+
+  const callDistributionAPI = async () => {
+    setLoading(true);
+    const startTimeStamp = claimInput.fromDate?.getTime();
+    const endTimeStamp = claimInput.toDate?.getTime();
+    const data = {
+      startTimeStamp: Math.floor((startTimeStamp as number) / 1000),
+      endTimeStamp: Math.floor((endTimeStamp as number) / 1000),
+      totalAmountOfTokens: claimInput.amount
+    };
+
+    try {
+      const response = await fetch("/api/distribution", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        console.error("Error:", result.error);
+        setLoading(false);
+      } else {
+        console.log("Merkle Tree:", result);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error("Error calling API:", error);
+      setLoading(false);
+    }
+  };
 
   return (
     <Box height={"100%"}>
@@ -86,19 +122,6 @@ const CreateRewardClaim = () => {
               md: "row"
             }}
           >
-            {/* <Flex
-            alignItems={{
-              sm: "start",
-              md: "center"
-            }}
-            wrap={"wrap"}
-            gap={4}
-            direction={{
-              sm: "column",
-              md: "row"
-            }}
-            justifyContent={"space-between"}
-          > */}
             <Image width={6} src="/icons/alert-triangle.svg" />
             <Text color={"#E9B15B"}>
               Please note that once claim rewards are launched, there will be no
@@ -215,10 +238,9 @@ const CreateRewardClaim = () => {
                 fontFamily={"Inter"}
                 value={claimInput.amount}
                 onChange={(e) => {
-                  const valueAsNumber = parseFloat(e.target.value) || 0;
                   setClaimInput({
                     ...claimInput,
-                    amount: valueAsNumber
+                    amount: e.target.value
                   });
                 }}
                 required
@@ -256,7 +278,10 @@ const CreateRewardClaim = () => {
           background="#fffafa"
         >
           <CreateClaimButton
-            handleClick={previousStep}
+            isLoading={loading}
+            loadingText={"Creating..."}
+            // handleClick={previousStep}
+            handleClick={callDistributionAPI}
             fullWidth={true}
             buttonText={"Create"}
           />

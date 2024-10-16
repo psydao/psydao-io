@@ -4,17 +4,29 @@ interface CreateClaimButtonProps {
   buttonText: string;
   fullWidth: boolean;
   handleClick: () => void;
+  isLoading?: boolean;
+  loadingText?: string;
 }
 
 const CreateClaimButton = ({
   buttonText,
   fullWidth,
-  handleClick
+  handleClick,
+  isLoading,
+  loadingText
 }: CreateClaimButtonProps) => {
   return (
     <Button
       onClick={handleClick}
       background={"linear-gradient(90deg, #B14CE7 0%, #E09CA4 100%)"}
+      _hover={{
+        background: "linear-gradient(90deg, #B14CE7 0%, #E09CA4 100%)",
+        opacity: 0.7
+      }}
+      _loading={{
+        background: "linear-gradient(90deg, #B14CE7 0%, #E09CA4 100%)",
+        opacity: 0.7
+      }}
       width={fullWidth ? "100%" : "auto"}
       color={"white"}
       borderRadius={"20px"}
@@ -25,6 +37,8 @@ const CreateClaimButton = ({
       justifyContent={"center"}
       fontFamily={"Poppins Semibold"}
       marginX={"auto"}
+      loadingText={loadingText}
+      isLoading={isLoading}
     >
       {buttonText}
     </Button>

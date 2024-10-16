@@ -48,17 +48,17 @@ export const dummyData: ClaimCardProps[] = [
 export const dummyClaims: Partial<ClaimCardProps>[] = [
   {
     batchNumber: 1,
-    expiry: "2025-01-12",
+    expiry: "1731340800000",
     totalClaimable: "120000000"
   },
   {
     batchNumber: 2,
-    expiry: "2024-09-30",
+    expiry: "1727654400000",
     totalClaimable: "1600000"
   },
   {
     batchNumber: 3,
-    expiry: "2025-01-07",
+    expiry: "    1730937600000",
     totalClaimable: "60000"
   }
 ];

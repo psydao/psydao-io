@@ -140,34 +140,35 @@ const AdminViewClaims = () => {
       {showEmptyState && <EmptyState />}
       {!showEmptyState && (
         <>
-          <TableContainer>
+          <TableContainer paddingBottom={"100px"}>
             <Table variant="simple">
               <Tbody>
                 {dummyClaims.map((claim, index) => (
-                  <Tr key={index} fontFamily={"Inter Medium"} borderBottom={"1px solid #E9BDBD"}>
-                    <Grid
-                      templateColumns={{
-                        base: "minmax(170px, 1fr)",
-                        md: "repeat(auto-fit, minmax(170px, 1fr))"
-                      }}
-                      padding={6}
-                      justifyContent={"space-between"}
-                    >
-                      <Box>Claim ({claim.batchNumber})</Box>
-                      <Box>{getExpirationStatus(claim.expiry)}</Box>
-                      <Box>
-                        <Flex
-                          justifyContent={{
-                            base: "flex-start",
-                            md: "flex-end"
-                          }}
-                          alignItems="center"
-                        >
-                          {claim.totalClaimable} <PsyIcon />
-                        </Flex>
-                      </Box>
-                    </Grid>
-                  </Tr>
+                  <Grid
+                    key={index}
+                    fontFamily={"Inter Medium"}
+                    borderBottom={"1px solid #E9BDBD"}
+                    templateColumns={{
+                      base: "minmax(170px, 1fr)",
+                      md: "repeat(auto-fit, minmax(170px, 1fr))"
+                    }}
+                    padding={6}
+                    justifyContent={"space-between"}
+                  >
+                    <Box>Claim ({claim.batchNumber})</Box>
+                    <Box>{getExpirationStatus(claim.expiry as string)}</Box>
+                    <Box>
+                      <Flex
+                        justifyContent={{
+                          base: "flex-start",
+                          md: "flex-end"
+                        }}
+                        alignItems="center"
+                      >
+                        {claim.totalClaimable} <PsyIcon />
+                      </Flex>
+                    </Box>
+                  </Grid>
                 ))}
               </Tbody>
             </Table>
