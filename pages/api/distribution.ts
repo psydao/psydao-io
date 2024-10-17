@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { env } from "process";
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,7 +16,7 @@ export default async function handler(
   }
 
   try {
-    const response = await fetch("http://localhost:4000/distribution", {
+    const response = await fetch(`${env.PSYDAO_API_URL}/distribution`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
