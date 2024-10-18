@@ -2,9 +2,12 @@ import { ArrowBackIcon } from "@chakra-ui/icons";
 import { Box, Text, Flex, Button, Input, Image, Grid } from "@chakra-ui/react";
 import { useWizard } from "react-use-wizard";
 import CreateClaimButton from "./claim-button";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import CustomDatePicker from "./date-time-input";
-import { start } from "repl";
+import { useCreateNewClaimableBatch } from "@/services/web3/useCreateNewClaimableBatch";
+import { useGetMinimumClaimDeadline } from "@/services/web3/useGetMinimumClaimDeadline";
+import { getDeadlineTimeStamp } from "@/utils/getDeadlineTimeStamp";
+import { useApprovePsy } from "@/services/web3/useApprovePsy";
 
 const Section = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -33,22 +36,57 @@ type Claim = {
 const CreateRewardClaim = () => {
   const { previousStep } = useWizard();
   const [loading, setLoading] = useState(false);
+  const [claimDeadlineAsString, setClaimDeadlineAsString] = useState("");
   const [claimInput, setClaimInput] = useState<Claim>({
     fromDate: null,
     toDate: null,
     claimDeadline: null,
-    amount: ""
+    amount: "2"
   });
 
-  const callDistributionAPI = async () => {
+  const { minimumClaimDeadline, isSuccess, refetch } =
+    useGetMinimumClaimDeadline();
+
+  const { approve, data } = useApprovePsy();
+  console.log({ data });
+
+  console.log(minimumClaimDeadline?.toString());
+
+  useEffect(() => {
+    const claimDeadline = getDeadlineTimeStamp(
+      claimInput.fromDate?.getTime() as number,
+      minimumClaimDeadline?.toString()
+    );
+    setClaimDeadlineAsString(claimDeadline);
+    console.log({ claimDeadlineAsString });
+    // setClaimInput({
+    //   ...claimInput,
+    //   claimDeadline: new Date(claimDeadline)
+    // })
+  }, [claimInput.fromDate, minimumClaimDeadline]);
+
+  const {
+    createNewClaimableBatch,
+    isConfirmed,
+    isConfirming,
+    isPending,
+    error
+  } = useCreateNewClaimableBatch();
+
+  const callDistributionAPI = useCallback(async () => {
     setLoading(true);
     const startTimeStamp = claimInput.fromDate?.getTime();
     const endTimeStamp = claimInput.toDate?.getTime();
+    const claimDeadline = claimInput.claimDeadline?.getTime();
+    const claimDeadlineTimeStamp = Math.floor((claimDeadline as number) / 1000);
+
     const data = {
       startTimeStamp: Math.floor((startTimeStamp as number) / 1000),
       endTimeStamp: Math.floor((endTimeStamp as number) / 1000),
       totalAmountOfTokens: claimInput.amount
     };
+
+    console.log('amount', data.totalAmountOfTokens);
 
     try {
       const response = await fetch("/api/distribution", {
@@ -59,20 +97,31 @@ const CreateRewardClaim = () => {
         body: JSON.stringify(data)
       });
 
-      const result = await response.json();
-
       if (!response.ok) {
+        const result = await response.json();
         console.error("Error:", result.error);
         setLoading(false);
-      } else {
-        console.log("Merkle Tree:", result);
-        setLoading(false);
+        return;
       }
+
+      const result = await response.json();
+      console.log(result.proof, claimDeadlineAsString, result.ipfsHash);
+      console.log("Merkle Tree:", result);
+
+      console.log("Calling createNewClaimableBatch");
+      await createNewClaimableBatch(
+        result.merkleRoot,
+        claimDeadlineAsString,
+        result.ipfsHash
+      );
+
+      console.log("func", { isConfirmed, isConfirming, isPending, error });
+      setLoading(false);
     } catch (error) {
       console.error("Error calling API:", error);
       setLoading(false);
     }
-  };
+  }, [createNewClaimableBatch, claimInput, claimDeadlineAsString]);
 
   return (
     <Box height={"100%"}>
@@ -216,7 +265,6 @@ const CreateRewardClaim = () => {
               base: "1fr",
               md: "1fr 2fr"
             }}
-            // templateColumns={"1fr 2fr"}
           >
             <Text>Amount</Text>
             <Box
@@ -277,10 +325,16 @@ const CreateRewardClaim = () => {
           p={6}
           background="#fffafa"
         >
+          {/* <CreateClaimButton
+            isLoading={loading}
+            loadingText={"Creating..."}
+            handleClick={approve}
+            fullWidth={true}
+            buttonText={"Approve"}
+          /> */}
           <CreateClaimButton
             isLoading={loading}
             loadingText={"Creating..."}
-            // handleClick={previousStep}
             handleClick={callDistributionAPI}
             fullWidth={true}
             buttonText={"Create"}
