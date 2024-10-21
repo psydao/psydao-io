@@ -13,18 +13,19 @@ export const useCreateNewClaimableBatch = () => {
       hash: data
     });
 
-  console.log("hook", data, isPending, error);
   const createNewClaimableBatch = useCallback(
-    async (merkleRoot: string, deadline: string, ipfsHash: string) => {
-        console.log({merkleRoot, deadline, ipfsHash})
-    
+    async (
+      merkleRoot: string,
+      deadline: string,
+      ipfsHash: string,
+    ) => {
       return writeContract({
         address: env.NEXT_PUBLIC_IS_MAINNET
           ? psyClaimsMainnet
           : psyClaimsSepolia,
         functionName: "createNewClaimableBatch",
         abi: env.NEXT_PUBLIC_IS_MAINNET ? psyClaimsAbi : psyClaimsAbi,
-        args: [merkleRoot, BigInt(deadline), ipfsHash]
+        args: [merkleRoot, BigInt(deadline), ipfsHash],
       });
     },
     [writeContract]

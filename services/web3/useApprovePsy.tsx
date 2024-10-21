@@ -1,10 +1,18 @@
 import { useCallback, useState } from "react";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import psyTokenAbi from "@/abis/psyTokenAbi.json";
-import { psyClaimsMainnet, psyClaimsSepolia, psyNFTMainnet, psyNFTSepolia } from "@/constants/contracts";
+import {
+  psyClaimsMainnet,
+  psyClaimsSepolia,
+  psyNFTMainnet,
+  psyNFTSepolia,
+  psyTokenSepolia
+} from "@/constants/contracts";
 import { env } from "process";
 
-export const useApprovePsy = () => {
+export const useApprovePsy = (
+    amount: BigInt
+) => {
   const [approvedSuccess, setApprovedSuccess] = useState(false);
 
   const { writeContract, data, isPending, status } = useWriteContract();
@@ -19,15 +27,15 @@ export const useApprovePsy = () => {
   });
 
   const approve = useCallback(async () => {
-    const spenderContract = env.NEXT_PUBLIC_IS_MAINNET ? psyClaimsMainnet : psyClaimsSepolia;
-    console.log({ spenderContract });
-    const amount = BigInt(2);
+    const spenderContract = env.NEXT_PUBLIC_IS_MAINNET
+      ? psyClaimsMainnet
+      : psyClaimsSepolia;
     return writeContract(
       {
         abi: psyTokenAbi,
-        address: '0x0973F4c0B86f2EFCA3673864efccBd6090702321',
+        address: psyTokenSepolia,
         functionName: "approve",
-        args: [psyClaimsSepolia, amount]
+        args: [spenderContract, amount]
       },
       {
         onSuccess() {
@@ -39,14 +47,7 @@ export const useApprovePsy = () => {
         }
       }
     );
-  }, [
-    writeContract,
-    isPending,
-    data,
-    isSuccess,
-    isFetching,
-    status
-  ]);
+  }, [writeContract, isPending, data, isSuccess, isFetching, status]);
 
   return {
     approve,

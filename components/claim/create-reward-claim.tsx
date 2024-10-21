@@ -8,6 +8,7 @@ import { useCreateNewClaimableBatch } from "@/services/web3/useCreateNewClaimabl
 import { useGetMinimumClaimDeadline } from "@/services/web3/useGetMinimumClaimDeadline";
 import { getDeadlineTimeStamp } from "@/utils/getDeadlineTimeStamp";
 import { useApprovePsy } from "@/services/web3/useApprovePsy";
+import { parseUnits } from "viem";
 
 const Section = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -41,16 +42,15 @@ const CreateRewardClaim = () => {
     fromDate: null,
     toDate: null,
     claimDeadline: null,
-    amount: "2"
+    amount: ""
   });
 
   const { minimumClaimDeadline, isSuccess, refetch } =
     useGetMinimumClaimDeadline();
 
-  const { approve, data } = useApprovePsy();
-  console.log({ data });
-
-  console.log(minimumClaimDeadline?.toString());
+  const { approve, data } = useApprovePsy(
+    parseUnits(claimInput.amount.toString(), 18)
+  );
 
   useEffect(() => {
     const claimDeadline = getDeadlineTimeStamp(
@@ -58,13 +58,8 @@ const CreateRewardClaim = () => {
       minimumClaimDeadline?.toString()
     );
     setClaimDeadlineAsString(claimDeadline);
-    console.log({ claimDeadlineAsString });
-    // setClaimInput({
-    //   ...claimInput,
-    //   claimDeadline: new Date(claimDeadline)
-    // })
-  }, [claimInput.fromDate, minimumClaimDeadline]);
-
+  }, [claimInput.fromDate]);
+  
   const {
     createNewClaimableBatch,
     isConfirmed,
@@ -73,52 +68,75 @@ const CreateRewardClaim = () => {
     error
   } = useCreateNewClaimableBatch();
 
-  const callDistributionAPI = useCallback(async () => {
-    setLoading(true);
-    const startTimeStamp = claimInput.fromDate?.getTime();
-    const endTimeStamp = claimInput.toDate?.getTime();
-    const claimDeadline = claimInput.claimDeadline?.getTime();
-    const claimDeadlineTimeStamp = Math.floor((claimDeadline as number) / 1000);
-
-    const data = {
-      startTimeStamp: Math.floor((startTimeStamp as number) / 1000),
-      endTimeStamp: Math.floor((endTimeStamp as number) / 1000),
-      totalAmountOfTokens: claimInput.amount
-    };
-
-    console.log('amount', data.totalAmountOfTokens);
-
+  const fetchDistributionData = async (
+    startTimeStamp: number,
+    endTimeStamp: number,
+    totalAmountOfTokens: string
+  ): Promise<{
+    data?: { merkleRoot: string; ipfsHash: string };
+    error?: any;
+  }> => {
     try {
       const response = await fetch("/api/distribution", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify({
+          startTimeStamp: startTimeStamp / 1000,
+          endTimeStamp: endTimeStamp / 1000,
+          totalAmountOfTokens: totalAmountOfTokens.toString()
+        })
       });
 
       if (!response.ok) {
         const result = await response.json();
         console.error("Error:", result.error);
-        setLoading(false);
-        return;
+        return { error: result.error };
       }
 
       const result = await response.json();
-      console.log(result.proof, claimDeadlineAsString, result.ipfsHash);
       console.log("Merkle Tree:", result);
-
-      console.log("Calling createNewClaimableBatch");
-      await createNewClaimableBatch(
-        result.merkleRoot,
-        claimDeadlineAsString,
-        result.ipfsHash
-      );
-
-      console.log("func", { isConfirmed, isConfirming, isPending, error });
-      setLoading(false);
+      return { data: result };
     } catch (error) {
       console.error("Error calling API:", error);
+      return { error };
+    }
+  };
+
+  const handleDistributionProcess = useCallback(async () => {
+    setLoading(true);
+
+    const startTimeStamp = claimInput.fromDate?.getTime();
+    const endTimeStamp = claimInput.toDate?.getTime();
+    const totalAmountOfTokens = claimInput.amount;
+
+    if (!startTimeStamp || !endTimeStamp || !totalAmountOfTokens) {
+      setLoading(false);
+      return;
+    }
+
+    const { data, error } = await fetchDistributionData(
+      startTimeStamp,
+      endTimeStamp,
+      totalAmountOfTokens
+    );
+
+    if (error) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      console.log("Calling createNewClaimableBatch");
+      await createNewClaimableBatch(
+        data?.merkleRoot as string,
+        claimDeadlineAsString,
+        data?.ipfsHash as string
+      );
+    } catch (error) {
+      console.error("Error creating new claimable batch:", error);
+    } finally {
       setLoading(false);
     }
   }, [createNewClaimableBatch, claimInput, claimDeadlineAsString]);
@@ -325,17 +343,17 @@ const CreateRewardClaim = () => {
           p={6}
           background="#fffafa"
         >
-          {/* <CreateClaimButton
+          <CreateClaimButton
             isLoading={loading}
             loadingText={"Creating..."}
             handleClick={approve}
             fullWidth={true}
             buttonText={"Approve"}
-          /> */}
+          />
           <CreateClaimButton
             isLoading={loading}
             loadingText={"Creating..."}
-            handleClick={callDistributionAPI}
+            handleClick={handleDistributionProcess}
             fullWidth={true}
             buttonText={"Create"}
           />
