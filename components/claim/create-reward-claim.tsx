@@ -3,7 +3,7 @@ import { Box, Text, Flex, Button, Input, Image, Grid } from "@chakra-ui/react";
 import { useWizard } from "react-use-wizard";
 import CreateClaimButton from "./claim-button";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import CustomDatePicker from "./date-time-input";
+import CustomDatePicker from "./custom-date-picker";
 import { useCreateNewClaimableBatch } from "@/services/web3/useCreateNewClaimableBatch";
 import { useGetMinimumClaimDeadline } from "@/services/web3/useGetMinimumClaimDeadline";
 import { getDeadlineTimeStamp } from "@/utils/getDeadlineTimeStamp";
@@ -49,9 +49,23 @@ const CreateRewardClaim = () => {
     claimDeadline: null,
     amount: ""
   });
+  const [minDate, setMinDate] = useState<Date | null>(null);
 
   const { minimumClaimDeadline, isSuccess, refetch } =
     useGetMinimumClaimDeadline();
+
+  useEffect(() => {
+    if (claimInput.fromDate) {
+      const minimumClaimDeadlineMs =
+        parseInt(minimumClaimDeadline.toString()) * 1000;
+
+        const calculatedMinDate = new Date(
+        claimInput.fromDate.getTime() + minimumClaimDeadlineMs
+      );
+
+      setMinDate(calculatedMinDate);
+    }
+  }, [claimInput.fromDate, minimumClaimDeadline]);
 
   const {
     approve,
@@ -283,6 +297,7 @@ const CreateRewardClaim = () => {
             <Text>Claim deadline</Text>
             <CustomDatePicker
               label="Date"
+              minDate={minDate || undefined} 
               selectedDate={claimInput.claimDeadline}
               setSelectedDate={(deadline) =>
                 setClaimInput({
@@ -318,19 +333,11 @@ const CreateRewardClaim = () => {
               <Input
                 disabled
                 type="number"
-                step={0.001}
                 w={{ base: "100%" }}
                 fontSize="18px"
                 fontFamily={"Inter"}
                 value={claimInput.amount}
-                // onChange={(e) => {
-                //   setClaimInput({
-                //     ...claimInput,
-                //     amount: e.target.value
-                //   });
-                // }}
-                // required
-                border={"none"}                
+                border={"none"}
               />
               <Flex
                 alignItems={"center"}
