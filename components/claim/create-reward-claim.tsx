@@ -367,12 +367,13 @@ const CreateRewardClaim = () => {
           boxShadow={"0px -2px 25.6px 0px rgba(0, 0, 0, 0.25)"}
           p={6}
           background="#fffafa"
-          // ester: remove these styles below when fixing approval flow logic
+          // ester: you can remove these styles below when fixing approval flow logic
           display={"flex"}
           justifyContent={"space-between"}
         >
           {/* ester: show approve button if they've not approved the amount yet */}
           {/* this amount can be seen from calling allowance view function */}
+          {/* and compare that to the amount being sent */}
           <CreateClaimButton
             isLoading={loading}
             loadingText={"Creating..."}
