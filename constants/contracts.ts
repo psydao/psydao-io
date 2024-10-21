@@ -37,5 +37,5 @@ export const psyClaimsSepolia = "0xbe3D1afef909FfF28A98307A2Ff4947aDAcba1d7";
 export const psyClaimsMainnet = "0x82cD313da0eBA01D57C60da6738f3D5f55Ab7C50"; // add mainnet address
 
 // psyToken
-export const psyTokenSepolia = "0xbe3D1afef909FfF28A98307A2Ff4947aDAcba1d7";
+export const psyTokenSepolia = "0xcAAF3EbEC6E915e9f8f2816AdE11554D7BA83BA9";
 export const psyTokenMainnet = "0x0973F4c0B86f2EFCA3673864efccBd6090702321"; // add mainnet address

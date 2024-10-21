@@ -2,13 +2,16 @@ import { ArrowBackIcon } from "@chakra-ui/icons";
 import { Box, Text, Flex, Button, Input, Image, Grid } from "@chakra-ui/react";
 import { useWizard } from "react-use-wizard";
 import CreateClaimButton from "./claim-button";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import CustomDatePicker from "./date-time-input";
 import { useCreateNewClaimableBatch } from "@/services/web3/useCreateNewClaimableBatch";
 import { useGetMinimumClaimDeadline } from "@/services/web3/useGetMinimumClaimDeadline";
 import { getDeadlineTimeStamp } from "@/utils/getDeadlineTimeStamp";
 import { useApprovePsy } from "@/services/web3/useApprovePsy";
-import { parseUnits } from "viem";
+import { formatUnits, parseUnits } from "viem";
+import { usePsyPerBatch } from "@/services/web3/usePsyPerBatch";
+
+// ester: this file is quite hefty. If you want to refactor if, go ahead !
 
 const Section = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -38,6 +41,8 @@ const CreateRewardClaim = () => {
   const { previousStep } = useWizard();
   const [loading, setLoading] = useState(false);
   const [claimDeadlineAsString, setClaimDeadlineAsString] = useState("");
+  // ester: if the user has not selected fromDate, toDate, or claimDeadline we should display an error message
+  // amount is taken from contract thus not editable
   const [claimInput, setClaimInput] = useState<Claim>({
     fromDate: null,
     toDate: null,
@@ -48,9 +53,23 @@ const CreateRewardClaim = () => {
   const { minimumClaimDeadline, isSuccess, refetch } =
     useGetMinimumClaimDeadline();
 
-  const { approve, data } = useApprovePsy(
-    parseUnits(claimInput.amount.toString(), 18)
-  );
+  const {
+    approve,
+    data,
+    error: approveError,
+    txError
+  } = useApprovePsy(parseUnits(claimInput.amount.toString(), 18));
+
+  const { data: psyPerBatch, isError, isLoading, isFetched } = usePsyPerBatch();
+
+  useMemo(() => {
+    if (isFetched) {
+      setClaimInput({
+        ...claimInput,
+        amount: formatUnits(psyPerBatch as bigint, 18)
+      });
+    }
+  }, [isFetched]);
 
   useEffect(() => {
     const claimDeadline = getDeadlineTimeStamp(
@@ -59,7 +78,7 @@ const CreateRewardClaim = () => {
     );
     setClaimDeadlineAsString(claimDeadline);
   }, [claimInput.fromDate]);
-  
+
   const {
     createNewClaimableBatch,
     isConfirmed,
@@ -297,22 +316,21 @@ const CreateRewardClaim = () => {
               w={{ base: "100%", md: "auto" }}
             >
               <Input
+                disabled
                 type="number"
                 step={0.001}
                 w={{ base: "100%" }}
                 fontSize="18px"
                 fontFamily={"Inter"}
                 value={claimInput.amount}
-                onChange={(e) => {
-                  setClaimInput({
-                    ...claimInput,
-                    amount: e.target.value
-                  });
-                }}
-                required
-                border={"none"}
-                focusBorderColor="transparent"
-                onWheel={(e) => e.currentTarget.blur()}
+                // onChange={(e) => {
+                //   setClaimInput({
+                //     ...claimInput,
+                //     amount: e.target.value
+                //   });
+                // }}
+                // required
+                border={"none"}                
               />
               <Flex
                 alignItems={"center"}
@@ -342,7 +360,12 @@ const CreateRewardClaim = () => {
           boxShadow={"0px -2px 25.6px 0px rgba(0, 0, 0, 0.25)"}
           p={6}
           background="#fffafa"
+          // ester: remove these styles below when fixing approval flow logic
+          display={"flex"}
+          justifyContent={"space-between"}
         >
+          {/* ester: show approve button if they've not approved the amount yet */}
+          {/* this amount can be seen from calling allowance view function */}
           <CreateClaimButton
             isLoading={loading}
             loadingText={"Creating..."}

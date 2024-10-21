@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { format, addMonths, subMonths } from "date-fns";
+import { format, addMonths, subMonths, isBefore, startOfDay } from "date-fns";
 import {
   Box,
   Button,
@@ -64,18 +64,22 @@ interface CustomDatePickerProps {
   label: string;
   selectedDate: Date | null;
   setSelectedDate: (date: Date | null) => void;
+  minDate?: Date;
 }
 
 const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   label,
   selectedDate,
-  setSelectedDate
+  setSelectedDate,
+  minDate 
 }) => {
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
+  const minimumDate = minDate ? startOfDay(minDate) : startOfDay(new Date());
+
   const handleDateClick = (date: Date) => {
-    // todo: prevent default behavior of date click
+    if (isBefore(date, minimumDate)) return; 
     setSelectedDate(date);
     setIsOpen(false);
   };
@@ -153,18 +157,28 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
                 </Box>
               ))}
               {calendar.map((week, index) =>
-                week.map((date, dayIndex) => (
-                  <Button
-                    key={`${index}-${dayIndex}`}
-                    size="xs"
-                    variant="outline"
-                    fontSize={"10px"}
-                    onClick={() => date && handleDateClick(date)}
-                    disabled={!date}
-                  >
-                    {date ? format(date, "d") : ""}
-                  </Button>
-                ))
+                week.map((date, dayIndex) => {
+                  const isDisabled = !date || isBefore(date, minimumDate);
+                  return (
+                    <Button
+                      key={`${index}-${dayIndex}`}
+                      size="xs"
+                      variant="outline"
+                      fontSize={"10px"}
+                      onClick={() => date && handleDateClick(date)}
+                      isDisabled={isDisabled}
+                      sx={{
+                        bg: isDisabled ? "gray.200" : "white",
+                        cursor: isDisabled ? "not-allowed" : "pointer",
+                        _hover: isDisabled
+                          ? { bg: "gray.200" }
+                          : { bg: "blue.100" },
+                      }}
+                    >
+                      {date ? format(date, "d") : ""}
+                    </Button>
+                  );
+                })
               )}
             </Grid>
           </PopoverBody>

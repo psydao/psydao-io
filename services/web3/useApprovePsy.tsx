@@ -10,18 +10,17 @@ import {
 } from "@/constants/contracts";
 import { env } from "process";
 
-export const useApprovePsy = (
-    amount: BigInt
-) => {
+export const useApprovePsy = (amount: BigInt) => {
   const [approvedSuccess, setApprovedSuccess] = useState(false);
 
-  const { writeContract, data, isPending, status } = useWriteContract();
+  const { writeContract, data, isPending, status, error } = useWriteContract();
 
   const {
     isSuccess,
     isFetching,
     refetch: refetchTxReceipt,
-    fetchStatus
+    fetchStatus,
+    error: txError
   } = useWaitForTransactionReceipt({
     hash: data
   });
@@ -44,10 +43,10 @@ export const useApprovePsy = (
         },
         onSettled() {
           refetchTxReceipt();
-        }
+        },
       }
     );
-  }, [writeContract, isPending, data, isSuccess, isFetching, status]);
+  }, [writeContract, amount, isPending, data, isSuccess, isFetching, status]);
 
   return {
     approve,
@@ -56,6 +55,8 @@ export const useApprovePsy = (
     isSuccess,
     status,
     fetchStatus,
-    approvedSuccess
+    approvedSuccess,
+    error,
+    txError
   };
 };
