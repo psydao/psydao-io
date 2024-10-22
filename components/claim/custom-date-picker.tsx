@@ -79,7 +79,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   const minimumDate = minDate ? startOfDay(minDate) : startOfDay(new Date());
 
   const handleDateClick = (date: Date) => {
-    if (isBefore(date, minimumDate)) return; 
+    // if (isBefore(date, minimumDate)) return; 
     setSelectedDate(date);
     setIsOpen(false);
   };
@@ -158,7 +158,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
               ))}
               {calendar.map((week, index) =>
                 week.map((date, dayIndex) => {
-                  const isDisabled = !date || isBefore(date, minimumDate);
+                  // const isDisabled = !date || isBefore(date, minimumDate);
                   return (
                     <Button
                       key={`${index}-${dayIndex}`}
@@ -166,14 +166,14 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
                       variant="outline"
                       fontSize={"10px"}
                       onClick={() => date && handleDateClick(date)}
-                      isDisabled={isDisabled}
-                      sx={{
-                        bg: isDisabled ? "gray.200" : "white",
-                        cursor: isDisabled ? "not-allowed" : "pointer",
-                        _hover: isDisabled
-                          ? { bg: "gray.200" }
-                          : { bg: "blue.100" },
-                      }}
+                      // isDisabled={isDisabled}
+                      // sx={{
+                      //   bg: isDisabled ? "gray.200" : "white",
+                      //   cursor: isDisabled ? "not-allowed" : "pointer",
+                      //   _hover: isDisabled
+                      //     ? { bg: "gray.200" }
+                      //     : { bg: "blue.100" },
+                      // }}
                     >
                       {date ? format(date, "d") : ""}
                     </Button>

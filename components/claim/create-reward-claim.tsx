@@ -128,8 +128,8 @@ const CreateRewardClaim = () => {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          startTimeStamp: startTimeStamp / 1000,
-          endTimeStamp: endTimeStamp / 1000,
+          startTimeStamp: startTimeStamp,
+          endTimeStamp: endTimeStamp,
           totalAmountOfTokens: totalAmountOfTokens.toString()
         })
       });
@@ -174,9 +174,15 @@ const CreateRewardClaim = () => {
       return;
     }
 
+    const start = startTimeStamp / 1000;
+    const end = endTimeStamp / 1000;
+
     const { data, error } = await fetchDistributionData(
-      startTimeStamp,
-      endTimeStamp,
+      // the problem lies here with dynamic values: merkleroot is not returned
+      // startTimeStamp,
+      // endTimeStamp,
+      1723932000,
+      1726005600,
       totalAmountOfTokens
     );
 
