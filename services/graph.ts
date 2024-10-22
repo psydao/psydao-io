@@ -114,3 +114,20 @@ export const getUserCopyBalance = gql`
     }
   }
 `;
+
+export const getBatchClaims = gql`
+  query GetBatchClaims {
+    batchClaims(first: 5) {
+      id
+      claims {
+        account
+        amount
+      }
+      ipfsHash
+      merkleRoot
+      amount
+      claimed
+      deadline
+    }
+  }
+`;

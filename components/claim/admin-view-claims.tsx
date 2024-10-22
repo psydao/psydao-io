@@ -7,17 +7,15 @@ import {
   Image,
   Table,
   TableContainer,
-  Tr,
   Tbody,
-  Td,
   Switch,
   Grid
 } from "@chakra-ui/react";
 import { useWizard } from "react-use-wizard";
 import CreateClaimButton from "./claim-button";
-import { dummyClaims } from "./dummyData";
 import { useState } from "react";
 import { getExpirationStatus } from "@/utils/getExpirationStatus";
+import { useGetBatchClaims } from "@/hooks/useGetBatchClaims";
 
 const EmptyState = () => {
   const { nextStep } = useWizard();
@@ -88,6 +86,12 @@ const AdminViewClaims = () => {
   const { previousStep, nextStep } = useWizard();
   //  remove showEmptyState when done
   const [showEmptyState, setShowEmptyState] = useState(false);
+  const { claims } = useGetBatchClaims();
+
+  const formatClaimAmount = (amount: string) => {
+    const formattedAmount = Number(amount) / 1e18;
+    return formattedAmount.toFixed(2).replace(".", ",");
+  };
 
   return (
     <Box height={"100%"}>
@@ -143,7 +147,7 @@ const AdminViewClaims = () => {
           <TableContainer paddingBottom={"100px"}>
             <Table variant="simple">
               <Tbody>
-                {dummyClaims.map((claim, index) => (
+                {claims.map((claim, index) => (
                   <Grid
                     key={index}
                     fontFamily={"Inter Medium"}
@@ -155,8 +159,8 @@ const AdminViewClaims = () => {
                     padding={6}
                     justifyContent={"space-between"}
                   >
-                    <Box>Claim ({claim.batchNumber})</Box>
-                    <Box>{getExpirationStatus(claim.expiry as string)}</Box>
+                    <Box>Claim ({parseInt(claim.id) + 1})</Box>
+                    <Box>{getExpirationStatus(claim.deadline)}</Box>
                     <Box>
                       <Flex
                         justifyContent={{
@@ -165,7 +169,7 @@ const AdminViewClaims = () => {
                         }}
                         alignItems="center"
                       >
-                        {claim.totalClaimable} <PsyIcon />
+                        {formatClaimAmount(claim.amount)} <PsyIcon />
                       </Flex>
                     </Box>
                   </Grid>

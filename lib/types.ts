@@ -77,3 +77,18 @@ export type GeneralSettings = {
 };
 
 export type ClaimStatus = "claimable" | "claimed" | "expired";
+
+export type ClaimDetail = {
+  account: string;
+  amount: string;
+};
+
+export type Claim = {
+  id: string;
+  claims: ClaimDetail[];
+  ipfsHash: string;
+  merkleRoot: string;
+  amount: string;
+  claimed: boolean;
+  deadline: string;
+};
