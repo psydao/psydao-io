@@ -12,6 +12,7 @@ import { formatUnits, parseUnits } from "viem";
 import { usePsyPerBatch } from "@/services/web3/usePsyPerBatch";
 import { useCustomToasts } from "@/hooks/useCustomToasts";
 import { useResize } from "@/hooks/useResize";
+import useGetAvailableAllowance from "@/hooks/useGetAvailableAllowance";
 
 // ester: this file is quite hefty. If you want to refactor, go ahead !
 
@@ -45,8 +46,13 @@ const CreateRewardClaim = () => {
   const [loading, setLoading] = useState(false);
   const [claimDeadlineAsString, setClaimDeadlineAsString] = useState("");
   const { showCustomErrorToast, showSuccessToast } = useCustomToasts();
-  // ester: if the user has not selected fromDate, toDate, or claimDeadline we should display an error message
-  // amount is taken from contract thus not editable
+  const [claimsAllowance, setClaimsAllowance] = useState("");
+  const {
+    allowance,
+    error: allowanceError,
+    loading: allowanceLoading
+  } = useGetAvailableAllowance();
+
   const [claimInput, setClaimInput] = useState<Claim>({
     fromDate: null,
     toDate: null,
@@ -98,7 +104,11 @@ const CreateRewardClaim = () => {
         amount: formatUnits(psyPerBatch as bigint, 18)
       });
     }
-  }, [isFetched, psyPerBatch]);
+
+    if (!allowanceError && !allowanceLoading) {
+      setClaimsAllowance(allowance.toString());
+    }
+  }, [isFetched, psyPerBatch, allowanceError, allowanceLoading]);
 
   useEffect(() => {
     const claimDeadline = getDeadlineTimeStamp(
@@ -453,27 +463,27 @@ const CreateRewardClaim = () => {
           boxShadow={"0px -2px 25.6px 0px rgba(0, 0, 0, 0.25)"}
           p={6}
           background="#fffafa"
-          // ester: you can remove these styles below when fixing approval flow logic
-          display={"flex"}
-          justifyContent={"space-between"}
         >
           {/* ester: show approve button if they've not approved the amount yet */}
           {/* this amount can be seen from calling allowance view function */}
           {/* and compare that to the amount being sent */}
-          <CreateClaimButton
-            isLoading={loading}
-            loadingText={"Approving..."}
-            handleClick={approve}
-            fullWidth={true}
-            buttonText={"Approve"}
-          />
-          <CreateClaimButton
-            isLoading={loading}
-            loadingText={"Creating..."}
-            handleClick={handleDistributionProcess}
-            fullWidth={true}
-            buttonText={"Create"}
-          />
+          {claimsAllowance.toString() !== claimInput.amount ? (
+            <CreateClaimButton
+              isLoading={loading}
+              loadingText={"Approving..."}
+              handleClick={approve}
+              fullWidth={true}
+              buttonText={allowanceLoading ? "Please wait..." : "Approve"}
+            />
+          ) : (
+            <CreateClaimButton
+              isLoading={loading}
+              loadingText={"Creating..."}
+              handleClick={handleDistributionProcess}
+              fullWidth={true}
+              buttonText={allowanceLoading ? "Please wait..." : "Create"}
+            />
+          )}
         </Box>
       </Box>
     </Box>
