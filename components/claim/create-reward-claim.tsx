@@ -67,6 +67,8 @@ const CreateRewardClaim = () => {
       showCustomErrorToast("Could not fetch minimum claim deadline.", width);
       return;
     }
+    // Added this additional check because it yelled at me otherwise :(
+    // If you think it'll cause problems or isn't needed, please lmk! :)
     if (claimInput.fromDate && minimumClaimDeadline) {
       const minimumClaimDeadlineMs =
         parseInt(minimumClaimDeadline.toString()) * 1000;
@@ -76,7 +78,7 @@ const CreateRewardClaim = () => {
       );
       setMinDate(calculatedMinDate);
     }
-  }, [claimInput.fromDate, minimumClaimDeadline, minimumClaimDeadline]);
+  }, [claimInput.fromDate, minimumClaimDeadline, minimumClaimError, isSuccess]);
 
   const {
     approve,
@@ -89,6 +91,7 @@ const CreateRewardClaim = () => {
   const { data: psyPerBatch, isError, isLoading, isFetched } = usePsyPerBatch();
 
   useMemo(() => {
+    // Added this additional check because it threw me out without it :(
     if (isFetched && psyPerBatch) {
       setClaimInput({
         ...claimInput,
@@ -155,6 +158,9 @@ const CreateRewardClaim = () => {
     const startTimeStamp = claimInput.fromDate?.getTime();
     const endTimeStamp = claimInput.toDate?.getTime();
     const totalAmountOfTokens = claimInput.amount;
+    const currentDateTimeStamp = new Date().getTime();
+
+    // This is messy. I will turn this into a util function or something.
 
     if (!startTimeStamp) {
       showCustomErrorToast("Start timestamp missing.", width);
@@ -166,6 +172,27 @@ const CreateRewardClaim = () => {
       return;
     } else if (endTimeStamp < startTimeStamp) {
       showCustomErrorToast("End date before start date", width);
+      setLoading(false);
+      return;
+    } else if (
+      startTimeStamp < currentDateTimeStamp ||
+      endTimeStamp < currentDateTimeStamp
+    ) {
+      showCustomErrorToast(
+        "Cannot use a past date for the claim time period.",
+        width
+      );
+      setLoading(false);
+      return;
+    } else if (
+      minDate &&
+      claimInput.claimDeadline &&
+      minDate.getTime() > claimInput.claimDeadline.getTime()
+    ) {
+      showCustomErrorToast(
+        "The selected deadline is too close to the beginning of the claim period.",
+        width
+      );
       setLoading(false);
       return;
     } else if (!totalAmountOfTokens) {

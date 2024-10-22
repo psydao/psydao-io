@@ -47,7 +47,13 @@ const ERROR_MESSAGES = {
     "Could not fetch minimum claim deadline.",
   "End date before start date": "End date cannot be before start date.",
   "Error creating new claimable batch": "Error creating new claimable batch.",
-  "Error approving claimable funds": "Error approving claimable funds."
+  "Error approving claimable funds": "Error approving claimable funds.",
+  "Cannot use a past date for the claim time period.":
+    "Cannot use a past date for the claim time period.",
+  "Minimum claim deadline must be at least a week after claim period starts.":
+    "Minimum claim deadline must be at least a week after claim period starts.",
+  "The selected deadline is too close to the beginning of the claim period.":
+    "The selected deadline is too close to the beginning of the claim period."
 };
 
 export const customErrorMessage = (message: string): string => {
