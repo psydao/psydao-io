@@ -3,6 +3,11 @@ import ClaimCard from "./claim-card";
 import { dummyData } from "./dummyData";
 import { type ClaimStatus } from "@/lib/types";
 import { useWizard } from "react-use-wizard";
+import { fetchMerkleProof } from "@/utils/getMerkleProof";
+import { useGetBatchClaims } from "@/hooks/useGetBatchClaims";
+import { Address } from "viem";
+import { useAccount } from "wagmi";
+import { useEffect, useMemo, useState } from "react";
 
 interface ClaimableRewardsProps {
   isAdmin: boolean;
@@ -10,6 +15,59 @@ interface ClaimableRewardsProps {
 
 const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
   const { nextStep } = useWizard();
+  const { claims } = useGetBatchClaims();
+  const [batchId, setBatchId] = useState("1");
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const fetchBatchData = async (): Promise<{
+    data?: any;
+    error?: any;
+  }> => {
+    try {
+      const response = await fetch("/api/merkle-proof", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          address: '0xfeEb9546E9501f03aEc345fb4fbC8E255048C67d',
+          ipfsHash: 'QmTAPt6cT5aW4z1jLJA2bANSx3K6ra4u6VrGruqGpApm6E',
+          batchId: '1'
+        })
+      });
+  
+      if (!response.ok) {
+        const result = await response.json();
+        console.error("Error:", result.error);
+        return { error: result.error };
+      }
+  
+      const result = await response.json();
+      console.log(result);
+      return { data: result };
+    } catch (error) {
+      console.error("Error calling API:", error);
+      return { error };
+    }
+  };
+
+  useEffect(() => {
+    if (batchId) {
+      fetchBatchData()
+        .then((result) => {
+          setData(result.data);
+          setLoading(false);
+        })
+        .catch((error) => {
+          setError(error);
+          setLoading(false);
+        });
+    }
+  }, [batchId]);
+
+  console.log({ data });
 
   return (
     <Box>
@@ -68,15 +126,17 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
         maxW="100%"
         padding={{ base: "4", md: "8" }}
       >
-        {dummyData.map((item, index) => (
-          <ClaimCard
-            key={index}
-            amount={item.amount}
-            claimStatus={item.claimStatus as ClaimStatus}
-            batchNumber={item.batchNumber}
-            expiry={item.expiry}
-          />
-        ))}
+        {claims.map((item, index) => {
+          return (
+            <ClaimCard
+              key={index}
+              amount={item.amount}
+              claimStatus={"claimable"}
+              batchNumber={parseInt(item.id) + 1}
+              expiry={item.deadline}
+            />
+          );
+        })}
       </Grid>
     </Box>
   );
