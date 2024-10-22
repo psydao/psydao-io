@@ -38,7 +38,16 @@ const ERROR_MESSAGES = {
   "TokenSale: Tokens Locked":
     "Token withdrawal is locked. Please contact the administrator.",
   "TokenSale: Insufficient funds": "You must have a token balance to withdraw",
-  "Could not create cart": "Could not create cart for checkout."
+  "Could not create cart": "Could not create cart for checkout.",
+  "Start timestamp missing": "Please enter a start timestamp.",
+  "End timestamp missing": "Please enter an end timestamp.",
+  "Total amount of tokens missing":
+    "The total amount of tokens is missing. An error may have occurred.",
+  "Could not fetch minimum claim deadline.":
+    "Could not fetch minimum claim deadline.",
+  "End date before start date": "End date cannot be before start date.",
+  "Error creating new claimable batch": "Error creating new claimable batch.",
+  "Error approving claimable funds": "Error approving claimable funds."
 };
 
 export const customErrorMessage = (message: string): string => {
