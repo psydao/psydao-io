@@ -14,8 +14,6 @@ import { useCustomToasts } from "@/hooks/useCustomToasts";
 import { useResize } from "@/hooks/useResize";
 import useGetAvailableAllowance from "@/hooks/useGetAvailableAllowance";
 
-// ester: this file is quite hefty. If you want to refactor, go ahead !
-
 const Section = ({ children }: { children: React.ReactNode }) => {
   return (
     <Box
@@ -50,7 +48,8 @@ const CreateRewardClaim = () => {
   const {
     allowance,
     error: allowanceError,
-    loading: allowanceLoading
+    loading: allowanceLoading,
+    refetch: refetchAvailableAllowance
   } = useGetAvailableAllowance();
 
   const [claimInput, setClaimInput] = useState<Claim>({
@@ -91,7 +90,10 @@ const CreateRewardClaim = () => {
     data,
     error: approveError,
     txError,
-    approvedSuccess
+    approvedSuccess,
+    isSuccess: approveTxSuccess,
+    isFetching: approvePsyFetching,
+    isPending: approvePsyPending
   } = useApprovePsy(parseUnits(claimInput.amount.toString(), 18));
 
   const { data: psyPerBatch, isError, isLoading, isFetched } = usePsyPerBatch();
@@ -106,7 +108,7 @@ const CreateRewardClaim = () => {
     }
 
     if (!allowanceError && !allowanceLoading) {
-      setClaimsAllowance(allowance.toString());
+      setClaimsAllowance(formatUnits(allowance, 18).toString());
     }
   }, [isFetched, psyPerBatch, allowanceError, allowanceLoading]);
 
@@ -263,9 +265,10 @@ const CreateRewardClaim = () => {
       return;
     }
 
-    if (approvedSuccess) {
+    if (approvedSuccess && approveTxSuccess) {
       showSuccessToast("Successfully approved claimable funds.", width);
       setLoading(false);
+      refetchAvailableAllowance();
       return;
     }
   }, [approveError, approvedSuccess, isConfirmed, error]);
@@ -464,12 +467,9 @@ const CreateRewardClaim = () => {
           p={6}
           background="#fffafa"
         >
-          {/* ester: show approve button if they've not approved the amount yet */}
-          {/* this amount can be seen from calling allowance view function */}
-          {/* and compare that to the amount being sent */}
-          {claimsAllowance.toString() !== claimInput.amount ? (
+          {parseFloat(claimsAllowance) < parseFloat(claimInput.amount) ? (
             <CreateClaimButton
-              isLoading={loading}
+              isLoading={approvePsyFetching || approvePsyPending}
               loadingText={"Approving..."}
               handleClick={approve}
               fullWidth={true}

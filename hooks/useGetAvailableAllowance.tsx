@@ -5,11 +5,13 @@ import {
   psyClaimsMainnet,
   psyClaimsSepolia
 } from "@/constants/contracts";
-import { useReadContract } from "wagmi";
+import { useAccount, useReadContract } from "wagmi";
 import psyTokenAbi from "@/abis/psyTokenAbi.json";
 
 const useGetAvailableAllowance = () => {
-  const owner = env.NEXT_PUBLIC_IS_MAINNET ? psyTokenMainnet : psyTokenSepolia;
+  const { address } = useAccount();
+  //   Temp until I find out whether owner is curr address or claims contract owner
+  const owner = address ?? "0x";
   const spender = env.NEXT_PUBLIC_IS_MAINNET
     ? psyClaimsMainnet
     : psyClaimsSepolia;

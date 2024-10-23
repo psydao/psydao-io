@@ -43,7 +43,7 @@ export const useApprovePsy = (amount: BigInt) => {
         },
         onSettled() {
           refetchTxReceipt();
-        },
+        }
       }
     );
   }, [writeContract, amount, isPending, data, isSuccess, isFetching, status]);
@@ -52,6 +52,7 @@ export const useApprovePsy = (amount: BigInt) => {
     approve,
     data,
     isFetching,
+    isPending,
     isSuccess,
     status,
     fetchStatus,
