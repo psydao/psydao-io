@@ -13,8 +13,6 @@ import { usePsyPerBatch } from "@/services/web3/usePsyPerBatch";
 import { useCustomToasts } from "@/hooks/useCustomToasts";
 import { useResize } from "@/hooks/useResize";
 
-// ester: this file is quite hefty. If you want to refactor, go ahead !
-
 const Section = ({ children }: { children: React.ReactNode }) => {
   return (
     <Box
@@ -448,13 +446,9 @@ const CreateRewardClaim = () => {
           boxShadow={"0px -2px 25.6px 0px rgba(0, 0, 0, 0.25)"}
           p={6}
           background="#fffafa"
-          // ester: you can remove these styles below when fixing approval flow logic
           display={"flex"}
           justifyContent={"space-between"}
         >
-          {/* ester: show approve button if they've not approved the amount yet */}
-          {/* this amount can be seen from calling allowance view function */}
-          {/* and compare that to the amount being sent */}
           <CreateClaimButton
             isLoading={loading}
             loadingText={"Approving..."}
