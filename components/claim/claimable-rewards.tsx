@@ -3,7 +3,7 @@ import ClaimCard from "./claim-card";
 import { useWizard } from "react-use-wizard";
 import { useGetBatchClaims } from "@/hooks/useGetBatchClaims";
 import { useAccount } from "wagmi";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface ClaimableRewardsProps {
   isAdmin: boolean;
@@ -145,7 +145,7 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
                 key={index}
                 amount={item.amount}
                 claimStatus={item.claimed ? "claimed" : item.buttonDisabled ? "expired" : "claimable"}
-                batchNumber={parseInt(item.batchId)}
+                batchId={item.batchId}
                 expiry={item.deadline}
                 onClaim={() => {}}
                 proof={item.merkleProof}

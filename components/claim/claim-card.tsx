@@ -6,7 +6,7 @@ import { Box, Button, Divider, Flex, Text } from "@chakra-ui/react";
 export interface ClaimCardProps {
   amount: string;
   claimStatus: ClaimStatus;
-  batchNumber: number;
+  batchId: string;
   expiry: string;
   totalClaimable?: string;
   onClaim?: () => void;
@@ -30,10 +30,10 @@ const ClaimCardText = ({ text }: { text: string }) => (
 );
 
 const ClaimCard = (props: ClaimCardProps) => {
-  const { amount, claimStatus, batchNumber, expiry, proof, text, disabled } = props;
+  const { amount, claimStatus, batchId, expiry, proof, text, disabled } = props;
 
   const { claim } = useClaim({
-    batchId: batchNumber.toString(),
+    batchId: batchId.toString(),
     amount: amount,
     merkleProof: proof 
   });
@@ -60,7 +60,7 @@ const ClaimCard = (props: ClaimCardProps) => {
         gap={2}
         fontFamily={"Inter Medium"}
       >
-        <ClaimCardText text={`Batch ${batchNumber.toString()}`} />
+        <ClaimCardText text={`Batch ${batchId.toString()}`} />
         <Divider borderColor={"#E0E0E0"} my={3} />
         <ClaimCardText text={claimStatus} />
         <Text
