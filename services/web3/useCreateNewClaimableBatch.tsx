@@ -6,7 +6,7 @@ import { psyClaimsMainnet, psyClaimsSepolia } from "@/constants/contracts";
 import psyClaimsAbi from "@/abis/psyClaimsAbi.json";
 
 export const useCreateNewClaimableBatch = () => {
-  const { data, writeContract, isPending, error } = useWriteContract();
+  const { data, writeContract, isPending, error, reset } = useWriteContract();
 
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
     useWaitForTransactionReceipt({
@@ -14,19 +14,25 @@ export const useCreateNewClaimableBatch = () => {
     });
 
   const createNewClaimableBatch = useCallback(
-    async (
-      merkleRoot: string,
-      deadline: string,
-      ipfsHash: string,
-    ) => {
-      return writeContract({
-        address: env.NEXT_PUBLIC_IS_MAINNET
-          ? psyClaimsMainnet
-          : psyClaimsSepolia,
-        functionName: "createNewClaimableBatch",
-        abi: env.NEXT_PUBLIC_IS_MAINNET ? psyClaimsAbi : psyClaimsAbi,
-        args: [merkleRoot, BigInt(deadline), ipfsHash],
-      });
+    async (merkleRoot: string, deadline: string, ipfsHash: string) => {
+      return writeContract(
+        {
+          address: env.NEXT_PUBLIC_IS_MAINNET
+            ? psyClaimsMainnet
+            : psyClaimsSepolia,
+          functionName: "createNewClaimableBatch",
+          abi: env.NEXT_PUBLIC_IS_MAINNET ? psyClaimsAbi : psyClaimsAbi,
+          args: [merkleRoot, BigInt(deadline), ipfsHash]
+        },
+        {
+          onSuccess() {
+            reset();
+          },
+          onError() {
+            reset();
+          }
+        }
+      );
     },
     [writeContract]
   );
