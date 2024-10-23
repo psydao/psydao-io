@@ -271,7 +271,7 @@ const CreateRewardClaim = () => {
       refetchAvailableAllowance();
       return;
     }
-  }, [approveError, approvedSuccess, isConfirmed, error]);
+  }, [approveError, approvedSuccess, isConfirmed, error, approveTxSuccess]);
 
   return (
     <Box height={"100%"}>

@@ -10,7 +10,6 @@ import psyTokenAbi from "@/abis/psyTokenAbi.json";
 
 const useGetAvailableAllowance = () => {
   const { address } = useAccount();
-  //   Temp until I find out whether owner is curr address or claims contract owner
   const owner = address ?? "0x";
   const spender = env.NEXT_PUBLIC_IS_MAINNET
     ? psyClaimsMainnet
