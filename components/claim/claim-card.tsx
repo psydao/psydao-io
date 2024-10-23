@@ -1,4 +1,6 @@
 import { type ClaimStatus } from "@/lib/types";
+import { useClaim } from "@/services/web3/useClaim";
+import { getExpirationStatus } from "@/utils/getExpirationStatus";
 import { Box, Button, Divider, Flex, Text } from "@chakra-ui/react";
 
 export interface ClaimCardProps {
@@ -7,6 +9,8 @@ export interface ClaimCardProps {
   batchNumber: number;
   expiry: string;
   totalClaimable?: string;
+  onClaim?: () => void;
+  proof?: string[];
 }
 
 const ClaimCardText = ({ text }: { text: string }) => (
@@ -24,7 +28,14 @@ const ClaimCardText = ({ text }: { text: string }) => (
 );
 
 const ClaimCard = (props: ClaimCardProps) => {
-  const { amount, claimStatus, batchNumber, expiry } = props;
+  const { amount, claimStatus, batchNumber, expiry, proof } = props;
+
+  const { claim } = useClaim({
+    batchId: batchNumber.toString(),
+    amount: amount,
+    merkleProof: proof 
+  });
+
   const buttonText =
     claimStatus === "claimed"
       ? "Claimed"
@@ -33,6 +44,7 @@ const ClaimCard = (props: ClaimCardProps) => {
         : "Claim";
   return (
     <Flex
+      onClick={claim}
       maxW={"593px"}
       mx="auto"
       w="100%"
@@ -63,16 +75,16 @@ const ClaimCard = (props: ClaimCardProps) => {
             md: "16px"
           }}
         >
-          {amount} PSY
+          {parseFloat(amount).toFixed(2)} PSY
         </Text>
         <Divider borderColor={"#E0E0E0"} my={3} />
-        <ClaimCardText text={`Exp. ${expiry}`} />
+        <ClaimCardText text={`Exp. ${getExpirationStatus(expiry)}`} />
         <Box marginTop={4}>
           <Button
             onClick={() => true}
             isDisabled={claimStatus === "claimed"}
             background={
-              claimStatus === 'claimable'
+              claimStatus === "claimable"
                 ? "linear-gradient(90deg, #B14CE7 0%, #E09CA4 100%)"
                 : "gray.500"
             }

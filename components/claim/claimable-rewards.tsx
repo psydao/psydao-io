@@ -8,44 +8,57 @@ import { useGetBatchClaims } from "@/hooks/useGetBatchClaims";
 import { Address } from "viem";
 import { useAccount } from "wagmi";
 import { useEffect, useMemo, useState } from "react";
+import { useClaim } from "@/services/web3/useClaim";
 
 interface ClaimableRewardsProps {
   isAdmin: boolean;
 }
 
+type MappedClaimData = {
+  id: string;
+  claims: [];
+  batchId: string;
+  ipfsHash: string;
+  merkleRoot: string;
+  amount: string;
+  claimed: boolean;
+  deadline: string;
+  merkleProof: string[];
+  buttonDisabled: boolean;
+};
+
 const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
   const { nextStep } = useWizard();
   const { claims } = useGetBatchClaims();
-  const [batchId, setBatchId] = useState("1");
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [mappedData, setMappedData] = useState<MappedClaimData[]>([]);
+  const { address } = useAccount();
 
-  const fetchBatchData = async (): Promise<{
+
+  const fetchMappedData = async (): Promise<{
     data?: any;
     error?: any;
   }> => {
+    const cleanedArray = claims.map(({ __typename, ...rest }) => rest);
     try {
-      const response = await fetch("/api/merkle-proof", {
+      const response = await fetch("/api/mapped-data", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          address: '0xfeEb9546E9501f03aEc345fb4fbC8E255048C67d',
-          ipfsHash: 'QmTAPt6cT5aW4z1jLJA2bANSx3K6ra4u6VrGruqGpApm6E',
-          batchId: '1'
+          claims: cleanedArray,
+          address: address
         })
       });
-  
+
       if (!response.ok) {
         const result = await response.json();
         console.error("Error:", result.error);
         return { error: result.error };
       }
-  
+
       const result = await response.json();
-      console.log(result);
+      console.log({ result });
       return { data: result };
     } catch (error) {
       console.error("Error calling API:", error);
@@ -54,20 +67,18 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
   };
 
   useEffect(() => {
-    if (batchId) {
-      fetchBatchData()
+    if (claims && address) {
+      fetchMappedData()
         .then((result) => {
-          setData(result.data);
-          setLoading(false);
+          setMappedData(result.data);
         })
         .catch((error) => {
-          setError(error);
-          setLoading(false);
+          console.log(error);
         });
     }
-  }, [batchId]);
+  }, [claims, address]);
 
-  console.log({ data });
+  console.log({ mappedData });
 
   return (
     <Box>
@@ -126,17 +137,20 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
         maxW="100%"
         padding={{ base: "4", md: "8" }}
       >
-        {claims.map((item, index) => {
-          return (
-            <ClaimCard
-              key={index}
-              amount={item.amount}
-              claimStatus={"claimable"}
-              batchNumber={parseInt(item.id) + 1}
-              expiry={item.deadline}
-            />
-          );
-        })}
+        {mappedData.length > 0 &&
+          mappedData.map((item, index) => {
+            return (
+              <ClaimCard
+                key={index}
+                amount={item.amount}
+                claimStatus={item.claimed ? "claimed" : item.buttonDisabled ? "expired" : "claimable"}
+                batchNumber={parseInt(item.id) + 1}
+                expiry={item.deadline}
+                onClaim={() => {}}
+                proof={item.merkleProof}
+              />
+            );
+          })}
       </Grid>
     </Box>
   );

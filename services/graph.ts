@@ -117,12 +117,13 @@ export const getUserCopyBalance = gql`
 
 export const getBatchClaims = gql`
   query GetBatchClaims {
-    batchClaims(first: 5) {
+    batchClaims(first: 10) {
       id
       claims {
         account
         amount
       }
+      batchId
       ipfsHash
       merkleRoot
       amount

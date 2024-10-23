@@ -9,22 +9,21 @@ export default async function handler(
     return res.status(405).json({ message: "Only POST requests allowed" });
   }
 
-  const { address, ipfsHash, batchId } = req.body;
+  const { claims, address } = req.body;
 
-  if (!batchId || !address || !ipfsHash) {
+  if (!claims || !address) {
     return res.status(400).json({ error: "Missing parameters" });
   }
 
   try {
-    const response = await fetch(`${env.PSYDAO_API_URL}/merkle-proof`, {
+    const response = await fetch(`${env.PSYDAO_API_URL}/mapped-data`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        address,
-        ipfsHash,
-        batchId
+        claimBatches: claims,
+        address
       })
     });
 
