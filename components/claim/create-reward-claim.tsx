@@ -45,8 +45,6 @@ const CreateRewardClaim = () => {
   const [loading, setLoading] = useState(false);
   const [claimDeadlineAsString, setClaimDeadlineAsString] = useState("");
   const { showCustomErrorToast, showSuccessToast } = useCustomToasts();
-  // ester: if the user has not selected fromDate, toDate, or claimDeadline we should display an error message
-  // amount is taken from contract thus not editable
   const [claimInput, setClaimInput] = useState<Claim>({
     fromDate: null,
     toDate: null,
@@ -54,6 +52,7 @@ const CreateRewardClaim = () => {
     amount: ""
   });
   const [minDate, setMinDate] = useState<Date | null>(null);
+  const ONE_WEEK_MILLISECONDS = 604800000;
 
   const {
     minimumClaimDeadline,
@@ -152,6 +151,8 @@ const CreateRewardClaim = () => {
     }
   };
 
+  const currentDateTimeStamp = new Date().getTime();
+
   const handleDistributionProcess = useCallback(async () => {
     setLoading(true);
 
@@ -170,27 +171,21 @@ const CreateRewardClaim = () => {
       showCustomErrorToast("End timestamp missing.", width);
       setLoading(false);
       return;
+    } else if (!claimInput.claimDeadline) {
+      showCustomErrorToast("Please indicate a valid claim deadline.", width);
+      setLoading(false);
+      return;
     } else if (endTimeStamp < startTimeStamp) {
       showCustomErrorToast("End date before start date", width);
       setLoading(false);
       return;
     } else if (
-      startTimeStamp < currentDateTimeStamp ||
-      endTimeStamp < currentDateTimeStamp
-    ) {
-      showCustomErrorToast(
-        "Cannot use a past date for the claim time period.",
-        width
-      );
-      setLoading(false);
-      return;
-    } else if (
-      minDate &&
       claimInput.claimDeadline &&
-      minDate.getTime() > claimInput.claimDeadline.getTime()
+      claimInput.claimDeadline.getTime() <
+        currentDateTimeStamp + ONE_WEEK_MILLISECONDS
     ) {
       showCustomErrorToast(
-        "The selected deadline is too close to the beginning of the claim period.",
+        "The selected deadline is too close to the current date.",
         width
       );
       setLoading(false);
