@@ -38,7 +38,7 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
     data?: any;
     error?: any;
   }> => {
-    const cleanedArray = claims.map(({ __typename, ...rest }) => rest);
+    const cleanedClaimsArray = claims.map(({ __typename, ...rest }) => rest);
     try {
       const response = await fetch("/api/mapped-data", {
         method: "POST",
@@ -46,7 +46,7 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          claims: cleanedArray,
+          claims: cleanedClaimsArray,
           address: address
         })
       });
@@ -79,6 +79,10 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
   }, [claims, address]);
 
   console.log({ mappedData });
+
+  if (!mappedData) {
+    return null;
+  }
 
   return (
     <Box>
@@ -144,7 +148,7 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
                 key={index}
                 amount={item.amount}
                 claimStatus={item.claimed ? "claimed" : item.buttonDisabled ? "expired" : "claimable"}
-                batchNumber={parseInt(item.id) + 1}
+                batchNumber={parseInt(item.batchId)}
                 expiry={item.deadline}
                 onClaim={() => {}}
                 proof={item.merkleProof}
