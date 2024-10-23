@@ -40,11 +40,6 @@ export const useApprovePsy = (amount: BigInt) => {
       {
         onSuccess() {
           setApprovedSuccess(true);
-          reset();
-          refetchTxReceipt();
-        },
-        onError() {
-          reset();
         },
         onSettled() {
           refetchTxReceipt();

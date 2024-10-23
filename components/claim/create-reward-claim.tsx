@@ -50,7 +50,6 @@ const CreateRewardClaim = () => {
     amount: ""
   });
   const [minDate, setMinDate] = useState<Date | null>(null);
-  const ONE_WEEK_MILLISECONDS = 604800000;
 
   const {
     minimumClaimDeadline,
@@ -64,14 +63,12 @@ const CreateRewardClaim = () => {
       showCustomErrorToast("Could not fetch minimum claim deadline.", width);
       return;
     }
-    // Added this additional check because it yelled at me otherwise :(
-    // If you think it'll cause problems or isn't needed, please lmk! :)
-    if (claimInput.fromDate && minimumClaimDeadline) {
+    if (minimumClaimDeadline) {
       const minimumClaimDeadlineMs =
         parseInt(minimumClaimDeadline.toString()) * 1000;
 
       const calculatedMinDate = new Date(
-        claimInput.fromDate.getTime() + minimumClaimDeadlineMs
+        currentDateTimeStamp + minimumClaimDeadlineMs
       );
       setMinDate(calculatedMinDate);
     }
@@ -88,7 +85,6 @@ const CreateRewardClaim = () => {
   const { data: psyPerBatch, isError, isLoading, isFetched } = usePsyPerBatch();
 
   useMemo(() => {
-    // Added this additional check because it threw me out without it :(
     if (isFetched && psyPerBatch) {
       setClaimInput({
         ...claimInput,
@@ -179,8 +175,8 @@ const CreateRewardClaim = () => {
       return;
     } else if (
       claimInput.claimDeadline &&
-      claimInput.claimDeadline.getTime() <
-        currentDateTimeStamp + ONE_WEEK_MILLISECONDS
+      minDate &&
+      claimInput.claimDeadline.getTime() < minDate.getTime()
     ) {
       showCustomErrorToast(
         "The selected deadline is too close to the current date.",

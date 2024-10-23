@@ -15,24 +15,14 @@ export const useCreateNewClaimableBatch = () => {
 
   const createNewClaimableBatch = useCallback(
     async (merkleRoot: string, deadline: string, ipfsHash: string) => {
-      return writeContract(
-        {
-          address: env.NEXT_PUBLIC_IS_MAINNET
-            ? psyClaimsMainnet
-            : psyClaimsSepolia,
-          functionName: "createNewClaimableBatch",
-          abi: env.NEXT_PUBLIC_IS_MAINNET ? psyClaimsAbi : psyClaimsAbi,
-          args: [merkleRoot, BigInt(deadline), ipfsHash]
-        },
-        {
-          onSuccess() {
-            reset();
-          },
-          onError() {
-            reset();
-          }
-        }
-      );
+      return writeContract({
+        address: env.NEXT_PUBLIC_IS_MAINNET
+          ? psyClaimsMainnet
+          : psyClaimsSepolia,
+        functionName: "createNewClaimableBatch",
+        abi: env.NEXT_PUBLIC_IS_MAINNET ? psyClaimsAbi : psyClaimsAbi,
+        args: [merkleRoot, BigInt(deadline), ipfsHash]
+      });
     },
     [writeContract]
   );
