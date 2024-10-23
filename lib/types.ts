@@ -83,7 +83,7 @@ export type ClaimDetail = {
   amount: string;
 };
 
-export type Claim = {
+export type BatchClaim = {
   id: string;
   claims: ClaimDetail[];
   ipfsHash: string;

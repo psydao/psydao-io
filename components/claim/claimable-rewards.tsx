@@ -1,14 +1,9 @@
 import { Box, Button, Flex, Grid, Text } from "@chakra-ui/react";
 import ClaimCard from "./claim-card";
-import { dummyData } from "./dummyData";
-import { type ClaimStatus } from "@/lib/types";
 import { useWizard } from "react-use-wizard";
-import { fetchMerkleProof } from "@/utils/getMerkleProof";
 import { useGetBatchClaims } from "@/hooks/useGetBatchClaims";
-import { Address } from "viem";
 import { useAccount } from "wagmi";
 import { useEffect, useMemo, useState } from "react";
-import { useClaim } from "@/services/web3/useClaim";
 
 interface ClaimableRewardsProps {
   isAdmin: boolean;
@@ -25,6 +20,7 @@ type MappedClaimData = {
   deadline: string;
   merkleProof: string[];
   buttonDisabled: boolean;
+  reason: string;
 };
 
 const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
@@ -33,6 +29,7 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
   const [mappedData, setMappedData] = useState<MappedClaimData[]>([]);
   const { address } = useAccount();
 
+  console.log({ claims });
 
   const fetchMappedData = async (): Promise<{
     data?: any;
@@ -152,6 +149,8 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
                 expiry={item.deadline}
                 onClaim={() => {}}
                 proof={item.merkleProof}
+                text={item.reason}
+                disabled={item.buttonDisabled}
               />
             );
           })}

@@ -59,7 +59,7 @@ const CreateRewardClaim = () => {
       const minimumClaimDeadlineMs =
         parseInt(minimumClaimDeadline.toString()) * 1000;
 
-        const calculatedMinDate = new Date(
+      const calculatedMinDate = new Date(
         claimInput.fromDate.getTime() + minimumClaimDeadlineMs
       );
 
@@ -104,7 +104,8 @@ const CreateRewardClaim = () => {
   const fetchDistributionData = async (
     startTimeStamp: number,
     endTimeStamp: number,
-    totalAmountOfTokens: string
+    totalAmountOfTokens: string,
+    batchId: string
   ): Promise<{
     data?: { merkleRoot: string; ipfsHash: string };
     error?: any;
@@ -118,7 +119,8 @@ const CreateRewardClaim = () => {
         body: JSON.stringify({
           startTimeStamp: startTimeStamp,
           endTimeStamp: endTimeStamp,
-          totalAmountOfTokens: totalAmountOfTokens.toString()
+          totalAmountOfTokens: totalAmountOfTokens.toString(),
+          batchId: batchId
         })
       });
 
@@ -158,7 +160,8 @@ const CreateRewardClaim = () => {
       // endTimeStamp,
       1723932000,
       1726005600,
-      totalAmountOfTokens
+      totalAmountOfTokens,
+      "16"
     );
 
     if (error) {
@@ -303,7 +306,7 @@ const CreateRewardClaim = () => {
             <Text>Claim deadline</Text>
             <CustomDatePicker
               label="Date"
-              minDate={minDate || undefined} 
+              minDate={minDate || undefined}
               selectedDate={claimInput.claimDeadline}
               setSelectedDate={(deadline) =>
                 setClaimInput({

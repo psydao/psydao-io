@@ -1,4 +1,4 @@
-import { Claim } from "@/lib/types";
+import { BatchClaim } from "@/lib/types";
 import { getBatchClaims } from "@/services/graph";
 import {
   ApolloClient,
@@ -8,7 +8,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 
 export const useGetBatchClaims = () => {
-  const [claims, setClaims] = useState<Claim[]>([]);
+  const [claims, setClaims] = useState<BatchClaim[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
   const client = useApolloClient() as ApolloClient<NormalizedCacheObject>;
@@ -17,6 +17,14 @@ export const useGetBatchClaims = () => {
     setLoading(true);
     setError(null);
 
+    //   id: string;
+    // claims: ClaimDetail[];
+    // ipfsHash: string;
+    // merkleRoot: string;
+    // amount: string;
+    // claimed: boolean;
+    // deadline: string;
+
     try {
       const { data } = await client.query({
         query: getBatchClaims,
@@ -24,6 +32,8 @@ export const useGetBatchClaims = () => {
       });
 
       if (data && data.batchClaims) {
+       
+        
         setClaims(data.batchClaims);
       } else {
         setClaims([]);

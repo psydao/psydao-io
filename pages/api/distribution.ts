@@ -9,9 +9,9 @@ export default async function handler(
     return res.status(405).json({ message: "Only POST requests allowed" });
   }
 
-  const { startTimeStamp, endTimeStamp, totalAmountOfTokens } = req.body;
+  const { startTimeStamp, endTimeStamp, totalAmountOfTokens, batchId } = req.body;
 
-  if (!startTimeStamp || !endTimeStamp || !totalAmountOfTokens) {
+  if (!startTimeStamp || !endTimeStamp || !totalAmountOfTokens || !batchId) {
     return res.status(400).json({ error: "Missing parameters" });
   }
 
@@ -24,7 +24,8 @@ export default async function handler(
       body: JSON.stringify({
         startTimeStamp,
         endTimeStamp,
-        totalAmountOfTokens
+        totalAmountOfTokens,
+        batchId
       })
     });
 

@@ -11,6 +11,8 @@ export interface ClaimCardProps {
   totalClaimable?: string;
   onClaim?: () => void;
   proof?: string[];
+  text: string;
+  disabled?: boolean;
 }
 
 const ClaimCardText = ({ text }: { text: string }) => (
@@ -28,7 +30,7 @@ const ClaimCardText = ({ text }: { text: string }) => (
 );
 
 const ClaimCard = (props: ClaimCardProps) => {
-  const { amount, claimStatus, batchNumber, expiry, proof } = props;
+  const { amount, claimStatus, batchNumber, expiry, proof, text, disabled } = props;
 
   const { claim } = useClaim({
     batchId: batchNumber.toString(),
@@ -36,12 +38,6 @@ const ClaimCard = (props: ClaimCardProps) => {
     merkleProof: proof 
   });
 
-  const buttonText =
-    claimStatus === "claimed"
-      ? "Claimed"
-      : claimStatus === "expired"
-        ? "Expired"
-        : "Claim";
   return (
     <Flex
       onClick={claim}
@@ -78,11 +74,11 @@ const ClaimCard = (props: ClaimCardProps) => {
           {parseFloat(amount).toFixed(2)} PSY
         </Text>
         <Divider borderColor={"#E0E0E0"} my={3} />
-        <ClaimCardText text={`Exp. ${getExpirationStatus(expiry)}`} />
+        <ClaimCardText text={`${getExpirationStatus(expiry)}`} />
         <Box marginTop={4}>
           <Button
             onClick={() => true}
-            isDisabled={claimStatus === "claimed"}
+            isDisabled={disabled}
             background={
               claimStatus === "claimable"
                 ? "linear-gradient(90deg, #B14CE7 0%, #E09CA4 100%)"
@@ -101,7 +97,7 @@ const ClaimCard = (props: ClaimCardProps) => {
               opacity: claimStatus === "claimed" ? "" : "0.8"
             }}
           >
-            {buttonText}
+            {disabled ? text : "Claim"}
           </Button>
         </Box>
       </Box>
