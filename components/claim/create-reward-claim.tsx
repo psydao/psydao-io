@@ -158,8 +158,8 @@ const CreateRewardClaim = () => {
       // the problem lies here with dynamic values: merkleroot is not returned
       // startTimeStamp,
       // endTimeStamp,
-      1723932000,
-      1726005600,
+      start,
+      end,
       totalAmountOfTokens,
       "16"
     );
