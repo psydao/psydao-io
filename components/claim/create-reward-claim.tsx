@@ -156,7 +156,6 @@ const CreateRewardClaim = () => {
       }
 
       const result = await response.json();
-      console.log("Merkle Tree:", result);
       return { data: result };
     } catch (error) {
       console.error("Error calling API:", error);
