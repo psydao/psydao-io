@@ -13,7 +13,8 @@ import { env } from "process";
 export const useApprovePsy = (amount: BigInt) => {
   const [approvedSuccess, setApprovedSuccess] = useState(false);
 
-  const { writeContract, data, isPending, status, error } = useWriteContract();
+  const { writeContract, data, isPending, status, error, reset } =
+    useWriteContract();
 
   const {
     isSuccess,
@@ -39,7 +40,6 @@ export const useApprovePsy = (amount: BigInt) => {
       {
         onSuccess() {
           setApprovedSuccess(true);
-          refetchTxReceipt();
         },
         onSettled() {
           refetchTxReceipt();
