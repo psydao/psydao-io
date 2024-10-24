@@ -10,8 +10,9 @@ import { getDeadlineTimeStamp } from "@/utils/getDeadlineTimeStamp";
 import { useApprovePsy } from "@/services/web3/useApprovePsy";
 import { formatUnits, parseUnits } from "viem";
 import { usePsyPerBatch } from "@/services/web3/usePsyPerBatch";
-
-// ester: this file is quite hefty. If you want to refactor if, go ahead !
+import { useCustomToasts } from "@/hooks/useCustomToasts";
+import { useResize } from "@/hooks/useResize";
+import useGetAvailableAllowance from "@/hooks/useGetAvailableAllowance";
 
 const Section = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -39,10 +40,18 @@ type Claim = {
 
 const CreateRewardClaim = () => {
   const { previousStep } = useWizard();
+  const { width } = useResize();
   const [loading, setLoading] = useState(false);
   const [claimDeadlineAsString, setClaimDeadlineAsString] = useState("");
-  // ester: if the user has not selected fromDate, toDate, or claimDeadline we should display an error message
-  // amount is taken from contract thus not editable
+  const { showCustomErrorToast, showSuccessToast } = useCustomToasts();
+  const [claimsAllowance, setClaimsAllowance] = useState("");
+  const {
+    allowance,
+    error: allowanceError,
+    loading: allowanceLoading,
+    refetch: refetchAvailableAllowance
+  } = useGetAvailableAllowance();
+
   const [claimInput, setClaimInput] = useState<Claim>({
     fromDate: null,
     toDate: null,
@@ -51,11 +60,19 @@ const CreateRewardClaim = () => {
   });
   const [minDate, setMinDate] = useState<Date | null>(null);
 
-  const { minimumClaimDeadline, isSuccess, refetch } =
-    useGetMinimumClaimDeadline();
+  const {
+    minimumClaimDeadline,
+    isSuccess,
+    refetch,
+    error: minimumClaimError
+  } = useGetMinimumClaimDeadline();
 
   useEffect(() => {
-    if (claimInput.fromDate) {
+    if (minimumClaimError) {
+      showCustomErrorToast("Could not fetch minimum claim deadline.", width);
+      return;
+    }
+    if (minimumClaimDeadline && claimInput.fromDate) {
       const minimumClaimDeadlineMs =
         parseInt(minimumClaimDeadline.toString()) * 1000;
 
@@ -65,25 +82,33 @@ const CreateRewardClaim = () => {
 
       setMinDate(calculatedMinDate);
     }
-  }, [claimInput.fromDate, minimumClaimDeadline]);
+  }, [claimInput.fromDate, minimumClaimDeadline, minimumClaimError, isSuccess]);
 
   const {
     approve,
     data,
     error: approveError,
-    txError
+    txError,
+    approvedSuccess,
+    isSuccess: approveTxSuccess,
+    isFetching: approvePsyFetching,
+    isPending: approvePsyPending
   } = useApprovePsy(parseUnits(claimInput.amount.toString(), 18));
 
   const { data: psyPerBatch, isError, isLoading, isFetched } = usePsyPerBatch();
 
   useMemo(() => {
-    if (isFetched) {
+    if (isFetched && psyPerBatch) {
       setClaimInput({
         ...claimInput,
         amount: formatUnits(psyPerBatch as bigint, 18)
       });
     }
-  }, [isFetched]);
+
+    if (!allowanceError && !allowanceLoading) {
+      setClaimsAllowance(formatUnits(allowance, 18).toString());
+    }
+  }, [isFetched, psyPerBatch, allowanceError, allowanceLoading]);
 
   useEffect(() => {
     const claimDeadline = getDeadlineTimeStamp(
@@ -139,14 +164,47 @@ const CreateRewardClaim = () => {
     }
   };
 
+  const currentDateTimeStamp = new Date().getTime();
+
   const handleDistributionProcess = useCallback(async () => {
     setLoading(true);
 
     const startTimeStamp = claimInput.fromDate?.getTime();
     const endTimeStamp = claimInput.toDate?.getTime();
     const totalAmountOfTokens = claimInput.amount;
+    const currentDateTimeStamp = new Date().getTime();
 
-    if (!startTimeStamp || !endTimeStamp || !totalAmountOfTokens) {
+    // This is messy. I will turn this into a util function or something.
+
+    if (!startTimeStamp) {
+      showCustomErrorToast("Start timestamp missing.", width);
+      setLoading(false);
+      return;
+    } else if (!endTimeStamp) {
+      showCustomErrorToast("End timestamp missing.", width);
+      setLoading(false);
+      return;
+    } else if (!claimInput.claimDeadline) {
+      showCustomErrorToast("Please indicate a valid claim deadline.", width);
+      setLoading(false);
+      return;
+    } else if (endTimeStamp < startTimeStamp) {
+      showCustomErrorToast("End date before start date", width);
+      setLoading(false);
+      return;
+    } else if (
+      claimInput.claimDeadline &&
+      minDate &&
+      claimInput.claimDeadline.getTime() < minDate.getTime()
+    ) {
+      showCustomErrorToast(
+        "The selected deadline is too close to the current date.",
+        width
+      );
+      setLoading(false);
+      return;
+    } else if (!totalAmountOfTokens) {
+      showCustomErrorToast("Total amount of tokens missing.", width);
       setLoading(false);
       return;
     }
@@ -165,6 +223,7 @@ const CreateRewardClaim = () => {
     );
 
     if (error) {
+      showCustomErrorToast("Error creating distribution data", width);
       setLoading(false);
       return;
     }
@@ -177,11 +236,39 @@ const CreateRewardClaim = () => {
         data?.ipfsHash as string
       );
     } catch (error) {
+      showCustomErrorToast("Error creating new claimable batch", width);
       console.error("Error creating new claimable batch:", error);
     } finally {
       setLoading(false);
     }
   }, [createNewClaimableBatch, claimInput, claimDeadlineAsString]);
+
+  useEffect(() => {
+    if (approveError) {
+      showCustomErrorToast("Error approving claimable funds", width);
+      setLoading(false);
+      return;
+    }
+
+    if (isConfirmed) {
+      showSuccessToast("Successfully created new claimable batch.", width);
+      setLoading(false);
+      return;
+    }
+
+    if (error) {
+      showCustomErrorToast(error.message, width);
+      setLoading(false);
+      return;
+    }
+
+    if (approvedSuccess && approveTxSuccess) {
+      showSuccessToast("Successfully approved claimable funds.", width);
+      setLoading(false);
+      refetchAvailableAllowance();
+      return;
+    }
+  }, [approveError, approvedSuccess, isConfirmed, error, approveTxSuccess]);
 
   return (
     <Box height={"100%"}>
@@ -376,27 +463,24 @@ const CreateRewardClaim = () => {
           boxShadow={"0px -2px 25.6px 0px rgba(0, 0, 0, 0.25)"}
           p={6}
           background="#fffafa"
-          // ester: you can remove these styles below when fixing approval flow logic
-          display={"flex"}
-          justifyContent={"space-between"}
         >
-          {/* ester: show approve button if they've not approved the amount yet */}
-          {/* this amount can be seen from calling allowance view function */}
-          {/* and compare that to the amount being sent */}
-          <CreateClaimButton
-            isLoading={loading}
-            loadingText={"Creating..."}
-            handleClick={approve}
-            fullWidth={true}
-            buttonText={"Approve"}
-          />
-          <CreateClaimButton
-            isLoading={loading}
-            loadingText={"Creating..."}
-            handleClick={handleDistributionProcess}
-            fullWidth={true}
-            buttonText={"Create"}
-          />
+          {parseFloat(claimsAllowance) < parseFloat(claimInput.amount) ? (
+            <CreateClaimButton
+              isLoading={approvePsyFetching || approvePsyPending}
+              loadingText={"Approving..."}
+              handleClick={approve}
+              fullWidth={true}
+              buttonText={allowanceLoading ? "Please wait..." : "Approve"}
+            />
+          ) : (
+            <CreateClaimButton
+              isLoading={loading}
+              loadingText={"Creating..."}
+              handleClick={handleDistributionProcess}
+              fullWidth={true}
+              buttonText={allowanceLoading ? "Please wait..." : "Create"}
+            />
+          )}
         </Box>
       </Box>
     </Box>
