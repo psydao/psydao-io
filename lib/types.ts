@@ -85,6 +85,7 @@ export type ClaimDetail = {
 
 export type BatchClaim = {
   id: string;
+  __typename: string;
   claims: ClaimDetail[];
   ipfsHash: string;
   merkleRoot: string;
