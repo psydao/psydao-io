@@ -52,6 +52,7 @@ export const useApprovePsy = (amount: BigInt) => {
     approve,
     data,
     isFetching,
+    isPending,
     isSuccess,
     status,
     fetchStatus,
