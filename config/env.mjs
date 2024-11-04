@@ -16,8 +16,7 @@ export const env = createEnv({
     SHOPIFY_VARIANT_ID: z.string().min(1),
     POAP_API_KEY: z.string().min(1),
     POAP_EVENT_ID: z.string().min(1),
-    SNAPSHOT_GRAPHQL_URL: z.string().url(),
-    TEST_ENV: z.boolean()
+    SNAPSHOT_GRAPHQL_URL: z.string().url()
   },
   client: {
     NEXT_PUBLIC_IS_MAINNET: z.coerce.boolean(),
@@ -53,8 +52,6 @@ export const env = createEnv({
     POAP_EVENT_ID: process.env.POAP_EVENT_ID,
 
     SNAPSHOT_GRAPHQL_URL: process.env.SNAPSHOT_GRAPHQL_URL,
-
-    TEST_ENV: process.env.TEST_ENV === "true",
 
     NEXT_PUBLIC_IS_MAINNET: Number(process.env.NEXT_PUBLIC_CHAIN_ID) === 1,
     NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,

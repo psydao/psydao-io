@@ -39,7 +39,7 @@ export const uploadArrayToIpfs = async (array: Balance[]) => {
 
 /**
  * Get the data from IPFS
- * 
+ *
  * @param {string} ipfsHash - The IPFS hash to get the data from
  * @returns {Promise<any>} - The data from IPFS
  */
@@ -58,11 +58,12 @@ export const getIpfsHash = async (ipfsHash: string) => {
  * @param {Balance[]} balanceList - The list of balances to upload
  * @returns {Promise<string>} - The IPFS hash of the uploaded data
  */
-export async function pinClaimsListToIpfs(balanceList: Balance[]): Promise<string> {
+export async function pinClaimsListToIpfs(
+  balanceList: Balance[]
+): Promise<string> {
   try {
     const pinata = new PinataSDK({
       pinataJwt: process.env.PINATA_ADMIN_JWT!,
-      // @Bevan for me it only works with the prefix - please check :( otherwise all looks good!
       pinataGateway: "red-literary-tiglon-645.mypinata.cloud"
     });
 

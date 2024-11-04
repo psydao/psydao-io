@@ -6,8 +6,6 @@ import {
 import { keccak256, encodePacked, parseUnits, Address } from "viem";
 import { MerkleTree } from "merkletreejs";
 import { Balance, pinClaimsListToIpfs, uploadArrayToIpfs } from "./ipfs";
-import { userTestMapping } from "./config/test-mapping";
-import { TEST_ENV } from "@/constants/claims";
 
 import { psycHoldersNoProposals } from "./getPsycHoldersNoProposals";
 export const main = async (
@@ -19,7 +17,8 @@ export const main = async (
   const proposals = await getSnapshotProposals(startTimeStamp, endTimeStamp);
 
   let psycHolders: Address[] = [];
-  let psycHolderVotesPercentage: { address: Address; percentage: number }[] = [];
+  let psycHolderVotesPercentage: { address: Address; percentage: number }[] =
+    [];
   let psycHolderTokenDistribution: {
     address: Address;
     tokens: number;
@@ -41,10 +40,8 @@ export const main = async (
       Number(filteredProposals[filteredProposals.length - 1]?.snapshot)
     );
 
-    psycHolders = sgData.map((psycHolder) =>
-      TEST_ENV
-        ? (userTestMapping[psycHolder.owner] ?? psycHolder.owner.toLowerCase() as Address)
-        : psycHolder.owner.toLowerCase() as Address
+    psycHolders = sgData.map(
+      (psycHolder) => psycHolder.owner.toLowerCase() as Address
     );
 
     const tokenPerHolder = totalAmountOfTokens / psycHolders.length;
@@ -56,10 +53,7 @@ export const main = async (
     for (const proposal of filteredProposals) {
       const votes = (await getVotesOnProposalById(proposal.id)) ?? [];
       votes.forEach((vote) => {
-        const voterAddress = TEST_ENV
-          ? (userTestMapping[vote.voter.toLowerCase() as Address] ??
-            vote.voter.toLowerCase() as Address)
-          : vote.voter.toLowerCase() as Address;
+        const voterAddress = vote.voter.toLowerCase() as Address;
         if (psycHolders.includes(voterAddress.toLowerCase() as Address)) {
           if (votesCountMap[voterAddress] !== undefined) {
             votesCountMap[voterAddress]++;
@@ -91,7 +85,11 @@ export const main = async (
   }
 
   if (proposals?.length === 0) {
-    const emptyProposalsCalculation = await psycHoldersNoProposals(endTimeStamp, totalAmountOfTokens, batchId);
+    const emptyProposalsCalculation = await psycHoldersNoProposals(
+      endTimeStamp,
+      totalAmountOfTokens,
+      batchId
+    );
     return emptyProposalsCalculation;
   }
 
@@ -115,11 +113,7 @@ export const main = async (
     keccak256(
       encodePacked(
         ["uint256", "uint256", "address"],
-        [
-          BigInt(batchId),
-          parseUnits(holder.tokens, 18),
-          holder.address
-        ]
+        [BigInt(batchId), parseUnits(holder.tokens, 18), holder.address]
       )
     )
   );
