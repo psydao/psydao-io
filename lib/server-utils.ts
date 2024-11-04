@@ -5,7 +5,7 @@ interface PinataResponse {
   Timestamp: string;
 }
 
-const pinAddresses = async (ipfsHash: string) => {
+export const pinAddresses = async (ipfsHash: string) => {
   const pinata = new PinataSDK({
     pinataJwt: process.env.PINATA_JWT!,
     pinataGateway: process.env.NEXT_PUBLIC_PINATA_BASE_URL

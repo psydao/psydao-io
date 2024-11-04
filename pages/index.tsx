@@ -26,6 +26,9 @@ import WalletConnectHome from "@/components/connectWalletHome";
 import AdminDashboardWidget from "@/components/admin-dashboard";
 import GeneralDashboard from "@/components/general-dashboard";
 import ShopifyWidget from "@/components/shopify-widget";
+import { Claim } from "@/components/windows/claim";
+import { ApolloProvider } from "@apollo/client";
+import { shopifyClient } from "@/config/apolloClients";
 // import SaleWidgetProvider from "@/providers/SaleWidgetContext";
 
 // TODO Extract Pill component since it seems it will become a basic primitive
@@ -189,9 +192,9 @@ const Homepage: NextPage = () => {
                     overflow="hidden"
                   >
                     <Blog />
-                    <SwapWidget />
                     <Radio />
                     <Manifesto />
+                    <SwapWidget />
                     <NftSaleWidget updateTrigger={updateNftSaleTrigger} />
                     <AdminDashboardWidget
                       triggerNftSaleUpdate={triggerNftSaleUpdate}
@@ -199,7 +202,10 @@ const Homepage: NextPage = () => {
                     <GeneralDashboard
                       triggerNftSaleUpdate={triggerNftSaleUpdate}
                     />
-                    <ShopifyWidget />
+                    <ApolloProvider client={shopifyClient}>
+                      <ShopifyWidget />
+                    </ApolloProvider>
+                    <Claim />
                   </Box>
                 </WindowManager>
                 <Link

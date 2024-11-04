@@ -30,3 +30,21 @@ Newest subgraph link: https://api.studio.thegraph.com/query/42782/psy-sepolia-te
 
 - The format for NEXT_PUBLIC_WHITELIST_ADDRESSES is as follows: "0x00, 0x01, ..."
 - The logic to split this into an array of whitelisted addresses resides in env.mjs in @/config
+
+### Claims:
+
+- Claims cards:
+
+  - If the claim is expired, the amount is set to 0.00 and the button is disabled.
+  - If a user is ineligible, the amount is set to 0.00 and the button is disabled.
+  - If the user has already claimed, the amount is set to the remaining amount in the pool and the button is disabled.
+  - If a claim is claimable by the user the amount is set to what the user can claim and the button is enabled.
+  - On a successful claim, there is generally a slight delay before the button state is set to "claimed". This is expected behavior.
+
+- Claim creation:
+  - Test claim creation on time periods with- and without proposals
+    - Make sure we still get psycHolders for periods without proposals (we get psycHolders by timestamp during those periods)
+    - Ensure that returns are the same for time periods with and without proposals
+  - The claim's IPFS hash must be pinned to Piñata during claim creation.
+  - Claim deadline must be at least one week after the current date to give users enough time to claim.
+  - An allowance must be set before you can create a claim. Check the state of the button at the bottom of the window. The admin can either approve the amount or create a claim.

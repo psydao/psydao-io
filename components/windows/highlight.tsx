@@ -7,7 +7,6 @@ export const Highlight = () => {
   return (
     <Window
       id="highlight"
-      defaultIsOpen={true}
       height="80%"
       maxHeight="540px"
       minHeight="350px"

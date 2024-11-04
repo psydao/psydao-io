@@ -8,7 +8,7 @@ import { Global } from "@emotion/react";
 import { fontFaces } from "@/lib/constants";
 import { Web3Provider } from "@/providers/Web3Provider";
 import { ApolloProvider } from "@apollo/client";
-import graphClient from "@/config/graphql";
+import { graphClient } from "@/config/apolloClients";
 
 const { ToastContainer } = createStandaloneToast();
 

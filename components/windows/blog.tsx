@@ -43,7 +43,6 @@ export const Blog = () => {
         lg: fullScreenWindow ? "0" : "40%"
       }}
       fullScreenWindow={fullScreenWindow}
-      defaultIsOpen
     >
       <Window.TitleBar />
       <Window.Content layerStyle="window" position="relative" zIndex="0" p={0}>

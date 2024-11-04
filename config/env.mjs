@@ -8,12 +8,16 @@ export const env = createEnv({
     PINATA_SECRET_API_KEY: z.string().min(1),
     PINATA_JWT: z.string().min(1),
     SHOPIFY_API_ACCESS_TOKEN: z.string().min(1),
+    STOREFRONT_PUBLIC_ACCESS_TOKEN: z.string().min(1),
     SHOPIFY_API_KEY: z.string().min(1),
     SHOPIFY_API_SECRET: z.string().min(1),
     SHOPIFY_SHOP_NAME: z.string().min(1),
     SHOPIFY_PRODUCT_ID: z.string().min(1),
+    SHOPIFY_VARIANT_ID: z.string().min(1),
     POAP_API_KEY: z.string().min(1),
-    POAP_EVENT_ID: z.string().min(1)
+    POAP_EVENT_ID: z.string().min(1),
+    SNAPSHOT_GRAPHQL_URL: z.string().url(),
+    TEST_ENV: z.boolean()
   },
   client: {
     NEXT_PUBLIC_IS_MAINNET: z.coerce.boolean(),
@@ -22,6 +26,7 @@ export const env = createEnv({
     NEXT_PUBLIC_MIXPANEL_ID: z.string(),
     NEXT_PUBLIC_PROJECT_ID: z.string(),
     NEXT_PUBLIC_SUBGRAPH_URL: z.string().url(),
+    NEXT_PUBLIC_MAINNET_SUBGRAPH_URL: z.string().url(),
     NEXT_PUBLIC_PINATA_BASE_URL: z.string().url(),
     NEXT_PUBLIC_ETHERSCAN_BASE_URL: z.string().url(),
     NEXT_PUBLIC_MAINNET_ETHERSCAN_BASE_URL: z.string().url(),
@@ -38,18 +43,27 @@ export const env = createEnv({
     PINATA_SECRET_API_KEY: process.env.PINATA_SECRET_API_KEY,
     PINATA_JWT: process.env.PINATA_JWT,
     SHOPIFY_API_ACCESS_TOKEN: process.env.SHOPIFY_API_ACCESS_TOKEN,
+    STOREFRONT_PUBLIC_ACCESS_TOKEN: process.env.STOREFRONT_PUBLIC_ACCESS_TOKEN,
     SHOPIFY_API_KEY: process.env.SHOPIFY_API_KEY,
     SHOPIFY_API_SECRET: process.env.SHOPIFY_API_SECRET,
     SHOPIFY_SHOP_NAME: process.env.SHOPIFY_SHOP_NAME,
     SHOPIFY_PRODUCT_ID: process.env.SHOPIFY_PRODUCT_ID,
+    SHOPIFY_VARIANT_ID: process.env.SHOPIFY_VARIANT_ID,
     POAP_API_KEY: process.env.POAP_API_KEY,
     POAP_EVENT_ID: process.env.POAP_EVENT_ID,
+
+    SNAPSHOT_GRAPHQL_URL: process.env.SNAPSHOT_GRAPHQL_URL,
+
+    TEST_ENV: process.env.TEST_ENV === "true",
+
     NEXT_PUBLIC_IS_MAINNET: Number(process.env.NEXT_PUBLIC_CHAIN_ID) === 1,
     NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
     NEXT_PUBLIC_CHAIN_ID: Number(process.env.NEXT_PUBLIC_CHAIN_ID),
     NEXT_PUBLIC_MIXPANEL_ID: process.env.NEXT_PUBLIC_MIXPANEL_ID,
     NEXT_PUBLIC_PROJECT_ID: process.env.NEXT_PUBLIC_PROJECT_ID,
     NEXT_PUBLIC_SUBGRAPH_URL: process.env.NEXT_PUBLIC_SUBGRAPH_URL,
+    NEXT_PUBLIC_MAINNET_SUBGRAPH_URL:
+      process.env.NEXT_PUBLIC_MAINNET_SUBGRAPH_URL,
     NEXT_PUBLIC_PINATA_BASE_URL: process.env.NEXT_PUBLIC_PINATA_BASE_URL,
     NEXT_PUBLIC_ETHERSCAN_BASE_URL:
       Number(process.env.NEXT_PUBLIC_CHAIN_ID) === 1

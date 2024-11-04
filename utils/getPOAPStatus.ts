@@ -1,5 +1,4 @@
 import type { Address } from "viem";
-import type { PoapResponseType } from "@/pages/api/poap";
 
 const getPOAPStatus = async (address: Address | undefined) => {
   try {
@@ -15,7 +14,9 @@ const getPOAPStatus = async (address: Address | undefined) => {
 
     if (poapRes.status === 204) return;
 
-    const jsonPoapResponse = (await poapRes.json()) as PoapResponseType;
+    const jsonPoapResponse = (await poapRes.json()) as {
+      hasValidPoap: boolean;
+    };
 
     return jsonPoapResponse;
   } catch (error) {

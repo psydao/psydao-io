@@ -67,13 +67,13 @@ export const Manifesto = () => {
       }}
       width={"100%"}
       top={{
-        base: fullScreenWindow ? "0" : "55%",
-        sm: fullScreenWindow ? "0" : "58%",
+        base: fullScreenWindow ? "0" : "53%",
+        sm: fullScreenWindow ? "0" : "56%",
         md: fullScreenWindow ? "0" : "50%"
       }}
-      left={"50%"}
+      left={"45%"}
       transform={
-        fullScreenWindow ? "translate(-50%, 0)" : "translate(-50%, -50%)"
+        fullScreenWindow ? "translate(-50%, 0)" : "translate(-45%, -50%)"
       }
       fullScreenWindow={fullScreenWindow}
       defaultIsOpen
