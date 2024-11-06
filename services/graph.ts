@@ -114,3 +114,104 @@ export const getUserCopyBalance = gql`
     }
   }
 `;
+
+export const getBatchClaims = gql`
+  query GetBatchClaims {
+    batchClaims(orderBy: batchId) {
+      id
+      claims {
+        account
+        amount
+      }
+      batchId
+      ipfsHash
+      merkleRoot
+      amount
+      claimed
+      deadline
+    }
+  }
+`;
+
+export const getProposals = gql`
+  query Proposals($startTimeStamp: Int!, $endTimeStamp: Int!) {
+    proposals(
+      first: 1000
+      skip: 0
+      where: {
+        space_in: ["psydao.eth"]
+        state: "closed"
+        created_gte: $startTimeStamp
+        created_lte: $endTimeStamp
+      }
+      orderBy: "created"
+      orderDirection: asc
+    ) {
+      id
+      start
+      end
+      snapshot
+    }
+  }
+`;
+
+export const getVotesOnProposal = gql`
+  query VotesForProposal($proposalId: String!) {
+    votes(where: { proposal: $proposalId }) {
+      id
+      voter
+      created
+    }
+  }
+`;
+
+
+// const mainnetNFTAddress = "0x6c6ab7b3215374de4a65de63eac9bc7a0c7f402d";
+
+/**
+ * Get the owners of the NFTs on the mainnet
+ * The hardcoded address `0x6c6ab7b3215374de4a65de63eac9bc7a0c7f402d` 
+ * is the NFT contract address on mainnet
+ */
+export const getNFTHolders = gql`
+  query NFTHolders($blockNumber: Int!) {
+    tokens(
+      where: {
+        tokenAddress: "0x6c6ab7b3215374de4a65de63eac9bc7a0c7f402d"
+        blockNumber_lte: $blockNumber
+      }
+      orderBy: tokenId
+      orderDirection: asc
+    ) {
+      owner
+    }
+  }
+`;
+
+/**
+ * Get the owners of the NFTs on the mainnet by timestamps
+ * The hardcoded address `0x6c6ab7b3215374de4a65de63eac9bc7a0c7f402d` 
+ * is the NFT contract address on mainnet 
+ */
+export const getNFTHoldersBeforeTimestamp = gql`
+  query NFTHolders($endTimeStamp: Int!) {
+    tokens(
+      where: {
+        tokenAddress: "0x6c6ab7b3215374de4a65de63eac9bc7a0c7f402d"
+        blockTimestamp_lte: $endTimeStamp
+      }
+      orderBy: tokenId
+      orderDirection: asc
+    ) {
+      owner
+    }
+  }
+`;
+
+export const getUserOrders = gql`
+  query getUserOrders($query: String!) {
+    ordersCount(query: $query) {
+      count
+    }
+  }
+`;

@@ -7,7 +7,7 @@ export const chainLinkMainnet = "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419";
 export const chainLinkSepolia = "0x694AA1769357215DE4FAC081bf1f309aDC325306";
 
 // psyNFT
-export const psyNFTSepolia = "0x64e78537782095a38E3785431bE3647856980FfA";
+export const psyNFTSepolia = "0xbe3D1afef909FfF28A98307A2Ff4947aDAcba1d7";
 export const psyNFTMainnet = "0x6c6Ab7b3215374dE4A65De63eAC9BC7A0c7f402d";
 
 //psyNFTCopies
@@ -31,3 +31,11 @@ export const CoreMainnet = "0xDAAAC6a81fE6a230B880b96a2B5ca903d0c1d4F6";
 //PSYC Sale
 export const psycSaleSepolia = "0xc0150e3eEF8230974f85779DEcF5cd4104Be9c4c";
 export const psycSaleMainnet = "0xe94828A923538709c58764159D6CD99C4381d82B";
+
+// psyClaims
+export const psyClaimsSepolia = "0x053D698638639089c275fBa54704c102b1e24644";
+export const psyClaimsMainnet = "0x82cD313da0eBA01D57C60da6738f3D5f55Ab7C50"; // add mainnet address
+
+// psyToken
+export const psyTokenSepolia = "0xa794969Dda56E0546deEaa92D846428C7B94Dc51";
+export const psyTokenMainnet = "0x0973F4c0B86f2EFCA3673864efccBd6090702321"; // add mainnet address

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getMerkleProof } from "@/services/merkleRootProofs";
+import { getMerkleProof } from "@/services/getWhitelistMerkleProof";
 import { useGetAddresses } from "./useGetAddresses";
 
 const useFetchProof = (

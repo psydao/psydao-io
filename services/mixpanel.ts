@@ -1,3 +1,4 @@
+import { env } from "@/config/env.mjs";
 import mixpanel from "mixpanel-browser";
 
 export class MixpanelTracking {
@@ -18,7 +19,7 @@ export class MixpanelTracking {
         "Error: Instance creation of MixpanelTracking is not allowed. Use Mixpanel.getInstance()"
       );
 
-    mixpanel.init(process.env.NEXT_PUBLIC_MIXPANEL_ID ?? "", {
+    mixpanel.init(env.NEXT_PUBLIC_MIXPANEL_ID ?? "", {
       debug: false,
       ignore_dnt: true,
       api_host: "https://api-eu.mixpanel.com"

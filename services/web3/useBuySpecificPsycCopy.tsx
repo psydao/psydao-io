@@ -4,6 +4,7 @@ import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import psycSaleAbi from "@/abis/psycSaleAbiSepolia.json";
 import psycSaleAbiSepolia from "@/abis/psycSaleAbiSepolia.json";
 import { parseUnits } from "viem";
+import { env } from "@/config/env.mjs";
 
 export const useBuySpecificPsycCopy = () => {
   const { data, writeContract, isPending, error } = useWriteContract();
@@ -21,15 +22,9 @@ export const useBuySpecificPsycCopy = () => {
     ) => {
       const nftCopyAmount = parseUnits(buyNftCopyFromBatch, 18);
       return writeContract({
-        address:
-          process.env.NEXT_PUBLIC_CHAIN_ID === "1"
-            ? psycSaleMainnet
-            : psycSaleSepolia,
+        address: env.NEXT_PUBLIC_IS_MAINNET ? psycSaleMainnet : psycSaleSepolia,
         functionName: "buyNftCopyFromBatch",
-        abi:
-          process.env.NEXT_PUBLIC_CHAIN_ID === "1"
-            ? psycSaleAbi
-            : psycSaleAbiSepolia,
+        abi: env.NEXT_PUBLIC_IS_MAINNET ? psycSaleAbi : psycSaleAbiSepolia,
         args: [batchId, erc721TokenId],
         value: nftCopyAmount
       });

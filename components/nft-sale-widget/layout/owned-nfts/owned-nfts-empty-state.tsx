@@ -1,5 +1,5 @@
 import { Box, GridItem, Text, Image, Flex } from "@chakra-ui/react";
-import DiagonalRectangle from "../../commons/diagonal-rectangle";
+import DiagonalRectangle from "../../common/diagonal-rectangle";
 import { type ReactNode } from "react";
 
 interface OwnedNftsEmptyStateProps {
