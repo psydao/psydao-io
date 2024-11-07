@@ -29,7 +29,7 @@ export const Claim = () => {
     <Window
       id="claim"
       maxHeight={{
-        base: fullScreenWindow ? "100%" : "90%",
+        base: fullScreenWindow ? "100%" : "85%",
         sm: fullScreenWindow ? "100%" : "80%",
         md: fullScreenWindow ? "100%" : "650px"
       }}
@@ -40,11 +40,14 @@ export const Claim = () => {
       }}
       width={"100%"}
       top={{
-        base: fullScreenWindow ? "0" : "55%",
+        base: fullScreenWindow ? "0" : "60%",
         sm: fullScreenWindow ? "0" : "58%",
-        md: fullScreenWindow ? "0" : "50%"
+        md: fullScreenWindow ? "0" : "48%"
       }}
-      left={fullScreenWindow ? "0" : "40%"}
+      left={{
+        base: fullScreenWindow ? "0" : "40%",
+        xl: fullScreenWindow ? "0" : "30%"
+      }}
       transform={fullScreenWindow ? "translate(0, 0)" : "translate(-40%, -45%)"}
       fullScreenWindow={fullScreenWindow}
     >

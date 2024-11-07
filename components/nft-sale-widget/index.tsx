@@ -50,11 +50,14 @@ const NftSaleWidgetContent = () => {
       }}
       width={"100%"}
       top={{
-        base: fullScreenWindow ? "0" : "55%",
+        base: fullScreenWindow ? "0" : "65%",
         sm: fullScreenWindow ? "0" : "58%",
         md: fullScreenWindow ? "0" : "50%"
       }}
-      left={fullScreenWindow ? "0" : "50%"}
+      left={{
+        base: fullScreenWindow ? "0" : "50%",
+        lg: fullScreenWindow ? "0" : "30%"
+      }}
       transform={fullScreenWindow ? "translate(0, 0)" : "translate(-50%, -50%)"}
       fullScreenWindow={fullScreenWindow}
     >
