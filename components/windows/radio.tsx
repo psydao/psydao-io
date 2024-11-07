@@ -202,7 +202,7 @@ export const Radio = () => {
     <Window
       id="radio"
       maxHeight={{
-        base: fullScreenWindow ? "100%" : "90%",
+        base: fullScreenWindow ? "100%" : "85%",
         sm: fullScreenWindow ? "100%" : "80%",
         md: fullScreenWindow ? "100%" : "650px"
       }}
@@ -213,7 +213,7 @@ export const Radio = () => {
       }}
       width={"100%"}
       top={{
-        base: fullScreenWindow ? "0" : "55%",
+        base: fullScreenWindow ? "0" : "65%",
         sm: fullScreenWindow ? "0" : "58%",
         md: fullScreenWindow ? "0" : "50%"
       }}
