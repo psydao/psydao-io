@@ -195,9 +195,9 @@ const Homepage: NextPage = () => {
                     overflow="hidden"
                   >
                     <Blog />
-                    <SwapWidget />
                     <Radio />
                     <Manifesto />
+                    <SwapWidget />
                     <NftSaleWidget updateTrigger={updateNftSaleTrigger} />
                     <AdminDashboardWidget
                       triggerNftSaleUpdate={triggerNftSaleUpdate}
