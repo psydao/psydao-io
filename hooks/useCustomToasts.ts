@@ -31,8 +31,7 @@ const ERROR_MESSAGES = {
   "server error": "A server error has occurred. Please try again.",
   OwnableUnauthorizedAccount: "Invalid wallet address.",
   "Token Array Empty": "No tokens provided for sale.",
-  "Unable to decode signature":
-    "Please run 'mintNextBatch' first before creating a sale",
+  "Unable to decode signature": "A contract error has occurred.",
   "Size of bytes": "Invalid merkle root submitted",
   "Invalid Ceiling Price": "Floor price cannot be greater than ceiling price.",
   "TokenSale: Tokens Locked":
