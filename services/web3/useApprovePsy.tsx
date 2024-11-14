@@ -6,6 +6,7 @@ import {
   psyClaimsSepolia,
   psyNFTMainnet,
   psyNFTSepolia,
+  psyTokenMainnet,
   psyTokenSepolia
 } from "@/constants/contracts";
 import { env } from "@/config/env.mjs";
@@ -33,7 +34,7 @@ export const useApprovePsy = (amount: BigInt) => {
     return writeContract(
       {
         abi: psyTokenAbi,
-        address: psyTokenSepolia,
+        address: env.NEXT_PUBLIC_IS_MAINNET ? psyTokenMainnet : psyTokenSepolia,
         functionName: "approve",
         args: [spenderContract, amount]
       },
