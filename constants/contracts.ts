@@ -34,7 +34,7 @@ export const psycSaleMainnet = "0xe94828A923538709c58764159D6CD99C4381d82B";
 
 // psyClaims
 export const psyClaimsSepolia = "0x053D698638639089c275fBa54704c102b1e24644";
-export const psyClaimsMainnet = "0x0973F4c0B86f2EFCA3673864efccBd6090702321";
+export const psyClaimsMainnet = "0xAf5611967860f1315ff48d26B56997a04EAD837F";
 
 // psyToken
 export const psyTokenSepolia = "0xa794969Dda56E0546deEaa92D846428C7B94Dc51";
