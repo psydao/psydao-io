@@ -75,10 +75,11 @@ export const getTokensMetadataForASale = gql`
     tokens(
       where: { and: [{ tokenType_in: ["ERC721"] }, { tokenId_in: $tokenIds }] }
     ) {
+      id
+      tokenId
       metadata {
         imageURI
       }
-      tokenId
     }
   }
 `;
