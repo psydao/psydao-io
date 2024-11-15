@@ -78,7 +78,9 @@ export const getTokensMetadataForASale = gql`
       id
       tokenId
       metadata {
+        name
         imageURI
+        description
       }
     }
   }
