@@ -72,14 +72,13 @@ export const getTokenById = gql`
 
 export const getTokensMetadataForASale = gql`
   query GetTokensMetadata($tokenIds: [String!]!) {
-    tokens(where: { tokenId_in: $tokenIds }) {
-      id
-      tokenId
+    tokens(
+      where: { and: [{ tokenType_in: ["ERC721"] }, { tokenId_in: $tokenIds }] }
+    ) {
       metadata {
-        name
         imageURI
-        description
       }
+      tokenId
     }
   }
 `;
@@ -165,12 +164,11 @@ export const getVotesOnProposal = gql`
   }
 `;
 
-
 // const mainnetNFTAddress = "0x6c6ab7b3215374de4a65de63eac9bc7a0c7f402d";
 
 /**
  * Get the owners of the NFTs on the mainnet
- * The hardcoded address `0x6c6ab7b3215374de4a65de63eac9bc7a0c7f402d` 
+ * The hardcoded address `0x6c6ab7b3215374de4a65de63eac9bc7a0c7f402d`
  * is the NFT contract address on mainnet
  */
 export const getNFTHolders = gql`
@@ -190,8 +188,8 @@ export const getNFTHolders = gql`
 
 /**
  * Get the owners of the NFTs on the mainnet by timestamps
- * The hardcoded address `0x6c6ab7b3215374de4a65de63eac9bc7a0c7f402d` 
- * is the NFT contract address on mainnet 
+ * The hardcoded address `0x6c6ab7b3215374de4a65de63eac9bc7a0c7f402d`
+ * is the NFT contract address on mainnet
  */
 export const getNFTHoldersBeforeTimestamp = gql`
   query NFTHolders($endTimeStamp: Int!) {
