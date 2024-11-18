@@ -16,7 +16,6 @@ interface SaleWidgetContextType {
   activeSale: Sale | undefined;
   setActiveSale: React.Dispatch<React.SetStateAction<Sale | undefined>>;
   isOriginal: boolean;
-  // setIsOriginal: React.Dispatch<React.SetStateAction<boolean>>;
   isLoading: boolean;
   error: unknown;
   isWrongNetwork: boolean;
@@ -39,7 +38,6 @@ const SaleWidgetProvider: React.FC<SaleWidgetProviderProps> = ({
 }) => {
   const { chainId } = useAccount();
   const [activeSale, setActiveSale] = useState<Sale>();
-  // const [isOriginal, setIsOriginal] = useState<boolean>(false);
   const isOriginal = true;
 
   const {
@@ -87,7 +85,6 @@ const SaleWidgetProvider: React.FC<SaleWidgetProviderProps> = ({
         setActiveSale,
         allSalesData,
         isOriginal,
-        // setIsOriginal,
         isLoading,
         error,
         isWrongNetwork,

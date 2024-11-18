@@ -8,7 +8,6 @@ export const SaleTypeSwitch = () => {
     <Flex alignItems={"center"} gap={2} mb={1}>
       <Switch
         isChecked={isOriginal}
-        // onChange={() => setIsOriginal((prev) => !prev)}
         sx={{
           "span.chakra-switch__track:not([data-checked])": {
             backgroundColor: "#E9E9EA"
