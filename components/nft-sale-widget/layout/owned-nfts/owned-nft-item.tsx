@@ -210,32 +210,6 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
           </GridItem>
         </Grid>
       )}
-      {props.isOriginal && (
-        <MintButton
-          onClick={handleToggleSaleStatus}
-          isDisabled={isLoading}
-          customStyle={{
-            width: "100%",
-            background: isActive
-              ? "transparent"
-              : "linear-gradient(90deg, #B14CE7 0%, #E09CA4 100%)",
-            color: isActive ? "#B14CE7" : "white",
-            border: isActive ? "1px solid #B14CE7" : "1px solid #D6D6D6"
-          }}
-          ownedView
-        >
-          {isLoading ? (
-            <>
-              <Spinner size="sm" mr={2} />
-              {isActive ? "Deactivating" : "Activating"}
-            </>
-          ) : isActive ? (
-            "Deactivate Copy Sale"
-          ) : (
-            "Activate Copy Sale"
-          )}
-        </MintButton>
-      )}
       <FullSizeImageModal
         isOpen={isImageOpen}
         imageSrc={props.item.src}
