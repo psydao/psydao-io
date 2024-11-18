@@ -210,7 +210,7 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
           </GridItem>
         </Grid>
       )}
-      {props.isOriginal && (
+      {/* {props.isOriginal && (
         <MintButton
           onClick={handleToggleSaleStatus}
           isDisabled={isLoading}
@@ -235,7 +235,7 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
             "Activate Copy Sale"
           )}
         </MintButton>
-      )}
+      )} */}
       <FullSizeImageModal
         isOpen={isImageOpen}
         imageSrc={props.item.src}

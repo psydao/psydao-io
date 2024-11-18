@@ -50,7 +50,7 @@ const MintPsycHeader = () => {
           </Flex>
           <Flex gap={6} flexWrap={"wrap"}>
             <NftSalesDropdown />
-            <SaleTypeSwitch />
+            {/* <SaleTypeSwitch /> */}
           </Flex>
         </Flex>
       </Box>
