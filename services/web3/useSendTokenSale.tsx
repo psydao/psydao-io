@@ -7,6 +7,7 @@ import {
 } from "@/constants/contracts";
 import tokenSaleAbi from "@/abis/tokenSaleAbi.json";
 import tokenSaleAbiSepolia from "@/abis/tokenSaleAbiSepolia.json";
+import { env } from "@/config/env.mjs";
 
 export const useSendTokenSale = () => {
   const { data, writeContract, isPending, error } = useWriteContract();
@@ -21,15 +22,11 @@ export const useSendTokenSale = () => {
       const psyGwei = parseUnits(amountOfPsyTokens.toString(), 18);
       const ethGwei = parseUnits(ethToSpent, 18);
       return writeContract({
-        address:
-          process.env.NEXT_PUBLIC_CHAIN_ID === "1"
-            ? tokenSaleContract
-            : tokenSaleContractSepolia,
+        address: env.NEXT_PUBLIC_IS_MAINNET
+          ? tokenSaleContract
+          : tokenSaleContractSepolia,
         functionName: "buyTokens",
-        abi:
-          process.env.NEXT_PUBLIC_CHAIN_ID === "1"
-            ? tokenSaleAbi
-            : tokenSaleAbiSepolia,
+        abi: env.NEXT_PUBLIC_IS_MAINNET ? tokenSaleAbi : tokenSaleAbiSepolia,
         args: [psyGwei],
         value: ethGwei
       });

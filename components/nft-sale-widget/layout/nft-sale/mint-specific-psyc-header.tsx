@@ -1,21 +1,21 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
-import DecorationFrame from "../../commons/decoration-frame";
-import DiagonalRectangle from "../../commons/diagonal-rectangle";
+import DecorationFrame from "../../common/decoration-frame";
+import DiagonalRectangle from "../../common/diagonal-rectangle";
+import { useSaleWidget } from "@/providers/SaleWidgetContext";
 
-type MintSpecificPsycHeaderProps = {
-  isFullScreen: boolean;
-};
-const MintSpecificPsycHeader = (props: MintSpecificPsycHeaderProps) => {
+const MintSpecificPsycHeader = () => {
+  const { fullScreenWindow: isFullScreen } = useSaleWidget();
+
   return (
-    <Box position="relative" textAlign="center" py={4} px={2}>
+    <Box position="relative" textAlign="center" py={4}>
       <Flex
         position="relative"
         alignItems="center"
         justifyContent="center"
         width="100%"
-        gap={{ base: 2, sm: 6 }}
+        gap={{ base: 2, sm: 3 }}
       >
-        <DecorationFrame position="left" isFullScreen={props.isFullScreen} />
+        <DecorationFrame position="left" isFullScreen={isFullScreen} />
         <Box
           display="inline-flex"
           alignItems="center"
@@ -41,7 +41,7 @@ const MintSpecificPsycHeader = (props: MintSpecificPsycHeaderProps) => {
           </Text>
           <DiagonalRectangle position="right" />
         </Box>
-        <DecorationFrame position="right" isFullScreen={props.isFullScreen} />
+        <DecorationFrame position="right" isFullScreen={isFullScreen} />
       </Flex>
     </Box>
   );

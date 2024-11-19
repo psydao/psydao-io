@@ -21,19 +21,28 @@ export const Blog = () => {
   return (
     <Window
       id={id}
-      height={fullScreenWindow ? "100%" : isLargerThanMd ? "500px" : "65%"}
-      width={fullScreenWindow ? "100%" : isLargerThanMd ? "655px" : "95%"}
+      maxHeight={{
+        base: fullScreenWindow ? "100%" : "90%",
+        sm: fullScreenWindow ? "100%" : "80%",
+        md: fullScreenWindow ? "100%" : "650px"
+      }}
+      height={"100%"}
+      maxWidth={{
+        base: fullScreenWindow ? "100%" : "95%",
+        md: fullScreenWindow ? "100%" : "602px"
+      }}
+      width={"100%"}
       transform={fullScreenWindow ? "translate(0, 0)" : "translate(-50%, -40%)"}
       top={{
-        base: fullScreenWindow ? "0" : "46%",
-        md: fullScreenWindow ? "0" : "42%"
+        base: fullScreenWindow ? "0" : "55%",
+        sm: fullScreenWindow ? "0" : "58%",
+        md: fullScreenWindow ? "0" : "50%"
       }}
       left={{
         base: fullScreenWindow ? "0" : "50%",
-        lg: fullScreenWindow ? "0" : "40%"
+        xl: fullScreenWindow ? "0" : "30%"
       }}
       fullScreenWindow={fullScreenWindow}
-      defaultIsOpen
     >
       <Window.TitleBar />
       <Window.Content layerStyle="window" position="relative" zIndex="0" p={0}>

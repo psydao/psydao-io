@@ -6,7 +6,8 @@ import React, {
   useContext,
   useState,
   type ReactNode,
-  useCallback
+  useCallback,
+  useEffect
 } from "react";
 import { useAccount } from "wagmi";
 
@@ -41,6 +42,12 @@ export const TokenProvider: React.FC<{ children: ReactNode }> = ({
     },
     skip: !address
   });
+
+  useEffect(() => {
+    if (address && data) {
+      setTokenCount(data?.tokens.length ?? 0);
+    }
+  }, [address, data, setTokenCount]);
 
   const refetch = useCallback((): void => {
     void refetchQuery();
