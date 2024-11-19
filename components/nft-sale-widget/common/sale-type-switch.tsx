@@ -3,12 +3,11 @@ import { InfoOutlineIcon } from "@chakra-ui/icons";
 import { Flex, Show, Switch, Text, Tooltip } from "@chakra-ui/react";
 
 export const SaleTypeSwitch = () => {
-  const { isOriginal, setIsOriginal } = useSaleWidget();
+  const { isOriginal } = useSaleWidget();
   return (
     <Flex alignItems={"center"} gap={2} mb={1}>
       <Switch
         isChecked={isOriginal}
-        onChange={() => setIsOriginal((prev) => !prev)}
         sx={{
           "span.chakra-switch__track:not([data-checked])": {
             backgroundColor: "#E9E9EA"
