@@ -87,13 +87,7 @@ export const SwapWidget = () => {
 
   const ethPrice = useReadEthPrice();
   const { data: tokenPriceInDollar } = useReadTokenPriceInDollar();
-  const { data: totalTokensForSale } = useReadTotalTokensForSale();
-
-  const totalTokensForSaleValue = useMemo(() => {
-    if (totalTokensForSale) {
-      return formatUnits(BigInt(totalTokensForSale as number), 18);
-    }
-  }, [totalTokensForSale]);
+  const { data: totalTokensForSaleValue } = useReadTotalTokensForSale();
 
   const calculateTokenAmount = useCallback(
     (amountOfEth: string) => {

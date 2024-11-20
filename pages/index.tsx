@@ -159,13 +159,7 @@ const Homepage: NextPage = () => {
                     </Open>
                   </Box>
                   <Box gridArea="-2 / 1 / -1 / -1">
-                    <Marquee
-                      text={[
-                        "PSYDAO",
-                        "WHO CARES?",
-                        "NOW ACCEPTING ALCHEMIST GRANT APPLICATIONS"
-                      ]}
-                    />
+                    <Marquee text={["PSY TOKEN SOLD OUT."]} />
                   </Box>
                   <WalletConnectHome />
                   <Menu />
