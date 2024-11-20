@@ -26,7 +26,8 @@ import useGetTokenBalances from "@/services/web3/useGetTokenBalances";
 import { useWithdrawTokens } from "@/services/web3/useWithdrawTokens";
 import { useResize } from "@/hooks/useResize";
 import MintButton from "../ui/mint-button";
-import WrongNetworkWindow from "../commons/wrong-network";
+import WrongNetworkWindow from "../common/wrong-network";
+import { env } from "@/config/env.mjs";
 
 const SwapWidgetTitle = () => (
   <Box p={4} pb={8}>
@@ -189,7 +190,7 @@ export const SwapWidget = () => {
     isConfirmed: withdrawalConfirmed
   } = useWithdrawTokens(Number(tokensOwnedByUser), width);
 
-  const CHAINID = process.env.NEXT_PUBLIC_CHAIN_ID ?? 1;
+  const CHAINID = env.NEXT_PUBLIC_CHAIN_ID;
   const isWrongNetwork = chainId !== Number(CHAINID);
 
   const { userBalance } = useGetTokenBalances(
@@ -217,30 +218,30 @@ export const SwapWidget = () => {
   return (
     <Window
       id="swap"
-      height={
-        fullScreenWindow && termsAndConditions
-          ? "100%"
-          : isLargerThanMd
-            ? "500px"
-            : "80%"
-      }
-      width={
-        fullScreenWindow && termsAndConditions
-          ? "100%"
-          : isLargerThanMd
-            ? "655px"
-            : "95%"
-      }
-      top={{
-        base: fullScreenWindow && termsAndConditions ? "0" : "60%",
-        sm: fullScreenWindow && termsAndConditions ? "0" : "58%",
-        md: fullScreenWindow && termsAndConditions ? "0" : "56%"
+      maxHeight={{
+        base: fullScreenWindow ? "100%" : "85%",
+        sm: fullScreenWindow ? "100%" : "80%",
+        md: fullScreenWindow ? "100%" : "650px"
       }}
-      left={fullScreenWindow && termsAndConditions ? "0" : "50%"}
+      height={"100%"}
+      maxWidth={{
+        base: fullScreenWindow ? "100%" : "95%",
+        md: fullScreenWindow ? "100%" : "602px"
+      }}
+      width={"100%"}
+      top={{
+        base: fullScreenWindow ? "0" : "65%",
+        sm: fullScreenWindow ? "0" : "60%",
+        md: fullScreenWindow ? "0" : "50%"
+      }}
+      left={{
+        base: fullScreenWindow && termsAndConditions ? "0" : "50%",
+        xl: fullScreenWindow && termsAndConditions ? "0" : "30%"
+      }}
       transform={
         fullScreenWindow && termsAndConditions
           ? "translate(0, 0)"
-          : "translate(-50%, -50%)"
+          : "translate(-48%, -50%)"
       }
       fullScreenWindow={fullScreenWindow}
       defaultIsOpen

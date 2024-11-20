@@ -55,19 +55,25 @@ export const Manifesto = () => {
   return (
     <Window
       id="manifesto"
-      height={{
-        base: fullScreenWindow ? "100%" : isLargerThanMd ? "500px" : "80%",
-        md: fullScreenWindow ? "100%" : isLargerThanMd ? "500px" : "70%"
+      maxHeight={{
+        base: fullScreenWindow ? "100%" : "85%",
+        sm: fullScreenWindow ? "100%" : "80%",
+        md: fullScreenWindow ? "100%" : "650px"
       }}
-      width={isLargerThanMd ? "655px" : "95%"}
+      height={"100%"}
+      maxWidth={{
+        base: fullScreenWindow ? "100%" : "95%",
+        md: fullScreenWindow ? "100%" : "602px"
+      }}
+      width={"100%"}
       top={{
-        base: fullScreenWindow ? "0" : "60%",
-        sm: fullScreenWindow ? "0" : "58%",
-        md: fullScreenWindow ? "0" : "56%"
+        base: fullScreenWindow ? "0" : "62%",
+        sm: fullScreenWindow ? "0" : "56%",
+        md: fullScreenWindow ? "0" : "50%"
       }}
-      left={"50%"}
+      left={{ base: "45%", xl: "25%" }}
       transform={
-        fullScreenWindow ? "translate(-50%, 0)" : "translate(-50%, -50%)"
+        fullScreenWindow ? "translate(-50%, 0)" : "translate(-45%, -50%)"
       }
       fullScreenWindow={fullScreenWindow}
       defaultIsOpen

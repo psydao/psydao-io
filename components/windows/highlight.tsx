@@ -7,7 +7,6 @@ export const Highlight = () => {
   return (
     <Window
       id="highlight"
-      defaultIsOpen={true}
       height="80%"
       maxHeight="540px"
       minHeight="350px"
@@ -15,7 +14,7 @@ export const Highlight = () => {
       maxWidth="360px"
       minWidth="240px"
       top="50%"
-      left="50%"
+      left={{ base: "50%", xl: "30%" }}
       transform="translate(-50%, -50%)"
     >
       <Window.TitleBar />

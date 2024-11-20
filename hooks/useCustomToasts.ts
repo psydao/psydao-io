@@ -31,13 +31,33 @@ const ERROR_MESSAGES = {
   "server error": "A server error has occurred. Please try again.",
   OwnableUnauthorizedAccount: "Invalid wallet address.",
   "Token Array Empty": "No tokens provided for sale.",
-  "Unable to decode signature":
-    "Please run 'mintNextBatch' first before creating a sale",
-  "Size of bytes": "Invalid wallet address(es) submitted",
+  "Unable to decode signature": "A contract error has occurred.",
+  "Size of bytes": "Invalid merkle root submitted",
   "Invalid Ceiling Price": "Floor price cannot be greater than ceiling price.",
   "TokenSale: Tokens Locked":
     "Token withdrawal is locked. Please contact the administrator.",
-  "TokenSale: Insufficient funds": "You must have a token balance to withdraw"
+  "TokenSale: Insufficient funds": "You must have a token balance to withdraw",
+  "Could not create cart": "Could not create cart for checkout.",
+  "Start timestamp missing": "Please enter a start timestamp.",
+  "End timestamp missing": "Please enter an end timestamp.",
+  "Total amount of tokens missing":
+    "The total amount of tokens is missing. An error may have occurred.",
+  "Could not fetch minimum claim deadline.":
+    "Could not fetch minimum claim deadline.",
+  "End date before start date": "End date cannot be before start date.",
+  "Error creating new claimable batch": "Error creating new claimable batch.",
+  "Error approving claimable funds": "Error approving claimable funds.",
+  "Cannot use a past date for the claim time period.":
+    "Cannot use a past date for the claim time period.",
+  "Minimum claim deadline must be at least a week after claim period starts.":
+    "Minimum claim deadline must be at least a week after claim period starts.",
+  "The selected deadline is too close to the current date.":
+    "The selected deadline is too close to the current date.",
+  "Invalid Proof": "Invalid proof submitted.",
+  "Not Enough Psy In Contract": "Not enough PSY in contract to fulfill claim.",
+  "All Psy Claimed": "All PSY has been claimed.",
+  "Claim Period Ended": "The claim period has already ended.",
+  "Invalid Deadline": "The selected deadline is invalid."
 };
 
 export const customErrorMessage = (message: string): string => {
@@ -60,7 +80,7 @@ export const useCustomToasts = () => {
         type: "error",
         transition: Zoom
       },
-      width <= 768
+      width <= 600
     );
   };
 
@@ -75,7 +95,7 @@ export const useCustomToasts = () => {
         type: "error",
         transition: Zoom
       },
-      width <= 768
+      width <= 600
     );
   };
 
@@ -89,7 +109,7 @@ export const useCustomToasts = () => {
         type: "success",
         transition: Zoom
       },
-      width <= 768
+      width <= 600
     );
   };
 

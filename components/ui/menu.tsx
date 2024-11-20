@@ -164,6 +164,26 @@ export const Menu = () => {
               Mint PSYC
             </MenuItem>
           </Open>
+          <Open id="claim">
+            <MenuItem
+              fontStyle="italic"
+              onClick={() =>
+                MixpanelTracking.getInstance().menuLinkClicked("claim")
+              }
+            >
+              Claimable Rewards
+            </MenuItem>
+          </Open>
+          <Open id="shopify-widget">
+            <MenuItem
+              fontStyle="italic"
+              onClick={() =>
+                MixpanelTracking.getInstance().menuLinkClicked("shopify-widget")
+              }
+            >
+              Shop
+            </MenuItem>
+          </Open>
         </MenuList>
       </ChakraMenu>
     </Box>

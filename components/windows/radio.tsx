@@ -201,9 +201,22 @@ export const Radio = () => {
   return (
     <Window
       id="radio"
-      height={fullScreenWindow ? "100%" : isLargerThanMd ? "500px" : "80%"}
-      width={fullScreenWindow ? "100%" : isLargerThanMd ? "655px" : "95%"}
-      top={fullScreenWindow ? "0" : "50%"}
+      maxHeight={{
+        base: fullScreenWindow ? "100%" : "85%",
+        sm: fullScreenWindow ? "100%" : "80%",
+        md: fullScreenWindow ? "100%" : "650px"
+      }}
+      height={"100%"}
+      maxWidth={{
+        base: fullScreenWindow ? "100%" : "95%",
+        md: fullScreenWindow ? "100%" : "602px"
+      }}
+      width={"100%"}
+      top={{
+        base: fullScreenWindow ? "0" : "65%",
+        sm: fullScreenWindow ? "0" : "58%",
+        md: fullScreenWindow ? "0" : "50%"
+      }}
       left={fullScreenWindow ? "0" : "50%"}
       transform={fullScreenWindow ? "translate(0, 0)" : "translate(-50%, -50%)"}
       fullScreenWindow={fullScreenWindow}

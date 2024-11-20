@@ -4,6 +4,7 @@ import { psycSaleMainnet, psycSaleSepolia } from "@/constants/contracts";
 import psycSaleAbi from "@/abis/psycSaleAbi.json";
 import psycSaleAbiSepolia from "@/abis/psycSaleAbiSepolia.json";
 import { parseUnits } from "viem";
+import { env } from "@/config/env.mjs";
 
 export const useCreatePsycSale = () => {
   const { data, writeContract, isPending, error } = useWriteContract();
@@ -25,15 +26,9 @@ export const useCreatePsycSale = () => {
       const floorPriceGwei = parseUnits(floorPrice, 18);
       const ceilingPriceGwei = parseUnits(ceilingPrice, 18);
       return writeContract({
-        address:
-          process.env.NEXT_PUBLIC_CHAIN_ID === "1"
-            ? psycSaleMainnet
-            : psycSaleSepolia,
+        address: env.NEXT_PUBLIC_IS_MAINNET ? psycSaleMainnet : psycSaleSepolia,
         functionName: "createSaleBatch",
-        abi:
-          process.env.NEXT_PUBLIC_CHAIN_ID === "1"
-            ? psycSaleAbi
-            : psycSaleAbiSepolia,
+        abi: env.NEXT_PUBLIC_IS_MAINNET ? psycSaleAbi : psycSaleAbiSepolia,
         args: [
           tokenIds,
           saleStartTime,
