@@ -29,6 +29,7 @@ import ShopifyWidget from "@/components/shopify-widget";
 import { Claim } from "@/components/windows/claim";
 import { ApolloProvider } from "@apollo/client";
 import { shopifyClient } from "@/config/apolloClients";
+import { useReadTotalTokensForSale } from "@/services/web3/useReadTotalTokensForSale";
 // import SaleWidgetProvider from "@/providers/SaleWidgetContext";
 
 // TODO Extract Pill component since it seems it will become a basic primitive
@@ -38,6 +39,7 @@ import { shopifyClient } from "@/config/apolloClients";
 // probably a theme prop
 
 const Homepage: NextPage = () => {
+  const { data: totalTokensForSaleValue } = useReadTotalTokensForSale();
   useRescrictedCountries();
 
   useEffect(() => {
@@ -159,7 +161,18 @@ const Homepage: NextPage = () => {
                     </Open>
                   </Box>
                   <Box gridArea="-2 / 1 / -1 / -1">
-                    <Marquee text={["PSY TOKEN SOLD OUT."]} />
+                    <Marquee
+                      text={
+                        !totalTokensForSaleValue ||
+                        totalTokensForSaleValue === "0.00"
+                          ? ["PSY TOKEN SOLD OUT."]
+                          : [
+                              "PSYDAO",
+                              "WHO CARES?",
+                              "NOW ACCEPTING ALCHEMIST GRANT APPLICATIONS"
+                            ]
+                      }
+                    />
                   </Box>
                   <WalletConnectHome />
                   <Menu />
