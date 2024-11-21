@@ -209,10 +209,10 @@ const Homepage: NextPage = () => {
                     <GeneralDashboard
                       triggerNftSaleUpdate={triggerNftSaleUpdate}
                     />
+                    <Claim />
                     <ApolloProvider client={shopifyClient}>
                       <ShopifyWidget />
                     </ApolloProvider>
-                    <Claim />
                   </Box>
                 </WindowManager>
                 <Link
