@@ -206,7 +206,7 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
             fontSize={{ base: "20px", sm: "24px" }}
             lineHeight={{ base: "20px", sm: "24px" }}
           >
-            Claimable Rewards
+            Claimable Rewards for PSYC Token Holders
           </Text>
           {isAdmin && (
             <Button
