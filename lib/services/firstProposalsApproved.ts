@@ -1,7 +1,8 @@
 import { getPsycHolders } from "./getPsycHolders";
-import { keccak256, encodePacked, parseUnits } from "viem";
+import { keccak256, encodePacked, parseUnits, Address } from "viem";
 import { MerkleTree } from "merkletreejs";
 import { Balance, uploadArrayToIpfs } from "./ipfs";
+import { userTestMapping, TEST_ENV } from "../testMapping";
 
 export const firstProposals = async (
   endTimeStamp: number,
@@ -10,15 +11,22 @@ export const firstProposals = async (
 ) => {
   let psycHolderTokenDistribution: Balance[] = [];
   const sgData = await getPsycHolders(endTimeStamp);
-  const psycHolders = sgData.map((psycHolder: any) => psycHolder.owner);
+
+  const psycHolders = sgData.map((psycHolder) =>
+    TEST_ENV
+      ? (userTestMapping[psycHolder.owner] ??
+        (psycHolder.owner.toLowerCase() as Address))
+      : (psycHolder.owner.toLowerCase() as Address)
+  );
 
   // Calculate exact token amount per holder with full precision
-  const tokenPerHolder = (totalAmountOfTokens / psycHolders.length)
-    .toLocaleString('fullwide', {
-      useGrouping: false,
-      minimumFractionDigits: 11,
-      maximumFractionDigits: 11
-    });
+  const tokenPerHolder = (
+    totalAmountOfTokens / psycHolders.length
+  ).toLocaleString("fullwide", {
+    useGrouping: false,
+    minimumFractionDigits: 11,
+    maximumFractionDigits: 11
+  });
 
   // Calculate the amount of tokens each psyc holder gets based on the percentage of votes they have
   psycHolderTokenDistribution = psycHolders.map((psycHolder) => {
@@ -31,7 +39,7 @@ export const firstProposals = async (
   // Verify total equals input amount
   const totalDistributed = psycHolderTokenDistribution
     .reduce((sum, holder) => sum + Number(holder.tokens), 0)
-    .toLocaleString('fullwide', {
+    .toLocaleString("fullwide", {
       useGrouping: false,
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
@@ -44,8 +52,7 @@ export const firstProposals = async (
     //     minimumFractionDigits: 0,
     //     maximumFractionDigits: 18
     //   });
-    const tokenAmount = holder.tokens
-      .replace(/\.?0+$/, ''); // Remove trailing zeros but keep decimal precision
+    const tokenAmount = holder.tokens.replace(/\.?0+$/, ""); // Remove trailing zeros but keep decimal precision
 
     return keccak256(
       encodePacked(
@@ -56,7 +63,7 @@ export const firstProposals = async (
           holder.address as `0x${string}`
         ]
       )
-    )
+    );
   });
 
   const tree = new MerkleTree(leaves, keccak256, { sortPairs: true });
