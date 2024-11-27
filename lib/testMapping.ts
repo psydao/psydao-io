@@ -19,5 +19,5 @@ export const userTestMapping: { [key: Address]: Address } = {
   "0x2868a501b37f11cfdcfef96e9ad0588e0932b9de":
     "0x2868a501b37f11cfdcfef96e9ad0588e0932b9de", // gareth <> gareth
   "0x846e3d53c92712ae6eea5793ded3ee98de737ba7":
-    "0xe6ba5Bb7238e7C38C7c5Ff5F0dA2223C50A466f8" // Myles
+    "0xe6ba5bb7238e7c38c7c5ff5f0da2223c50a466f8" // Myles
 };
