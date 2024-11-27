@@ -13,11 +13,11 @@ export const userTestMapping: { [key: Address]: Address } = {
     "0xecf296664697227250496d4a01939fa1cd666553", // courtney 2
 
   "0x1885754425d75bddce43bd82f24f160d8f6abadf":
-    "0x4fed6ffc2a040e7a7c1be61b7d887fc483662b6f", // devon
+    "0xe2902ab6bd62e254b67c7cd4674d0d1db1f92695", // Liam
   "0x634646a55f9e6efccd87b3dbc7d022064c55e2fc":
     "0x8754a4c886f8cb77a1d2f38470c653ddb4727f21", // ester
   "0x2868a501b37f11cfdcfef96e9ad0588e0932b9de":
     "0x2868a501b37f11cfdcfef96e9ad0588e0932b9de", // gareth <> gareth
   "0x846e3d53c92712ae6eea5793ded3ee98de737ba7":
-    "0xa8ce58d1a60b7a795383050fc15e3ca344751606" // gareth 2
+    "0xe6ba5Bb7238e7C38C7c5Ff5F0dA2223C50A466f8" // Myles
 };
