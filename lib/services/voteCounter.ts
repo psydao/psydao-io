@@ -48,7 +48,7 @@ export const main = async (
         : (psycHolder.owner.toLowerCase() as Address)
     );
 
-    const tokenPerHolder = totalAmountOfTokens / psycHolders.length;
+    const tokenPerHolder = Math.floor(totalAmountOfTokens / psycHolders.length);
 
     psycHolders.forEach((holder) => {
       votesCountMap[holder.toLowerCase() as Address] = 0;
@@ -81,12 +81,12 @@ export const main = async (
     // Calculate the amount of tokens each psyc holder gets based on the percentage of votes they have
     psycHolderTokenDistribution = psycHolderVotesPercentage.map(
       (psycHolder) => {
-        const tokens = psycHolder.percentage * tokenPerHolder;
+        const tokens = psycHolder.percentage * Number(tokenPerHolder);
         return {
           address: psycHolder.address,
           tokens: tokens,
           percentage: psycHolder.percentage,
-          leftOver: tokenPerHolder - tokens
+          leftOver: Number(tokenPerHolder) - tokens
         };
       }
     );

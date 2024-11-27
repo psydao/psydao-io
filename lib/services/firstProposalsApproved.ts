@@ -20,19 +20,13 @@ export const firstProposals = async (
   );
 
   // Calculate exact token amount per holder with full precision
-  const tokenPerHolder = (
-    totalAmountOfTokens / psycHolders.length
-  ).toLocaleString("fullwide", {
-    useGrouping: false,
-    minimumFractionDigits: 11,
-    maximumFractionDigits: 11
-  });
+  const tokenPerHolder = Math.floor(totalAmountOfTokens / psycHolders.length);
 
   // Calculate the amount of tokens each psyc holder gets based on the percentage of votes they have
   psycHolderTokenDistribution = psycHolders.map((psycHolder) => {
     return {
       address: psycHolder as `0x${string}`,
-      tokens: tokenPerHolder
+      tokens: tokenPerHolder.toString()
     };
   });
 

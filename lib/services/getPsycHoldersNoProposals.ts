@@ -18,13 +18,7 @@ export const psycHoldersNoProposals = async (
         (psycHolder.owner.toLowerCase() as Address))
       : (psycHolder.owner.toLowerCase() as Address)
   );
-  const tokenPerHolder = (
-    totalAmountOfTokens / psycHolders.length
-  ).toLocaleString("fullwide", {
-    useGrouping: false,
-    minimumFractionDigits: 11,
-    maximumFractionDigits: 11
-  });
+  const tokenPerHolder = Math.floor(totalAmountOfTokens / psycHolders.length);
 
   // Calculate the amount of tokens each psyc holder gets based on the percentage of votes they have
   balances = psycHolders.map((psycHolder) => {
