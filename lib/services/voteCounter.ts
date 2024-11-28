@@ -3,28 +3,35 @@ import {
   getSnapshotProposals,
   getVotesOnProposalById
 } from "./getSnapshotProposalsAndVotes";
-import { keccak256, encodePacked, parseUnits, Address } from "viem";
+import {
+  keccak256,
+  encodePacked,
+  parseUnits,
+  Address,
+  formatUnits
+} from "viem";
 import { MerkleTree } from "merkletreejs";
 import { Balance, pinClaimsListToIpfs, uploadArrayToIpfs } from "./ipfs";
 
 import { psycHoldersNoProposals } from "./getPsycHoldersNoProposals";
 import { TEST_ENV, userTestMapping } from "../testMapping";
+import BigNumber from "bignumber.js";
 export const main = async (
   startTimeStamp: number,
   endTimeStamp: number,
-  totalAmountOfTokens: number,
+  totalAmountOfTokens: string,
   batchId: number
 ) => {
   const proposals = await getSnapshotProposals(startTimeStamp, endTimeStamp);
 
   let psycHolders: Address[] = [];
-  let psycHolderVotesPercentage: { address: Address; percentage: number }[] =
+  let psycHolderVotesPercentage: { address: Address; percentage: string }[] =
     [];
   let psycHolderTokenDistribution: {
     address: Address;
-    tokens: number;
-    leftOver: number;
-    percentage: number;
+    tokens: string;
+    leftOver: string;
+    percentage: string;
   }[] = [];
   const votesCountMap: { [address: Address]: number } = {};
   let totalVotes: number = 0;
@@ -48,7 +55,9 @@ export const main = async (
         : (psycHolder.owner.toLowerCase() as Address)
     );
 
-    const tokenPerHolder = Math.floor(totalAmountOfTokens / psycHolders.length);
+    const tokenPerHolder = BigNumber(totalAmountOfTokens).dividedBy(
+      BigNumber(psycHolders.length)
+    );
 
     psycHolders.forEach((holder) => {
       votesCountMap[holder.toLowerCase() as Address] = 0;
@@ -73,7 +82,9 @@ export const main = async (
       ([address, count]) => {
         return {
           address: address as Address,
-          percentage: count / filteredProposals.length
+          percentage: BigNumber(count)
+            .dividedBy(BigNumber(filteredProposals.length))
+            .toString()
         };
       }
     );
@@ -81,12 +92,16 @@ export const main = async (
     // Calculate the amount of tokens each psyc holder gets based on the percentage of votes they have
     psycHolderTokenDistribution = psycHolderVotesPercentage.map(
       (psycHolder) => {
-        const tokens = psycHolder.percentage * Number(tokenPerHolder);
+        const tokens = BigNumber(psycHolder.percentage)
+          .multipliedBy(BigNumber(tokenPerHolder))
+          .toString();
         return {
           address: psycHolder.address,
           tokens: tokens,
           percentage: psycHolder.percentage,
-          leftOver: Number(tokenPerHolder) - tokens
+          leftOver: BigNumber(tokenPerHolder)
+            .minus(BigNumber(tokens))
+            .toString()
         };
       }
     );
@@ -102,16 +117,20 @@ export const main = async (
   }
 
   const unAllocatedTokens = psycHolderTokenDistribution.reduce(
-    (acc, curr) => acc + curr.leftOver,
+    (acc, curr) => BigNumber(acc).plus(BigNumber(curr.leftOver)).toNumber(),
     0
   );
 
   // Upload array to IPFS and get the hash
   const balances: Balance[] = psycHolderTokenDistribution.map((holder) => {
-    const finalTokens = (
-      holder.tokens +
-      (unAllocatedTokens * (votesCountMap[holder.address] ?? 0)) / totalVotes
-    ).toFixed(11); // Increase precision to 11 decimal places
+    const finalTokens = BigNumber(holder.tokens)
+      .plus(
+        BigNumber(unAllocatedTokens)
+          .multipliedBy(BigNumber(votesCountMap[holder.address] ?? 0))
+          .dividedBy(BigNumber(totalVotes))
+      )
+      .toString();
+
     return {
       address: holder.address,
       tokens: finalTokens

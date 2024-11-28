@@ -1,12 +1,19 @@
 import { getPsycHoldersBeforeTimestamp } from "./getPsycHolders";
-import { keccak256, encodePacked, parseUnits, Address } from "viem";
+import {
+  keccak256,
+  encodePacked,
+  parseUnits,
+  Address,
+  formatUnits
+} from "viem";
 import { MerkleTree } from "merkletreejs";
 import { Balance, pinClaimsListToIpfs } from "./ipfs";
 import { userTestMapping, TEST_ENV } from "../testMapping";
+import BigNumber from "bignumber.js";
 
 export const psycHoldersNoProposals = async (
   endTimeStamp: number,
-  totalAmountOfTokens: number,
+  totalAmountOfTokens: string,
   batchId: number
 ) => {
   let balances: Balance[] = [];
@@ -18,7 +25,9 @@ export const psycHoldersNoProposals = async (
         (psycHolder.owner.toLowerCase() as Address))
       : (psycHolder.owner.toLowerCase() as Address)
   );
-  const tokenPerHolder = Math.floor(totalAmountOfTokens / psycHolders.length);
+  const totalAmount = new BigNumber(totalAmountOfTokens);
+  const numberOfHolders = new BigNumber(psycHolders.length);
+  const tokenPerHolder = totalAmount.dividedBy(numberOfHolders).toString();
 
   // Calculate the amount of tokens each psyc holder gets based on the percentage of votes they have
   balances = psycHolders.map((psycHolder) => {
