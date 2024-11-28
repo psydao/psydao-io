@@ -91,8 +91,6 @@ const ClaimCard = (props: ClaimCardProps) => {
     }
   }, [amount]);
 
-  console.log(formattedAmount, "=> formattedAmount", amount, "=> amount");
-
   return (
     <Flex
       maxW={"593px"}

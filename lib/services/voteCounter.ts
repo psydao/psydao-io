@@ -138,12 +138,7 @@ export const main = async (
   });
 
   const leaves = balances.map((holder) => {
-    const tokenAmount = Number(holder.tokens)
-      .toLocaleString("fullwide", {
-        useGrouping: false,
-        maximumFractionDigits: 20
-      })
-      .replace(/\.?0+$/, "");
+    const tokenAmount = holder.tokens;
 
     return keccak256(
       encodePacked(

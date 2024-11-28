@@ -27,11 +27,6 @@ export const firstProposals = async (
   );
 
   // Calculate exact token amount per holder with full precision
-  // const tokenPerHolder = formatUnits(
-  //   parseUnits(totalAmountOfTokens, 18) /
-  //     parseUnits(psycHolders.length.toString(), 18),
-  //   18
-  // );
   const tokenPerHolder = BigNumber(totalAmountOfTokens)
     .dividedBy(BigNumber(psycHolders.length))
     .toString();
@@ -43,16 +38,6 @@ export const firstProposals = async (
       tokens: tokenPerHolder.toString()
     };
   });
-
-  // Verify total equals input amount
-  // no longer used?
-  // const totalDistributed = psycHolderTokenDistribution
-  //   .reduce((sum, holder) => sum + Number(holder.tokens), 0)
-  //   .toLocaleString("fullwide", {
-  //     useGrouping: false,
-  //     minimumFractionDigits: 2,
-  //     maximumFractionDigits: 2
-  //   });
 
   const leaves = psycHolderTokenDistribution.map((holder) => {
     const tokenAmount = holder.tokens;
