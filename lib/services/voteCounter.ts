@@ -3,35 +3,28 @@ import {
   getSnapshotProposals,
   getVotesOnProposalById
 } from "./getSnapshotProposalsAndVotes";
-import {
-  keccak256,
-  encodePacked,
-  parseUnits,
-  Address,
-  formatUnits
-} from "viem";
+import { keccak256, encodePacked, parseUnits, Address } from "viem";
 import { MerkleTree } from "merkletreejs";
 import { Balance, pinClaimsListToIpfs, uploadArrayToIpfs } from "./ipfs";
 
 import { psycHoldersNoProposals } from "./getPsycHoldersNoProposals";
 import { TEST_ENV, userTestMapping } from "../testMapping";
-import BigNumber from "bignumber.js";
 export const main = async (
   startTimeStamp: number,
   endTimeStamp: number,
-  totalAmountOfTokens: string,
+  totalAmountOfTokens: number,
   batchId: number
 ) => {
   const proposals = await getSnapshotProposals(startTimeStamp, endTimeStamp);
 
   let psycHolders: Address[] = [];
-  let psycHolderVotesPercentage: { address: Address; percentage: string }[] =
+  let psycHolderVotesPercentage: { address: Address; percentage: number }[] =
     [];
   let psycHolderTokenDistribution: {
     address: Address;
-    tokens: string;
-    leftOver: string;
-    percentage: string;
+    tokens: number;
+    leftOver: number;
+    percentage: number;
   }[] = [];
   const votesCountMap: { [address: Address]: number } = {};
   let totalVotes: number = 0;
@@ -55,9 +48,7 @@ export const main = async (
         : (psycHolder.owner.toLowerCase() as Address)
     );
 
-    const tokenPerHolder = BigNumber(totalAmountOfTokens).dividedBy(
-      BigNumber(psycHolders.length)
-    );
+    const tokenPerHolder = Math.floor(totalAmountOfTokens / psycHolders.length);
 
     psycHolders.forEach((holder) => {
       votesCountMap[holder.toLowerCase() as Address] = 0;
@@ -82,9 +73,7 @@ export const main = async (
       ([address, count]) => {
         return {
           address: address as Address,
-          percentage: BigNumber(count)
-            .dividedBy(BigNumber(filteredProposals.length))
-            .toString()
+          percentage: count / filteredProposals.length
         };
       }
     );
@@ -92,16 +81,12 @@ export const main = async (
     // Calculate the amount of tokens each psyc holder gets based on the percentage of votes they have
     psycHolderTokenDistribution = psycHolderVotesPercentage.map(
       (psycHolder) => {
-        const tokens = BigNumber(psycHolder.percentage)
-          .multipliedBy(BigNumber(tokenPerHolder))
-          .toString();
+        const tokens = psycHolder.percentage * Number(tokenPerHolder);
         return {
           address: psycHolder.address,
           tokens: tokens,
           percentage: psycHolder.percentage,
-          leftOver: BigNumber(tokenPerHolder)
-            .minus(BigNumber(tokens))
-            .toString()
+          leftOver: Number(tokenPerHolder) - tokens
         };
       }
     );
@@ -117,20 +102,16 @@ export const main = async (
   }
 
   const unAllocatedTokens = psycHolderTokenDistribution.reduce(
-    (acc, curr) => BigNumber(acc).plus(BigNumber(curr.leftOver)).toNumber(),
+    (acc, curr) => acc + curr.leftOver,
     0
   );
 
   // Upload array to IPFS and get the hash
   const balances: Balance[] = psycHolderTokenDistribution.map((holder) => {
-    const finalTokens = BigNumber(holder.tokens)
-      .plus(
-        BigNumber(unAllocatedTokens)
-          .multipliedBy(BigNumber(votesCountMap[holder.address] ?? 0))
-          .dividedBy(BigNumber(totalVotes))
-      )
-      .toString();
-
+    const finalTokens = (
+      holder.tokens +
+      (unAllocatedTokens * (votesCountMap[holder.address] ?? 0)) / totalVotes
+    ).toFixed(11); // Increase precision to 11 decimal places
     return {
       address: holder.address,
       tokens: finalTokens
@@ -138,7 +119,12 @@ export const main = async (
   });
 
   const leaves = balances.map((holder) => {
-    const tokenAmount = holder.tokens;
+    const tokenAmount = Number(holder.tokens)
+      .toLocaleString("fullwide", {
+        useGrouping: false,
+        maximumFractionDigits: 20
+      })
+      .replace(/\.?0+$/, "");
 
     return keccak256(
       encodePacked(

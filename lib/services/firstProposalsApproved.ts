@@ -13,7 +13,7 @@ import BigNumber from "bignumber.js";
 
 export const firstProposals = async (
   endTimeStamp: number,
-  totalAmountOfTokens: string,
+  totalAmountOfTokens: number,
   batchId: number
 ) => {
   let psycHolderTokenDistribution: Balance[] = [];
@@ -27,9 +27,7 @@ export const firstProposals = async (
   );
 
   // Calculate exact token amount per holder with full precision
-  const tokenPerHolder = BigNumber(totalAmountOfTokens)
-    .dividedBy(BigNumber(psycHolders.length))
-    .toString();
+  const tokenPerHolder = Math.floor(totalAmountOfTokens / psycHolders.length);
 
   // Calculate the amount of tokens each psyc holder gets based on the percentage of votes they have
   psycHolderTokenDistribution = psycHolders.map((psycHolder) => {
