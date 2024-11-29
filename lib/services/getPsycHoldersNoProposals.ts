@@ -8,8 +8,6 @@ import {
 } from "viem";
 import { MerkleTree } from "merkletreejs";
 import { Balance, pinClaimsListToIpfs } from "./ipfs";
-import { userTestMapping, TEST_ENV } from "../testMapping";
-import BigNumber from "bignumber.js";
 
 export const psycHoldersNoProposals = async (
   endTimeStamp: number,
@@ -19,11 +17,8 @@ export const psycHoldersNoProposals = async (
   let balances: Balance[] = [];
   const sgData = await getPsycHoldersBeforeTimestamp(endTimeStamp);
 
-  const psycHolders = sgData.map((psycHolder) =>
-    TEST_ENV
-      ? (userTestMapping[psycHolder.owner] ??
-        (psycHolder.owner.toLowerCase() as Address))
-      : (psycHolder.owner.toLowerCase() as Address)
+  const psycHolders = sgData.map(
+    (psycHolder) => psycHolder.owner.toLowerCase() as Address
   );
 
   const tokenPerHolder = Math.floor(totalAmountOfTokens / psycHolders.length);

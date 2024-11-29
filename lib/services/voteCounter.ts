@@ -8,7 +8,7 @@ import { MerkleTree } from "merkletreejs";
 import { Balance, pinClaimsListToIpfs, uploadArrayToIpfs } from "./ipfs";
 
 import { psycHoldersNoProposals } from "./getPsycHoldersNoProposals";
-import { TEST_ENV, userTestMapping } from "../testMapping";
+
 export const main = async (
   startTimeStamp: number,
   endTimeStamp: number,
@@ -41,11 +41,8 @@ export const main = async (
       Number(filteredProposals[filteredProposals.length - 1]?.snapshot)
     );
 
-    psycHolders = sgData.map((psycHolder) =>
-      TEST_ENV
-        ? (userTestMapping[psycHolder.owner] ??
-          (psycHolder.owner.toLowerCase() as Address))
-        : (psycHolder.owner.toLowerCase() as Address)
+    psycHolders = sgData.map(
+      (psycHolder) => psycHolder.owner.toLowerCase() as Address
     );
 
     const tokenPerHolder = Math.floor(totalAmountOfTokens / psycHolders.length);
@@ -57,10 +54,7 @@ export const main = async (
     for (const proposal of filteredProposals) {
       const votes = (await getVotesOnProposalById(proposal.id)) ?? [];
       votes.forEach((vote) => {
-        const voterAddress = TEST_ENV
-          ? (userTestMapping[vote.voter.toLowerCase() as Address] ??
-            (vote.voter.toLowerCase() as Address))
-          : (vote.voter.toLowerCase() as Address);
+        const voterAddress = vote.voter.toLowerCase() as Address;
         if (psycHolders.includes(voterAddress.toLowerCase() as Address)) {
           if (votesCountMap[voterAddress] !== undefined) {
             votesCountMap[voterAddress]++;

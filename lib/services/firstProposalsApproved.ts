@@ -8,8 +8,6 @@ import {
 } from "viem";
 import { MerkleTree } from "merkletreejs";
 import { Balance, uploadArrayToIpfs } from "./ipfs";
-import { userTestMapping, TEST_ENV } from "../testMapping";
-import BigNumber from "bignumber.js";
 
 export const firstProposals = async (
   endTimeStamp: number,
@@ -19,11 +17,8 @@ export const firstProposals = async (
   let psycHolderTokenDistribution: Balance[] = [];
   const sgData = await getPsycHolders(endTimeStamp);
 
-  const psycHolders = sgData.map((psycHolder) =>
-    TEST_ENV
-      ? (userTestMapping[psycHolder.owner] ??
-        (psycHolder.owner.toLowerCase() as Address))
-      : (psycHolder.owner.toLowerCase() as Address)
+  const psycHolders = sgData.map(
+    (psycHolder) => psycHolder.owner.toLowerCase() as Address
   );
 
   // Calculate exact token amount per holder with full precision
