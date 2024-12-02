@@ -8,6 +8,7 @@ import { MerkleTree } from "merkletreejs";
 import { Balance, pinClaimsListToIpfs, uploadArrayToIpfs } from "./ipfs";
 
 import { psycHoldersNoProposals } from "./getPsycHoldersNoProposals";
+
 export const main = async (
   startTimeStamp: number,
   endTimeStamp: number,
@@ -16,7 +17,7 @@ export const main = async (
 ) => {
   const proposals = await getSnapshotProposals(startTimeStamp, endTimeStamp);
 
-  let psycHolders: Address[] = [];
+  let psycHolders: Set<string> = new Set();
   let psycHolderVotesPercentage: { address: Address; percentage: number }[] =
     [];
   let psycHolderTokenDistribution: {
@@ -40,11 +41,11 @@ export const main = async (
       Number(filteredProposals[filteredProposals.length - 1]?.snapshot)
     );
 
-    psycHolders = sgData.map(
-      (psycHolder) => psycHolder.owner.toLowerCase() as Address
+    psycHolders = new Set(
+      sgData.map((psycHolder) => psycHolder.owner.toLowerCase())
     );
 
-    const tokenPerHolder = totalAmountOfTokens / psycHolders.length;
+    const tokenPerHolder = Math.floor(totalAmountOfTokens / psycHolders.size);
 
     psycHolders.forEach((holder) => {
       votesCountMap[holder.toLowerCase() as Address] = 0;
@@ -54,7 +55,7 @@ export const main = async (
       const votes = (await getVotesOnProposalById(proposal.id)) ?? [];
       votes.forEach((vote) => {
         const voterAddress = vote.voter.toLowerCase() as Address;
-        if (psycHolders.includes(voterAddress.toLowerCase() as Address)) {
+        if (psycHolders.has(voterAddress.toLowerCase() as Address)) {
           if (votesCountMap[voterAddress] !== undefined) {
             votesCountMap[voterAddress]++;
             totalVotes++;
@@ -66,7 +67,7 @@ export const main = async (
       ([address, count]) => {
         return {
           address: address as Address,
-          percentage: Number((count / filteredProposals.length).toFixed(2))
+          percentage: count / filteredProposals.length
         };
       }
     );
@@ -74,11 +75,12 @@ export const main = async (
     // Calculate the amount of tokens each psyc holder gets based on the percentage of votes they have
     psycHolderTokenDistribution = psycHolderVotesPercentage.map(
       (psycHolder) => {
+        const tokens = psycHolder.percentage * Number(tokenPerHolder);
         return {
           address: psycHolder.address,
-          tokens: Number(psycHolder.percentage.toFixed(2)) * tokenPerHolder,
+          tokens: tokens,
           percentage: psycHolder.percentage,
-          leftOver: tokenPerHolder - psycHolder.percentage * tokenPerHolder
+          leftOver: Number(tokenPerHolder) - tokens
         };
       }
     );
@@ -100,28 +102,35 @@ export const main = async (
 
   // Upload array to IPFS and get the hash
   const balances: Balance[] = psycHolderTokenDistribution.map((holder) => {
+    const finalTokens = (
+      holder.tokens +
+      (unAllocatedTokens * (votesCountMap[holder.address] ?? 0)) / totalVotes
+    ).toFixed(11); // Increase precision to 11 decimal places
     return {
       address: holder.address,
-      tokens: (
-        holder.tokens +
-        (unAllocatedTokens * (votesCountMap[holder.address] ?? 0)) / totalVotes
-      ).toFixed(10)
+      tokens: finalTokens
     };
   });
 
-  const leaves = balances.map((holder) =>
-    keccak256(
+  const leaves = balances.map((holder) => {
+    const tokenAmount = Number(holder.tokens)
+      .toLocaleString("fullwide", {
+        useGrouping: false,
+        maximumFractionDigits: 20
+      })
+      .replace(/\.?0+$/, "");
+
+    return keccak256(
       encodePacked(
         ["uint256", "uint256", "address"],
-        [BigInt(batchId), parseUnits(holder.tokens, 18), holder.address]
+        [BigInt(batchId), parseUnits(tokenAmount, 18), holder.address]
       )
-    )
-  );
+    );
+  });
 
   const tree = new MerkleTree(leaves, keccak256, { sortPairs: true });
   const merkleRoot = tree.getHexRoot();
 
-  console.log("with proposals ipfs upload");
   const ipfsHash = await pinClaimsListToIpfs(balances);
   return { balances, merkleRoot, ipfsHash };
 };

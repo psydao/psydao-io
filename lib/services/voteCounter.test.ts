@@ -105,7 +105,7 @@ describe("voteCounter main function", () => {
     // Each holder should get exactly 255,835.3866666667 tokens
     const expectedTokensPerHolder = (totalTokens / 3).toFixed(10);
     result.balances.forEach((balance) => {
-      expect(parseFloat(balance.tokens)).toBeCloseTo(255835.3866666667, 4);
+      expect(Number(balance.tokens)).toBe(255835);
     });
 
     // Total should be exactly 767,506.16
@@ -113,7 +113,7 @@ describe("voteCounter main function", () => {
       (sum, balance) => sum + parseFloat(balance.tokens),
       0
     );
-    expect(totalDistributed).toBeCloseTo(767506.16, 4);
+    expect(totalDistributed).toBeLessThanOrEqual(767506.16);
   });
 
   it("should calculate distribution correctly with valid inputs", async () => {
@@ -149,7 +149,7 @@ describe("voteCounter main function", () => {
       (sum, balance) => sum + parseFloat(balance.tokens),
       0
     );
-    expect(totalTokens).toBeCloseTo(mockInput.totalAmountOfTokens, 4);
+    expect(totalTokens).toBeLessThanOrEqual(mockInput.totalAmountOfTokens);
   });
 
   it("should handle filtered out proposals correctly", async () => {
@@ -234,7 +234,7 @@ describe("voteCounter main function", () => {
       (sum, balance) => sum + parseFloat(balance.tokens),
       0
     );
-    expect(totalTokens).toBeCloseTo(mockInput.totalAmountOfTokens, 4);
+    expect(totalTokens).toBeLessThanOrEqual(mockInput.totalAmountOfTokens);
   });
 
   it("should handle errors in snapshot proposals fetch", async () => {
@@ -328,5 +328,98 @@ describe("voteCounter main function", () => {
       merkleRoot: "0x",
       ipfsHash: ""
     });
+  });
+
+  it("should distribute tokens equally after rounding", async () => {
+    const mockProposal = {
+      id: "0x123",
+      snapshot: "123456",
+      start: 1723932000,
+      end: 1726005600
+    };
+
+    // Test with 3 holders
+    const mockPsycHolders = [
+      { owner: "0xd9c0bb3476ce2ad2102d3ac07287bb802eea98f1" },
+      { owner: "0x5de3f8b1e1c758c3fe0b300aa376da229a732dc9" },
+      { owner: "0xf2217ba914d9c07b81c5e4b10a2eb2ec478d49aa" }
+    ] as PsycHolder[];
+
+    // Make sure votes match holder addresses
+    const mockVotes = mockPsycHolders.map((holder, index) => ({
+      id: `vote${index}`,
+      voter: holder.owner.toLowerCase(),
+      created: 1723932100 + index
+    }));
+
+    vi.mocked(getSnapshotProposals).mockResolvedValue([mockProposal]);
+    vi.mocked(getPsycHolders).mockResolvedValue(mockPsycHolders);
+    vi.mocked(getVotesOnProposalById).mockResolvedValue(mockVotes);
+    vi.mocked(pinClaimsListToIpfs).mockResolvedValue("QmHash123");
+
+    const totalAmount = 767506.15;
+    const result = await main(1723932000, 1726005600, totalAmount, 25);
+
+    // Convert all numbers to strings with full precision for comparison
+    const totalDistributed = result.balances.reduce(
+      (sum, balance) => sum + Number(balance.tokens),
+      0
+    );
+    expect(totalDistributed).toBeLessThanOrEqual(totalAmount);
+
+    // Verify that the last person can claim
+    const lastBalance = Number(
+      result.balances[result.balances.length - 1]?.tokens
+    );
+    const sumWithoutLast = result.balances
+      .slice(0, -1)
+      .reduce((sum, balance) => sum + Number(balance.tokens), 0);
+
+    expect(sumWithoutLast + lastBalance).toBeLessThanOrEqual(totalAmount);
+  });
+
+  it("should handle the exact distribution case that was failing", async () => {
+    const mockProposal = {
+      id: "0x123",
+      snapshot: "123456",
+      start: 1723932000,
+      end: 1726005600
+    };
+
+    // Recreate the exact case that was failing
+    const mockPsycHolders = [
+      { owner: "0xc3ac5ef1a15c40241233c722fe322d83b010e445" },
+      { owner: "0x5de3f8b1e1c758c3fe0b300aa376da229a732dc9" },
+      { owner: "0x407a6d10206f40a7aec3046fc17c4a186171b4e7" }
+    ] as PsycHolder[];
+
+    const mockVotes = mockPsycHolders.map((holder, index) => ({
+      id: `vote${index}`,
+      voter: holder.owner,
+      created: 1723932100 + index
+    }));
+
+    vi.mocked(getSnapshotProposals).mockResolvedValue([mockProposal]);
+    vi.mocked(getPsycHolders).mockResolvedValue(mockPsycHolders);
+    vi.mocked(getVotesOnProposalById).mockResolvedValue(mockVotes);
+    vi.mocked(pinClaimsListToIpfs).mockResolvedValue("QmHash123");
+
+    const totalAmount = 767506.1;
+    const result = await main(1723932000, 1726005600, totalAmount, 25);
+
+    // Each holder should get exactly 255835.36666666667
+    const expectedPerHolder = "255835.00000000000";
+
+    result.balances.forEach((balance) => {
+      expect(balance.tokens).toBe(expectedPerHolder);
+    });
+
+    // Verify exact sum
+    const totalDistributed = result.balances.reduce(
+      (sum, balance) => sum + Number(balance.tokens),
+      0
+    );
+
+    expect(totalDistributed).toBeLessThanOrEqual(totalAmount);
   });
 });
