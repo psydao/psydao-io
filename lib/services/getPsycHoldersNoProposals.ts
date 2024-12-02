@@ -17,19 +17,17 @@ export const psycHoldersNoProposals = async (
   let balances: Balance[] = [];
   const sgData = await getPsycHoldersBeforeTimestamp(endTimeStamp);
 
-  const psycHolders = sgData.map(
-    (psycHolder) => psycHolder.owner.toLowerCase() as Address
+  const psycHolders = new Set(
+    sgData.map((psycHolder) => psycHolder.owner.toLowerCase() as Address)
   );
 
-  const tokenPerHolder = Math.floor(totalAmountOfTokens / psycHolders.length);
+  const tokenPerHolder = Math.floor(totalAmountOfTokens / psycHolders.size);
 
   // Calculate the amount of tokens each psyc holder gets based on the percentage of votes they have
-  balances = psycHolders.map((psycHolder) => {
-    return {
-      address: psycHolder as Address,
-      tokens: tokenPerHolder.toString()
-    };
-  });
+  balances = Array.from(psycHolders, (psycHolder) => ({
+    address: psycHolder as Address,
+    tokens: tokenPerHolder.toString()
+  }));
 
   const leaves = balances.map((holder) =>
     keccak256(

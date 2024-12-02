@@ -17,7 +17,7 @@ export const main = async (
 ) => {
   const proposals = await getSnapshotProposals(startTimeStamp, endTimeStamp);
 
-  let psycHolders: Address[] = [];
+  let psycHolders: Set<string> = new Set();
   let psycHolderVotesPercentage: { address: Address; percentage: number }[] =
     [];
   let psycHolderTokenDistribution: {
@@ -41,11 +41,11 @@ export const main = async (
       Number(filteredProposals[filteredProposals.length - 1]?.snapshot)
     );
 
-    psycHolders = sgData.map(
-      (psycHolder) => psycHolder.owner.toLowerCase() as Address
+    psycHolders = new Set(
+      sgData.map((psycHolder) => psycHolder.owner.toLowerCase())
     );
 
-    const tokenPerHolder = Math.floor(totalAmountOfTokens / psycHolders.length);
+    const tokenPerHolder = Math.floor(totalAmountOfTokens / psycHolders.size);
 
     psycHolders.forEach((holder) => {
       votesCountMap[holder.toLowerCase() as Address] = 0;
@@ -55,7 +55,7 @@ export const main = async (
       const votes = (await getVotesOnProposalById(proposal.id)) ?? [];
       votes.forEach((vote) => {
         const voterAddress = vote.voter.toLowerCase() as Address;
-        if (psycHolders.includes(voterAddress.toLowerCase() as Address)) {
+        if (psycHolders.has(voterAddress.toLowerCase() as Address)) {
           if (votesCountMap[voterAddress] !== undefined) {
             votesCountMap[voterAddress]++;
             totalVotes++;
