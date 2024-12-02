@@ -18,7 +18,7 @@ export default async function handler(
       const merkleTree = await main(
         Number(startTimeStamp),
         Number(endTimeStamp),
-        Number(totalAmountOfTokens),
+        totalAmountOfTokens.toString(),
         Number(batchId)
       );
 
@@ -32,4 +32,3 @@ export default async function handler(
     return res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
-
