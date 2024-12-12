@@ -28,7 +28,6 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
     imageUris,
     imageUrisLoading,
     privateSaleStatus,
-    isSoldOut,
     whitelist,
     currentImageIndex
   } = useMintSection(isRandom);
@@ -49,7 +48,6 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
           privateSaleStatus={privateSaleStatus}
           isOriginal={isOriginal}
           handleModal={handleModal}
-          isSoldOut={isSoldOut}
           refetchBalances={refetchBalances}
         />
       ) : activeSale ? (
@@ -75,7 +73,6 @@ const RandomPsycItem: React.FC<{
   privateSaleStatus: boolean;
   isOriginal: boolean;
   handleModal: () => void;
-  isSoldOut: boolean;
   refetchBalances: () => void;
 }> = ({
   token,
@@ -83,7 +80,6 @@ const RandomPsycItem: React.FC<{
   privateSaleStatus,
   isOriginal,
   handleModal,
-  isSoldOut,
   refetchBalances
 }) => (
   <Flex justifyContent="center" w="100%">
@@ -94,7 +90,6 @@ const RandomPsycItem: React.FC<{
       isPrivateSale={privateSaleStatus}
       isOriginal={isOriginal}
       handleModal={handleModal}
-      soldOut={isSoldOut}
       refetchBalances={refetchBalances}
     />
   </Flex>
@@ -146,7 +141,6 @@ const SpecificPsycItems: React.FC<{
         isPrivateSale={privateSaleStatus}
         isOriginal={isOriginal}
         handleModal={handleModal}
-        soldOut={false}
         refetchBalances={refetchBalances}
       />
     ))}

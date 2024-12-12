@@ -19,7 +19,6 @@ interface PsycItemProps {
   isOriginal: boolean;
   refetchBalances: () => void;
   handleModal: () => void;
-  soldOut: boolean;
 }
 
 const PsycItem: React.FC<PsycItemProps> = ({
@@ -29,8 +28,7 @@ const PsycItem: React.FC<PsycItemProps> = ({
   isPrivateSale,
   isOriginal,
   refetchBalances,
-  handleModal,
-  soldOut
+  handleModal
 }) => {
   const [isImageOpen, setIsImageOpen] = useState(false);
 
@@ -51,8 +49,7 @@ const PsycItem: React.FC<PsycItemProps> = ({
     isRandom,
     isPrivateSale,
     isOriginal,
-    refetchBalances,
-    soldOut
+    refetchBalances
   });
 
   return (
@@ -118,9 +115,6 @@ const PsycItem: React.FC<PsycItemProps> = ({
   );
 
   function renderOverlays() {
-    if (soldOut && isRandom && isOriginal) {
-      return <SoldOutOverlay />;
-    }
     if (isOriginal && isSold && !isRandom) {
       return <SoldOverlay />;
     }
@@ -148,7 +142,6 @@ const PsycItem: React.FC<PsycItemProps> = ({
         isMinting={isMinting}
         isPaused={isPaused || (!isOriginal && !isActive)}
         isActive={isActive}
-        soldOut={soldOut}
         isOriginal={isOriginal}
         isRandom={isRandom}
         isSold={isSold ?? false}

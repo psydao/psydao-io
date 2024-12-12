@@ -11,19 +11,22 @@ import useRandomImage from "@/hooks/useRandomImage";
 import useGetRandomIds from "@/hooks/useGetRandomIds";
 
 export const useMintSection = (isRandom: boolean) => {
-  const { activeSale, isOriginal } = useSaleWidget();
+  const { activeSale, allSalesData, isOriginal } = useSaleWidget();
   const [isOpen, setIsOpen] = useState(false);
   const [whitelist, setWhitelist] = useState<{ [key: string]: string[] }>({});
 
   const { isLoading: isPrivateSaleLoading, isPrivateSale } = usePrivateSale();
   const { isLoading: isAddressesLoading, getAddresses } = useGetAddresses();
-  const isSoldOut = useBatchSoldOut(activeSale, isPrivateSale);
 
   const { availableRandomIds, isRandomIdsLoading } = useGetRandomIds(
     activeSale,
     isRandom,
     isOriginal
   );
+
+  const allTokensOnSale = useMemo(() => {
+    return allSalesData?.sales.map((sale) => sale.tokensOnSale).flat();
+  }, [allSalesData]);
 
   const imageIds = useMemo(() => {
     if (isRandomIdsLoading) return [];
@@ -32,8 +35,8 @@ export const useMintSection = (isRandom: boolean) => {
       return availableRandomIds;
     }
 
-    return activeSale?.tokensOnSale.map((token) => token.tokenID) ?? [];
-  }, [availableRandomIds, isRandomIdsLoading, activeSale, isRandom]);
+    return allTokensOnSale?.map((token) => token.tokenID) ?? [];
+  }, [availableRandomIds, isRandomIdsLoading, allTokensOnSale, isRandom]);
 
   const { imageUris, loading: imageUrisLoading } = useImageData(
     imageIds,
@@ -110,14 +113,13 @@ export const useMintSection = (isRandom: boolean) => {
     isOpen,
     handleModal,
     activeSale,
-    isOriginal,
     randomToken,
     activeTokens,
     imageUris,
+    isOriginal,
     imageUrisLoading,
     privateSaleStatus,
     isAddressesLoading,
-    isSoldOut,
     whitelist,
     currentImageIndex,
     tokens: activeSale?.tokensOnSale ?? []
