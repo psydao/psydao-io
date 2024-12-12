@@ -13,8 +13,10 @@ const useGetRandomIds = (
   isRandom: boolean,
   isOriginal: boolean
 ) => {
-  const [availableRandomIds, setAvailableRandomIds] = useState<string[]>([]);
-  const [isRandomIdsLoading, setIsRandomIdsLoading] = useState(false);
+  const [availableRandomTokens, setAvailableRandomTokens] = useState<
+    TokenOnSale[]
+  >([]);
+  const [isRandomTokensLoading, setIsRandomTokensLoading] = useState(false);
 
   const client = env.NEXT_PUBLIC_IS_MAINNET ? mainnetClient : sepoliaClient;
   const contractAddress = env.NEXT_PUBLIC_IS_MAINNET
@@ -27,7 +29,7 @@ const useGetRandomIds = (
   useEffect(() => {
     const fetchRandomCopies = async () => {
       if (allTokensOnSale && isRandom) {
-        setIsRandomIdsLoading(true);
+        setIsRandomTokensLoading(true);
       }
       if (allTokensOnSale && isRandom && !isOriginal) {
         const randomCopies = await Promise.all(
@@ -40,22 +42,35 @@ const useGetRandomIds = (
             })) as TokenInformationReturn;
 
             return {
+              id: token.id,
               tokenID: token.tokenID,
+              buyer: token.buyer,
+              sale: token.sale,
               tokenActive: currentTokenInfo[2]
             };
           })
         );
 
-        setAvailableRandomIds(
+        setAvailableRandomTokens(
           randomCopies
             .filter((token) => token.tokenActive === true)
-            .map((token) => token.tokenID)
+            .map((token) => ({
+              id: token.id,
+              tokenID: token.tokenID,
+              buyer: token.buyer,
+              sale: token.sale
+            }))
         );
       } else if (allTokensOnSale && isRandom && isOriginal) {
-        setAvailableRandomIds(
+        setAvailableRandomTokens(
           allTokensOnSale
             .filter((token) => token.buyer === null)
-            .map((token) => token.tokenID)
+            .map((token) => ({
+              id: token.id,
+              tokenID: token.tokenID,
+              buyer: token.buyer,
+              sale: token.sale
+            }))
         );
       }
     };
@@ -64,10 +79,10 @@ const useGetRandomIds = (
         console.error(error);
       })
       .finally(() => {
-        setIsRandomIdsLoading(false);
+        setIsRandomTokensLoading(false);
       });
   }, [allTokensOnSale, isOriginal]);
-  return { availableRandomIds, isRandomIdsLoading };
+  return { availableRandomTokens, isRandomTokensLoading };
 };
 
 export default useGetRandomIds;
