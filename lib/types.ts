@@ -4,6 +4,12 @@ export interface TokenOnSale {
   id: string;
   tokenID: string;
   buyer: Address | null;
+  sale: {
+    batchID: string;
+    ceilingPrice: string;
+    floorPrice: string;
+    ipfsHash: string;
+  };
 }
 
 export interface TokenMetadata {
@@ -51,6 +57,12 @@ export type OwnedTokenItem = {
   owner: string;
   tokenAddress: string;
   tokenId: string;
+  sale: {
+    batchID: string;
+    ceilingPrice: string;
+    floorPrice: string;
+    ipfsHash: string;
+  };
   uri: string;
   __typename: string;
 };

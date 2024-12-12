@@ -5,6 +5,7 @@ export const getTokensOnSale = gql`
     tokenOnSales {
       tokenID
       id
+      batchID
       price
       sale {
         batchID
@@ -34,6 +35,12 @@ export const getAllSalesWithTokens = gql`
           name
           imageURI
           description
+        }
+        sale {
+          batchID
+          ceilingPrice
+          floorPrice
+          ipfsHash
         }
       }
     }

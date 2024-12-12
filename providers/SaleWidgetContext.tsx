@@ -13,14 +13,12 @@ import type { Sale, GetAllSalesWithTokensData } from "@/lib/types";
 import { useWindowManager } from "@/components/ui/window-manager";
 
 interface SaleWidgetContextType {
-  activeSale: Sale | undefined;
-  setActiveSale: React.Dispatch<React.SetStateAction<Sale | undefined>>;
   isOriginal: boolean;
   isLoading: boolean;
   error: unknown;
   isWrongNetwork: boolean;
   fullScreenWindow: boolean;
-  allSalesData?: GetAllSalesWithTokensData;
+  allSalesData: GetAllSalesWithTokensData | undefined;
 }
 
 const SaleWidgetContext = createContext<SaleWidgetContextType | undefined>(
@@ -37,7 +35,6 @@ const SaleWidgetProvider: React.FC<SaleWidgetProviderProps> = ({
   updateTrigger
 }) => {
   const { chainId } = useAccount();
-  const [activeSale, setActiveSale] = useState<Sale>();
   const isOriginal = true;
 
   const {
@@ -51,24 +48,13 @@ const SaleWidgetProvider: React.FC<SaleWidgetProviderProps> = ({
   const isWrongNetwork = chainId !== Number(CHAINID);
 
   useEffect(() => {
-    if (
-      !allSalesLoading &&
-      allSalesData &&
-      allSalesData.sales.length > 0 &&
-      !activeSale
-    ) {
-      setActiveSale(allSalesData.sales[0]);
-    }
-  }, [allSalesLoading, allSalesData, activeSale]);
-
-  useEffect(() => {
     const refetchData = async () => {
       if (updateTrigger) {
         await refetch();
       }
     };
     refetchData().catch(console.error);
-  }, [updateTrigger, refetch, activeSale]);
+  }, [updateTrigger, refetch]);
 
   const { state } = useWindowManager();
 
@@ -81,8 +67,6 @@ const SaleWidgetProvider: React.FC<SaleWidgetProviderProps> = ({
   return (
     <SaleWidgetContext.Provider
       value={{
-        activeSale,
-        setActiveSale,
         allSalesData,
         isOriginal,
         isLoading,

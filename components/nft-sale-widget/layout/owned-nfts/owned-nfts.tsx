@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 
 type OwnedNftsProps = {
   nftData: GetTokensByOwnerData | undefined;
-  activeSale: Sale | undefined;
+  allSales: Sale[] | undefined;
   isOriginal: boolean;
   isLoading: boolean;
   isFullScreen: boolean;
@@ -38,14 +38,16 @@ const OwnedNfts = (props: OwnedNftsProps) => {
     balances: copyBalances,
     refetchBalances,
     loading: copyBalancesLoading
-  } = useUserCopyBalances(props.activeSale, address);
+  } = useUserCopyBalances(props.allSales, address);
 
   if (!address) return null;
 
   const filteredCopyTokens =
-    props.activeSale?.tokensOnSale.filter(
-      (token) => parseInt(copyBalances[token.tokenID] ?? "0", 10) > 0
-    ) ?? [];
+    props.allSales
+      ?.flatMap((sale) => sale.tokensOnSale)
+      .filter(
+        (token) => parseInt(copyBalances[token.tokenID] ?? "0", 10) > 0
+      ) ?? [];
 
   const EmptyStateText = (
     <>
@@ -104,7 +106,7 @@ const OwnedNfts = (props: OwnedNftsProps) => {
                   tokenId: token.tokenId,
                   whitelist: [],
                   balance: "0",
-                  batchId: props.activeSale?.batchID ?? "",
+                  batchId: token?.sale?.batchID ?? "",
                   price: "0",
                   isSold: false,
                   ipfsHash: ""
@@ -125,8 +127,8 @@ const OwnedNfts = (props: OwnedNftsProps) => {
                   tokenId: token.tokenID,
                   whitelist: [],
                   balance: copyBalances[token.tokenID] ?? "0",
-                  batchId: props.activeSale?.batchID ?? "",
-                  price: `${formatUnits(BigInt(props?.activeSale?.ceilingPrice ?? 0), 18)}`,
+                  batchId: token.sale.batchID ?? "",
+                  price: `${formatUnits(BigInt(token.sale.floorPrice), 18)}`,
                   isSold: false,
                   ipfsHash: ""
                 }}
@@ -145,7 +147,7 @@ const OwnedNfts = (props: OwnedNftsProps) => {
           <SubmitButtonContainer>
             <PsyButton
               onClick={handleAddToWallet}
-              isDisabled={!props.activeSale || isAdding}
+              isDisabled={!props.allSales || isAdding}
               customStyle={{
                 width: "100%",
                 maxWidth: "550px",

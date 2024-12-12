@@ -8,7 +8,7 @@ const OwnedNftsContent = () => {
   const { data, tokenCount } = useTokenContext();
 
   const {
-    activeSale,
+    allSalesData,
     isOriginal,
     isLoading,
     fullScreenWindow: isFullScreen
@@ -20,13 +20,15 @@ const OwnedNftsContent = () => {
     </>
   );
 
+  console.log("all sales data", allSalesData);
+
   return (
     <>
       {tokenCount > 0 ? (
         <OwnedNfts
           nftData={data}
           isOriginal={isOriginal}
-          activeSale={activeSale}
+          allSales={allSalesData?.sales ?? []}
           isLoading={isLoading}
           isFullScreen={isFullScreen}
         />

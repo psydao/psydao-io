@@ -1,4 +1,4 @@
-import type { SaleTokensMetadata } from "@/lib/types";
+import type { SaleTokensMetadata, TokenOnSale } from "@/lib/types";
 import { getTokensMetadataForASale } from "@/services/graph";
 import { useQuery } from "@apollo/client";
 import { useMemo } from "react";

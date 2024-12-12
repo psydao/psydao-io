@@ -15,7 +15,7 @@ interface UseUserCopyBalancesResult {
 }
 
 const useUserCopyBalances = (
-  activeSale: Sale | undefined,
+  activeSales: Sale[] | undefined,
   address: string | undefined
 ): UseUserCopyBalancesResult => {
   const [balances, setBalances] = useState<{ [key: string]: string }>({});
@@ -24,7 +24,7 @@ const useUserCopyBalances = (
   const client = useApolloClient() as ApolloClient<NormalizedCacheObject>;
 
   const fetchBalances = useCallback(async () => {
-    if (!activeSale || !address) {
+    if (!activeSales || !address) {
       setLoading(false);
       return;
     }
@@ -33,7 +33,8 @@ const useUserCopyBalances = (
     setError(null);
 
     try {
-      const balancesPromises = activeSale.tokensOnSale.map(async (token) => {
+      const tokensOnSale = activeSales.flatMap((sale) => sale.tokensOnSale);
+      const balancesPromises = tokensOnSale.map(async (token) => {
         const concatenatedId = `${address.toLowerCase()}-${token.tokenID}`;
         const { data }: { data: { userCopyBalance?: { balance: string } } } =
           await client.query({
@@ -63,7 +64,7 @@ const useUserCopyBalances = (
     } finally {
       setLoading(false);
     }
-  }, [client, activeSale, address]);
+  }, [client, activeSales, address]);
 
   useEffect(() => {
     void fetchBalances();
