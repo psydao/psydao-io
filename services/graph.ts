@@ -19,7 +19,7 @@ export const getTokensOnSale = gql`
 
 export const getAllSalesWithTokens = gql`
   query GetAllSalesWithTokens {
-    sales(orderBy: batchID) {
+    sales(orderBy: batchID, orderDirection: desc) {
       batchID
       blockNumber
       ceilingPrice
@@ -82,6 +82,8 @@ export const getTokensMetadataForASale = gql`
   query GetTokensMetadata($tokenIds: [String!]!) {
     tokens(
       where: { and: [{ tokenType_in: ["ERC721"] }, { tokenId_in: $tokenIds }] }
+      orderBy: tokenId
+      orderDirection: desc
     ) {
       id
       tokenId
