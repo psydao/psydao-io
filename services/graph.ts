@@ -98,7 +98,7 @@ export const getTokensMetadataForASale = gql`
 
 export const getTokensByOwner = gql`
   query GetTokensByOwner($owner: String!) {
-    tokens(where: { owner: $owner }, orderBy: tokenId, orderDirection: asc) {
+    tokens(where: { owner: $owner }, orderBy: tokenId, orderDirection: desc) {
       owner
       tokenId
       tokenAddress
