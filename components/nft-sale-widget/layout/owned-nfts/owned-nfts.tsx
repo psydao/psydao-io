@@ -20,9 +20,15 @@ type OwnedNftsProps = {
 };
 
 const OwnedNfts = (props: OwnedNftsProps) => {
-  const imageIds = props.nftData?.tokens.map((token) => token.tokenId) ?? [];
+  const sortedTokens = [...(props.nftData?.tokens ?? [])].sort(
+    (a, b) => parseInt(a.tokenId) - parseInt(b.tokenId)
+  );
+
+  const imageIds = sortedTokens.map((token) => token.tokenId);
   const { imageUris, loading: imageUrisLoading } = useImageData(imageIds);
   const [reloadTrigger, setReloadTrigger] = useState(0);
+
+  const reversedImageUris = [...imageUris].reverse();
 
   const triggerReload = () => {
     setReloadTrigger((prev) => prev + 1);
@@ -97,11 +103,12 @@ const OwnedNfts = (props: OwnedNftsProps) => {
         maxW={"100%"}
       >
         {props.isOriginal
-          ? props.nftData?.tokens.map((token, index) => (
+          ? sortedTokens.map((token, index) => (
               <OwnedNftItem
-                key={index}
+                key={token.tokenId}
                 item={{
-                  src: imageUris[index % imageUris.length] ?? "",
+                  src:
+                    reversedImageUris[index % reversedImageUris.length] ?? "",
                   tokenId: token.tokenId,
                   whitelist: [],
                   balance: "0",
@@ -120,7 +127,8 @@ const OwnedNfts = (props: OwnedNftsProps) => {
               <OwnedNftItem
                 key={index}
                 item={{
-                  src: imageUris[index % imageUris.length] ?? "",
+                  src:
+                    reversedImageUris[index % reversedImageUris.length] ?? "",
                   tokenId: token.tokenID,
                   whitelist: [],
                   balance: copyBalances[token.tokenID] ?? "0",

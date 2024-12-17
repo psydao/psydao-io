@@ -9,7 +9,7 @@ import ConnectWalletModal from "../../common/connect-wallet-modal";
 
 import useUserCopyBalances from "@/hooks/useUserCopyBalances";
 
-import type { Sale, TokenItem } from "@/lib/types";
+import type { Sale, TokenItem, TokenOnSale } from "@/lib/types";
 import { useMintSection } from "../../hooks/useMintSection";
 interface MintSectionProps {
   isRandom: boolean;
@@ -22,7 +22,7 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
   const {
     isOpen,
     handleModal,
-    activeSale,
+    allSalesData,
     isOriginal,
     randomToken,
     imageUris,
@@ -33,11 +33,18 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
   } = useMintSection(isRandom);
 
   const { address } = useAccount();
-  const { refetchBalances } = useUserCopyBalances(activeSale, address);
+  const { refetchBalances } = useUserCopyBalances(
+    allSalesData?.sales ?? [],
+    address
+  );
 
   if (imageUrisLoading || (isRandom && !randomToken)) {
     return <SkeletonLayout isRandom={isRandom} />;
   }
+
+  const tokensOnSale = allSalesData?.sales?.flatMap(
+    (sale) => sale.tokensOnSale
+  );
 
   return (
     <Flex textAlign="center" pb={4} px={4} justifyContent="center">
@@ -50,11 +57,11 @@ const MintSection = ({ isRandom }: MintSectionProps) => {
           handleModal={handleModal}
           refetchBalances={refetchBalances}
         />
-      ) : activeSale ? (
+      ) : allSalesData?.sales ? (
         <SpecificPsycItems
-          tokens={activeSale?.tokensOnSale ?? []}
+          tokens={tokensOnSale ?? []}
           imageUris={imageUris}
-          activeSale={activeSale}
+          activeSales={allSalesData.sales}
           whitelist={whitelist}
           privateSaleStatus={privateSaleStatus}
           isOriginal={isOriginal}
@@ -96,9 +103,9 @@ const RandomPsycItem: React.FC<{
 );
 
 const SpecificPsycItems: React.FC<{
-  tokens: { id: string; tokenID: string }[];
+  tokens: TokenOnSale[];
   imageUris: string[];
-  activeSale: Sale;
+  activeSales: Sale[] | undefined;
   whitelist: { [key: string]: string[] };
   privateSaleStatus: boolean;
   isOriginal: boolean;
@@ -107,44 +114,45 @@ const SpecificPsycItems: React.FC<{
 }> = ({
   tokens,
   imageUris,
-  activeSale,
   whitelist,
   privateSaleStatus,
   isOriginal,
   handleModal,
   refetchBalances
-}) => (
-  <Grid
-    templateColumns={{
-      base: "minmax(170px, 1fr)",
-      sm: "repeat(auto-fit, minmax(170px, 1fr))"
-    }}
-    gap={6}
-    justifyItems="center"
-    maxW="100%"
-  >
-    {tokens.map((token, index) => (
-      <PsycItem
-        key={token.id}
-        item={{
-          src: imageUris[index] ?? "",
-          price: formatUnits(BigInt(activeSale.ceilingPrice), 18),
-          isSold: false,
-          batchId: activeSale.batchID,
-          tokenId: token.tokenID,
-          ipfsHash: activeSale.ipfsHash,
-          whitelist: whitelist[activeSale.ipfsHash] ?? [],
-          balance: "0"
-        }}
-        index={parseInt(token.id, 10)}
-        isRandom={false}
-        isPrivateSale={privateSaleStatus}
-        isOriginal={isOriginal}
-        handleModal={handleModal}
-        refetchBalances={refetchBalances}
-      />
-    ))}
-  </Grid>
-);
+}) => {
+  return (
+    <Grid
+      templateColumns={{
+        base: "minmax(170px, 1fr)",
+        sm: "repeat(auto-fit, minmax(170px, 1fr))"
+      }}
+      gap={6}
+      justifyItems="center"
+      maxW="100%"
+    >
+      {tokens.map((token, index) => (
+        <PsycItem
+          key={token.id}
+          item={{
+            src: imageUris[index] ?? "",
+            price: formatUnits(BigInt(token.sale.ceilingPrice), 18),
+            isSold: false,
+            batchId: token.sale.batchID,
+            tokenId: token.tokenID,
+            ipfsHash: token.sale.ipfsHash,
+            whitelist: whitelist[token.sale.ipfsHash] ?? [],
+            balance: "0"
+          }}
+          index={parseInt(token.id, 10)}
+          isRandom={false}
+          isPrivateSale={privateSaleStatus}
+          isOriginal={isOriginal}
+          handleModal={handleModal}
+          refetchBalances={refetchBalances}
+        />
+      ))}
+    </Grid>
+  );
+};
 
 export default MintSection;
