@@ -30,6 +30,14 @@ export const getAllSalesWithTokens = gql`
         id
         tokenID
         buyer
+        sale {
+          id
+          batchID
+          blockNumber
+          ceilingPrice
+          floorPrice
+          ipfsHash
+        }
         metadata {
           name
           imageURI
