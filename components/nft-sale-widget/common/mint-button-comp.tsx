@@ -36,9 +36,11 @@ export const MintButtonComponent = memo(
         buttonText = "Minting";
       } else if (isPaused) {
         buttonText = "Paused";
+      } else if (isSold && isOriginal) {
+        buttonText = "Sold";
       }
 
-      isDisabled = isMinting || isPaused;
+      isDisabled = isMinting || isPaused || (isSold && isOriginal);
     } else {
       if (isMinting) {
         buttonText = "Minting";
