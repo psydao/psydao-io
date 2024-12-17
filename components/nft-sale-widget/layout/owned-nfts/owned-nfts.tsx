@@ -2,7 +2,6 @@ import { Flex, Grid } from "@chakra-ui/react";
 import { useAccount } from "wagmi";
 import { type GetTokensByOwnerData, type Sale } from "@/lib/types";
 import useUserCopyBalances from "@/hooks/useUserCopyBalances";
-import { formatUnits } from "viem";
 import OwnedNftsEmptyState from "./owned-nfts-empty-state";
 import useImageData from "@/hooks/useImageData";
 import { useAddAssetToWallet } from "@/hooks/useAddAsset";
@@ -14,7 +13,7 @@ import { useEffect, useState } from "react";
 
 type OwnedNftsProps = {
   nftData: GetTokensByOwnerData | undefined;
-  activeSale: Sale | undefined;
+  allSales: Sale[] | undefined;
   isOriginal: boolean;
   isLoading: boolean;
   isFullScreen: boolean;
@@ -38,14 +37,16 @@ const OwnedNfts = (props: OwnedNftsProps) => {
     balances: copyBalances,
     refetchBalances,
     loading: copyBalancesLoading
-  } = useUserCopyBalances(props.activeSale, address);
+  } = useUserCopyBalances(props.allSales, address);
 
   if (!address) return null;
 
   const filteredCopyTokens =
-    props.activeSale?.tokensOnSale.filter(
-      (token) => parseInt(copyBalances[token.tokenID] ?? "0", 10) > 0
-    ) ?? [];
+    props.allSales
+      ?.flatMap((sale) => sale.tokensOnSale)
+      .filter(
+        (token) => parseInt(copyBalances[token.tokenID] ?? "0", 10) > 0
+      ) ?? [];
 
   const EmptyStateText = (
     <>
@@ -104,8 +105,6 @@ const OwnedNfts = (props: OwnedNftsProps) => {
                   tokenId: token.tokenId,
                   whitelist: [],
                   balance: "0",
-                  batchId: props.activeSale?.batchID ?? "",
-                  price: "0",
                   isSold: false,
                   ipfsHash: ""
                 }}
@@ -125,8 +124,6 @@ const OwnedNfts = (props: OwnedNftsProps) => {
                   tokenId: token.tokenID,
                   whitelist: [],
                   balance: copyBalances[token.tokenID] ?? "0",
-                  batchId: props.activeSale?.batchID ?? "",
-                  price: `${formatUnits(BigInt(props?.activeSale?.ceilingPrice ?? 0), 18)}`,
                   isSold: false,
                   ipfsHash: ""
                 }}
@@ -145,7 +142,7 @@ const OwnedNfts = (props: OwnedNftsProps) => {
           <SubmitButtonContainer>
             <PsyButton
               onClick={handleAddToWallet}
-              isDisabled={!props.activeSale || isAdding}
+              isDisabled={!props.allSales || isAdding}
               customStyle={{
                 width: "100%",
                 maxWidth: "550px",
