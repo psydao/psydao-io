@@ -42,4 +42,5 @@ export const psyTokenMainnet = "0x2196B84EaCe74867b73fb003AfF93C11FcE1D47A";
 
 // Freebase
 export const freebaseSepolia = "0xef352fb4C0Dd8d7548d11B2E138A1c835364bB1d"
+// NOTE: new sepolia address should be "0x89F9587F512A69bd8586CCEa267658b464747D70"
 export const freebaseMainnet = ""

@@ -1,43 +1,55 @@
-import { useAddDepositToken, useUpdateRewardConfig, useRewardTokenManagement } from "@/hooks/useFreebaseAdmin";
-import { Flex, Box, Text, Grid } from "@chakra-ui/react";
-import { RewardConfiguration } from "./reward-configuration";
-import { TokenManagement } from "./token-management";
+import { useState } from "react"
+import { Box, Text } from "@chakra-ui/react"
+import { TokenManagement } from "./token-management"
+import { RewardConfiguration } from "./reward-configuration"
+import { AdminSwitch } from "./admin-switch"
+import { useAddDepositToken, useUpdateRewardConfig, useRewardTokenManagement } from "@/hooks/useFreebaseAdmin"
 
-const AdminFreebaseComponent: React.FC = () => {
-  const { addDepositToken } = useAddDepositToken();
-  const { addRewardToken, setRewardToken } = useRewardTokenManagement();
-  const { updateRewardPerBlock, setAllocationPoint } = useUpdateRewardConfig();
+export function AdminFreebaseComponent() {
+  const [isTokenManagement, setIsTokenManagement] = useState(true)
+
+  // Hooks for contract interactions
+  const { addDepositToken } = useAddDepositToken()
+  const { addRewardToken, setRewardToken } = useRewardTokenManagement()
+  const { updateRewardPerBlock, setAllocationPoint } = useUpdateRewardConfig()
 
   return (
-    <Box>
-      <Flex
-        px={{ base: "4", md: "8" }}
-        alignItems="center"
-        justifyContent="space-between"
-        borderBottom="1px solid #E9BDBD"
+    <Box p={6}>
+      <Text
+        as="h2"
+        fontSize={{ base: "24px", sm: "40px" }}
+        color="#269200"
+        mb={6}
       >
-        <Text
-          as="h2"
-          fontSize={{ base: "24px", sm: "40px" }}
-          color="#269200"
-        >
-          Freebase LP Admin
-        </Text>
-      </Flex>
+        Freebase LP Admin
+      </Text>
 
-      <Grid templateColumns="repeat(auto-fit, minmax(300px, 1fr))" gap={6} p={6}>
-        <TokenManagement
-          onAddToken={addDepositToken}
-          onAddReward={addRewardToken}
-          onSetReward={setRewardToken}
-        />
-        <RewardConfiguration
-          onUpdatePerBlock={updateRewardPerBlock}
-          onSetAllocation={setAllocationPoint}
-        />
-      </Grid>
+      <AdminSwitch
+        isTokenManagement={isTokenManagement}
+        setIsTokenManagement={setIsTokenManagement}
+      />
+
+      <Box
+        p={6}
+        borderRadius="md"
+        border="1px solid #E9BDBD"
+        bg="white"
+      >
+        {isTokenManagement ? (
+          <TokenManagement
+            onAddToken={addDepositToken}
+            onAddReward={addRewardToken}
+            onSetReward={setRewardToken}
+          />
+        ) : (
+          <RewardConfiguration
+            onUpdatePerBlock={updateRewardPerBlock}
+            onSetAllocation={setAllocationPoint}
+          />
+        )}
+      </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default AdminFreebaseComponent;
+export default AdminFreebaseComponent

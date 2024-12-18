@@ -14,19 +14,25 @@ import { Head } from "@/components/ui/head";
 import { Marquee } from "@/components/ui/marquee";
 import { Menu } from "@/components/ui/menu";
 import { Open, WindowManager } from "@/components/ui/window-manager";
+
+import { MixpanelTracking } from "@/services/mixpanel";
+
 import { Manifesto } from "@/components/windows/manifesto";
 import { Radio } from "@/components/windows/radio";
-import { MixpanelTracking } from "@/services/mixpanel";
 import { SwapWidget } from "@/components/windows/swap-widget";
-import { useRescrictedCountries } from "@/hooks/restrictedCountries";
 import { Blog } from "@/components/windows/blog";
+import { Claim } from "@/components/windows/claim";
+import { Freebase } from "@/components/windows/freebase";
+
+import { useRescrictedCountries } from "@/hooks/restrictedCountries";
+
 import "react-toastify/dist/ReactToastify.css";
 import { NftSaleWidget } from "@/components/nft-sale-widget";
 import WalletConnectHome from "@/components/connectWalletHome";
 import AdminDashboardWidget from "@/components/admin-dashboard";
 import GeneralDashboard from "@/components/general-dashboard";
 import ShopifyWidget from "@/components/shopify-widget";
-import { Claim } from "@/components/windows/claim";
+
 import { ApolloProvider } from "@apollo/client";
 import { shopifyClient } from "@/config/apolloClients";
 import { useReadTotalTokensForSale } from "@/services/web3/useReadTotalTokensForSale";
@@ -164,13 +170,13 @@ const Homepage: NextPage = () => {
                     <Marquee
                       text={
                         !totalTokensForSaleValue ||
-                        totalTokensForSaleValue === "0.00"
+                          totalTokensForSaleValue === "0.00"
                           ? ["PSY TOKEN SOLD OUT."]
                           : [
-                              "PSYDAO",
-                              "WHO CARES?",
-                              "NOW ACCEPTING ALCHEMIST GRANT APPLICATIONS"
-                            ]
+                            "PSYDAO",
+                            "WHO CARES?",
+                            "NOW ACCEPTING ALCHEMIST GRANT APPLICATIONS"
+                          ]
                       }
                     />
                   </Box>
@@ -213,6 +219,7 @@ const Homepage: NextPage = () => {
                     <ApolloProvider client={shopifyClient}>
                       <ShopifyWidget />
                     </ApolloProvider>
+                    <Freebase />
                   </Box>
                 </WindowManager>
                 <Link

@@ -184,6 +184,16 @@ export const Menu = () => {
               Shop
             </MenuItem>
           </Open>
+          <Open id="freebase">
+            <MenuItem
+              fontStyle="italic"
+              onClick={() =>
+                MixpanelTracking.getInstance().menuLinkClicked("freebase")
+              }
+            >
+              Freebase
+            </MenuItem>
+          </Open>
         </MenuList>
       </ChakraMenu>
     </Box>
