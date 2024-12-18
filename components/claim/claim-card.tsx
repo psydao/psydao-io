@@ -78,13 +78,8 @@ const ClaimCard = (props: ClaimCardProps) => {
         return Number(amount).toFixed(2);
       }
       // Format from wei (18 decimals) to a human-readable number
-      if (amount.length > 18) {
-        const formatted = formatUnits(BigInt(amount), 18);
-        return Number(formatted).toFixed(2);
-      }
-
-      // Round to 2 decimal places
-      return Number(amount).toFixed(2);
+      const formatted = formatUnits(BigInt(amount), 18);
+      return Number(formatted).toFixed(2);
     } catch (err) {
       console.error("Error formatting amount:", err);
       return "0.00";
