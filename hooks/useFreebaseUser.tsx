@@ -81,23 +81,35 @@ export function usePoolInteraction(poolId: bigint) {
   }
 }
 
-export function usePoolData(poolId?: bigint) {
-  const { data: poolInfo } = useReadContract({
+export function usePoolData() {
+  const { data: poolLength } = useReadContract({
+    address: FREEBASE_ADDRESS,
+    abi: FREEBASE_ABI,
+    functionName: 'poolLength'
+  }) as { data: bigint }
+
+  const { data: pools } = useReadContract({
     address: FREEBASE_ADDRESS,
     abi: FREEBASE_ABI,
     functionName: 'poolInfo',
-    args: poolId ? [poolId] : undefined
-  })
+    args: poolLength ? Array.from({ length: Number(poolLength) }, (_, i) => BigInt(i)) : undefined
+  }) as { data: PoolInfo[] }
 
   const { data: totalAllocPoint } = useReadContract({
     address: FREEBASE_ADDRESS,
     abi: FREEBASE_ABI,
     functionName: 'totalAllocPoint'
-  })
+  }) as { data: bigint }
 
   return {
-    pool: poolInfo as PoolInfo | undefined,
-    totalAllocPoint: totalAllocPoint as bigint | undefined
+    pools: pools ? pools.map((pool, index) => ({
+      id: index,
+      token: pool.token,
+      allocPoint: pool.allocPoint,
+      lastRewardBlock: pool.lastRewardBlock,
+      accRewardPerShare: pool.accRewardPerShare
+    })) : undefined,
+    totalAllocPoint
   }
 }
 

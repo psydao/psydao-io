@@ -12,6 +12,7 @@ import { getAllSalesWithTokens } from "@/services/graph";
 import { useQuery } from "@apollo/client";
 import { whitelistedAddresses } from "./whitelisted-addresses";
 import { useAccount } from "wagmi";
+import AdminFreebaseComponent from "../freebase/admin-freebase-component";
 
 const AdminDashboardWidget = ({
   triggerNftSaleUpdate

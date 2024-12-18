@@ -1,7 +1,7 @@
 import { useAddDepositToken, useUpdateRewardConfig, useRewardTokenManagement } from "@/hooks/useFreebaseAdmin";
 import { Flex, Box, Text, Grid } from "@chakra-ui/react";
-import { RewardConfiguration } from "./freebase/reward-configuration";
-import { TokenManagement } from "./freebase/token-management";
+import { RewardConfiguration } from "./reward-configuration";
+import { TokenManagement } from "./token-management";
 
 const AdminFreebaseComponent: React.FC = () => {
   const { addDepositToken } = useAddDepositToken();
