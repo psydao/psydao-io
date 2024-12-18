@@ -27,7 +27,7 @@ import useReadTokenInformation from "@/hooks/useReadTokenInformation";
 import { env } from "@/config/env.mjs";
 
 interface OwnedNftItemProps {
-  item: TokenItem & {
+  item: Omit<TokenItem, "batchId" | "price"> & {
     whitelist: string[];
     balance?: string;
   };
@@ -59,15 +59,6 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
     props.isOriginal,
     props.refetchBalances
   );
-
-  const handleMint = async () => {
-    await buyNft(
-      parseInt(props.item.batchId),
-      parseInt(props.item.tokenId),
-      props.item.price ?? "0.00",
-      []
-    );
-  };
 
   const isButtonDisabled =
     isPending ||
@@ -169,47 +160,6 @@ const OwnedNftItem = (props: OwnedNftItemProps) => {
           objectFit="cover"
         />
       </Box>
-      {!props.isOriginal && (
-        <Grid
-          w={"100%"}
-          gridTemplateColumns={{ base: "1fr", md: "1fr 1fr" }}
-          gap={4}
-        >
-          <GridItem w={"100%"}>
-            <Flex
-              padding={"12px 48px"}
-              borderRadius={"999px"}
-              border={"1px solid #D6D6D6"}
-              color={"#585858"}
-              alignItems={"center"}
-              justifyContent={"center"}
-            >
-              {props.item.balance && props.item.balance === "1"
-                ? `${props.item.balance} Copy`
-                : `${props.item.balance} Copies`}
-            </Flex>
-          </GridItem>
-          <GridItem w={"100%"}>
-            <MintButton
-              onClick={handleMint}
-              isDisabled={isButtonDisabled}
-              customStyle={{
-                width: "100%"
-              }}
-              ownedView
-            >
-              {isPending || isConfirming ? (
-                <>
-                  <Spinner size="sm" mr={2} />
-                  Minting
-                </>
-              ) : (
-                "Mint"
-              )}
-            </MintButton>
-          </GridItem>
-        </Grid>
-      )}
       <FullSizeImageModal
         isOpen={isImageOpen}
         imageSrc={props.item.src}

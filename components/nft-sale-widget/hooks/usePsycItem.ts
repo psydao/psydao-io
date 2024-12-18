@@ -18,7 +18,6 @@ interface UsePsycItemProps {
   isPrivateSale: boolean;
   isOriginal: boolean;
   refetchBalances: () => void;
-  soldOut: boolean;
 }
 
 export const usePsycItem = ({
@@ -26,8 +25,7 @@ export const usePsycItem = ({
   isRandom,
   isPrivateSale,
   isOriginal,
-  refetchBalances,
-  soldOut
+  refetchBalances
 }: UsePsycItemProps) => {
   const { address } = useAccount();
   const { refetch } = useTokenContext();
@@ -95,7 +93,6 @@ export const usePsycItem = ({
       isMinting ||
       isSoldLoading ||
       isPaused ||
-      (isRandom && soldOut && isOriginal) ||
       (!isOriginal && !isActive)
     );
   }, [
@@ -107,7 +104,6 @@ export const usePsycItem = ({
     isMinting,
     isSoldLoading,
     isPaused,
-    soldOut,
     isActive
   ]);
 

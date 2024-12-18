@@ -4,6 +4,14 @@ export interface TokenOnSale {
   id: string;
   tokenID: string;
   buyer: Address | null;
+  sale: {
+    id: string;
+    batchID: string;
+    blockNumber: string;
+    ceilingPrice: string;
+    floorPrice: string;
+    ipfsHash: string;
+  };
 }
 
 export interface TokenMetadata {

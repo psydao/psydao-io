@@ -13,8 +13,6 @@ import type { Sale, GetAllSalesWithTokensData } from "@/lib/types";
 import { useWindowManager } from "@/components/ui/window-manager";
 
 interface SaleWidgetContextType {
-  activeSale: Sale | undefined;
-  setActiveSale: React.Dispatch<React.SetStateAction<Sale | undefined>>;
   isOriginal: boolean;
   isLoading: boolean;
   error: unknown;
@@ -81,8 +79,6 @@ const SaleWidgetProvider: React.FC<SaleWidgetProviderProps> = ({
   return (
     <SaleWidgetContext.Provider
       value={{
-        activeSale,
-        setActiveSale,
         allSalesData,
         isOriginal,
         isLoading,

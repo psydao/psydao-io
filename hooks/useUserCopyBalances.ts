@@ -15,7 +15,7 @@ interface UseUserCopyBalancesResult {
 }
 
 const useUserCopyBalances = (
-  activeSale: Sale | undefined,
+  allSales: Sale[] | undefined,
   address: string | undefined
 ): UseUserCopyBalancesResult => {
   const [balances, setBalances] = useState<{ [key: string]: string }>({});
@@ -24,7 +24,7 @@ const useUserCopyBalances = (
   const client = useApolloClient() as ApolloClient<NormalizedCacheObject>;
 
   const fetchBalances = useCallback(async () => {
-    if (!activeSale || !address) {
+    if (!allSales || !address) {
       setLoading(false);
       return;
     }
@@ -33,20 +33,22 @@ const useUserCopyBalances = (
     setError(null);
 
     try {
-      const balancesPromises = activeSale.tokensOnSale.map(async (token) => {
-        const concatenatedId = `${address.toLowerCase()}-${token.tokenID}`;
-        const { data }: { data: { userCopyBalance?: { balance: string } } } =
-          await client.query({
-            query: getUserCopyBalance,
-            variables: { id: concatenatedId },
-            fetchPolicy: "network-only"
-          });
+      const balancesPromises = allSales
+        .flatMap((sale) => sale.tokensOnSale)
+        .map(async (token) => {
+          const concatenatedId = `${address.toLowerCase()}-${token.tokenID}`;
+          const { data }: { data: { userCopyBalance?: { balance: string } } } =
+            await client.query({
+              query: getUserCopyBalance,
+              variables: { id: concatenatedId },
+              fetchPolicy: "network-only"
+            });
 
-        return {
-          tokenId: token.tokenID,
-          balance: data.userCopyBalance?.balance ?? "0"
-        };
-      });
+          return {
+            tokenId: token.tokenID,
+            balance: data.userCopyBalance?.balance ?? "0"
+          };
+        });
 
       const balancesData = await Promise.all(balancesPromises);
       const balancesMap = balancesData.reduce(
@@ -63,7 +65,7 @@ const useUserCopyBalances = (
     } finally {
       setLoading(false);
     }
-  }, [client, activeSale, address]);
+  }, [client, allSales, address]);
 
   useEffect(() => {
     void fetchBalances();

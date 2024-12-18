@@ -12,6 +12,7 @@ export interface ClaimCardProps {
   claimStatus: ClaimStatus;
   batchId: string;
   expiry: string;
+  deadline: string;
   totalClaimable?: string;
   onClaim?: () => void;
   proof?: string[];
@@ -34,7 +35,16 @@ const ClaimCardText = ({ text }: { text: string }) => (
 );
 
 const ClaimCard = (props: ClaimCardProps) => {
-  const { amount, claimStatus, batchId, expiry, proof, text, disabled } = props;
+  const {
+    amount,
+    claimStatus,
+    batchId,
+    expiry,
+    proof,
+    text,
+    disabled,
+    deadline
+  } = props;
   const { width } = useResize();
   const { showCustomErrorToast, showErrorToast, showSuccessToast } =
     useCustomToasts();
@@ -53,7 +63,8 @@ const ClaimCard = (props: ClaimCardProps) => {
     batchId: batchId.toString(),
     amount: amount,
     merkleProof: proof,
-    width: width
+    width: width,
+    deadline
   });
 
   useEffect(() => {

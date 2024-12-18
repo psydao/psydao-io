@@ -2,19 +2,21 @@ import { ERC1155Mainnet, ERC1155Sepolia } from "@/constants/contracts";
 import ERC1155Abi from "@/abis/ERC1155Abi.json";
 import ERC1155SepoliaAbi from "@/abis/ERC115AbiSepolia.json";
 import { mainnetClient, sepoliaClient } from "@/constants/publicClient";
-import type { Sale } from "@/lib/types";
+import type { Sale, TokenOnSale } from "@/lib/types";
 import { useEffect, useState } from "react";
 import { env } from "@/config/env.mjs";
 
 export type TokenInformationReturn = [bigint, bigint, boolean];
 
 const useGetRandomIds = (
-  activeSale: Sale | undefined,
+  allTokensOnSale: TokenOnSale[] | undefined,
   isRandom: boolean,
   isOriginal: boolean
 ) => {
-  const [availableRandomIds, setAvailableRandomIds] = useState<string[]>([]);
-  const [isRandomIdsLoading, setIsRandomIdsLoading] = useState(false);
+  const [availableRandomTokens, setAvailableRandomTokens] = useState<
+    TokenOnSale[]
+  >([]);
+  const [isRandomTokensLoading, setIsRandomTokensLoading] = useState(false);
 
   const client = env.NEXT_PUBLIC_IS_MAINNET ? mainnetClient : sepoliaClient;
   const contractAddress = env.NEXT_PUBLIC_IS_MAINNET
@@ -26,12 +28,12 @@ const useGetRandomIds = (
 
   useEffect(() => {
     const fetchRandomCopies = async () => {
-      if (activeSale && isRandom) {
-        setIsRandomIdsLoading(true);
+      if (allTokensOnSale && isRandom) {
+        setIsRandomTokensLoading(true);
       }
-      if (activeSale && isRandom && !isOriginal) {
+      if (allTokensOnSale && isRandom && !isOriginal) {
         const randomCopies = await Promise.all(
-          activeSale.tokensOnSale.map(async (token) => {
+          allTokensOnSale.map(async (token) => {
             const currentTokenInfo = (await client.readContract({
               address: contractAddress,
               abi: contractAbi,
@@ -40,22 +42,35 @@ const useGetRandomIds = (
             })) as TokenInformationReturn;
 
             return {
+              id: token.id,
               tokenID: token.tokenID,
+              buyer: token.buyer,
+              sale: token.sale,
               tokenActive: currentTokenInfo[2]
             };
           })
         );
 
-        setAvailableRandomIds(
+        setAvailableRandomTokens(
           randomCopies
             .filter((token) => token.tokenActive === true)
-            .map((token) => token.tokenID)
+            .map((token) => ({
+              id: token.id,
+              tokenID: token.tokenID,
+              buyer: token.buyer,
+              sale: token.sale
+            }))
         );
-      } else if (activeSale && isRandom && isOriginal) {
-        setAvailableRandomIds(
-          activeSale.tokensOnSale
+      } else if (allTokensOnSale && isRandom && isOriginal) {
+        setAvailableRandomTokens(
+          allTokensOnSale
             .filter((token) => token.buyer === null)
-            .map((token) => token.tokenID)
+            .map((token) => ({
+              id: token.id,
+              tokenID: token.tokenID,
+              buyer: token.buyer,
+              sale: token.sale
+            }))
         );
       }
     };
@@ -64,10 +79,10 @@ const useGetRandomIds = (
         console.error(error);
       })
       .finally(() => {
-        setIsRandomIdsLoading(false);
+        setIsRandomTokensLoading(false);
       });
-  }, [activeSale, isOriginal]);
-  return { availableRandomIds, isRandomIdsLoading };
+  }, [allTokensOnSale, isOriginal]);
+  return { availableRandomTokens, isRandomTokensLoading };
 };
 
 export default useGetRandomIds;

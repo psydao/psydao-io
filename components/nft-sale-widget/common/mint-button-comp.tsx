@@ -10,7 +10,6 @@ interface MintButtonProps {
   isMinting: boolean;
   isPaused: boolean;
   isActive: boolean;
-  soldOut: boolean;
   isOriginal: boolean;
   isRandom: boolean;
   isSold: boolean;
@@ -25,7 +24,6 @@ export const MintButtonComponent = memo(
     isMinting,
     isPaused,
     isActive,
-    soldOut,
     isOriginal,
     isRandom,
     isSold
@@ -38,11 +36,11 @@ export const MintButtonComponent = memo(
         buttonText = "Minting";
       } else if (isPaused) {
         buttonText = "Paused";
-      } else if (soldOut && isOriginal) {
-        buttonText = "Sold Out";
+      } else if (isSold && isOriginal) {
+        buttonText = "Sold";
       }
 
-      isDisabled = isMinting || isPaused || (soldOut && isOriginal);
+      isDisabled = isMinting || isPaused || (isSold && isOriginal);
     } else {
       if (isMinting) {
         buttonText = "Minting";

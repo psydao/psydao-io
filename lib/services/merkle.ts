@@ -44,8 +44,7 @@ const processClaim = async (claim: Claim, address: string) => {
     updatedClaim.buttonDisabled = true;
     updatedClaim.reason = "Claimed";
   } else if (deadlineTimestamp <= currentTimestamp) {
-    updatedClaim.buttonDisabled = claim.claimed;
-    updatedClaim.reason = claim.claimed ? "Claimed" : "Expired";
+    updatedClaim.buttonDisabled = false;
   } else if (
     address &&
     claim.claims.some((c) => c.account.toLowerCase() === address.toLowerCase())
