@@ -39,16 +39,9 @@ interface SetAllocationPointParams {
  * @returns {Object} - An object containing the addDepositToken function, the transaction hash, and the status of the transaction
  */
 export const useAddDepositToken = () => {
-  const { data: simulateData } = useSimulateContract({
-    address: FREEBASE_ADDRESS,
-    abi: FREEBASE_ABI,
-    functionName: 'addDepositToken'
-  });
-
   const { writeContract, data, isPending, isSuccess, error } = useWriteContract();
 
   const addDepositToken = ({ allocPoint, token, withUpdate }: AddDepositTokenParams) => {
-    if (!simulateData?.request) return
     writeContract({
       address: FREEBASE_ADDRESS,
       abi: FREEBASE_ABI,

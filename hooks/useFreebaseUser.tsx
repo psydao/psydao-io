@@ -1,7 +1,10 @@
+import { useEffect } from "react"
 import { freebaseSepolia } from "@/constants/contracts"
 import psydaoMasterBaseAbi from "@/abis/PsyDAOMasterBase.json"
-import { useWriteContract, useSimulateContract, useReadContract } from "wagmi"
-import { Address } from "viem"
+import { useWriteContract, useSimulateContract, useReadContract, useAccount } from "wagmi"
+import { type Address, erc20Abi, maxUint256, parseEther } from "viem"
+import { useLiquidityPools, useLiquidityPool } from "@/lib/services/freebase";
+import { useApproveToken } from "@/services/web3/useApproveToken";
 
 const FREEBASE_ADDRESS = freebaseSepolia
 const FREEBASE_ABI = psydaoMasterBaseAbi
@@ -18,44 +21,76 @@ interface PoolInfo {
   lastRewardBlock: bigint
   accRewardPerShare: bigint
 }
+
+interface GraphQLPool {
+  id: string
+  token: string
+  allocPoint: string
+  lastRewardBlock: string
+  accRewardPerShare: string
+  userCount: string
+  depositCount: string
+  withdrawCount: string
+}
 //#endregion
 
 export function usePoolInteraction(poolId: bigint) {
-  const { data: depositSimulateData } = useSimulateContract({
-    address: FREEBASE_ADDRESS,
-    abi: FREEBASE_ABI,
-    functionName: 'deposit',
-    args: [poolId, 0n] // Default amount, will be overridden in the write call
+  const { address } = useAccount()
+  const { data: poolData } = useLiquidityPool(poolId.toString())
+  const pool = poolData?.pool
+
+  // Get allowance
+  const { data: allowance, refetch: refetchAllowance } = useReadContract({
+    address: pool?.token.id as Address,
+    abi: erc20Abi,
+    functionName: 'allowance',
+    args: [address as Address, FREEBASE_ADDRESS],
+    query: {
+      enabled: Boolean(address && pool?.token.id)
+    }
   })
 
-  const { data: withdrawSimulateData } = useSimulateContract({
-    address: FREEBASE_ADDRESS,
-    abi: FREEBASE_ABI,
-    functionName: 'withdraw',
-    args: [poolId, 0n] // Default amount, will be overridden in the write call
+  const {
+    approve,
+    isSuccess: isApproveSuccess,
+    isPending: isApprovePending,
+    approvedSuccess
+  } = useApproveToken({
+    tokenAddress: pool?.token.id as Address,
+    spenderAddress: FREEBASE_ADDRESS,
+    abi: erc20Abi
   })
 
-  const { data: emergencySimulateData } = useSimulateContract({
-    address: FREEBASE_ADDRESS,
-    abi: FREEBASE_ABI,
-    functionName: 'emergencyWithdraw',
-    args: [poolId]
-  })
+  useEffect(() => {
+    if (approvedSuccess) {
+      refetchAllowance()
+    }
+  }, [approvedSuccess, refetchAllowance])
 
   const { writeContract } = useWriteContract()
 
-  const deposit = ({ amount }: Omit<PoolInteractionParams, 'pid'>) => {
-    if (!depositSimulateData?.request) return
+  const deposit = async ({ amount }: Omit<PoolInteractionParams, 'pid'>) => {
+    console.log('deposit', {
+      allowance,
+      amount
+    })
+    if (!allowance || amount > allowance) {
+      console.log('we need approval')
+      await approve(parseEther(amount.toString()))
+      // Wait for approval success before proceeding
+      return
+    }
+
+    console.log('proceeding to writeContract')
     writeContract({
-      address: FREEBASE_ADDRESS,
       abi: FREEBASE_ABI,
+      address: FREEBASE_ADDRESS,
       functionName: 'deposit',
-      args: [poolId, amount]
+      args: [poolId, amount],
     })
   }
 
   const withdraw = ({ amount }: Omit<PoolInteractionParams, 'pid'>) => {
-    if (!withdrawSimulateData?.request) return
     writeContract({
       address: FREEBASE_ADDRESS,
       abi: FREEBASE_ABI,
@@ -65,7 +100,6 @@ export function usePoolInteraction(poolId: bigint) {
   }
 
   const emergencyWithdraw = () => {
-    if (!emergencySimulateData?.request) return
     writeContract({
       address: FREEBASE_ADDRESS,
       abi: FREEBASE_ABI,
@@ -77,39 +111,33 @@ export function usePoolInteraction(poolId: bigint) {
   return {
     deposit,
     withdraw,
-    emergencyWithdraw
+    emergencyWithdraw,
+    isPending: isApprovePending,
+    approvedSuccess,
+    allowance
   }
 }
 
 export function usePoolData() {
-  const { data: poolLength } = useReadContract({
-    address: FREEBASE_ADDRESS,
-    abi: FREEBASE_ABI,
-    functionName: 'poolLength'
-  }) as { data: bigint }
-
-  const { data: pools } = useReadContract({
-    address: FREEBASE_ADDRESS,
-    abi: FREEBASE_ABI,
-    functionName: 'poolInfo',
-    args: poolLength ? Array.from({ length: Number(poolLength) }, (_, i) => BigInt(i)) : undefined
-  }) as { data: PoolInfo[] }
-
-  const { data: totalAllocPoint } = useReadContract({
-    address: FREEBASE_ADDRESS,
-    abi: FREEBASE_ABI,
-    functionName: 'totalAllocPoint'
-  }) as { data: bigint }
+  const { data: graphqlData } = useLiquidityPools()
 
   return {
-    pools: pools ? pools.map((pool, index) => ({
-      id: index,
-      token: pool.token,
-      allocPoint: pool.allocPoint,
-      lastRewardBlock: pool.lastRewardBlock,
-      accRewardPerShare: pool.accRewardPerShare
-    })) : undefined,
-    totalAllocPoint
+    pools: graphqlData?.pools?.map(pool => ({
+      id: Number(pool.id),
+      token: pool.token.id as Address,
+      allocPoint: BigInt(pool.allocPoint),
+      lastRewardBlock: BigInt(pool.lastRewardBlock),
+      accRewardPerShare: BigInt(pool.accRewardPerShare),
+      tokenInfo: pool.token,
+      userCount: pool.userCount,
+      depositCount: pool.depositCount,
+      withdrawCount: pool.withdrawCount
+    })),
+    // If you still need totalAllocPoint, we can calculate it from the pools
+    totalAllocPoint: graphqlData?.pools?.reduce(
+      (total, pool) => total + BigInt(pool.allocPoint),
+      0n
+    ) ?? 0n
   }
 }
 

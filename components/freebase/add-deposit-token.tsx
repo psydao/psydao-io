@@ -1,4 +1,4 @@
-import { Box, Flex, FormLabel, Input, Button, FormControl } from "@chakra-ui/react"
+import { Box, Flex, FormLabel, Input, Button, FormControl, VStack } from "@chakra-ui/react"
 import { useState } from "react"
 import { type Address } from "viem"
 
@@ -12,27 +12,19 @@ export default function AddDepositToken({ onSubmit }: AddDepositTokenProps) {
 
   const handleSubmit = () => {
     if (!tokenAddress || !allocPoint) return
+    console.log('handlesubmit is firing')
     onSubmit({
       token: tokenAddress as Address,
       allocPoint: BigInt(allocPoint),
       withUpdate: true
     })
-    // Reset form
     setTokenAddress("")
     setAllocPoint("")
   }
 
   return (
     <FormControl>
-      <Flex
-        direction={{ base: "column", md: "row" }}
-        gap={4}
-        alignItems={{ base: "start", md: "center" }}
-        justifyContent="space-between"
-        w="100%"
-        p={4}
-        borderBottom="1px solid #F2BEBE"
-      >
+      <VStack align="stretch" spacing={4}>
         <FormLabel
           fontSize="18"
           mb="0"
@@ -41,21 +33,18 @@ export default function AddDepositToken({ onSubmit }: AddDepositTokenProps) {
           Add Deposit Token
         </FormLabel>
 
-        <Flex gap={4} alignItems="center" flexWrap={{ base: "wrap", md: "nowrap" }}>
-          <Box
-            display="flex"
-            bg="#FBF6F8"
-            alignItems="center"
-            borderRadius="xl"
-            boxShadow="inner"
-            p="16px"
-            gap={2}
-          >
+        <Box
+          bg="#FBF6F8"
+          borderRadius="xl"
+          boxShadow="inner"
+          p="16px"
+        >
+          <VStack spacing={3}>
             <Input
               value={tokenAddress}
               onChange={(e) => setTokenAddress(e.target.value)}
               placeholder="Token Address"
-              w={{ base: "100%", md: "200px" }}
+              w="100%"
               border="none"
               focusBorderColor="transparent"
               fontFamily="Inter"
@@ -65,28 +54,29 @@ export default function AddDepositToken({ onSubmit }: AddDepositTokenProps) {
               value={allocPoint}
               onChange={(e) => setAllocPoint(e.target.value)}
               placeholder="Alloc Points"
-              w={{ base: "100%", md: "120px" }}
+              w="100%"
               border="none"
               focusBorderColor="transparent"
               fontFamily="Inter"
             />
-          </Box>
+          </VStack>
+        </Box>
 
-          <Button
-            onClick={handleSubmit}
-            bg="linear-gradient(90deg, #f3a6a6, #f77cc2)"
-            color="black"
-            borderRadius="20px"
-            px={6}
-            py={2}
-            fontSize="16px"
-            fontWeight="bold"
-            _hover={{ opacity: 0.8 }}
-          >
-            Add Token
-          </Button>
-        </Flex>
-      </Flex>
+        <Button
+          onClick={handleSubmit}
+          bg="linear-gradient(90deg, #f3a6a6, #f77cc2)"
+          color="black"
+          borderRadius="20px"
+          px={6}
+          py={2}
+          fontSize="16px"
+          fontWeight="bold"
+          _hover={{ opacity: 0.8 }}
+          w="100%"
+        >
+          Add Token
+        </Button>
+      </VStack>
     </FormControl>
   )
 }

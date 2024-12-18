@@ -1,4 +1,4 @@
-import { Box, Flex, FormLabel, Input, Button, FormControl, Tabs, TabList, Tab, TabPanels, TabPanel } from "@chakra-ui/react"
+import { Box, Flex, FormLabel, Input, Button, FormControl, Tabs, TabList, Tab, TabPanels, TabPanel, VStack } from "@chakra-ui/react"
 import { useState } from "react"
 import { type Address } from "viem"
 
@@ -40,15 +40,7 @@ export default function ManageRewardToken({ onAddReward, onSetReward }: ManageRe
 
         <TabPanels>
           <TabPanel p={0}>
-            <Flex
-              direction={{ base: "column", md: "row" }}
-              gap={4}
-              alignItems={{ base: "start", md: "center" }}
-              justifyContent="space-between"
-              w="100%"
-              p={4}
-              borderBottom="1px solid #F2BEBE"
-            >
+            <VStack align="stretch" spacing={4}>
               <FormLabel
                 fontSize="18"
                 mb="0"
@@ -57,21 +49,18 @@ export default function ManageRewardToken({ onAddReward, onSetReward }: ManageRe
                 Add Reward Token
               </FormLabel>
 
-              <Flex gap={4} alignItems="center" flexWrap={{ base: "wrap", md: "nowrap" }}>
-                <Box
-                  display="flex"
-                  bg="#FBF6F8"
-                  alignItems="center"
-                  borderRadius="xl"
-                  boxShadow="inner"
-                  p="16px"
-                  gap={2}
-                >
+              <Box
+                bg="#FBF6F8"
+                borderRadius="xl"
+                boxShadow="inner"
+                p="16px"
+              >
+                <VStack spacing={3}>
                   <Input
                     value={rewardToken}
                     onChange={(e) => setRewardToken(e.target.value)}
                     placeholder="Token Address"
-                    w={{ base: "100%", md: "200px" }}
+                    w="100%"
                     border="none"
                     focusBorderColor="transparent"
                     fontFamily="Inter"
@@ -81,40 +70,33 @@ export default function ManageRewardToken({ onAddReward, onSetReward }: ManageRe
                     value={transferAmount}
                     onChange={(e) => setTransferAmount(e.target.value)}
                     placeholder="Amount"
-                    w={{ base: "100%", md: "120px" }}
+                    w="100%"
                     border="none"
                     focusBorderColor="transparent"
                     fontFamily="Inter"
                   />
-                </Box>
+                </VStack>
+              </Box>
 
-                <Button
-                  onClick={handleAddReward}
-                  bg="linear-gradient(90deg, #f3a6a6, #f77cc2)"
-                  color="black"
-                  borderRadius="20px"
-                  px={6}
-                  py={2}
-                  fontSize="16px"
-                  fontWeight="bold"
-                  _hover={{ opacity: 0.8 }}
-                >
-                  Add Token
-                </Button>
-              </Flex>
-            </Flex>
+              <Button
+                onClick={handleAddReward}
+                bg="linear-gradient(90deg, #f3a6a6, #f77cc2)"
+                color="black"
+                borderRadius="20px"
+                px={6}
+                py={2}
+                fontSize="16px"
+                fontWeight="bold"
+                _hover={{ opacity: 0.8 }}
+                w="100%"
+              >
+                Add Token
+              </Button>
+            </VStack>
           </TabPanel>
 
           <TabPanel p={0}>
-            <Flex
-              direction={{ base: "column", md: "row" }}
-              gap={4}
-              alignItems={{ base: "start", md: "center" }}
-              justifyContent="space-between"
-              w="100%"
-              p={4}
-              borderBottom="1px solid #F2BEBE"
-            >
+            <VStack align="stretch" spacing={4}>
               <FormLabel
                 fontSize="18"
                 mb="0"
@@ -123,41 +105,38 @@ export default function ManageRewardToken({ onAddReward, onSetReward }: ManageRe
                 Set Active Token
               </FormLabel>
 
-              <Flex gap={4} alignItems="center">
-                <Box
-                  display="flex"
-                  bg="#FBF6F8"
-                  alignItems="center"
-                  borderRadius="xl"
-                  boxShadow="inner"
-                  p="16px"
-                >
-                  <Input
-                    value={activeToken}
-                    onChange={(e) => setActiveToken(e.target.value)}
-                    placeholder="Token Address"
-                    w={{ base: "100%", md: "200px" }}
-                    border="none"
-                    focusBorderColor="transparent"
-                    fontFamily="Inter"
-                  />
-                </Box>
+              <Box
+                bg="#FBF6F8"
+                borderRadius="xl"
+                boxShadow="inner"
+                p="16px"
+              >
+                <Input
+                  value={activeToken}
+                  onChange={(e) => setActiveToken(e.target.value)}
+                  placeholder="Token Address"
+                  w="100%"
+                  border="none"
+                  focusBorderColor="transparent"
+                  fontFamily="Inter"
+                />
+              </Box>
 
-                <Button
-                  onClick={handleSetReward}
-                  bg="linear-gradient(90deg, #f3a6a6, #f77cc2)"
-                  color="black"
-                  borderRadius="20px"
-                  px={6}
-                  py={2}
-                  fontSize="16px"
-                  fontWeight="bold"
-                  _hover={{ opacity: 0.8 }}
-                >
-                  Set Active
-                </Button>
-              </Flex>
-            </Flex>
+              <Button
+                onClick={handleSetReward}
+                bg="linear-gradient(90deg, #f3a6a6, #f77cc2)"
+                color="black"
+                borderRadius="20px"
+                px={6}
+                py={2}
+                fontSize="16px"
+                fontWeight="bold"
+                _hover={{ opacity: 0.8 }}
+                w="100%"
+              >
+                Set Active
+              </Button>
+            </VStack>
           </TabPanel>
         </TabPanels>
       </Tabs>

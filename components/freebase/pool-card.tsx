@@ -17,7 +17,13 @@ interface PoolCardProps {
 
 export function PoolCard({ pool, userAddress }: PoolCardProps) {
   const [amount, setAmount] = useState("")
-  const { deposit, withdraw } = usePoolInteraction(BigInt(pool.id))
+  const {
+    deposit,
+    withdraw,
+    isPending,
+    approvedSuccess,
+    allowance
+  } = usePoolInteraction(BigInt(pool.id))
   const { symbol, decimals } = useTokenInfo(pool.token)
 
   const handleDeposit = () => {
@@ -58,6 +64,7 @@ export function PoolCard({ pool, userAddress }: PoolCardProps) {
             placeholder="Enter amount"
             border="none"
             focusBorderColor="transparent"
+            disabled={isPending}
           />
         </Box>
 
@@ -68,8 +75,11 @@ export function PoolCard({ pool, userAddress }: PoolCardProps) {
             color="black"
             flex={1}
             _hover={{ opacity: 0.8 }}
+            isDisabled={isPending}
           >
-            Deposit
+            {isPending ? 'Approving...' :
+              !approvedSuccess && !allowance ? 'Approve & Deposit' :
+                'Deposit'}
           </Button>
           <Button
             onClick={handleWithdraw}
@@ -77,6 +87,7 @@ export function PoolCard({ pool, userAddress }: PoolCardProps) {
             color="black"
             flex={1}
             _hover={{ opacity: 0.8 }}
+            isDisabled={isPending}
           >
             Withdraw
           </Button>
