@@ -10,11 +10,12 @@ interface ClaimProps {
   amount: string;
   merkleProof: any;
   width: number;
+  deadline: string;
 }
 
 export const useClaim = (props: ClaimProps) => {
   const [approvedSuccess, setApprovedSuccess] = useState(false);
-  const { batchId, amount, merkleProof, width } = props;
+  const { batchId, amount, merkleProof, width, deadline } = props;
 
   const {
     writeContract,
@@ -43,6 +44,16 @@ export const useClaim = (props: ClaimProps) => {
       : psyClaimsSepolia;
 
     const bnAmount = parseUnits(amount, 18);
+    const currentTimestamp = new Date().getTime();
+
+    if (Number(deadline) <= Math.floor(currentTimestamp / 1000)) {
+      return writeContract({
+        abi: psyClaimsAbi,
+        address: spenderContract,
+        functionName: "claimUnclaimedTokens",
+        args: [batchId]
+      });
+    }
 
     return writeContract(
       {
