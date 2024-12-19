@@ -24,14 +24,6 @@ export default function ManageRewardToken({ onAddReward, onSetReward }: ManageRe
     setTransferAmount("")
   }
 
-  const handleSetReward = () => {
-    if (!activeToken) return
-    onSetReward({
-      rewardToken: activeToken as Address
-    })
-    setActiveToken("")
-  }
-
   const handleSetActiveRewardToken = (tokenId: string) => {
     console.log('setting active reward token', tokenId)
     onSetReward({
@@ -44,8 +36,7 @@ export default function ManageRewardToken({ onAddReward, onSetReward }: ManageRe
       <Tabs variant="soft-rounded" colorScheme="pink">
         <TabList mb={4}>
           <Tab>Add Reward Token</Tab>
-          <Tab>Set Active Token</Tab>
-          <Tab>List of Tokens</Tab>
+          <Tab>List of Reward Tokens</Tab>
         </TabList>
 
         <TabPanels>
@@ -101,50 +92,6 @@ export default function ManageRewardToken({ onAddReward, onSetReward }: ManageRe
                 w="100%"
               >
                 Add Token
-              </Button>
-            </VStack>
-          </TabPanel>
-
-          <TabPanel p={0}>
-            <VStack align="stretch" spacing={4}>
-              <FormLabel
-                fontSize="18"
-                mb="0"
-                fontFamily="Inter"
-              >
-                Set Active Token
-              </FormLabel>
-
-              <Box
-                bg="#FBF6F8"
-                borderRadius="xl"
-                boxShadow="inner"
-                p="16px"
-              >
-                <Input
-                  value={activeToken}
-                  onChange={(e) => setActiveToken(e.target.value)}
-                  placeholder="Token Address"
-                  w="100%"
-                  border="none"
-                  focusBorderColor="transparent"
-                  fontFamily="Inter"
-                />
-              </Box>
-
-              <Button
-                onClick={handleSetReward}
-                bg="linear-gradient(90deg, #f3a6a6, #f77cc2)"
-                color="black"
-                borderRadius="20px"
-                px={6}
-                py={2}
-                fontSize="16px"
-                fontWeight="bold"
-                _hover={{ opacity: 0.8 }}
-                w="100%"
-              >
-                Set Active
               </Button>
             </VStack>
           </TabPanel>
