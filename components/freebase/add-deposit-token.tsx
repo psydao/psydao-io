@@ -1,6 +1,5 @@
 import {
   Box,
-  Flex,
   FormLabel, Input, Button, FormControl,
   Tabs, Tab, TabList, TabPanels, TabPanel,
   Text,
@@ -21,7 +20,7 @@ export default function AddDepositToken({ onSubmit }: AddDepositTokenProps) {
 
   const handleSubmit = () => {
     if (!tokenAddress || !allocPoint) return
-    console.log('handlesubmit is firing')
+
     onSubmit({
       token: tokenAddress as Address,
       allocPoint: BigInt(allocPoint),

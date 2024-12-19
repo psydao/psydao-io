@@ -124,7 +124,7 @@ export function useUpdateRewardConfig() {
   const { writeContract } = useWriteContract()
 
   const updateRewardPerBlock = ({ rewardPerBlock }: UpdateRewardPerBlockParams) => {
-    if (!perBlockSimulateData?.request) return
+    // if (!perBlockSimulateData?.request) return
     writeContract({
       address: FREEBASE_ADDRESS,
       abi: FREEBASE_ABI,
@@ -134,7 +134,7 @@ export function useUpdateRewardConfig() {
   }
 
   const setAllocationPoint = ({ pid, allocPoint, withUpdate }: SetAllocationPointParams) => {
-    if (!allocPointSimulateData?.request) return
+    // if (!allocPointSimulateData?.request) return
     writeContract({
       address: FREEBASE_ADDRESS,
       abi: FREEBASE_ABI,
