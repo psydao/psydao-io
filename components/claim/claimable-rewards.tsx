@@ -260,6 +260,7 @@ const ClaimableRewards: React.FC<ClaimableRewardsProps> = ({ isAdmin }) => {
                 proof={item.merkleProof}
                 text={item.reason ? item.reason : "Claim"}
                 disabled={!!item.reason}
+                deadline={item.deadline}
               />
             );
           })

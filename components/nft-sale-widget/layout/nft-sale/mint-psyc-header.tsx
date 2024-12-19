@@ -2,8 +2,6 @@ import { Box, Divider, Flex, Text } from "@chakra-ui/react";
 import { useAccount } from "wagmi";
 
 import { WhitepaperLink } from "../../common/whitepaper-link";
-import { SaleTypeSwitch } from "../../common/sale-type-switch";
-import NftSalesDropdown from "../../common/sales-dropdown";
 import { whitelistedAddresses } from "@/components/admin-dashboard/whitelisted-addresses";
 import NftSaleTabs from "../nft-sale-tabs";
 
@@ -47,9 +45,6 @@ const MintPsycHeader = () => {
               )}
               <WhitepaperLink />
             </Flex>
-          </Flex>
-          <Flex gap={6} flexWrap={"wrap"}>
-            <NftSalesDropdown />
           </Flex>
         </Flex>
       </Box>
