@@ -109,22 +109,9 @@ export function useRewardTokenManagement() {
  * @returns {Object} - An object containing the updateRewardPerBlock and setAllocationPoint functions, the transaction hash, and the status of the transaction
  */
 export function useUpdateRewardConfig() {
-  const { data: perBlockSimulateData } = useSimulateContract({
-    address: FREEBASE_ADDRESS,
-    abi: FREEBASE_ABI,
-    functionName: 'updateRewardPerBlock'
-  })
-
-  const { data: allocPointSimulateData } = useSimulateContract({
-    address: FREEBASE_ADDRESS,
-    abi: FREEBASE_ABI,
-    functionName: 'setRewardAllocationPoint'
-  })
-
   const { writeContract } = useWriteContract()
 
   const updateRewardPerBlock = ({ rewardPerBlock }: UpdateRewardPerBlockParams) => {
-    // if (!perBlockSimulateData?.request) return
     writeContract({
       address: FREEBASE_ADDRESS,
       abi: FREEBASE_ABI,
@@ -134,7 +121,6 @@ export function useUpdateRewardConfig() {
   }
 
   const setAllocationPoint = ({ pid, allocPoint, withUpdate }: SetAllocationPointParams) => {
-    // if (!allocPointSimulateData?.request) return
     writeContract({
       address: FREEBASE_ADDRESS,
       abi: FREEBASE_ABI,
