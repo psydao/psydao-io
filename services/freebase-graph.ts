@@ -116,16 +116,22 @@ export const getFreebaseGlobalStats = gql`
   query GetGlobalStats {
     globalStats {
       id
-      rewardPerBlock
-      startBlock
-      totalDeposited
-      totalPools
+      dailyVolume
+      activeRewardTokens
       totalUsers
       totalValueLocked
-      weeklyVolume
-      dailyVolume
+      totalPools
+      totalDeposited
+      totalRewardsToppedUp
+      totalRewardsWithdrawn
+      totalUnclaimedRewards
+      totalRewardsDistributed
+      totalAllocPoint
+      startBlock
+      rewardPerBlock
       bonusMultiplier
       bonusEndBlock
+      weeklyVolume
     }
   }
 `;

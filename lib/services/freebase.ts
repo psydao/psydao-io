@@ -40,14 +40,21 @@ interface FreebasePoolsResponse {
 
 interface FreebaseGlobalStats {
   id: string
-  rewardPerBlock: string
-  startBlock: string
-  totalDeposited: string
-  totalPools: string
+  dailyVolume: string
+  activeRewardTokens: string
   totalUsers: string
   totalValueLocked: string
+  totalPools: string
+  totalDeposited: string
+  totalRewardsToppedUp: string
+  totalRewardsWithdrawn: string
+  totalUnclaimedRewards: string
+  totalRewardsDistributed: string
+  totalAllocPoint: string
+  startBlock: string
+  rewardPerBlock: string
   weeklyVolume: string
-  dailyVolume: string
+
   bonusMultiplier: string
   bonusEndBlock: string
 }
