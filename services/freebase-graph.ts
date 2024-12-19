@@ -5,7 +5,9 @@ export const getFreebasePools = gql`
     pools {
       id
       token {
-        id,
+        id
+        name
+        decimals
         isActiveRewardToken
         isDepositToken
         isRewardToken
@@ -29,7 +31,9 @@ export const getFreebasePool = gql`
     pool(id: $id) {
       id
       token {
-        id,
+        id
+        name
+        decimals
         isActiveRewardToken
         isDepositToken
         isRewardToken
@@ -44,6 +48,40 @@ export const getFreebasePool = gql`
       userCount
       depositCount
       withdrawCount
+    }
+  }
+`;
+
+export const getFreebaseTokens = gql`
+  query GetFreebaseTokens {
+    tokens {
+      id
+      name
+      decimals
+      isActiveRewardToken
+      isDepositToken
+      isRewardToken
+      lastPriceUpdate
+      price
+      symbol
+      totalDeposited
+    }
+  }
+`;
+
+export const getFreebaseRewardTokens = gql`
+  query GetFreebaseRewardTokens($isRewardToken: Boolean!) {
+    tokens(where: { isRewardToken: $isRewardToken }) {
+      id
+      name
+      decimals
+      isActiveRewardToken
+      isDepositToken
+      isRewardToken
+      lastPriceUpdate
+      price
+      symbol
+      totalDeposited
     }
   }
 `;

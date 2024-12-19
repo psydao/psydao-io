@@ -1,6 +1,7 @@
-import { Box, Flex, FormLabel, Input, Button, FormControl, Tabs, TabList, Tab, TabPanels, TabPanel, VStack } from "@chakra-ui/react"
+import { Box, Flex, FormLabel, Input, Button, FormControl, Tabs, TabList, Tab, TabPanels, TabPanel, Text, VStack } from "@chakra-ui/react"
 import { useState } from "react"
 import { type Address } from "viem"
+import { useRewardTokens } from "@/hooks/useFreebaseUser"
 
 interface ManageRewardTokenProps {
   onAddReward: (args: { rewardToken: Address; transferAmount: bigint }) => void
@@ -11,6 +12,7 @@ export default function ManageRewardToken({ onAddReward, onSetReward }: ManageRe
   const [rewardToken, setRewardToken] = useState("")
   const [transferAmount, setTransferAmount] = useState("")
   const [activeToken, setActiveToken] = useState("")
+  const { rewardTokens } = useRewardTokens()
 
   const handleAddReward = () => {
     if (!rewardToken || !transferAmount) return
@@ -30,12 +32,20 @@ export default function ManageRewardToken({ onAddReward, onSetReward }: ManageRe
     setActiveToken("")
   }
 
+  const handleSetActiveRewardToken = (tokenId: string) => {
+    console.log('setting active reward token', tokenId)
+    onSetReward({
+      rewardToken: tokenId as Address
+    })
+  }
+
   return (
     <FormControl>
       <Tabs variant="soft-rounded" colorScheme="pink">
         <TabList mb={4}>
           <Tab>Add Reward Token</Tab>
           <Tab>Set Active Token</Tab>
+          <Tab>List of Tokens</Tab>
         </TabList>
 
         <TabPanels>
@@ -136,6 +146,24 @@ export default function ManageRewardToken({ onAddReward, onSetReward }: ManageRe
               >
                 Set Active
               </Button>
+            </VStack>
+          </TabPanel>
+
+          <TabPanel p={0}>
+            <VStack align="stretch" spacing={4}>
+              <FormLabel
+                fontSize="18"
+                mb="0"
+                fontFamily="Inter"
+              >
+                List of Reward Tokens
+              </FormLabel>
+              {rewardTokens?.map((token) => (
+                <Text key={token.id}>{token.name} {token.isActiveRewardToken === true ?
+                  <b>(currently active)</b> :
+                  <Button onClick={() => handleSetActiveRewardToken(token.id)}>Make Active</Button>}
+                </Text>
+              ))}
             </VStack>
           </TabPanel>
         </TabPanels>
