@@ -69,6 +69,23 @@ export const getFreebaseTokens = gql`
   }
 `;
 
+export const getFreebaseDepositTokens = gql`
+  query GetFreebaseDepositTokens($isDepositToken: Boolean!) {
+    tokens(where: { isDepositToken: $isDepositToken }) {
+      id
+      name
+      decimals
+      isActiveRewardToken
+      isDepositToken
+      isRewardToken
+      lastPriceUpdate
+      price
+      symbol
+      totalDeposited
+    }
+  }
+`;
+
 export const getFreebaseRewardTokens = gql`
   query GetFreebaseRewardTokens($isRewardToken: Boolean!) {
     tokens(where: { isRewardToken: $isRewardToken }) {

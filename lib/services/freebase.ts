@@ -3,7 +3,8 @@ import {
   getFreebasePool,
   getFreebasePools,
   getFreebaseTokens,
-  getFreebaseRewardTokens
+  getFreebaseRewardTokens,
+  getFreebaseDepositTokens
 } from "@/services/freebase-graph";
 import { useQuery } from "@apollo/client"
 import { Address } from "viem"
@@ -51,6 +52,15 @@ export function useLiquidityPool(id: string) {
 
 export function useFreebaseTokens() {
   return useQuery<{ tokens: FreebaseToken[] }>(getFreebaseTokens, {
+    client: freebaseGraphClient
+  })
+}
+
+export function useFreebaseDepositTokens() {
+  return useQuery<{ tokens: FreebaseToken[] }>(getFreebaseDepositTokens, {
+    variables: {
+      isDepositToken: true
+    },
     client: freebaseGraphClient
   })
 }

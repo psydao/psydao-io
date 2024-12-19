@@ -6,7 +6,8 @@ import { type Address, erc20Abi, maxUint256, parseEther } from "viem"
 import {
   useLiquidityPools,
   useLiquidityPool,
-  useFreebaseRewardTokens
+  useFreebaseRewardTokens,
+  useFreebaseDepositTokens
 } from "@/lib/services/freebase";
 import { useApproveToken } from "@/services/web3/useApproveToken";
 
@@ -195,5 +196,12 @@ export function useRewardTokens() {
   const { data: rewardTokens } = useFreebaseRewardTokens()
   return {
     rewardTokens: rewardTokens?.tokens
+  }
+}
+
+export function useDepositTokens() {
+  const { data: depositTokens } = useFreebaseDepositTokens()
+  return {
+    depositTokens: depositTokens?.tokens
   }
 }
