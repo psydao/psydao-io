@@ -194,9 +194,10 @@ export function usePendingRewards(poolId: bigint, userAddress: Address) {
 }
 
 export function useRewardTokens() {
-  const { data: rewardTokens } = useFreebaseRewardTokens()
+  const { data: rewardTokens, refetch: refetchRewardTokens } = useFreebaseRewardTokens()
   return {
-    rewardTokens: rewardTokens?.tokens
+    rewardTokens: rewardTokens?.tokens,
+    refetchRewardTokens
   }
 }
 

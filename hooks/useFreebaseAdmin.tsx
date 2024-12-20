@@ -1,7 +1,11 @@
 import { freebaseSepolia } from "@/constants/contracts"
 import psydaoMasterBaseAbi from "@/abis/PsyDAOMasterBase.json"
 import { useWriteContract, useSimulateContract } from "wagmi"
-import { Address } from "viem"
+import { type Address, erc20Abi } from "viem"
+import { useApproveToken } from "@/services/web3/useApproveToken";
+import useGetTokenAllowance from "@/services/web3/useGetTokenAllowance";
+import { useEffect, useState } from "react";
+import { useRewardTokens } from "@/hooks/useFreebaseUser";
 
 const FREEBASE_ADDRESS = freebaseSepolia
 const FREEBASE_ABI = psydaoMasterBaseAbi
@@ -64,28 +68,64 @@ export const useAddDepositToken = () => {
  * @returns {Object} - An object containing the addRewardToken and setRewardToken functions, the transaction hash, and the status of the transaction
  */
 export function useRewardTokenManagement() {
-  const { data: addSimulateData } = useSimulateContract({
-    address: FREEBASE_ADDRESS,
-    abi: FREEBASE_ABI,
-    functionName: 'addRewardToken'
-  })
-
-  const { data: setSimulateData } = useSimulateContract({
-    address: FREEBASE_ADDRESS,
-    abi: FREEBASE_ABI,
-    functionName: 'setRewardToken'
-  })
-
+  const { refetchRewardTokens } = useRewardTokens()
   const { writeContract } = useWriteContract()
+  const [pendingReward, setPendingReward] = useState<{
+    token: Address
+    amount: bigint
+  } | null>(null)
+
+  // Only setup allowance check when we have a pending reward
+  const { allowance, refetch: refetchAllowance } = useGetTokenAllowance({
+    spenderAddress: FREEBASE_ADDRESS,
+    tokenAddress: pendingReward?.token ?? "0x0"
+  })
+
+  // Setup approval hook
+  const {
+    approve,
+    isSuccess: isApproveSuccess,
+    resetApprove
+  } = useApproveToken({
+    tokenAddress: pendingReward?.token ?? "0x0",
+    spenderAddress: FREEBASE_ADDRESS,
+    abi: erc20Abi
+  })
+
+  // Handle the approval -> allowance check -> contract write flow
+  useEffect(() => {
+    if (!pendingReward) return
+
+    const handleRewardToken = async () => {
+      if (allowance >= pendingReward.amount) {
+        // Allowance is sufficient, proceed with contract call
+        writeContract({
+          address: FREEBASE_ADDRESS,
+          abi: FREEBASE_ABI,
+          functionName: 'addRewardToken',
+          args: [pendingReward.token, pendingReward.amount]
+        }, {
+          onSuccess() {
+            refetchRewardTokens()
+            setPendingReward(null)
+          }
+        })
+      } else if (!isApproveSuccess) {
+        // Need approval
+        await approve(pendingReward.amount)
+      } else if (isApproveSuccess) {
+        // Approval successful, refetch allowance
+        await refetchAllowance()
+        // resetApprove()
+      }
+    }
+
+    handleRewardToken()
+  }, [pendingReward, allowance, isApproveSuccess, approve, writeContract, refetchAllowance, resetApprove])
+
 
   const addRewardToken = ({ rewardToken, transferAmount }: AddRewardTokenParams) => {
-    if (!addSimulateData?.request) return
-    writeContract({
-      address: FREEBASE_ADDRESS,
-      abi: FREEBASE_ABI,
-      functionName: 'addRewardToken',
-      args: [rewardToken, transferAmount]
-    })
+    setPendingReward({ token: rewardToken, amount: transferAmount })
   }
 
   const setRewardToken = ({ rewardToken }: SetRewardTokenParams) => {
@@ -100,7 +140,9 @@ export function useRewardTokenManagement() {
 
   return {
     addRewardToken,
-    setRewardToken
+    setRewardToken,
+    isApproveSuccess,
+    isPending: !!pendingReward
   }
 }
 
