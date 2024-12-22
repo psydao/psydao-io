@@ -11,7 +11,7 @@ import { splitAndValidateAddresses } from "@/utils/splitAndValidateAddresses";
 
 import { useCustomToasts } from "./useCustomToasts";
 import { useResize } from "@/hooks/useResize";
-import { uploadAddresses } from "@/lib/server-utils";
+import { pinWhitelistToIpfs } from "@/lib/services/ipfs";
 
 export const useCreateSale = (
   setOpenCreateSale: React.Dispatch<React.SetStateAction<boolean>>,
@@ -86,13 +86,14 @@ export const useCreateSale = (
         );
         return;
       }
-
       const formattedAddresses: `0x${string}`[] =
-        splitNewWhitelistedAddresses.map((address) => address as `0x${string}`);
+        splitNewWhitelistedAddresses.map((address) =>
+          address.toLowerCase() as `0x${string}`
+        );
       const merkleRoot = getMerkleRoot(formattedAddresses);
       const floorPriceWei = toWei(floorPrice);
       const ceilingPriceWei = toWei(ceilingPrice);
-      const ipfsHash = await uploadAddresses(splitNewWhitelistedAddresses);
+      const ipfsHash = await pinWhitelistToIpfs(splitNewWhitelistedAddresses);
 
       try {
         const args = [
