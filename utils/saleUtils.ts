@@ -39,5 +39,5 @@ export const getNewAddresses = (
     onError();
     return [];
   }
-  return filteredAddresses as `0x${string}`[];
+  return filteredAddresses.map(address => address.toLowerCase()) as `0x${string}`[];
 };

@@ -11,7 +11,7 @@ import { splitAndValidateAddresses } from "@/utils/splitAndValidateAddresses";
 
 import { useCustomToasts } from "./useCustomToasts";
 import { useResize } from "@/hooks/useResize";
-import { uploadAddresses } from "@/lib/server-utils";
+import { useIpfs } from "@/hooks/useIpfs";
 
 export const useCreateSale = (
   setOpenCreateSale: React.Dispatch<React.SetStateAction<boolean>>,
@@ -29,6 +29,7 @@ export const useCreateSale = (
   } = useCustomToasts();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { width } = useResize();
+  const { uploadWhitelist } = useIpfs();
 
   const { data: hash, writeContract, error } = useWriteContract();
   const { isSuccess: transactionSuccess } = useWaitForTransactionReceipt({
@@ -51,50 +52,53 @@ export const useCreateSale = (
       }
       setIsSubmitting(true);
 
-      const splitNewWhitelistedAddresses = splitAndValidateAddresses(
-        newWhitelistedAddresses,
-        (message) => {
-          setIsSubmitting(false);
-          showErrorToast(message, width);
-        }
-      );
-
-      if (splitNewWhitelistedAddresses.length < 2) {
-        showErrorToast(
-          "Please enter at least two addresses to whitelist",
-          width
-        );
-        setIsSubmitting(false);
-        return;
-      }
-
-      if (parseFloat(floorPrice) > parseFloat(ceilingPrice)) {
-        setIsSubmitting(false);
-        showErrorToast(
-          "Please make sure the floor price is less than or equal to the ceiling price",
-          width
-        );
-        return;
-      }
-
-      const saleStartTime = toUnixTimestamp(startDate, startTime);
-      if (saleStartTime < Math.floor(Date.now() / 1000)) {
-        setIsSubmitting(false);
-        showErrorToast(
-          "The date cannot be in the past. Please select a valid date.",
-          width
-        );
-        return;
-      }
-
-      const formattedAddresses: `0x${string}`[] =
-        splitNewWhitelistedAddresses.map((address) => address as `0x${string}`);
-      const merkleRoot = getMerkleRoot(formattedAddresses);
-      const floorPriceWei = toWei(floorPrice);
-      const ceilingPriceWei = toWei(ceilingPrice);
-      const ipfsHash = await uploadAddresses(splitNewWhitelistedAddresses);
-
       try {
+        const splitNewWhitelistedAddresses = splitAndValidateAddresses(
+          newWhitelistedAddresses,
+          (message) => {
+            setIsSubmitting(false);
+            showErrorToast(message, width);
+          }
+        );
+
+        if (splitNewWhitelistedAddresses.length < 2) {
+          showErrorToast(
+            "Please enter at least two addresses to whitelist",
+            width
+          );
+          setIsSubmitting(false);
+          return;
+        }
+
+        if (parseFloat(floorPrice) > parseFloat(ceilingPrice)) {
+          setIsSubmitting(false);
+          showErrorToast(
+            "Please make sure the floor price is less than or equal to the ceiling price",
+            width
+          );
+          return;
+        }
+
+        const saleStartTime = toUnixTimestamp(startDate, startTime);
+        if (saleStartTime < Math.floor(Date.now() / 1000)) {
+          setIsSubmitting(false);
+          showErrorToast(
+            "The date cannot be in the past. Please select a valid date.",
+            width
+          );
+          return;
+        }
+
+        const formattedAddresses: `0x${string}`[] =
+          splitNewWhitelistedAddresses.map((address) =>
+            address.toLowerCase() as `0x${string}`
+          );
+        const merkleRoot = getMerkleRoot(formattedAddresses);
+        const floorPriceWei = toWei(floorPrice);
+        const ceilingPriceWei = toWei(ceilingPrice);
+        
+        const ipfsHash = await uploadWhitelist(splitNewWhitelistedAddresses);
+
         const args = [
           tokenIds,
           saleStartTime,
@@ -125,7 +129,8 @@ export const useCreateSale = (
       tokenIds,
       whitelistedArray,
       writeContract,
-      width
+      width,
+      uploadWhitelist
     ]
   );
 
