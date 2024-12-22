@@ -8,7 +8,7 @@ import { type Address, parseUnits } from "viem";
 import { getMerkleRoot, getNewAddresses } from "@/utils/saleUtils";
 import { useGetCurrentSaleValues } from "./useGetCurrentSaleValues";
 import type { Sale } from "@/lib/types";
-import { pinWhitelistToIpfs } from "@/lib/services/ipfs";
+import { useIpfs } from "@/hooks/useIpfs";
 
 export const useEditSaleForm = (
   address: string | undefined,
@@ -22,6 +22,7 @@ export const useEditSaleForm = (
 ) => {
   const toast = useToast();
   const { width } = useResize();
+  const { uploadWhitelist } = useIpfs();
   const {
     ceilingPrice: currentCeilingPrice,
     floorPrice: currentFloorPrice,
@@ -67,7 +68,6 @@ export const useEditSaleForm = (
     newFloorPrice: string,
     newCeilingPrice: string,
     isPausedLocal: boolean,
-
     width: number
   ) => {
     e.preventDefault();
@@ -82,26 +82,26 @@ export const useEditSaleForm = (
     }
     setIsSubmitting(true);
 
-    const currentAddresses = await getAddresses(currentIpfsHash);
-
-    const ceilingPriceHasChanged =
-      parseUnits(newCeilingPrice, 18).toString() !== currentCeilingPrice;
-    const floorPriceHasChanged =
-      parseUnits(newFloorPrice, 18).toString() !== currentFloorPrice;
-    const saleStatusMustChange = isPausedLocal !== currentIsPaused;
-
-    const addressesToSubmit = getNewAddresses(
-      addressesToRemove,
-      newAddresses,
-      existingAddresses,
-      () => {
-        setIsSubmitting(false);
-        setIsSuccess(false);
-        setIsError(true);
-      }
-    );
-
     try {
+      const currentAddresses = await getAddresses(currentIpfsHash);
+
+      const ceilingPriceHasChanged =
+        parseUnits(newCeilingPrice, 18).toString() !== currentCeilingPrice;
+      const floorPriceHasChanged =
+        parseUnits(newFloorPrice, 18).toString() !== currentFloorPrice;
+      const saleStatusMustChange = isPausedLocal !== currentIsPaused;
+
+      const addressesToSubmit = getNewAddresses(
+        addressesToRemove,
+        newAddresses,
+        existingAddresses,
+        () => {
+          setIsSubmitting(false);
+          setIsSuccess(false);
+          setIsError(true);
+        }
+      );
+
       if (
         !ceilingPriceHasChanged &&
         !floorPriceHasChanged &&
@@ -119,7 +119,7 @@ export const useEditSaleForm = (
           JSON.stringify(currentAddresses.sort()) &&
         addressesToSubmit.length >= 2
       ) {
-        const newIpfsHash = await pinWhitelistToIpfs(addressesToSubmit);
+        const newIpfsHash = await uploadWhitelist(addressesToSubmit);
         const newMerkleRoot = getMerkleRoot(addressesToSubmit);
         const merklerootResponse = await writeContractAsync({
           ...psycSaleContractConfig,
