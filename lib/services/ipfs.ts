@@ -111,8 +111,9 @@ export async function pinWhitelistToIpfs(
   addresses: string[]
 ): Promise<string> {
   try {
+
     const pinata = new PinataSDK({
-      pinataJwt: process.env.PINATA_ADMIN_JWT!,
+      pinataJwt: env.PINATA_ADMIN_JWT,
       pinataGateway: "red-literary-tiglon-645.mypinata.cloud"
     });
 
