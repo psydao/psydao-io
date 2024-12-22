@@ -129,8 +129,7 @@ export async function pinWhitelistToIpfs(
       },
       groupId: psyDaoClaimsGroupId
     };
-
-    const upload = await pinata.upload.json(addresses, options);
+    const upload = await pinata.upload.json({ addresses: addresses }, options);
 
     const ipfsHash = upload.IpfsHash;
 
