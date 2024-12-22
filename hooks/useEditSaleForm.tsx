@@ -5,10 +5,10 @@ import { psycSaleContractConfig } from "@/lib/sale-contract-config";
 import { useCustomToasts } from "@/hooks/useCustomToasts";
 import { useResize } from "@/hooks/useResize";
 import { type Address, parseUnits } from "viem";
-import { uploadAddresses } from "@/lib/server-utils";
 import { getMerkleRoot, getNewAddresses } from "@/utils/saleUtils";
 import { useGetCurrentSaleValues } from "./useGetCurrentSaleValues";
 import type { Sale } from "@/lib/types";
+import { pinWhitelistToIpfs } from "@/lib/services/ipfs";
 
 export const useEditSaleForm = (
   address: string | undefined,
@@ -119,7 +119,7 @@ export const useEditSaleForm = (
           JSON.stringify(currentAddresses.sort()) &&
         addressesToSubmit.length >= 2
       ) {
-        const newIpfsHash = await uploadAddresses(addressesToSubmit);
+        const newIpfsHash = await pinWhitelistToIpfs(addressesToSubmit);
         const newMerkleRoot = getMerkleRoot(addressesToSubmit);
         const merklerootResponse = await writeContractAsync({
           ...psycSaleContractConfig,
