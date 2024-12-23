@@ -2,7 +2,6 @@ import { Flex, Grid } from "@chakra-ui/react";
 import { useAccount } from "wagmi";
 import { type GetTokensByOwnerData, type Sale } from "@/lib/types";
 import useUserCopyBalances from "@/hooks/useUserCopyBalances";
-import { formatUnits } from "viem";
 import OwnedNftsEmptyState from "./owned-nfts-empty-state";
 import useImageData from "@/hooks/useImageData";
 import { useAddAssetToWallet } from "@/hooks/useAddAsset";
@@ -14,16 +13,22 @@ import { useEffect, useState } from "react";
 
 type OwnedNftsProps = {
   nftData: GetTokensByOwnerData | undefined;
-  activeSale: Sale | undefined;
+  allSales: Sale[] | undefined;
   isOriginal: boolean;
   isLoading: boolean;
   isFullScreen: boolean;
 };
 
 const OwnedNfts = (props: OwnedNftsProps) => {
-  const imageIds = props.nftData?.tokens.map((token) => token.tokenId) ?? [];
+  const sortedTokens = [...(props.nftData?.tokens ?? [])].sort(
+    (a, b) => parseInt(a.tokenId) - parseInt(b.tokenId)
+  );
+
+  const imageIds = sortedTokens.map((token) => token.tokenId);
   const { imageUris, loading: imageUrisLoading } = useImageData(imageIds);
   const [reloadTrigger, setReloadTrigger] = useState(0);
+
+  const reversedImageUris = [...imageUris].reverse();
 
   const triggerReload = () => {
     setReloadTrigger((prev) => prev + 1);
@@ -38,14 +43,16 @@ const OwnedNfts = (props: OwnedNftsProps) => {
     balances: copyBalances,
     refetchBalances,
     loading: copyBalancesLoading
-  } = useUserCopyBalances(props.activeSale, address);
+  } = useUserCopyBalances(props.allSales, address);
 
   if (!address) return null;
 
   const filteredCopyTokens =
-    props.activeSale?.tokensOnSale.filter(
-      (token) => parseInt(copyBalances[token.tokenID] ?? "0", 10) > 0
-    ) ?? [];
+    props.allSales
+      ?.flatMap((sale) => sale.tokensOnSale)
+      .filter(
+        (token) => parseInt(copyBalances[token.tokenID] ?? "0", 10) > 0
+      ) ?? [];
 
   const EmptyStateText = (
     <>
@@ -96,16 +103,15 @@ const OwnedNfts = (props: OwnedNftsProps) => {
         maxW={"100%"}
       >
         {props.isOriginal
-          ? props.nftData?.tokens.map((token, index) => (
+          ? sortedTokens.map((token, index) => (
               <OwnedNftItem
-                key={index}
+                key={token.tokenId}
                 item={{
-                  src: imageUris[index % imageUris.length] ?? "",
+                  src:
+                    reversedImageUris[index % reversedImageUris.length] ?? "",
                   tokenId: token.tokenId,
                   whitelist: [],
                   balance: "0",
-                  batchId: props.activeSale?.batchID ?? "",
-                  price: "0",
                   isSold: false,
                   ipfsHash: ""
                 }}
@@ -121,12 +127,11 @@ const OwnedNfts = (props: OwnedNftsProps) => {
               <OwnedNftItem
                 key={index}
                 item={{
-                  src: imageUris[index % imageUris.length] ?? "",
+                  src:
+                    reversedImageUris[index % reversedImageUris.length] ?? "",
                   tokenId: token.tokenID,
                   whitelist: [],
                   balance: copyBalances[token.tokenID] ?? "0",
-                  batchId: props.activeSale?.batchID ?? "",
-                  price: `${formatUnits(BigInt(props?.activeSale?.ceilingPrice ?? 0), 18)}`,
                   isSold: false,
                   ipfsHash: ""
                 }}
@@ -145,7 +150,7 @@ const OwnedNfts = (props: OwnedNftsProps) => {
           <SubmitButtonContainer>
             <PsyButton
               onClick={handleAddToWallet}
-              isDisabled={!props.activeSale || isAdding}
+              isDisabled={!props.allSales || isAdding}
               customStyle={{
                 width: "100%",
                 maxWidth: "550px",

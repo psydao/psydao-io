@@ -12,6 +12,7 @@ export interface ClaimCardProps {
   claimStatus: ClaimStatus;
   batchId: string;
   expiry: string;
+  deadline: string;
   totalClaimable?: string;
   onClaim?: () => void;
   proof?: string[];
@@ -34,7 +35,16 @@ const ClaimCardText = ({ text }: { text: string }) => (
 );
 
 const ClaimCard = (props: ClaimCardProps) => {
-  const { amount, claimStatus, batchId, expiry, proof, text, disabled } = props;
+  const {
+    amount,
+    claimStatus,
+    batchId,
+    expiry,
+    proof,
+    text,
+    disabled,
+    deadline
+  } = props;
   const { width } = useResize();
   const { showCustomErrorToast, showErrorToast, showSuccessToast } =
     useCustomToasts();
@@ -53,7 +63,8 @@ const ClaimCard = (props: ClaimCardProps) => {
     batchId: batchId.toString(),
     amount: amount,
     merkleProof: proof,
-    width: width
+    width: width,
+    deadline
   });
 
   useEffect(() => {
@@ -78,13 +89,8 @@ const ClaimCard = (props: ClaimCardProps) => {
         return Number(amount).toFixed(2);
       }
       // Format from wei (18 decimals) to a human-readable number
-      if (amount.length > 18) {
-        const formatted = formatUnits(BigInt(amount), 18);
-        return Number(formatted).toFixed(2);
-      }
-
-      // Round to 2 decimal places
-      return Number(amount).toFixed(2);
+      const formatted = formatUnits(BigInt(amount), 18);
+      return Number(formatted).toFixed(2);
     } catch (err) {
       console.error("Error formatting amount:", err);
       return "0.00";
