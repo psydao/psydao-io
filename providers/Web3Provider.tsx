@@ -31,7 +31,7 @@ export const wagmiConfig = getDefaultConfig({
   chains: [sepolia, mainnet],
   transports: {
     [sepolia.id]: http("https://sepolia.gateway.tenderly.co"),
-    [mainnet.id]: http()
+    [mainnet.id]: http(process.env.NEXT_PUBLIC_MAINNET_CLIENT)
   },
   ssr: true
 });
@@ -46,9 +46,7 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider theme={theme}>
-          {children}
-        </RainbowKitProvider>
+        <RainbowKitProvider theme={theme}>{children}</RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
