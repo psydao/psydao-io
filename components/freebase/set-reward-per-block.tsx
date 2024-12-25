@@ -5,9 +5,10 @@ interface SetRewardPerBlockProps {
   value: string
   onChange: (value: string) => void
   onSubmit: () => void
+  isPending: boolean
 }
 
-export default function SetRewardPerBlock({ value, onChange, onSubmit }: SetRewardPerBlockProps) {
+export default function SetRewardPerBlock({ value, onChange, onSubmit, isPending }: SetRewardPerBlockProps) {
   const { globalStats } = useGlobalStats()
   return (
     <VStack align="stretch" spacing={4}>
@@ -47,8 +48,10 @@ export default function SetRewardPerBlock({ value, onChange, onSubmit }: SetRewa
         fontSize="16px"
         fontWeight="bold"
         _hover={{ opacity: 0.8 }}
+        isLoading={isPending}
+        isDisabled={isPending}
       >
-        Update
+        {isPending ? "Updating..." : "Update"}
       </Button>
 
     </VStack>

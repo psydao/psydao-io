@@ -14,6 +14,7 @@ interface SetAllocationPointProps {
   onPoolIdChange: (value: string) => void
   onAllocPointChange: (value: string) => void
   onSubmit: () => void
+  isPending: boolean
 }
 
 export default function SetAllocationPoint({
@@ -21,7 +22,8 @@ export default function SetAllocationPoint({
   allocPoint,
   onPoolIdChange,
   onAllocPointChange,
-  onSubmit
+  onSubmit,
+  isPending
 }: SetAllocationPointProps) {
   const { pools } = usePoolData()
   return (
@@ -84,8 +86,10 @@ export default function SetAllocationPoint({
                 fontSize="16px"
                 fontWeight="bold"
                 _hover={{ opacity: 0.8 }}
+                isLoading={isPending}
+                isDisabled={isPending}
               >
-                Set
+                {isPending ? "Setting..." : "Set"}
               </Button>
             </VStack>
           </TabPanel>

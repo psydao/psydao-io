@@ -1,16 +1,36 @@
-import { Box, Flex, Text, Input, Button } from "@chakra-ui/react"
-import { useState } from "react"
-import { type Address } from "viem"
-import AddDepositToken from "./add-deposit-token"
-import ManageRewardToken from "./manage-reward-token"
+import { Box, Flex, Text, Input, Button } from "@chakra-ui/react";
+import { useState } from "react";
+import { type Address } from "viem";
+import AddDepositToken from "./add-deposit-token";
+import ManageRewardToken from "./manage-reward-token";
 
 interface TokenManagementProps {
-  onAddToken: (args: { allocPoint: bigint; token: Address; withUpdate: boolean }) => void
-  onAddReward: (args: { rewardToken: Address; transferAmount: bigint }) => void
-  onSetReward: (args: { rewardToken: Address }) => void
+  onAddToken: {
+    addDepositToken: (args: {
+      allocPoint: bigint;
+      token: Address;
+      withUpdate: boolean;
+    }) => void;
+    isPending: boolean;
+  };
+  onAddReward: {
+    addRewardToken: (args: {
+      rewardToken: Address;
+      transferAmount: bigint;
+    }) => void;
+    isPending: boolean;
+  };
+  onSetReward: {
+    setRewardToken: (args: { rewardToken: Address }) => void;
+    isPending: boolean;
+  };
 }
 
-export function TokenManagement({ onAddToken, onAddReward, onSetReward }: TokenManagementProps) {
+export function TokenManagement({
+  onAddToken,
+  onAddReward,
+  onSetReward
+}: TokenManagementProps) {
   return (
     <Box
       borderRadius="xl"
@@ -27,12 +47,17 @@ export function TokenManagement({ onAddToken, onAddReward, onSetReward }: TokenM
       </Text>
 
       <Flex direction="column" gap={6}>
-        <AddDepositToken onSubmit={onAddToken} />
+        <AddDepositToken
+          onSubmit={onAddToken.addDepositToken}
+          isPending={onAddToken.isPending}
+        />
         <ManageRewardToken
-          onAddReward={onAddReward}
-          onSetReward={onSetReward}
+          onAddReward={onAddReward.addRewardToken}
+          onSetReward={onSetReward.setRewardToken}
+          isPendingAddReward={onAddReward.isPending}
+          isPendingSetReward={onSetReward.isPending}
         />
       </Flex>
     </Box>
-  )
+  );
 }
