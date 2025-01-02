@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Text, Input } from "@chakra-ui/react";
+import { Box, Button, Card, CardBody, CardHeader, CardFooter, Flex, Text, Input } from "@chakra-ui/react";
 import { usePoolInteraction } from "@/hooks/useFreebaseUser";
 import { useState } from "react";
 import { formatUnits, type Address } from "viem";
@@ -48,61 +48,75 @@ export function PoolCard({ pool, userAddress, rewardTokens, userPoolPosition }: 
   };
 
   return (
-    <Box borderRadius="xl" borderColor="#F2BEBE" borderWidth="1px" p={6}>
-      <Flex justify="space-between" align="center" mb={4}>
-        <Text fontSize="lg" fontWeight="bold">
-          Pool #{pool.id}
-        </Text>
-        <Text>{symbol}</Text>
-      </Flex>
-
-      <Flex direction="column" gap={4}>
-        {userPoolPosition?.amount && (<Text>Deposited Tokens: {formatUnits(userPoolPosition?.amount, 18)}</Text>)}
-        <Box bg="#FBF6F8" borderRadius="xl" boxShadow="inner" p={4}>
-          <Input
-            type="number"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            placeholder="Enter amount"
-            border="none"
-            focusBorderColor="transparent"
-            disabled={approvalPending || poolInteractionPending}
-          />
-        </Box>
-
-        <Flex gap={4}>
-          <Button
-            onClick={handleDeposit}
-            bg="linear-gradient(90deg, #f3a6a6, #f77cc2)"
-            color="black"
-            flex={1}
-            _hover={{
-              opacity: approvalPending || poolInteractionPending ? 0.4 : 0.8
-            }}
-            isDisabled={approvalPending || poolInteractionPending}
-          >
-            {approvalPending || poolInteractionPending
-              ? "Please wait..."
-              : !approvedSuccess && !allowance
-                ? "Approve & Deposit"
-                : "Deposit"}
-          </Button>
-          {userPoolPosition?.amount && userPoolPosition.amount > BigInt("0") && (<Button
-            onClick={handleWithdraw}
-            bg="linear-gradient(90deg, #f3a6a6, #f77cc2)"
-            color="black"
-            flex={1}
-            _hover={{
-              opacity: approvalPending || poolInteractionPending ? 0.4 : 0.8
-            }}
-            isDisabled={approvalPending || poolInteractionPending}
-          >
-            {approvalPending || poolInteractionPending
-              ? "Please wait..."
-              : "Withdraw"}
-          </Button>)}
+    <Card
+      borderColor="#F2BEBE"
+      borderWidth="1px"
+      borderRadius="lg"
+      overflow="hidden"
+    >
+      <CardHeader pb={0}>
+        <Flex justify="space-between" align="center">
+          <Text fontSize="md" fontWeight="medium">
+            Pool #{pool.id}
+          </Text>
+          <Text fontSize="md">
+            {symbol}
+          </Text>
         </Flex>
-      </Flex>
-    </Box>
-  );
+      </CardHeader>
+
+      <CardBody>
+        {userPoolPosition?.amount && (
+          <Text fontSize="sm" color="gray.600" mb={4}>
+            Deposited Tokens: {formatUnits(userPoolPosition?.amount, 18)}
+          </Text>
+        )}
+
+        <Input
+          type="number"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          placeholder="Enter amount"
+          bg="#FBF6F8"
+          border="none"
+          borderRadius="md"
+          fontSize="sm"
+          height="48px"
+          _placeholder={{ color: 'gray.500' }}
+          disabled={approvalPending || poolInteractionPending}
+        />
+      </CardBody>
+
+      <CardFooter gap={3}>
+        <Button
+          onClick={handleDeposit}
+          bg="linear-gradient(90deg, #F2BEBE, #F77CC2)"
+          color="black"
+          flex={1}
+          height="48px"
+          isDisabled={approvalPending || poolInteractionPending}
+          _hover={{ opacity: 0.9 }}
+        >
+          {approvalPending || poolInteractionPending
+            ? "Please wait..."
+            : !approvedSuccess && !allowance
+              ? "Approve & Deposit"
+              : "Deposit"}
+        </Button>
+        {userPoolPosition?.amount && userPoolPosition.amount > BigInt("0") && (
+          <Button
+            onClick={handleWithdraw}
+            bg="linear-gradient(90deg, #F2BEBE, #F77CC2)"
+            color="black"
+            flex={1}
+            height="48px"
+            isDisabled={approvalPending || poolInteractionPending}
+            _hover={{ opacity: 0.9 }}
+          >
+            Withdraw
+          </Button>
+        )}
+      </CardFooter>
+    </Card>
+  )
 }
