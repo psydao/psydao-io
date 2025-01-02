@@ -7,9 +7,11 @@ import { useState } from "react"
 interface RewardConfigurationProps {
   onUpdatePerBlock: (args: { rewardPerBlock: bigint }) => void
   onSetAllocation: (args: { pid: bigint, allocPoint: bigint, withUpdate: boolean }) => void
+  isUpdateRewardPending: boolean
+  isSetAllocationPending: boolean
 }
 
-export function RewardConfiguration({ onUpdatePerBlock, onSetAllocation }: RewardConfigurationProps) {
+export function RewardConfiguration({ onUpdatePerBlock, onSetAllocation, isUpdateRewardPending, isSetAllocationPending }: RewardConfigurationProps) {
   const [rewardPerBlock, setRewardPerBlock] = useState("")
   const [allocPoint, setAllocPoint] = useState("")
   const [poolId, setPoolId] = useState("")
@@ -37,6 +39,7 @@ export function RewardConfiguration({ onUpdatePerBlock, onSetAllocation }: Rewar
             if (!rewardPerBlock) return
             onUpdatePerBlock({ rewardPerBlock: BigInt(rewardPerBlock) })
           }}
+          isPending={isUpdateRewardPending}
         />
 
         <SetAllocationPoint
@@ -52,6 +55,7 @@ export function RewardConfiguration({ onUpdatePerBlock, onSetAllocation }: Rewar
               withUpdate: true
             })
           }}
+          isPending={isSetAllocationPending}
         />
       </Flex>
     </Box>

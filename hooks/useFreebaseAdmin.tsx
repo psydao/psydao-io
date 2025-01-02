@@ -69,7 +69,7 @@ export const useAddDepositToken = () => {
  */
 export function useRewardTokenManagement() {
   const { refetchRewardTokens } = useRewardTokens()
-  const { writeContract } = useWriteContract()
+  const { writeContract, isPending: isWritePending } = useWriteContract();
   const [pendingReward, setPendingReward] = useState<{
     token: Address
     amount: bigint
@@ -85,7 +85,8 @@ export function useRewardTokenManagement() {
   const {
     approve,
     isSuccess: isApproveSuccess,
-    resetApprove
+    resetApprove,
+    isPending: isApprovePending
   } = useApproveToken({
     tokenAddress: pendingReward?.token ?? "0x0",
     spenderAddress: FREEBASE_ADDRESS,
@@ -142,8 +143,9 @@ export function useRewardTokenManagement() {
     addRewardToken,
     setRewardToken,
     isApproveSuccess,
-    isPending: !!pendingReward
-  }
+    isPendingAddReward: isApprovePending || isWritePending,
+    isPendingSetReward: isWritePending
+  };
 }
 
 /**
@@ -152,27 +154,39 @@ export function useRewardTokenManagement() {
  */
 export function useUpdateRewardConfig() {
   const { writeContract } = useWriteContract()
+  const [isUpdateRewardPending, setIsUpdateRewardPending] = useState(false)
+  const [isSetAllocationPending, setIsSetAllocationPending] = useState(false)
 
   const updateRewardPerBlock = ({ rewardPerBlock }: UpdateRewardPerBlockParams) => {
+    setIsUpdateRewardPending(true)
     writeContract({
       address: FREEBASE_ADDRESS,
       abi: FREEBASE_ABI,
       functionName: 'updateRewardPerBlock',
       args: [rewardPerBlock]
+    }, {
+      onSuccess: () => setIsUpdateRewardPending(false),
+      onError: () => setIsUpdateRewardPending(false)
     })
   }
 
   const setAllocationPoint = ({ pid, allocPoint, withUpdate }: SetAllocationPointParams) => {
+    setIsSetAllocationPending(true)
     writeContract({
       address: FREEBASE_ADDRESS,
       abi: FREEBASE_ABI,
       functionName: 'setRewardAllocationPoint',
       args: [pid, allocPoint, withUpdate]
+    }, {
+      onSuccess: () => setIsSetAllocationPending(false),
+      onError: () => setIsSetAllocationPending(false)
     })
   }
 
   return {
     updateRewardPerBlock,
-    setAllocationPoint
+    setAllocationPoint,
+    isUpdateRewardPending,
+    isSetAllocationPending,
   }
 };

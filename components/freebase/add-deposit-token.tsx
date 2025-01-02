@@ -1,34 +1,49 @@
 import {
   Box,
-  FormLabel, Input, Button, FormControl,
-  Tabs, Tab, TabList, TabPanels, TabPanel,
+  FormLabel,
+  Input,
+  Button,
+  FormControl,
+  Tabs,
+  Tab,
+  TabList,
+  TabPanels,
+  TabPanel,
   Text,
   VStack
-} from "@chakra-ui/react"
-import { useState } from "react"
-import { type Address } from "viem"
-import { useDepositTokens } from "@/hooks/useFreebaseUser"
+} from "@chakra-ui/react";
+import { useState } from "react";
+import { type Address } from "viem";
+import { useDepositTokens } from "@/hooks/useFreebaseUser";
 
 interface AddDepositTokenProps {
-  onSubmit: (args: { allocPoint: bigint; token: Address; withUpdate: boolean }) => void
+  onSubmit: (args: {
+    allocPoint: bigint;
+    token: Address;
+    withUpdate: boolean;
+  }) => void;
+  isPending: boolean;
 }
 
-export default function AddDepositToken({ onSubmit }: AddDepositTokenProps) {
-  const [tokenAddress, setTokenAddress] = useState("")
-  const [allocPoint, setAllocPoint] = useState("")
-  const { depositTokens } = useDepositTokens()
+export default function AddDepositToken({
+  onSubmit,
+  isPending
+}: AddDepositTokenProps) {
+  const [tokenAddress, setTokenAddress] = useState("");
+  const [allocPoint, setAllocPoint] = useState("");
+  const { depositTokens } = useDepositTokens();
 
   const handleSubmit = () => {
-    if (!tokenAddress || !allocPoint) return
+    if (!tokenAddress || !allocPoint) return;
 
     onSubmit({
       token: tokenAddress as Address,
       allocPoint: BigInt(allocPoint),
       withUpdate: true
-    })
-    setTokenAddress("")
-    setAllocPoint("")
-  }
+    });
+    setTokenAddress("");
+    setAllocPoint("");
+  };
 
   return (
     <FormControl>
@@ -80,6 +95,8 @@ export default function AddDepositToken({ onSubmit }: AddDepositTokenProps) {
 
               <Button
                 onClick={handleSubmit}
+                isLoading={isPending}
+                isDisabled={isPending}
                 bg="linear-gradient(90deg, #f3a6a6, #f77cc2)"
                 color="black"
                 borderRadius="20px"
@@ -90,7 +107,7 @@ export default function AddDepositToken({ onSubmit }: AddDepositTokenProps) {
                 _hover={{ opacity: 0.8 }}
                 w="100%"
               >
-                Add Token
+                {isPending ? "Adding Token..." : "Add Token"}
               </Button>
             </VStack>
           </TabPanel>
