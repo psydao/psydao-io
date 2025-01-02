@@ -131,7 +131,6 @@ export function useRewardTokenManagement() {
 
       } else if (!isApproveSuccess) {
         // Need approval
-        console.log('approving ', pendingReward.amount.toString())
         await approve(pendingReward.amount)
       } else if (isApproveSuccess) {
         // Approval successful, refetch allowance
