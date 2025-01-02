@@ -1,11 +1,11 @@
-import { useCallback, useState } from "react"
-import { useWaitForTransactionReceipt, useWriteContract } from "wagmi"
-import { Address, Abi } from "viem"
+import { useCallback, useState } from "react";
+import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import { Address, Abi } from "viem";
 
 interface UseApproveTokenParams {
-  tokenAddress: Address
-  spenderAddress: Address
-  abi: Abi
+  tokenAddress: Address;
+  spenderAddress: Address;
+  abi: Abi;
 }
 
 export function useApproveToken({
@@ -13,10 +13,10 @@ export function useApproveToken({
   spenderAddress,
   abi
 }: UseApproveTokenParams) {
-  const [approvedSuccess, setApprovedSuccess] = useState(false)
+  const [approvedSuccess, setApprovedSuccess] = useState(false);
 
   const { writeContract, data, isPending, status, error, reset } =
-    useWriteContract()
+    useWriteContract();
 
   const {
     isSuccess,
@@ -26,26 +26,29 @@ export function useApproveToken({
     error: txError
   } = useWaitForTransactionReceipt({
     hash: data
-  })
+  });
 
-  const approve = useCallback(async (amount: bigint) => {
-    return writeContract(
-      {
-        address: tokenAddress,
-        abi,
-        functionName: "approve",
-        args: [spenderAddress, amount]
-      },
-      {
-        onSuccess() {
-          setApprovedSuccess(true)
+  const approve = useCallback(
+    async (amount: bigint) => {
+      return writeContract(
+        {
+          address: tokenAddress,
+          abi,
+          functionName: "approve",
+          args: [spenderAddress, amount]
         },
-        onError(error) {
-          console.error("useApproveTokenError", error)
+        {
+          onSuccess() {
+            setApprovedSuccess(true);
+          },
+          onError(error) {
+            console.error("useApproveTokenError", error);
+          }
         }
-      }
-    )
-  }, [writeContract, tokenAddress, spenderAddress, abi])
+      );
+    },
+    [writeContract, tokenAddress, spenderAddress, abi]
+  );
 
   return {
     approve,
@@ -60,5 +63,5 @@ export function useApproveToken({
     txError,
     resetApprove: reset,
     refetchApprovalTxReceipt: refetchTxReceipt
-  }
+  };
 }

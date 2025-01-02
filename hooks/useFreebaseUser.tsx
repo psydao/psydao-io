@@ -6,7 +6,7 @@ import {
   useSimulateContract,
   useReadContract,
   useAccount,
-  useWaitForTransactionReceipt,
+  useWaitForTransactionReceipt
 } from "wagmi";
 import { type Address, erc20Abi, maxUint256, parseEther } from "viem";
 import {
@@ -14,7 +14,7 @@ import {
   useLiquidityPool,
   useFreebaseRewardTokens,
   useFreebaseDepositTokens,
-  useFreebaseGlobalStats,
+  useFreebaseGlobalStats
 } from "@/lib/services/freebase";
 import { useApproveToken } from "@/services/web3/useApproveToken";
 
@@ -58,48 +58,49 @@ export function usePoolInteraction(poolId: bigint) {
     functionName: "allowance",
     args: [address as Address, FREEBASE_ADDRESS],
     query: {
-      enabled: Boolean(address && pool?.token.id),
-    },
+      enabled: Boolean(address && pool?.token.id)
+    }
   });
 
   const {
     writeContract,
     isPending: poolInteractionPending,
     data,
-    isSuccess: poolInteractionSuccess,
+    isSuccess: poolInteractionSuccess
   } = useWriteContract();
 
   const {
     isSuccess: isPoolTransactionSuccess,
     isFetching: poolTransactionPending,
     refetch: refetchTxReceipt,
-    error: txError,
+    error: txError
   } = useWaitForTransactionReceipt({
-    hash: data,
+    hash: data
   });
 
   const {
     approve,
     isSuccess: isApproveSuccess,
     isPending: isApprovePending,
-    approvedSuccess,
+    isFetching: isApproveFetching,
+    approvedSuccess
   } = useApproveToken({
     tokenAddress: pool?.token.id as Address,
     spenderAddress: FREEBASE_ADDRESS,
-    abi: erc20Abi,
+    abi: erc20Abi
   });
 
   useEffect(() => {
-    if (approvedSuccess) {
+    if (isApproveSuccess) {
       refetchAllowance();
     }
-  }, [approvedSuccess, refetchAllowance]);
+  }, [isApproveSuccess, refetchAllowance]);
 
   const deposit = async ({ amount }: Omit<PoolInteractionParams, "pid">) => {
     const parsedAmount = parseEther(amount.toString());
     console.log("deposit", {
       allowance,
-      parsedAmount,
+      parsedAmount
     });
     if (!allowance || parsedAmount > allowance) {
       console.log("we need approval");
@@ -113,7 +114,7 @@ export function usePoolInteraction(poolId: bigint) {
       abi: FREEBASE_ABI,
       address: FREEBASE_ADDRESS,
       functionName: "deposit",
-      args: [poolId, parsedAmount],
+      args: [poolId, parsedAmount]
     });
   };
 
@@ -123,7 +124,7 @@ export function usePoolInteraction(poolId: bigint) {
       address: FREEBASE_ADDRESS,
       abi: FREEBASE_ABI,
       functionName: "withdraw",
-      args: [poolId, parsedAmount],
+      args: [poolId, parsedAmount]
     });
   };
 
@@ -132,7 +133,7 @@ export function usePoolInteraction(poolId: bigint) {
       address: FREEBASE_ADDRESS,
       abi: FREEBASE_ABI,
       functionName: "emergencyWithdraw",
-      args: [poolId],
+      args: [poolId]
     });
   };
 
@@ -141,9 +142,9 @@ export function usePoolInteraction(poolId: bigint) {
     withdraw,
     emergencyWithdraw,
     poolInteractionPending: poolInteractionPending || poolTransactionPending,
-    isApprovePending,
+    approvalPending: isApprovePending || isApproveFetching,
     approvedSuccess,
-    allowance,
+    allowance
   };
 }
 
@@ -160,14 +161,14 @@ export function usePoolData() {
       tokenInfo: pool.token,
       userCount: pool.userCount,
       depositCount: pool.depositCount,
-      withdrawCount: pool.withdrawCount,
+      withdrawCount: pool.withdrawCount
     })),
     // If you still need totalAllocPoint, we can calculate it from the pools
     totalAllocPoint:
       graphqlData?.pools?.reduce(
         (total, pool) => total + BigInt(pool.allocPoint),
-        0n,
-      ) ?? 0n,
+        0n
+      ) ?? 0n
   };
 }
 
@@ -176,13 +177,13 @@ export function useRewards(address: Address) {
     address: FREEBASE_ADDRESS,
     abi: FREEBASE_ABI,
     functionName: "totalUnclaimedRewards",
-    args: [address],
+    args: [address]
   });
 
   const { data: simulateClaimData } = useSimulateContract({
     address: FREEBASE_ADDRESS,
     abi: FREEBASE_ABI,
-    functionName: "claimUnclaimedRewards",
+    functionName: "claimUnclaimedRewards"
   });
 
   const { writeContract } = useWriteContract();
@@ -193,13 +194,13 @@ export function useRewards(address: Address) {
       address: FREEBASE_ADDRESS,
       abi: FREEBASE_ABI,
       functionName: "claimUnclaimedRewards",
-      args: [token],
+      args: [token]
     });
   };
 
   return {
     unclaimedRewards: unclaimedRewards as bigint | undefined,
-    claimRewards,
+    claimRewards
   };
 }
 
@@ -209,11 +210,11 @@ export function usePendingRewards(poolId: bigint, userAddress: Address) {
     address: FREEBASE_ADDRESS,
     abi: FREEBASE_ABI,
     functionName: "pendingRewards",
-    args: [poolId, userAddress],
+    args: [poolId, userAddress]
   });
 
   return {
-    pendingRewards: pendingRewards as bigint | undefined,
+    pendingRewards: pendingRewards as bigint | undefined
   };
 }
 
@@ -222,20 +223,20 @@ export function useRewardTokens() {
     useFreebaseRewardTokens();
   return {
     rewardTokens: rewardTokens?.tokens,
-    refetchRewardTokens,
+    refetchRewardTokens
   };
 }
 
 export function useDepositTokens() {
   const { data: depositTokens } = useFreebaseDepositTokens();
   return {
-    depositTokens: depositTokens?.tokens,
+    depositTokens: depositTokens?.tokens
   };
 }
 
 export function useGlobalStats() {
   const { data: globalStats } = useFreebaseGlobalStats();
   return {
-    globalStats: globalStats?.globalStats,
+    globalStats: globalStats?.globalStats
   };
 }

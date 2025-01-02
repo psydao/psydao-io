@@ -22,10 +22,10 @@ export function PoolCard({ pool, userAddress, rewardTokens }: PoolCardProps) {
   const {
     deposit,
     withdraw,
-    isApprovePending,
+    approvalPending,
     approvedSuccess,
     allowance,
-    poolInteractionPending,
+    poolInteractionPending
   } = usePoolInteraction(BigInt(pool.id));
   const { symbol, decimals } = useTokenInfo(pool.token);
 
@@ -59,7 +59,7 @@ export function PoolCard({ pool, userAddress, rewardTokens }: PoolCardProps) {
             placeholder="Enter amount"
             border="none"
             focusBorderColor="transparent"
-            disabled={isApprovePending || poolInteractionPending}
+            disabled={approvalPending || poolInteractionPending}
           />
         </Box>
 
@@ -70,11 +70,11 @@ export function PoolCard({ pool, userAddress, rewardTokens }: PoolCardProps) {
             color="black"
             flex={1}
             _hover={{
-              opacity: isApprovePending || poolInteractionPending ? 0.4 : 0.8,
+              opacity: approvalPending || poolInteractionPending ? 0.4 : 0.8
             }}
-            isDisabled={isApprovePending || poolInteractionPending}
+            isDisabled={approvalPending || poolInteractionPending}
           >
-            {isApprovePending || poolInteractionPending
+            {approvalPending || poolInteractionPending
               ? "Please wait..."
               : !approvedSuccess && !allowance
                 ? "Approve & Deposit"
@@ -86,11 +86,11 @@ export function PoolCard({ pool, userAddress, rewardTokens }: PoolCardProps) {
             color="black"
             flex={1}
             _hover={{
-              opacity: isApprovePending || poolInteractionPending ? 0.4 : 0.8,
+              opacity: approvalPending || poolInteractionPending ? 0.4 : 0.8
             }}
-            isDisabled={isApprovePending || poolInteractionPending}
+            isDisabled={approvalPending || poolInteractionPending}
           >
-            {isApprovePending || poolInteractionPending
+            {approvalPending || poolInteractionPending
               ? "Please wait..."
               : "Withdraw"}
           </Button>
