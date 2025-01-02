@@ -103,7 +103,6 @@ export function useRewardTokenManagement() {
 
     const handleRewardToken = async () => {
       if (allowance === undefined) {
-        console.error('allowance not found')
         return
       }
 
