@@ -1,23 +1,29 @@
 import { Box, Button, Flex, Text, Input } from "@chakra-ui/react";
 import { usePoolInteraction } from "@/hooks/useFreebaseUser";
 import { useState } from "react";
-import { type Address } from "viem";
+import { formatUnits, type Address } from "viem";
 import { useTokenInfo } from "@/hooks/useTokenInfo";
-import { FreebaseToken } from "@/lib/services/freebase";
+import { FreebaseToken, FreebaseUserPoolPosition } from "@/lib/services/freebase";
 
 interface PoolCardProps {
   pool: {
     id: number;
-    token: Address;
+    tokenAddress: Address;
     allocPoint: bigint;
     lastRewardBlock: bigint;
     accRewardPerShare: bigint;
+    tokenInfo: FreebaseToken;
+    userCount: number;
+    depositCount: number;
+    withdrawCount: number;
+    totalDeposited: bigint;
   };
   userAddress?: Address;
   rewardTokens?: FreebaseToken[];
+  userPoolPosition?: FreebaseUserPoolPosition;
 }
 
-export function PoolCard({ pool, userAddress, rewardTokens }: PoolCardProps) {
+export function PoolCard({ pool, userAddress, rewardTokens, userPoolPosition }: PoolCardProps) {
   const [amount, setAmount] = useState("");
   const {
     deposit,
@@ -27,7 +33,7 @@ export function PoolCard({ pool, userAddress, rewardTokens }: PoolCardProps) {
     allowance,
     poolInteractionPending
   } = usePoolInteraction(BigInt(pool.id));
-  const { symbol, decimals } = useTokenInfo(pool.token);
+  const { symbol, decimals } = useTokenInfo(pool.tokenAddress);
 
   const handleDeposit = () => {
     if (!amount) return;
@@ -51,6 +57,7 @@ export function PoolCard({ pool, userAddress, rewardTokens }: PoolCardProps) {
       </Flex>
 
       <Flex direction="column" gap={4}>
+        {userPoolPosition?.amount && (<Text>Deposited Tokens: {formatUnits(userPoolPosition?.amount, 18)}</Text>)}
         <Box bg="#FBF6F8" borderRadius="xl" boxShadow="inner" p={4}>
           <Input
             type="number"
@@ -80,7 +87,7 @@ export function PoolCard({ pool, userAddress, rewardTokens }: PoolCardProps) {
                 ? "Approve & Deposit"
                 : "Deposit"}
           </Button>
-          <Button
+          {userPoolPosition?.amount && userPoolPosition.amount > BigInt("0") && (<Button
             onClick={handleWithdraw}
             bg="linear-gradient(90deg, #f3a6a6, #f77cc2)"
             color="black"
@@ -93,7 +100,7 @@ export function PoolCard({ pool, userAddress, rewardTokens }: PoolCardProps) {
             {approvalPending || poolInteractionPending
               ? "Please wait..."
               : "Withdraw"}
-          </Button>
+          </Button>)}
         </Flex>
       </Flex>
     </Box>

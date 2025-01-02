@@ -1,4 +1,4 @@
-import { usePoolData, useRewards, useRewardTokens } from "@/hooks/useFreebaseUser";
+import { usePoolData, useRewards, useRewardTokens, useUserPoolPositions } from "@/hooks/useFreebaseUser";
 import { Box, Grid, Text, Flex } from "@chakra-ui/react";
 import { useAccount } from "wagmi";
 import { type Address } from "viem";
@@ -8,6 +8,7 @@ import { PoolCard } from "./pool-card";
 export function UserDashboard() {
   const { address } = useAccount();
   const { pools } = usePoolData();
+  const { userPoolPositions } = useUserPoolPositions(address as Address);
   const { unclaimedRewards } = useRewards(address as Address);
   const { rewardTokens } = useRewardTokens();
 
@@ -34,14 +35,17 @@ export function UserDashboard() {
         gap={4}
         p={6}
       >
-        {pools?.map((pool) => (
-          <PoolCard
+        {pools?.map((pool) => {
+          const userPoolPosition = userPoolPositions?.find((position) => Number(position.pool.id) === pool.id);
+
+          return (<PoolCard
             rewardTokens={rewardTokens}
             key={pool.id}
             pool={pool}
             userAddress={address}
-          />
-        ))}
+            userPoolPosition={userPoolPosition}
+          />)
+        })}
       </Grid>
     </Box>
   );
