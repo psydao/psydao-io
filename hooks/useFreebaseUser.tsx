@@ -1,8 +1,14 @@
-import { useEffect } from "react"
-import { freebaseSepolia } from "@/constants/contracts"
-import psydaoMasterBaseAbi from "@/abis/PsyDAOMasterBase.json"
-import { useWriteContract, useSimulateContract, useReadContract, useAccount } from "wagmi"
-import { type Address, erc20Abi, maxUint256, parseEther } from "viem"
+import { useEffect, useState } from "react";
+import { freebaseSepolia } from "@/constants/contracts";
+import psydaoMasterBaseAbi from "@/abis/PsyDAOMasterBase.json";
+import {
+  useWriteContract,
+  useSimulateContract,
+  useReadContract,
+  useAccount,
+  useWaitForTransactionReceipt
+} from "wagmi";
+import { type Address, erc20Abi, maxUint256, parseEther } from "viem";
 import {
   useLiquidityPools,
   useLiquidityPool,
@@ -12,123 +18,141 @@ import {
 } from "@/lib/services/freebase";
 import { useApproveToken } from "@/services/web3/useApproveToken";
 
-const FREEBASE_ADDRESS = freebaseSepolia
-const FREEBASE_ABI = psydaoMasterBaseAbi
+const FREEBASE_ADDRESS = freebaseSepolia;
+const FREEBASE_ABI = psydaoMasterBaseAbi;
 
 //#region interfaces
 interface PoolInteractionParams {
-  pid: bigint
-  amount: bigint
+  pid: bigint;
+  amount: bigint;
 }
 
 interface PoolInfo {
-  token: Address
-  allocPoint: bigint
-  lastRewardBlock: bigint
-  accRewardPerShare: bigint
+  token: Address;
+  allocPoint: bigint;
+  lastRewardBlock: bigint;
+  accRewardPerShare: bigint;
 }
 
 interface GraphQLPool {
-  id: string
-  token: string
-  allocPoint: string
-  lastRewardBlock: string
-  accRewardPerShare: string
-  userCount: string
-  depositCount: string
-  withdrawCount: string
+  id: string;
+  token: string;
+  allocPoint: string;
+  lastRewardBlock: string;
+  accRewardPerShare: string;
+  userCount: string;
+  depositCount: string;
+  withdrawCount: string;
 }
 //#endregion
 
 export function usePoolInteraction(poolId: bigint) {
-  const { address } = useAccount()
-  const { data: poolData } = useLiquidityPool(poolId.toString())
-  const pool = poolData?.pool
+  const { address } = useAccount();
+  const { data: poolData } = useLiquidityPool(poolId.toString());
+  const pool = poolData?.pool;
 
   // Get allowance
   const { data: allowance, refetch: refetchAllowance } = useReadContract({
     address: pool?.token.id as Address,
     abi: erc20Abi,
-    functionName: 'allowance',
+    functionName: "allowance",
     args: [address as Address, FREEBASE_ADDRESS],
     query: {
       enabled: Boolean(address && pool?.token.id)
     }
-  })
+  });
+
+  const {
+    writeContract,
+    isPending: poolInteractionPending,
+    data,
+    isSuccess: poolInteractionSuccess
+  } = useWriteContract();
+
+  const {
+    isSuccess: isPoolTransactionSuccess,
+    isFetching: poolTransactionPending,
+    refetch: refetchTxReceipt,
+    error: txError
+  } = useWaitForTransactionReceipt({
+    hash: data
+  });
 
   const {
     approve,
     isSuccess: isApproveSuccess,
     isPending: isApprovePending,
+    isFetching: isApproveFetching,
     approvedSuccess
   } = useApproveToken({
     tokenAddress: pool?.token.id as Address,
     spenderAddress: FREEBASE_ADDRESS,
     abi: erc20Abi
-  })
+  });
 
   useEffect(() => {
-    if (approvedSuccess) {
-      refetchAllowance()
+    if (isApproveSuccess) {
+      refetchAllowance();
     }
-  }, [approvedSuccess, refetchAllowance])
+  }, [isApproveSuccess, refetchAllowance]);
 
-  const { writeContract } = useWriteContract()
-
-  const deposit = async ({ amount }: Omit<PoolInteractionParams, 'pid'>) => {
-    console.log('deposit', {
+  const deposit = async ({ amount }: Omit<PoolInteractionParams, "pid">) => {
+    const parsedAmount = parseEther(amount.toString());
+    console.log("deposit", {
       allowance,
-      amount
-    })
-    if (!allowance || amount > allowance) {
-      console.log('we need approval')
-      await approve(parseEther(amount.toString()))
+      parsedAmount
+    });
+    if (!allowance || parsedAmount > allowance) {
+      console.log("we need approval");
+      await approve(parsedAmount);
       // Wait for approval success before proceeding
-      return
+      return;
     }
 
-    console.log('proceeding to writeContract')
+    console.log("proceeding to writeContract");
     writeContract({
       abi: FREEBASE_ABI,
       address: FREEBASE_ADDRESS,
-      functionName: 'deposit',
-      args: [poolId, amount],
-    })
-  }
+      functionName: "deposit",
+      args: [poolId, parsedAmount]
+    });
+  };
 
-  const withdraw = ({ amount }: Omit<PoolInteractionParams, 'pid'>) => {
+  const withdraw = ({ amount }: Omit<PoolInteractionParams, "pid">) => {
+    const parsedAmount = parseEther(amount.toString());
     writeContract({
       address: FREEBASE_ADDRESS,
       abi: FREEBASE_ABI,
-      functionName: 'withdraw',
-      args: [poolId, amount]
-    })
-  }
+      functionName: "withdraw",
+      args: [poolId, parsedAmount]
+    });
+  };
 
   const emergencyWithdraw = () => {
     writeContract({
       address: FREEBASE_ADDRESS,
       abi: FREEBASE_ABI,
-      functionName: 'emergencyWithdraw',
+      functionName: "emergencyWithdraw",
       args: [poolId]
-    })
-  }
+    });
+  };
 
   return {
     deposit,
     withdraw,
     emergencyWithdraw,
-    isPending: isApprovePending,
+    poolInteractionPending: poolInteractionPending || poolTransactionPending,
+    approvalPending: isApprovePending || isApproveFetching,
     approvedSuccess,
     allowance
-  }
+  };
 }
 
 export function usePoolData() {
-  const { data: graphqlData } = useLiquidityPools()
+  const { data: graphqlData } = useLiquidityPools();
 
   return {
-    pools: graphqlData?.pools?.map(pool => ({
+    pools: graphqlData?.pools?.map((pool) => ({
       id: Number(pool.id),
       token: pool.token.id as Address,
       allocPoint: BigInt(pool.allocPoint),
@@ -140,43 +164,44 @@ export function usePoolData() {
       withdrawCount: pool.withdrawCount
     })),
     // If you still need totalAllocPoint, we can calculate it from the pools
-    totalAllocPoint: graphqlData?.pools?.reduce(
-      (total, pool) => total + BigInt(pool.allocPoint),
-      0n
-    ) ?? 0n
-  }
+    totalAllocPoint:
+      graphqlData?.pools?.reduce(
+        (total, pool) => total + BigInt(pool.allocPoint),
+        0n
+      ) ?? 0n
+  };
 }
 
 export function useRewards(address: Address) {
   const { data: unclaimedRewards } = useReadContract({
     address: FREEBASE_ADDRESS,
     abi: FREEBASE_ABI,
-    functionName: 'totalUnclaimedRewards',
+    functionName: "totalUnclaimedRewards",
     args: [address]
-  })
+  });
 
   const { data: simulateClaimData } = useSimulateContract({
     address: FREEBASE_ADDRESS,
     abi: FREEBASE_ABI,
-    functionName: 'claimUnclaimedRewards'
-  })
+    functionName: "claimUnclaimedRewards"
+  });
 
-  const { writeContract } = useWriteContract()
+  const { writeContract } = useWriteContract();
 
   const claimRewards = (token: Address) => {
-    if (!simulateClaimData?.request) return
+    if (!simulateClaimData?.request) return;
     writeContract({
       address: FREEBASE_ADDRESS,
       abi: FREEBASE_ABI,
-      functionName: 'claimUnclaimedRewards',
+      functionName: "claimUnclaimedRewards",
       args: [token]
-    })
-  }
+    });
+  };
 
   return {
     unclaimedRewards: unclaimedRewards as bigint | undefined,
     claimRewards
-  }
+  };
 }
 
 // Additional hook for pending rewards
@@ -184,33 +209,34 @@ export function usePendingRewards(poolId: bigint, userAddress: Address) {
   const { data: pendingRewards } = useReadContract({
     address: FREEBASE_ADDRESS,
     abi: FREEBASE_ABI,
-    functionName: 'pendingRewards',
+    functionName: "pendingRewards",
     args: [poolId, userAddress]
-  })
+  });
 
   return {
     pendingRewards: pendingRewards as bigint | undefined
-  }
+  };
 }
 
 export function useRewardTokens() {
-  const { data: rewardTokens, refetch: refetchRewardTokens } = useFreebaseRewardTokens()
+  const { data: rewardTokens, refetch: refetchRewardTokens } =
+    useFreebaseRewardTokens();
   return {
     rewardTokens: rewardTokens?.tokens,
     refetchRewardTokens
-  }
+  };
 }
 
 export function useDepositTokens() {
-  const { data: depositTokens } = useFreebaseDepositTokens()
+  const { data: depositTokens } = useFreebaseDepositTokens();
   return {
     depositTokens: depositTokens?.tokens
-  }
+  };
 }
 
 export function useGlobalStats() {
-  const { data: globalStats } = useFreebaseGlobalStats()
+  const { data: globalStats } = useFreebaseGlobalStats();
   return {
     globalStats: globalStats?.globalStats
-  }
+  };
 }
