@@ -1,6 +1,7 @@
-import { Box, Flex, FormLabel, Input, Button, FormControl, Tabs, TabList, Tab, TabPanels, TabPanel, VStack } from "@chakra-ui/react"
+import { Box, Flex, FormLabel, Input, Button, FormControl, Tabs, TabList, Tab, TabPanels, TabPanel, Text, VStack } from "@chakra-ui/react"
 import { useState } from "react"
 import { type Address } from "viem"
+import { useRewardTokens } from "@/hooks/useFreebaseUser"
 
 interface ManageRewardTokenProps {
   onAddReward: (args: { rewardToken: Address; transferAmount: bigint }) => void
@@ -11,6 +12,7 @@ export default function ManageRewardToken({ onAddReward, onSetReward }: ManageRe
   const [rewardToken, setRewardToken] = useState("")
   const [transferAmount, setTransferAmount] = useState("")
   const [activeToken, setActiveToken] = useState("")
+  const { rewardTokens } = useRewardTokens()
 
   const handleAddReward = () => {
     if (!rewardToken || !transferAmount) return
@@ -22,12 +24,11 @@ export default function ManageRewardToken({ onAddReward, onSetReward }: ManageRe
     setTransferAmount("")
   }
 
-  const handleSetReward = () => {
-    if (!activeToken) return
+  const handleSetActiveRewardToken = (tokenId: string) => {
+    console.log('setting active reward token', tokenId)
     onSetReward({
-      rewardToken: activeToken as Address
+      rewardToken: tokenId as Address
     })
-    setActiveToken("")
   }
 
   return (
@@ -35,7 +36,7 @@ export default function ManageRewardToken({ onAddReward, onSetReward }: ManageRe
       <Tabs variant="soft-rounded" colorScheme="pink">
         <TabList mb={4}>
           <Tab>Add Reward Token</Tab>
-          <Tab>Set Active Token</Tab>
+          <Tab>List of Reward Tokens</Tab>
         </TabList>
 
         <TabPanels>
@@ -102,40 +103,14 @@ export default function ManageRewardToken({ onAddReward, onSetReward }: ManageRe
                 mb="0"
                 fontFamily="Inter"
               >
-                Set Active Token
+                List of Reward Tokens
               </FormLabel>
-
-              <Box
-                bg="#FBF6F8"
-                borderRadius="xl"
-                boxShadow="inner"
-                p="16px"
-              >
-                <Input
-                  value={activeToken}
-                  onChange={(e) => setActiveToken(e.target.value)}
-                  placeholder="Token Address"
-                  w="100%"
-                  border="none"
-                  focusBorderColor="transparent"
-                  fontFamily="Inter"
-                />
-              </Box>
-
-              <Button
-                onClick={handleSetReward}
-                bg="linear-gradient(90deg, #f3a6a6, #f77cc2)"
-                color="black"
-                borderRadius="20px"
-                px={6}
-                py={2}
-                fontSize="16px"
-                fontWeight="bold"
-                _hover={{ opacity: 0.8 }}
-                w="100%"
-              >
-                Set Active
-              </Button>
+              {rewardTokens?.map((token) => (
+                <Text key={token.id}>{token.name} {token.isActiveRewardToken === true ?
+                  <b>(currently active)</b> :
+                  <Button onClick={() => handleSetActiveRewardToken(token.id)}>Make Active</Button>}
+                </Text>
+              ))}
             </VStack>
           </TabPanel>
         </TabPanels>

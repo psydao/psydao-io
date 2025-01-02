@@ -3,7 +3,12 @@ import { freebaseSepolia } from "@/constants/contracts"
 import psydaoMasterBaseAbi from "@/abis/PsyDAOMasterBase.json"
 import { useWriteContract, useSimulateContract, useReadContract, useAccount } from "wagmi"
 import { type Address, erc20Abi, maxUint256, parseEther } from "viem"
-import { useLiquidityPools, useLiquidityPool } from "@/lib/services/freebase";
+import {
+  useLiquidityPools,
+  useLiquidityPool,
+  useFreebaseRewardTokens,
+  useFreebaseDepositTokens
+} from "@/lib/services/freebase";
 import { useApproveToken } from "@/services/web3/useApproveToken";
 
 const FREEBASE_ADDRESS = freebaseSepolia
@@ -184,5 +189,19 @@ export function usePendingRewards(poolId: bigint, userAddress: Address) {
 
   return {
     pendingRewards: pendingRewards as bigint | undefined
+  }
+}
+
+export function useRewardTokens() {
+  const { data: rewardTokens } = useFreebaseRewardTokens()
+  return {
+    rewardTokens: rewardTokens?.tokens
+  }
+}
+
+export function useDepositTokens() {
+  const { data: depositTokens } = useFreebaseDepositTokens()
+  return {
+    depositTokens: depositTokens?.tokens
   }
 }

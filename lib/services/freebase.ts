@@ -1,10 +1,18 @@
 import { freebaseGraphClient } from "@/config/apolloClients";
-import { getFreebasePool, getFreebasePools } from "@/services/freebase-graph";
+import {
+  getFreebasePool,
+  getFreebasePools,
+  getFreebaseTokens,
+  getFreebaseRewardTokens,
+  getFreebaseDepositTokens
+} from "@/services/freebase-graph";
 import { useQuery } from "@apollo/client"
 import { Address } from "viem"
 
-interface FreebaseToken {
+export interface FreebaseToken {
   id: Address
+  name: string
+  decimals: number
   isActiveRewardToken: boolean
   isDepositToken: boolean
   isRewardToken: boolean
@@ -38,6 +46,30 @@ export function useLiquidityPools() {
 export function useLiquidityPool(id: string) {
   return useQuery<{ pool: FreebasePool }>(getFreebasePool, {
     variables: { id },
+    client: freebaseGraphClient
+  })
+}
+
+export function useFreebaseTokens() {
+  return useQuery<{ tokens: FreebaseToken[] }>(getFreebaseTokens, {
+    client: freebaseGraphClient
+  })
+}
+
+export function useFreebaseDepositTokens() {
+  return useQuery<{ tokens: FreebaseToken[] }>(getFreebaseDepositTokens, {
+    variables: {
+      isDepositToken: true
+    },
+    client: freebaseGraphClient
+  })
+}
+
+export function useFreebaseRewardTokens() {
+  return useQuery<{ tokens: FreebaseToken[] }>(getFreebaseRewardTokens, {
+    variables: {
+      isRewardToken: true
+    },
     client: freebaseGraphClient
   })
 }

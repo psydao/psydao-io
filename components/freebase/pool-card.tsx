@@ -3,6 +3,7 @@ import { usePoolInteraction } from "@/hooks/useFreebaseUser"
 import { useState } from "react"
 import { type Address } from "viem"
 import { useTokenInfo } from "@/hooks/useTokenInfo"
+import { FreebaseToken } from "@/lib/services/freebase"
 
 interface PoolCardProps {
   pool: {
@@ -13,9 +14,10 @@ interface PoolCardProps {
     accRewardPerShare: bigint
   }
   userAddress?: Address
+  rewardTokens?: FreebaseToken[]
 }
 
-export function PoolCard({ pool, userAddress }: PoolCardProps) {
+export function PoolCard({ pool, userAddress, rewardTokens }: PoolCardProps) {
   const [amount, setAmount] = useState("")
   const {
     deposit,

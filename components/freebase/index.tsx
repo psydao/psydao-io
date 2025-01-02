@@ -1,4 +1,4 @@
-import { usePoolData, useRewards } from "@/hooks/useFreebaseUser";
+import { usePoolData, useRewards, useRewardTokens } from "@/hooks/useFreebaseUser";
 import { Box, Grid, Text, Flex } from "@chakra-ui/react";
 import { useAccount } from "wagmi";
 import { type Address } from "viem";
@@ -9,6 +9,7 @@ export function UserDashboard() {
   const { address } = useAccount();
   const { pools } = usePoolData();
   const { unclaimedRewards } = useRewards(address as Address);
+  const { rewardTokens } = useRewardTokens();
 
   return (
     <Box>
@@ -35,6 +36,7 @@ export function UserDashboard() {
       >
         {pools?.map((pool) => (
           <PoolCard
+            rewardTokens={rewardTokens}
             key={pool.id}
             pool={pool}
             userAddress={address}

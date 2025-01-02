@@ -89,7 +89,7 @@ export function useRewardTokenManagement() {
   }
 
   const setRewardToken = ({ rewardToken }: SetRewardTokenParams) => {
-    if (!setSimulateData?.request) return
+    // if (!setSimulateData?.request) return
     writeContract({
       address: FREEBASE_ADDRESS,
       abi: FREEBASE_ABI,
