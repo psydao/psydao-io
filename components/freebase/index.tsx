@@ -23,7 +23,7 @@ export function UserDashboard() {
           as="h2"
           fontSize={{ base: "20px", sm: "24px" }}
         >
-          Freebase LP Pools
+          Freebase Pools
         </Text>
       </Flex>
 
