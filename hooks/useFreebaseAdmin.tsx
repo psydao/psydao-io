@@ -102,11 +102,6 @@ export function useRewardTokenManagement() {
     if (!pendingReward) return
 
     const handleRewardToken = async () => {
-      console.group('handleRewardToken')
-      console.log('allowance:', allowance?.toString())
-      console.log('pending reward amount:', pendingReward.amount.toString())
-      console.groupEnd()
-
       if (allowance === undefined) {
         console.error('allowance not found')
         return
@@ -118,7 +113,6 @@ export function useRewardTokenManagement() {
 
       if (parsedAllowance >= parsedPendingReward) {
         // Allowance is sufficient, proceed with contract call
-        console.log('adding reward token')
         writeContract({
           address: FREEBASE_ADDRESS,
           abi: FREEBASE_ABI,

@@ -30,7 +30,6 @@ export function useApproveToken({
 
   const approve = useCallback(
     async (approvalAmount: bigint) => {
-      console.log('approving in approve ', approvalAmount.toString())
       const parsedAmount = parseEther(approvalAmount.toString())
       return writeContract(
         {
