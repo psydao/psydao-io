@@ -99,6 +99,10 @@ export const useCustomToasts = () => {
     );
   };
 
+  /**
+   * @param message - The message to display in the toast
+   * @param width - The width of the screen
+   */
   const showSuccessToast = (message: string, width: number) => {
     customToast(
       {

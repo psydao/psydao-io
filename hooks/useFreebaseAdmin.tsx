@@ -1,11 +1,13 @@
 import { freebaseSepolia } from "@/constants/contracts"
 import psydaoMasterBaseAbi from "@/abis/PsyDAOMasterBase.json"
 import { useWriteContract, useSimulateContract } from "wagmi"
-import { type Address, erc20Abi } from "viem"
+import { type Address, erc20Abi, parseEther } from "viem"
 import { useApproveToken } from "@/services/web3/useApproveToken";
 import useGetTokenAllowance from "@/services/web3/useGetTokenAllowance";
 import { useEffect, useState } from "react";
 import { useRewardTokens } from "@/hooks/useFreebaseUser";
+import { useCustomToasts } from "./useCustomToasts";
+import { useResize } from "./useResize";
 
 const FREEBASE_ADDRESS = freebaseSepolia
 const FREEBASE_ABI = psydaoMasterBaseAbi
@@ -74,6 +76,8 @@ export function useRewardTokenManagement() {
     token: Address
     amount: bigint
   } | null>(null)
+  const { showSuccessToast } = useCustomToasts()
+  const { width } = useResize()
 
   // Only setup allowance check when we have a pending reward
   const { allowance, refetch: refetchAllowance } = useGetTokenAllowance({
@@ -98,26 +102,48 @@ export function useRewardTokenManagement() {
     if (!pendingReward) return
 
     const handleRewardToken = async () => {
-      if (allowance >= pendingReward.amount) {
+      console.group('handleRewardToken')
+      console.log('allowance:', allowance?.toString())
+      console.log('pending reward amount:', pendingReward.amount.toString())
+      console.groupEnd()
+
+      if (allowance === undefined) {
+        console.error('allowance not found')
+        return
+      }
+
+      // NOTE currently all tokens in this contract use 18 decimals
+      const parsedAllowance = parseEther(allowance?.toString() ?? '0')
+      const parsedPendingReward = parseEther(pendingReward.amount.toString())
+
+      if (parsedAllowance >= parsedPendingReward) {
         // Allowance is sufficient, proceed with contract call
+        console.log('adding reward token')
         writeContract({
           address: FREEBASE_ADDRESS,
           abi: FREEBASE_ABI,
           functionName: 'addRewardToken',
-          args: [pendingReward.token, pendingReward.amount]
+          args: [pendingReward.token, parsedPendingReward]
         }, {
           onSuccess() {
             refetchRewardTokens()
             setPendingReward(null)
+            showSuccessToast('Reward token added', width)
+          },
+          onError(error) {
+            console.error('Error adding reward token:', error)
           }
         })
+
       } else if (!isApproveSuccess) {
         // Need approval
+        console.log('approving ', pendingReward.amount.toString())
         await approve(pendingReward.amount)
       } else if (isApproveSuccess) {
         // Approval successful, refetch allowance
         await refetchAllowance()
-        // resetApprove()
+      } else {
+        console.error('unknown state')
       }
     }
 
@@ -130,7 +156,6 @@ export function useRewardTokenManagement() {
   }
 
   const setRewardToken = ({ rewardToken }: SetRewardTokenParams) => {
-    // if (!setSimulateData?.request) return
     writeContract({
       address: FREEBASE_ADDRESS,
       abi: FREEBASE_ABI,
