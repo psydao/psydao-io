@@ -103,6 +103,7 @@ export function useFreebaseRewardTokens() {
 
 export function useFreebaseGlobalStats() {
   return useQuery<{ globalStats: FreebaseGlobalStats[] }>(getFreebaseGlobalStats, {
-    client: freebaseGraphClient
+    client: freebaseGraphClient,
+    pollInterval: POLL_INTERVAL
   })
 }
