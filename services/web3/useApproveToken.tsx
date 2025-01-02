@@ -58,6 +58,7 @@ export function useApproveToken({
     approvedSuccess,
     error,
     txError,
-    resetApprove: reset
+    resetApprove: reset,
+    refetchApprovalTxReceipt: refetchTxReceipt
   }
 }

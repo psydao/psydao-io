@@ -7,7 +7,8 @@ import {
   useLiquidityPools,
   useLiquidityPool,
   useFreebaseRewardTokens,
-  useFreebaseDepositTokens
+  useFreebaseDepositTokens,
+  useFreebaseGlobalStats
 } from "@/lib/services/freebase";
 import { useApproveToken } from "@/services/web3/useApproveToken";
 
@@ -193,9 +194,10 @@ export function usePendingRewards(poolId: bigint, userAddress: Address) {
 }
 
 export function useRewardTokens() {
-  const { data: rewardTokens } = useFreebaseRewardTokens()
+  const { data: rewardTokens, refetch: refetchRewardTokens } = useFreebaseRewardTokens()
   return {
-    rewardTokens: rewardTokens?.tokens
+    rewardTokens: rewardTokens?.tokens,
+    refetchRewardTokens
   }
 }
 
@@ -203,5 +205,12 @@ export function useDepositTokens() {
   const { data: depositTokens } = useFreebaseDepositTokens()
   return {
     depositTokens: depositTokens?.tokens
+  }
+}
+
+export function useGlobalStats() {
+  const { data: globalStats } = useFreebaseGlobalStats()
+  return {
+    globalStats: globalStats?.globalStats
   }
 }

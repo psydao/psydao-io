@@ -26,6 +26,15 @@ export const getFreebasePools = gql`
   }
 `;
 
+export const getFreebasePoolAllocPoints = gql`
+  query GetFreebasePoolAllocPoints {
+    pools {
+      id
+      allocPoint
+    }
+  }
+`;
+
 export const getFreebasePool = gql`
   query GetFreebasPool($id: ID!) {
     pool(id: $id) {
@@ -99,6 +108,30 @@ export const getFreebaseRewardTokens = gql`
       price
       symbol
       totalDeposited
+    }
+  }
+`;
+
+export const getFreebaseGlobalStats = gql`
+  query GetGlobalStats {
+    globalStats {
+      id
+      dailyVolume
+      activeRewardTokens
+      totalUsers
+      totalValueLocked
+      totalPools
+      totalDeposited
+      totalRewardsToppedUp
+      totalRewardsWithdrawn
+      totalUnclaimedRewards
+      totalRewardsDistributed
+      totalAllocPoint
+      startBlock
+      rewardPerBlock
+      bonusMultiplier
+      bonusEndBlock
+      weeklyVolume
     }
   }
 `;

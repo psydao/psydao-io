@@ -4,7 +4,8 @@ import {
   getFreebasePools,
   getFreebaseTokens,
   getFreebaseRewardTokens,
-  getFreebaseDepositTokens
+  getFreebaseDepositTokens,
+  getFreebaseGlobalStats
 } from "@/services/freebase-graph";
 import { useQuery } from "@apollo/client"
 import { Address } from "viem"
@@ -35,6 +36,27 @@ interface FreebasePool {
 
 interface FreebasePoolsResponse {
   pools: FreebasePool[]
+}
+
+interface FreebaseGlobalStats {
+  id: string
+  dailyVolume: string
+  activeRewardTokens: string
+  totalUsers: string
+  totalValueLocked: string
+  totalPools: string
+  totalDeposited: string
+  totalRewardsToppedUp: string
+  totalRewardsWithdrawn: string
+  totalUnclaimedRewards: string
+  totalRewardsDistributed: string
+  totalAllocPoint: string
+  startBlock: string
+  rewardPerBlock: string
+  weeklyVolume: string
+
+  bonusMultiplier: string
+  bonusEndBlock: string
 }
 
 export function useLiquidityPools() {
@@ -70,6 +92,12 @@ export function useFreebaseRewardTokens() {
     variables: {
       isRewardToken: true
     },
+    client: freebaseGraphClient
+  })
+}
+
+export function useFreebaseGlobalStats() {
+  return useQuery<{ globalStats: FreebaseGlobalStats[] }>(getFreebaseGlobalStats, {
     client: freebaseGraphClient
   })
 }
