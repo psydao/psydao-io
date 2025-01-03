@@ -52,6 +52,11 @@ export function usePoolInteraction(poolId: bigint) {
   const { data: poolData } = useLiquidityPool(poolId.toString());
   const pool = poolData?.pool;
 
+  // Add state for pending deposit
+  const [pendingDeposit, setPendingDeposit] = useState<{
+    amount: bigint;
+  } | null>(null);
+
   // Get allowance
   const { data: allowance, refetch: refetchAllowance } = useReadContract({
     address: pool?.token.id as Address,
@@ -84,39 +89,69 @@ export function usePoolInteraction(poolId: bigint) {
     isSuccess: isApproveSuccess,
     isPending: isApprovePending,
     isFetching: isApproveFetching,
-    approvedSuccess
+    approvedSuccess,
+    resetApprove
   } = useApproveToken({
     tokenAddress: pool?.token.id as Address,
     spenderAddress: FREEBASE_ADDRESS,
     abi: erc20Abi
   });
 
+  // Handle the approval -> allowance check -> contract write flow
   useEffect(() => {
-    if (isApproveSuccess) {
-      refetchAllowance();
-    }
-  }, [isApproveSuccess, refetchAllowance]);
+    if (!pendingDeposit || !pool?.token.id) return;
 
-  const deposit = async ({ amount }: Omit<PoolInteractionParams, "pid">) => {
+    const handleDeposit = async () => {
+      if (allowance === undefined) {
+        return;
+      }
+
+      const parsedAllowance = allowance;
+      const parsedPendingDeposit = pendingDeposit.amount;
+
+      if (parsedAllowance >= parsedPendingDeposit) {
+        // Allowance is sufficient, proceed with contract call
+        writeContract(
+          {
+            address: FREEBASE_ADDRESS,
+            abi: FREEBASE_ABI,
+            functionName: "deposit",
+            args: [poolId, parsedPendingDeposit]
+          },
+          {
+            onSuccess() {
+              setPendingDeposit(null);
+            },
+            onError(error) {
+              console.error("Error depositing:", error);
+            }
+          }
+        );
+      } else if (!isApproveSuccess) {
+        // Need approval
+        await approve(parsedPendingDeposit);
+      } else if (isApproveSuccess) {
+        // Approval successful, refetch allowance
+        await refetchAllowance();
+      }
+    };
+
+    handleDeposit();
+  }, [
+    pendingDeposit,
+    allowance,
+    isApproveSuccess,
+    approve,
+    writeContract,
+    refetchAllowance,
+    resetApprove,
+    pool?.token.id,
+    poolId
+  ]);
+
+  const deposit = ({ amount }: Omit<PoolInteractionParams, "pid">) => {
     const parsedAmount = parseEther(amount.toString());
-    console.log("deposit", {
-      allowance,
-      parsedAmount
-    });
-    if (!allowance || parsedAmount > allowance) {
-      console.log("we need approval");
-      await approve(parsedAmount);
-      // Wait for approval success before proceeding
-      return;
-    }
-
-    console.log("proceeding to writeContract");
-    writeContract({
-      abi: FREEBASE_ABI,
-      address: FREEBASE_ADDRESS,
-      functionName: "deposit",
-      args: [poolId, parsedAmount]
-    });
+    setPendingDeposit({ amount: parsedAmount });
   };
 
   const withdraw = ({ amount }: Omit<PoolInteractionParams, "pid">) => {
@@ -245,12 +280,14 @@ export function useGlobalStats() {
 
 /**
  * Get all the pools the user has invested in and their histories
- * 
+ *
  * @param userAddress - The address of the user
  * @returns All the user's pool positions
  */
 export function useUserPoolPositions(userAddress: Address) {
-  const { data: userPoolPositions } = useFreebaseUserPoolsPositions(userAddress.toLowerCase() as Address);
+  const { data: userPoolPositions } = useFreebaseUserPoolsPositions(
+    userAddress.toLowerCase() as Address
+  );
   return {
     userPoolPositions: userPoolPositions?.user?.positions
   };

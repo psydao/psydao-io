@@ -1,9 +1,22 @@
-import { Box, Button, Card, CardBody, CardHeader, CardFooter, Flex, Text, Input } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  CardFooter,
+  Flex,
+  Text,
+  Input
+} from "@chakra-ui/react";
 import { usePoolInteraction } from "@/hooks/useFreebaseUser";
 import { useState } from "react";
 import { formatUnits, type Address } from "viem";
 import { useTokenInfo } from "@/hooks/useTokenInfo";
-import { FreebaseToken, FreebaseUserPoolPosition } from "@/lib/services/freebase";
+import {
+  FreebaseToken,
+  FreebaseUserPoolPosition
+} from "@/lib/services/freebase";
 
 interface PoolCardProps {
   pool: {
@@ -23,7 +36,12 @@ interface PoolCardProps {
   userPoolPosition?: FreebaseUserPoolPosition;
 }
 
-export function PoolCard({ pool, userAddress, rewardTokens, userPoolPosition }: PoolCardProps) {
+export function PoolCard({
+  pool,
+  userAddress,
+  rewardTokens,
+  userPoolPosition
+}: PoolCardProps) {
   const [amount, setAmount] = useState("");
   const {
     deposit,
@@ -74,7 +92,8 @@ export function PoolCard({ pool, userAddress, rewardTokens, userPoolPosition }: 
               left: "0",
               width: "100%",
               height: "100%",
-              background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)",
+              background:
+                "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)",
               transform: "translateX(-100%)",
               animation: "shimmer 2s infinite"
             }}
@@ -101,7 +120,7 @@ export function PoolCard({ pool, userAddress, rewardTokens, userPoolPosition }: 
           borderRadius="md"
           fontSize="sm"
           height="48px"
-          _placeholder={{ color: 'gray.500' }}
+          _placeholder={{ color: "gray.500" }}
           disabled={approvalPending || poolInteractionPending}
         />
       </CardBody>
@@ -132,10 +151,12 @@ export function PoolCard({ pool, userAddress, rewardTokens, userPoolPosition }: 
             isDisabled={approvalPending || poolInteractionPending}
             _hover={{ opacity: 0.9 }}
           >
-            Withdraw
+            {approvalPending || poolInteractionPending
+              ? "Please wait..."
+              : "Withdraw"}
           </Button>
         )}
       </CardFooter>
     </Card>
-  )
+  );
 }
