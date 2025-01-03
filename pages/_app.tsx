@@ -4,8 +4,8 @@ import {
   extendTheme,
   createStandaloneToast
 } from "@chakra-ui/react";
-import { Global } from "@emotion/react";
-import { fontFaces } from "@/lib/constants";
+import { css, Global } from "@emotion/react";
+import { fontFaces, shimmer } from "@/lib/constants";
 import { Web3Provider } from "@/providers/Web3Provider";
 import { ApolloProvider } from "@apollo/client";
 import { graphClient } from "@/config/apolloClients";
@@ -26,7 +26,14 @@ const App = ({ Component, pageProps }: AppProps) => {
   return (
     <ChakraProvider theme={theme}>
       <ApolloProvider client={graphClient}>
-        <Global styles={fontFaces} />
+        <Global styles={css`
+          ${fontFaces}
+          @keyframes shimmer {
+            100% {
+              transform: translateX(100%);
+            }
+          }
+        `} />
         <Web3Provider>
           <Component {...pageProps} />
           <ToastContainer />
