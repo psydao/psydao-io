@@ -212,7 +212,11 @@ export function usePendingRewards(poolId: bigint, userAddress: Address) {
     address: FREEBASE_ADDRESS,
     abi: FREEBASE_ABI,
     functionName: "pendingRewards",
-    args: [poolId, userAddress]
+    args: [poolId, userAddress],
+    query: {
+      refetchInterval: 10_000,
+      refetchIntervalInBackground: false
+    }
   });
 
   return {
