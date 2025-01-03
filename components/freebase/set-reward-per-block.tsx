@@ -17,15 +17,6 @@ export default function SetRewardPerBlock({
   isPending
 }: SetRewardPerBlockProps) {
   const { globalStats } = useGlobalStats();
-  const [formattedRewardPerBlock, setFormattedRewardPerBlock] = useState("0");
-
-  useEffect(() => {
-    if (globalStats?.length) {
-      setFormattedRewardPerBlock(
-        formatEther(BigInt(globalStats[0]?.rewardPerBlock ?? "0") ?? 0n)
-      );
-    }
-  }, [globalStats]);
 
   return (
     <VStack align="stretch" spacing={4}>
@@ -33,7 +24,10 @@ export default function SetRewardPerBlock({
         Reward Per Block
       </FormLabel>
       {globalStats?.length && (
-        <Text>Current Rewards Per block: {formattedRewardPerBlock}</Text>
+        <Text>
+          Current Rewards Per block:{" "}
+          {formatEther(BigInt(globalStats[0]?.rewardPerBlock ?? "0") ?? 0n)}
+        </Text>
       )}
       <Box bg="#FBF6F8" borderRadius="xl" boxShadow="inner" p="16px">
         <Input
