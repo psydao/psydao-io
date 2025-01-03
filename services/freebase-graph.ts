@@ -36,7 +36,7 @@ export const getFreebasePoolAllocPoints = gql`
 `;
 
 export const getFreebasePool = gql`
-  query GetFreebasPool($id: ID!) {
+  query GetFreebasePool($id: ID!) {
     pool(id: $id) {
       id
       token {
