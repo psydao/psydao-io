@@ -135,3 +135,72 @@ export const getFreebaseGlobalStats = gql`
     }
   }
 `;
+
+/**
+ * Get the user's position in a pool with their deposit and withdraw history
+ */
+export const getFreebaseUserPoolPosition = gql`
+  query GetUserPoolPosition($positionId: ID!) {
+  userPosition(id: $positionId) {
+    id
+    amount          # Current amount still in pool
+    rewardDebt      # Amount of rewards owed to the user
+    lastAction      # Last action taken by the user
+    pool {
+      id
+      token {
+        symbol
+        decimals
+      }
+    }
+    depositHistory {
+      id
+      amount
+      block
+      timestamp
+      transaction
+    }
+    withdrawHistory {
+      id
+      amount
+      block
+      timestamp
+      transaction
+      emergency    # If you want to distinguish emergency withdrawals
+    }
+  }
+}
+`;
+
+export const getFreebaseUserPoolsPositions = gql`
+query GetUserPositions($userId: ID!) {
+  user(id: $userId) {
+    positions {
+      id
+      pool {
+        id
+        token {
+          symbol
+          decimals
+        }
+      }
+      amount
+      depositHistory {
+        id
+        amount
+        block
+        timestamp
+        transaction
+      }
+      withdrawHistory {
+        id
+        amount
+        block
+        timestamp
+        transaction
+        emergency
+      }
+    }
+  }
+}
+`;

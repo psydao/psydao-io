@@ -14,7 +14,8 @@ import {
   useLiquidityPool,
   useFreebaseRewardTokens,
   useFreebaseDepositTokens,
-  useFreebaseGlobalStats
+  useFreebaseGlobalStats,
+  useFreebaseUserPoolsPositions
 } from "@/lib/services/freebase";
 import { useApproveToken } from "@/services/web3/useApproveToken";
 
@@ -154,14 +155,15 @@ export function usePoolData() {
   return {
     pools: graphqlData?.pools?.map((pool) => ({
       id: Number(pool.id),
-      token: pool.token.id as Address,
+      tokenAddress: pool.token.id as Address,
       allocPoint: BigInt(pool.allocPoint),
       lastRewardBlock: BigInt(pool.lastRewardBlock),
       accRewardPerShare: BigInt(pool.accRewardPerShare),
       tokenInfo: pool.token,
       userCount: pool.userCount,
       depositCount: pool.depositCount,
-      withdrawCount: pool.withdrawCount
+      withdrawCount: pool.withdrawCount,
+      totalDeposited: pool.token.totalDeposited
     })),
     // If you still need totalAllocPoint, we can calculate it from the pools
     totalAllocPoint:
@@ -238,5 +240,18 @@ export function useGlobalStats() {
   const { data: globalStats } = useFreebaseGlobalStats();
   return {
     globalStats: globalStats?.globalStats
+  };
+}
+
+/**
+ * Get all the pools the user has invested in and their histories
+ * 
+ * @param userAddress - The address of the user
+ * @returns All the user's pool positions
+ */
+export function useUserPoolPositions(userAddress: Address) {
+  const { data: userPoolPositions } = useFreebaseUserPoolsPositions(userAddress.toLowerCase() as Address);
+  return {
+    userPoolPositions: userPoolPositions?.user?.positions
   };
 }
