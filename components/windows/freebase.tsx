@@ -1,15 +1,15 @@
-import { useMemo } from "react"
-import { Box, useMediaQuery } from "@chakra-ui/react"
-import { Window } from "@/components/ui/window"
-import { useWindowManager } from "@/components/ui/window-manager"
-import { useAccount } from "wagmi"
-import { env } from "@/config/env.mjs"
+import { useMemo } from "react";
+import { Box, useMediaQuery } from "@chakra-ui/react";
+import { Window } from "@/components/ui/window";
+import { useWindowManager } from "@/components/ui/window-manager";
+import { useAccount } from "wagmi";
+import { env } from "@/config/env.mjs";
 
 // Components
-import UserDashboard from "@/components/freebase"
-import AdminFreebaseComponent from "@/components/freebase/admin-freebase-component"
-import WrongNetworkWindow from "../common/wrong-network"
-import { whitelistedAddresses } from "../admin-dashboard/whitelisted-addresses"
+import UserDashboard from "@/components/freebase";
+import AdminFreebaseComponent from "@/components/freebase/admin-freebase-component";
+import WrongNetworkWindow from "../common/wrong-network";
+import { whitelistedAddresses } from "../admin-dashboard/whitelisted-addresses";
 
 // Window style configurations
 const windowStyles = {
@@ -29,25 +29,31 @@ const windowStyles = {
     sm: "58%",
     md: "50%"
   }
-} as const
+} as const;
 
 export function Freebase() {
   // Hooks
-  const { state } = useWindowManager()
-  const [isLargerThanMd] = useMediaQuery("(min-width: 768px)")
-  const { address, chainId } = useAccount()
+  const { state } = useWindowManager();
+  const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
+  const { address, chainId } = useAccount();
 
   // Memoized values
-  const fullScreenWindow = useMemo(() => state.fullScreen === "freebase", [state])
-  const isWrongNetwork = chainId !== env.NEXT_PUBLIC_CHAIN_ID
-  const isAdmin = whitelistedAddresses.includes(address ?? "0x")
+  const fullScreenWindow = useMemo(() => {
+    if (state.fullScreen === "freebase") {
+      return true;
+    }
+
+    return false;
+  }, [state]);
+  const isWrongNetwork = chainId !== env.NEXT_PUBLIC_CHAIN_ID;
+  const isAdmin = whitelistedAddresses.includes(address ?? "0x");
 
   // Render content based on conditions
   const renderContent = () => {
-    if (isWrongNetwork) return <WrongNetworkWindow />
-    if (isAdmin) return <AdminFreebaseComponent />
-    return <UserDashboard />
-  }
+    if (isWrongNetwork) return <WrongNetworkWindow />;
+    if (isAdmin) return <AdminFreebaseComponent />;
+    return <UserDashboard />;
+  };
 
   return (
     <Window
@@ -55,6 +61,11 @@ export function Freebase() {
       {...windowStyles}
       maxHeight={fullScreenWindow ? "100%" : windowStyles.maxHeight}
       maxWidth={fullScreenWindow ? "100%" : windowStyles.maxWidth}
+      top={{
+        base: fullScreenWindow ? "0" : "58%",
+        sm: fullScreenWindow ? "0" : "56%",
+        md: fullScreenWindow ? "0" : "46%"
+      }}
       left={fullScreenWindow ? "0" : "50%"}
       transform={fullScreenWindow ? "translate(0, 0)" : "translate(-50%, -50%)"}
       fullScreenWindow={fullScreenWindow}
@@ -74,5 +85,5 @@ export function Freebase() {
         />
       </Window.Content>
     </Window>
-  )
+  );
 }
