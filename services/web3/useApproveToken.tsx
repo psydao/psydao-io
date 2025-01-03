@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
-import { Address, Abi, parseEther } from "viem";
+import { Address, Abi } from "viem";
 
 interface UseApproveTokenParams {
   tokenAddress: Address;
@@ -30,13 +30,12 @@ export function useApproveToken({
 
   const approve = useCallback(
     async (approvalAmount: bigint) => {
-      const parsedAmount = parseEther(approvalAmount.toString())
       return writeContract(
         {
           address: tokenAddress,
           abi,
           functionName: "approve",
-          args: [spenderAddress, parsedAmount]
+          args: [spenderAddress, approvalAmount]
         },
         {
           onSuccess() {
