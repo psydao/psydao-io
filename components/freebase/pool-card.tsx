@@ -37,13 +37,13 @@ export function PoolCard({ pool, userAddress, rewardTokens, userPoolPosition }: 
 
   const handleDeposit = () => {
     if (!amount) return;
-    deposit({ amount: BigInt(amount) });
+    deposit({ amount });
     setAmount("");
   };
 
   const handleWithdraw = () => {
     if (!amount) return;
-    withdraw({ amount: BigInt(amount) });
+    withdraw({ amount });
     setAmount("");
   };
 
