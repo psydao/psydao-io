@@ -194,12 +194,13 @@ export function useUpdateRewardConfig() {
     rewardPerBlock
   }: UpdateRewardPerBlockParams) => {
     setIsUpdateRewardPending(true);
+    const parsedRewardPerBlock = parseEther(rewardPerBlock.toString());
     writeContract(
       {
         address: FREEBASE_ADDRESS,
         abi: FREEBASE_ABI,
         functionName: "updateRewardPerBlock",
-        args: [rewardPerBlock]
+        args: [parsedRewardPerBlock]
       },
       {
         onSuccess: () => setIsUpdateRewardPending(false),

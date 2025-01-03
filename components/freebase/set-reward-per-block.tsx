@@ -1,31 +1,35 @@
-import { Box, FormLabel, Input, Button, VStack, Text } from "@chakra-ui/react"
-import { useGlobalStats } from "@/hooks/useFreebaseUser"
+import { Box, FormLabel, Input, Button, VStack, Text } from "@chakra-ui/react";
+import { useGlobalStats } from "@/hooks/useFreebaseUser";
+import { formatEther } from "viem";
+import { useEffect, useState } from "react";
 
 interface SetRewardPerBlockProps {
-  value: string
-  onChange: (value: string) => void
-  onSubmit: () => void
-  isPending: boolean
+  value: string;
+  onChange: (value: string) => void;
+  onSubmit: () => void;
+  isPending: boolean;
 }
 
-export default function SetRewardPerBlock({ value, onChange, onSubmit, isPending }: SetRewardPerBlockProps) {
-  const { globalStats } = useGlobalStats()
+export default function SetRewardPerBlock({
+  value,
+  onChange,
+  onSubmit,
+  isPending
+}: SetRewardPerBlockProps) {
+  const { globalStats } = useGlobalStats();
+
   return (
     <VStack align="stretch" spacing={4}>
-      <FormLabel
-        fontSize="18"
-        mb="0"
-        fontFamily="Inter"
-      >
+      <FormLabel fontSize="18" mb="0" fontFamily="Inter">
         Reward Per Block
       </FormLabel>
-      {globalStats?.length && <Text>Current Rewards Per block: {globalStats[0]?.rewardPerBlock}</Text>}
-      <Box
-        bg="#FBF6F8"
-        borderRadius="xl"
-        boxShadow="inner"
-        p="16px"
-      >
+      {globalStats?.length && (
+        <Text>
+          Current Rewards Per block:{" "}
+          {formatEther(BigInt(globalStats[0]?.rewardPerBlock ?? "0") ?? 0n)}
+        </Text>
+      )}
+      <Box bg="#FBF6F8" borderRadius="xl" boxShadow="inner" p="16px">
         <Input
           type="number"
           value={value}
@@ -53,7 +57,6 @@ export default function SetRewardPerBlock({ value, onChange, onSubmit, isPending
       >
         {isPending ? "Updating..." : "Update"}
       </Button>
-
     </VStack>
-  )
+  );
 }
