@@ -59,7 +59,26 @@ export function PoolCard({ pool, userAddress, rewardTokens, userPoolPosition }: 
           <Text fontSize="md" fontWeight="medium">
             Pool #{pool.id}
           </Text>
-          <Text fontSize="md">
+          <Text
+            bg="#FBF6F8"
+            px={3}
+            py={1}
+            borderRadius="full"
+            fontSize="sm"
+            position="relative"
+            overflow="hidden"
+            _after={{
+              content: '""',
+              position: "absolute",
+              top: "0",
+              left: "0",
+              width: "100%",
+              height: "100%",
+              background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)",
+              transform: "translateX(-100%)",
+              animation: "shimmer 2s infinite"
+            }}
+          >
             {symbol}
           </Text>
         </Flex>
