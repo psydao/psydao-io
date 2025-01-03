@@ -68,6 +68,27 @@ export const Menu = () => {
           minWidth="0"
           boxShadow="0px 8px 12px rgba(152, 53, 186, 0.22)"
           color={"#9835BA"}
+          maxH={{ base: "65vh", md: "none" }}
+          overflowY={{ base: "auto", md: "visible" }}
+          css={{
+            "&::-webkit-scrollbar": {
+              width: "6px",
+              marginRight: "4px"
+            },
+            "&::-webkit-scrollbar-track": {
+              width: "5px",
+              background: "white",
+              borderRadius: "24px",
+              border: "1px solid #F2BEBE"
+            },
+            "&::-webkit-scrollbar-thumb": {
+              background: "#F2BEBE",
+              border: "1.5px solid transparent",
+              backgroundClip: "padding-box",
+              borderRadius: "24px",
+              width: "3px"
+            }
+          }}
         >
           <Open id="manifesto">
             <MenuItem fontStyle="italic">
