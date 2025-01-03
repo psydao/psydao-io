@@ -208,19 +208,22 @@ export function useRewards(address: Address) {
 
 // Additional hook for pending rewards
 export function usePendingRewards(poolId: bigint, userAddress: Address) {
-  const { data: pendingRewards } = useReadContract({
+  const { data: pendingRewards, error, isError } = useReadContract({
     address: FREEBASE_ADDRESS,
     abi: FREEBASE_ABI,
     functionName: "pendingRewards",
     args: [poolId, userAddress],
     query: {
       refetchInterval: 10_000,
-      refetchIntervalInBackground: false
+      refetchIntervalInBackground: false,
+      enabled: Boolean(poolId && userAddress)
     }
   });
 
   return {
-    pendingRewards: pendingRewards as bigint | undefined
+    pendingRewards: pendingRewards as bigint | undefined,
+    error,
+    isError
   };
 }
 
