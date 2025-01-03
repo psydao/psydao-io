@@ -93,7 +93,11 @@ export function PoolCard({ pool, userAddress, rewardTokens, userPoolPosition }: 
         )}
         {pendingRewards && (
           <Text fontSize="sm" color="gray.600" mb={4}>
-            Pending Rewards: {formatUnits(pendingRewards, 18)}
+            Pending Rewards: {
+              pendingRewards && BigInt(pendingRewards) > BigInt(0)
+                ? Number(formatUnits(pendingRewards, 18)).toFixed(2)
+                : formatUnits(pendingRewards, 18)
+            }
           </Text>
         )}
 
