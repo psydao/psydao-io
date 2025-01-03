@@ -64,7 +64,7 @@ export function Freebase() {
       top={{
         base: fullScreenWindow ? "0" : "58%",
         sm: fullScreenWindow ? "0" : "56%",
-        md: fullScreenWindow ? "0" : "46%"
+        md: fullScreenWindow ? "0" : "52%"
       }}
       left={fullScreenWindow ? "0" : "50%"}
       transform={fullScreenWindow ? "translate(0, 0)" : "translate(-50%, -50%)"}
