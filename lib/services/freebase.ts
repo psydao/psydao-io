@@ -10,6 +10,7 @@ import {
 import { useQuery } from "@apollo/client"
 import { Address } from "viem"
 
+// #region Interfaces
 export interface FreebaseToken {
   id: Address
   name: string
@@ -64,7 +65,9 @@ export function useLiquidityPools() {
     client: freebaseGraphClient
   })
 }
+// #endregion
 
+const POLL_INTERVAL = 10_000
 export function useLiquidityPool(id: string) {
   return useQuery<{ pool: FreebasePool }>(getFreebasePool, {
     variables: { id },
@@ -83,7 +86,8 @@ export function useFreebaseDepositTokens() {
     variables: {
       isDepositToken: true
     },
-    client: freebaseGraphClient
+    client: freebaseGraphClient,
+    pollInterval: POLL_INTERVAL
   })
 }
 
@@ -92,7 +96,8 @@ export function useFreebaseRewardTokens() {
     variables: {
       isRewardToken: true
     },
-    client: freebaseGraphClient
+    client: freebaseGraphClient,
+    pollInterval: POLL_INTERVAL
   })
 }
 

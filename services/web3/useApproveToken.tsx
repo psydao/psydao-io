@@ -29,13 +29,13 @@ export function useApproveToken({
   });
 
   const approve = useCallback(
-    async (amount: bigint) => {
+    async (approvalAmount: bigint) => {
       return writeContract(
         {
           address: tokenAddress,
           abi,
           functionName: "approve",
-          args: [spenderAddress, amount]
+          args: [spenderAddress, approvalAmount]
         },
         {
           onSuccess() {
