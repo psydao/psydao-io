@@ -52,6 +52,11 @@ export function usePoolInteraction(poolId: bigint) {
   const { data: poolData } = useLiquidityPool(poolId.toString());
   const pool = poolData?.pool;
 
+  // Add state for pending deposit
+  const [pendingDeposit, setPendingDeposit] = useState<{
+    amount: bigint;
+  } | null>(null);
+
   // Get allowance
   const { data: allowance, refetch: refetchAllowance } = useReadContract({
     address: pool?.token.id as Address,
@@ -64,7 +69,7 @@ export function usePoolInteraction(poolId: bigint) {
   });
 
   const {
-    writeContract,
+    writeContractAsync,
     isPending: poolInteractionPending,
     data,
     isSuccess: poolInteractionSuccess
@@ -74,7 +79,8 @@ export function usePoolInteraction(poolId: bigint) {
     isSuccess: isPoolTransactionSuccess,
     isFetching: poolTransactionPending,
     refetch: refetchTxReceipt,
-    error: txError
+    error: txError,
+    data: txData
   } = useWaitForTransactionReceipt({
     hash: data
   });
@@ -84,7 +90,8 @@ export function usePoolInteraction(poolId: bigint) {
     isSuccess: isApproveSuccess,
     isPending: isApprovePending,
     isFetching: isApproveFetching,
-    approvedSuccess
+    approvedSuccess,
+    resetApprove
   } = useApproveToken({
     tokenAddress: pool?.token.id as Address,
     spenderAddress: FREEBASE_ADDRESS,
@@ -92,45 +99,95 @@ export function usePoolInteraction(poolId: bigint) {
   });
 
   useEffect(() => {
-    if (isApproveSuccess) {
+    if (poolInteractionSuccess && txData) {
       refetchAllowance();
     }
-  }, [isApproveSuccess, refetchAllowance]);
+  }, [poolInteractionSuccess, txData]);
 
-  const deposit = async ({ amount }: Omit<PoolInteractionParams, "pid">) => {
+  // Handle the approval -> allowance check -> contract write flow
+  useEffect(() => {
+    if (!pendingDeposit || !pool?.token.id) return;
+    const handleDeposit = async () => {
+      if (allowance === undefined) {
+        return;
+      }
+      const parsedAllowance = allowance;
+      const parsedPendingDeposit = pendingDeposit.amount;
+
+      if (parsedAllowance >= parsedPendingDeposit) {
+        // Allowance is sufficient, proceed with contract call
+        try {
+          await writeContractAsync(
+            {
+              address: FREEBASE_ADDRESS,
+              abi: FREEBASE_ABI,
+              functionName: "deposit",
+              args: [poolId, parsedPendingDeposit]
+            },
+            {
+              onSuccess() {
+                setPendingDeposit(null);
+                resetApprove();
+              },
+              onError(error) {
+                console.error("Error depositing:", error);
+              }
+            }
+          );
+        } catch (error) {
+          console.error("Error depositing:", error);
+        }
+      } else if (!isApproveSuccess) {
+        // Need approval
+        await approve(parsedPendingDeposit);
+      } else if (isApproveSuccess) {
+        // Approval successful, refetch allowance
+        await refetchAllowance();
+      }
+    };
+
+    handleDeposit();
+  }, [
+    pendingDeposit,
+    allowance,
+    isApproveSuccess,
+    approve,
+    writeContractAsync,
+    resetApprove,
+    pool?.token.id,
+    poolId
+  ]);
+
+  const deposit = ({ amount }: Omit<PoolInteractionParams, "pid">) => {
     const parsedAmount = parseEther(amount);
+    setPendingDeposit({ amount: parsedAmount });
+  };
 
-    if (!allowance || parsedAmount > allowance) {
-      await approve(parsedAmount);
-      // Wait for approval success before proceeding
-      return;
+  const withdraw = async ({ amount }: Omit<PoolInteractionParams, "pid">) => {
+    const parsedAmount = parseEther(amount);
+    try {
+      await writeContractAsync({
+        address: FREEBASE_ADDRESS,
+        abi: FREEBASE_ABI,
+        functionName: "withdraw",
+        args: [poolId, parsedAmount]
+      });
+    } catch (error) {
+      console.error("Error withdrawing:", error);
     }
-
-    writeContract({
-      abi: FREEBASE_ABI,
-      address: FREEBASE_ADDRESS,
-      functionName: "deposit",
-      args: [poolId, parsedAmount]
-    });
   };
 
-  const withdraw = ({ amount }: Omit<PoolInteractionParams, "pid">) => {
-    const parsedAmount = parseEther(amount);
-    writeContract({
-      address: FREEBASE_ADDRESS,
-      abi: FREEBASE_ABI,
-      functionName: "withdraw",
-      args: [poolId, parsedAmount]
-    });
-  };
-
-  const emergencyWithdraw = () => {
-    writeContract({
-      address: FREEBASE_ADDRESS,
-      abi: FREEBASE_ABI,
-      functionName: "emergencyWithdraw",
-      args: [poolId]
-    });
+  const emergencyWithdraw = async () => {
+    try {
+      await writeContractAsync({
+        address: FREEBASE_ADDRESS,
+        abi: FREEBASE_ABI,
+        functionName: "emergencyWithdraw",
+        args: [poolId]
+      });
+    } catch (error) {
+      console.error("Error withdrawing:", error);
+    }
   };
 
   return {
@@ -203,7 +260,11 @@ export function useRewards(address: Address) {
 
 // Additional hook for pending rewards
 export function usePendingRewards(poolId: bigint, userAddress: Address) {
-  const { data: pendingRewards, error, isError } = useReadContract({
+  const {
+    data: pendingRewards,
+    error,
+    isError
+  } = useReadContract({
     address: FREEBASE_ADDRESS,
     abi: FREEBASE_ABI,
     functionName: "pendingRewards",
@@ -247,12 +308,14 @@ export function useGlobalStats() {
 
 /**
  * Get all the pools the user has invested in and their histories
- * 
+ *
  * @param userAddress - The address of the user
  * @returns All the user's pool positions
  */
 export function useUserPoolPositions(userAddress: Address) {
-  const { data: userPoolPositions } = useFreebaseUserPoolsPositions(userAddress.toLowerCase() as Address);
+  const { data: userPoolPositions } = useFreebaseUserPoolsPositions(
+    userAddress.toLowerCase() as Address
+  );
   return {
     userPoolPositions: userPoolPositions?.user?.positions
   };

@@ -1,10 +1,22 @@
-import { Box, Button, Card, CardBody, CardHeader, CardFooter, Flex, Text, Input } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  CardFooter,
+  Flex,
+  Text,
+  Input
+} from "@chakra-ui/react";
 import { usePoolInteraction, usePendingRewards } from "@/hooks/useFreebaseUser";
 import { useState } from "react";
 import { formatUnits, type Address } from "viem";
 import { useTokenInfo } from "@/hooks/useTokenInfo";
-import { FreebaseToken, FreebaseUserPoolPosition } from "@/lib/services/freebase";
-
+import {
+  FreebaseToken,
+  FreebaseUserPoolPosition
+} from "@/lib/services/freebase";
 
 interface PoolCardProps {
   pool: {
@@ -25,16 +37,21 @@ interface PoolCardProps {
 }
 
 function formatAmount(amount: bigint, decimals: number): string {
-  const formatted = Number(formatUnits(amount, decimals))
+  const formatted = Number(formatUnits(amount, decimals));
 
   // If it's a whole number, don't show decimals
-  if (formatted % 1 === 0) return formatted.toString()
+  if (formatted % 1 === 0) return formatted.toString();
 
   // Otherwise show up to 2 decimal places, removing trailing zeros
-  return formatted.toFixed(2).replace(/\.?0+$/, '')
+  return formatted.toFixed(2).replace(/\.?0+$/, "");
 }
 
-export function PoolCard({ pool, userAddress, rewardTokens, userPoolPosition }: PoolCardProps) {
+export function PoolCard({
+  pool,
+  userAddress,
+  rewardTokens,
+  userPoolPosition
+}: PoolCardProps) {
   const [amount, setAmount] = useState("");
   const {
     deposit,
@@ -45,7 +62,10 @@ export function PoolCard({ pool, userAddress, rewardTokens, userPoolPosition }: 
     poolInteractionPending
   } = usePoolInteraction(BigInt(pool.id));
   const { symbol, decimals } = useTokenInfo(pool.tokenAddress);
-  const { pendingRewards } = usePendingRewards(BigInt(pool.id), userAddress as Address);
+  const { pendingRewards } = usePendingRewards(
+    BigInt(pool.id),
+    userAddress as Address
+  );
   const handleDeposit = () => {
     if (!amount) return;
     deposit({ amount });
@@ -85,7 +105,8 @@ export function PoolCard({ pool, userAddress, rewardTokens, userPoolPosition }: 
               left: "0",
               width: "100%",
               height: "100%",
-              background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)",
+              background:
+                "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)",
               transform: "translateX(-100%)",
               animation: "shimmer 2s infinite"
             }}
@@ -103,11 +124,10 @@ export function PoolCard({ pool, userAddress, rewardTokens, userPoolPosition }: 
         )}
         {pendingRewards && (
           <Text fontSize="sm" color="gray.600" mb={4}>
-            Pending Rewards: {
-              pendingRewards && BigInt(pendingRewards) > BigInt(0)
-                ? Number(formatUnits(pendingRewards, 18)).toFixed(2)
-                : formatUnits(pendingRewards, 18)
-            }
+            Pending Rewards:{" "}
+            {pendingRewards && BigInt(pendingRewards) > BigInt(0)
+              ? Number(formatUnits(pendingRewards, 18)).toFixed(2)
+              : formatUnits(pendingRewards, 18)}
           </Text>
         )}
 
@@ -121,7 +141,7 @@ export function PoolCard({ pool, userAddress, rewardTokens, userPoolPosition }: 
           borderRadius="md"
           fontSize="sm"
           height="48px"
-          _placeholder={{ color: 'gray.500' }}
+          _placeholder={{ color: "gray.500" }}
           disabled={approvalPending || poolInteractionPending}
         />
       </CardBody>
@@ -138,7 +158,7 @@ export function PoolCard({ pool, userAddress, rewardTokens, userPoolPosition }: 
         >
           {approvalPending || poolInteractionPending
             ? "Please wait..."
-            : !approvedSuccess && !allowance
+            : !approvedSuccess || allowance === BigInt("0") || !allowance
               ? "Approve & Deposit"
               : "Deposit"}
         </Button>
@@ -152,10 +172,12 @@ export function PoolCard({ pool, userAddress, rewardTokens, userPoolPosition }: 
             isDisabled={approvalPending || poolInteractionPending}
             _hover={{ opacity: 0.9 }}
           >
-            Withdraw
+            {approvalPending || poolInteractionPending
+              ? "Please wait..."
+              : "Withdraw"}
           </Button>
         )}
       </CardFooter>
     </Card>
-  )
+  );
 }
