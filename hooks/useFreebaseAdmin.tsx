@@ -8,8 +8,9 @@ import { useEffect, useState } from "react";
 import { useRewardTokens } from "@/hooks/useFreebaseUser";
 import { useCustomToasts } from "./useCustomToasts";
 import { useResize } from "./useResize";
+import { env } from "@/config/env.mjs";
 
-const FREEBASE_ADDRESS = freebaseSepolia;
+const FREEBASE_ADDRESS = env.NEXT_PUBLIC_FREEBASE_CONTRACT_ADDRESS as Address;
 const FREEBASE_ABI = psydaoMasterBaseAbi;
 
 //#region interfaces
