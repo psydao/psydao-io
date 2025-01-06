@@ -36,10 +36,13 @@ export const env = createEnv({
     NEXT_PUBLIC_WHITELISTED_ADDRESSES: z
       .array(z.string())
       .or(z.string())
-      .transform((val) => (typeof val === "string" ? val.split(",") : val))
+      .transform((val) => (typeof val === "string" ? val.split(",") : val)),
+    NEXT_PUBLIC_FREEBASE_CONTRACT_ADDRESS: z.string().min(1)
   },
   runtimeEnv: {
     CHAINALYSIS_API_KEY: process.env.CHAINALYSIS_API_KEY,
+    NEXT_PUBLIC_FREEBASE_CONTRACT_ADDRESS:
+      process.env.NEXT_PUBLIC_FREEBASE_CONTRACT_ADDRESS,
     PINATA_API_KEY: process.env.PINATA_API_KEY,
     PINATA_SECRET_API_KEY: process.env.PINATA_SECRET_API_KEY,
     PINATA_ADMIN_JWT: process.env.PINATA_ADMIN_JWT,
