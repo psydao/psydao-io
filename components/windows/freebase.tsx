@@ -1,5 +1,12 @@
 import { useMemo } from "react";
-import { Box, useMediaQuery } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  useMediaQuery,
+  Text,
+  Image
+} from "@chakra-ui/react";
 import { Window } from "@/components/ui/window";
 import { useWindowManager } from "@/components/ui/window-manager";
 import { useAccount } from "wagmi";
@@ -11,6 +18,8 @@ import AdminFreebaseComponent from "@/components/freebase/admin-freebase-compone
 import WrongNetworkWindow from "../common/wrong-network";
 import { whitelistedAddresses } from "../admin-dashboard/whitelisted-addresses";
 import { Wizard } from "react-use-wizard";
+import DiagonalRectangle from "../nft-sale-widget/common/diagonal-rectangle";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 // Window style configurations
 const windowStyles = {
@@ -38,6 +47,8 @@ export function Freebase() {
   const [isLargerThanMd] = useMediaQuery("(min-width: 768px)");
   const { address, chainId } = useAccount();
 
+  const { openConnectModal } = useConnectModal();
+
   // Memoized values
   const fullScreenWindow = useMemo(() => {
     if (state.fullScreen === "freebase") {
@@ -47,7 +58,6 @@ export function Freebase() {
     return false;
   }, [state]);
   const isWrongNetwork = chainId !== env.NEXT_PUBLIC_CHAIN_ID;
-  const isAdmin = whitelistedAddresses.includes(address ?? "0x");
 
   return (
     <Window
@@ -66,11 +76,72 @@ export function Freebase() {
     >
       <Window.TitleBar />
       <Window.Content p={0} overflowX="hidden">
-        <Wizard startIndex={0}>
-          <UserDashboard />
-          <AdminFreebaseComponent />
-        </Wizard>
-
+        {!address ? (
+          <Flex
+            direction={"column"}
+            justifyContent="center"
+            alignItems="center"
+            height="100%"
+            px={4}
+          >
+            <Box
+              p={6}
+              display={"inline-flex"}
+              borderRadius={"30px"}
+              border={"2px solid #F2BEBE73"}
+              gap={2.5}
+              position={"relative"}
+              flexDirection={"column"}
+              alignItems={"center"}
+              height={"fit-content"}
+              width={"fit-content"}
+            >
+              <Box>
+                <Image src={"/psy-logo.svg"} />
+              </Box>
+              <Flex
+                flexWrap={"nowrap"}
+                gap={4}
+                alignItems={"center"}
+                direction={"column"}
+                justifyContent={"center"}
+              >
+                <DiagonalRectangle position="left" />
+                <Text
+                  fontSize={18}
+                  color={"black"}
+                  lineHeight={"26px"}
+                  textAlign={"center"}
+                >
+                  Connect your wallet <br /> to view pools
+                </Text>
+                <DiagonalRectangle position="right" />
+                <Button
+                  variant={"unstyled"}
+                  w={"100%"}
+                  borderRadius={"24px"}
+                  border={"2px solid #F2BEBE"}
+                  color={"#F2BEBE"}
+                  fontSize={18}
+                  fontFamily={"Amiri"}
+                  fontWeight={"bold"}
+                  onClick={() => {
+                    openConnectModal && openConnectModal();
+                  }}
+                >
+                  Connect Wallet
+                </Button>
+              </Flex>
+            </Box>
+          </Flex>
+        ) : isWrongNetwork ? (
+          <WrongNetworkWindow />
+        ) : (
+          <Wizard startIndex={0}>
+            <UserDashboard />
+            <AdminFreebaseComponent />
+          </Wizard>
+        )}
         <Box
           as="img"
           src="/windows/alchemist/clouds.png"
