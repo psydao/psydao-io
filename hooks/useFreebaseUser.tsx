@@ -126,6 +126,7 @@ export function usePoolInteraction(poolId: bigint) {
           {
             onSuccess() {
               setPendingDeposit(null);
+              resetApprove();
             },
             onError(error) {
               console.error("Error depositing:", error);
@@ -153,7 +154,7 @@ export function usePoolInteraction(poolId: bigint) {
     poolId
   ]);
 
-  const deposit = async ({ amount }: Omit<PoolInteractionParams, "pid">) => {
+  const deposit = ({ amount }: Omit<PoolInteractionParams, "pid">) => {
     const parsedAmount = parseEther(amount.toString());
     setPendingDeposit({ amount: parsedAmount });
   };
