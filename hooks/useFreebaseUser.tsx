@@ -25,7 +25,7 @@ const FREEBASE_ABI = psydaoMasterBaseAbi;
 //#region interfaces
 interface PoolInteractionParams {
   pid: bigint;
-  amount: bigint;
+  amount: string;
 }
 
 interface PoolInfo {
@@ -159,12 +159,12 @@ export function usePoolInteraction(poolId: bigint) {
   ]);
 
   const deposit = ({ amount }: Omit<PoolInteractionParams, "pid">) => {
-    const parsedAmount = parseEther(amount.toString());
+    const parsedAmount = parseEther(amount);
     setPendingDeposit({ amount: parsedAmount });
   };
 
   const withdraw = async ({ amount }: Omit<PoolInteractionParams, "pid">) => {
-    const parsedAmount = parseEther(amount.toString());
+    const parsedAmount = parseEther(amount);
     try {
       await writeContractAsync({
         address: FREEBASE_ADDRESS,

@@ -36,6 +36,16 @@ interface PoolCardProps {
   userPoolPosition?: FreebaseUserPoolPosition;
 }
 
+function formatAmount(amount: bigint, decimals: number): string {
+  const formatted = Number(formatUnits(amount, decimals));
+
+  // If it's a whole number, don't show decimals
+  if (formatted % 1 === 0) return formatted.toString();
+
+  // Otherwise show up to 2 decimal places, removing trailing zeros
+  return formatted.toFixed(2).replace(/\.?0+$/, "");
+}
+
 export function PoolCard({
   pool,
   userAddress,
@@ -58,13 +68,13 @@ export function PoolCard({
   );
   const handleDeposit = () => {
     if (!amount) return;
-    deposit({ amount: BigInt(amount) });
+    deposit({ amount });
     setAmount("");
   };
 
   const handleWithdraw = () => {
     if (!amount) return;
-    withdraw({ amount: BigInt(amount) });
+    withdraw({ amount });
     setAmount("");
   };
 
@@ -109,7 +119,7 @@ export function PoolCard({
       <CardBody>
         {userPoolPosition?.amount && (
           <Text fontSize="sm" color="gray.600" mb={4}>
-            Deposited Tokens: {formatUnits(userPoolPosition?.amount, 18)}
+            Deposited Tokens: {formatAmount(userPoolPosition?.amount, 18)}
           </Text>
         )}
         {pendingRewards && (
