@@ -41,5 +41,5 @@ export const psyTokenSepolia = "0x4B8F35db4e71492C81b381C6b52a131424241AFE";
 export const psyTokenMainnet = "0x2196B84EaCe74867b73fb003AfF93C11FcE1D47A";
 
 // Freebase
-export const freebaseSepolia = "0x017D4D6108069b003794f08C54ccb0A651AE9AaE"
+export const freebaseSepolia = "0x017D4D6108069b003794f08C54ccb0A651AE9AaE";
 export const freebaseMainnet = ""

@@ -137,7 +137,7 @@ export function PoolCard({
         >
           {approvalPending || poolInteractionPending
             ? "Please wait..."
-            : !approvedSuccess && !allowance
+            : !approvedSuccess || allowance === BigInt("0") || !allowance
               ? "Approve & Deposit"
               : "Deposit"}
         </Button>

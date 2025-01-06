@@ -69,7 +69,7 @@ export function usePoolInteraction(poolId: bigint) {
   });
 
   const {
-    writeContract,
+    writeContractAsync,
     isPending: poolInteractionPending,
     data,
     isSuccess: poolInteractionSuccess
@@ -79,7 +79,8 @@ export function usePoolInteraction(poolId: bigint) {
     isSuccess: isPoolTransactionSuccess,
     isFetching: poolTransactionPending,
     refetch: refetchTxReceipt,
-    error: txError
+    error: txError,
+    data: txData
   } = useWaitForTransactionReceipt({
     hash: data
   });
@@ -97,21 +98,25 @@ export function usePoolInteraction(poolId: bigint) {
     abi: erc20Abi
   });
 
+  useEffect(() => {
+    if (poolInteractionSuccess && txData) {
+      refetchAllowance();
+    }
+  }, [poolInteractionSuccess, txData]);
+
   // Handle the approval -> allowance check -> contract write flow
   useEffect(() => {
     if (!pendingDeposit || !pool?.token.id) return;
-
     const handleDeposit = async () => {
       if (allowance === undefined) {
         return;
       }
-
       const parsedAllowance = allowance;
       const parsedPendingDeposit = pendingDeposit.amount;
 
       if (parsedAllowance >= parsedPendingDeposit) {
         // Allowance is sufficient, proceed with contract call
-        writeContract(
+        await writeContractAsync(
           {
             address: FREEBASE_ADDRESS,
             abi: FREEBASE_ABI,
@@ -142,21 +147,20 @@ export function usePoolInteraction(poolId: bigint) {
     allowance,
     isApproveSuccess,
     approve,
-    writeContract,
-    refetchAllowance,
+    writeContractAsync,
     resetApprove,
     pool?.token.id,
     poolId
   ]);
 
-  const deposit = ({ amount }: Omit<PoolInteractionParams, "pid">) => {
+  const deposit = async ({ amount }: Omit<PoolInteractionParams, "pid">) => {
     const parsedAmount = parseEther(amount.toString());
     setPendingDeposit({ amount: parsedAmount });
   };
 
-  const withdraw = ({ amount }: Omit<PoolInteractionParams, "pid">) => {
+  const withdraw = async ({ amount }: Omit<PoolInteractionParams, "pid">) => {
     const parsedAmount = parseEther(amount.toString());
-    writeContract({
+    await writeContractAsync({
       address: FREEBASE_ADDRESS,
       abi: FREEBASE_ABI,
       functionName: "withdraw",
@@ -164,8 +168,8 @@ export function usePoolInteraction(poolId: bigint) {
     });
   };
 
-  const emergencyWithdraw = () => {
-    writeContract({
+  const emergencyWithdraw = async () => {
+    await writeContractAsync({
       address: FREEBASE_ADDRESS,
       abi: FREEBASE_ABI,
       functionName: "emergencyWithdraw",
