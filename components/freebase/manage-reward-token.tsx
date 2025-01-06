@@ -17,7 +17,7 @@ import { type Address } from "viem";
 import { useRewardTokens } from "@/hooks/useFreebaseUser";
 
 interface ManageRewardTokenProps {
-  onAddReward: (args: { rewardToken: Address; transferAmount: bigint }) => void;
+  onAddReward: (args: { rewardToken: Address; transferAmount: string }) => void;
   onSetReward: (args: { rewardToken: Address }) => void;
   isPendingAddReward: boolean;
   isPendingSetReward: boolean;
@@ -38,7 +38,7 @@ export default function ManageRewardToken({
     if (!rewardToken || !transferAmount) return;
     onAddReward({
       rewardToken: rewardToken as Address,
-      transferAmount: BigInt(transferAmount)
+      transferAmount
     });
     setRewardToken("");
     setTransferAmount("");
