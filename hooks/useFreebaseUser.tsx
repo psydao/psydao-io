@@ -116,23 +116,27 @@ export function usePoolInteraction(poolId: bigint) {
 
       if (parsedAllowance >= parsedPendingDeposit) {
         // Allowance is sufficient, proceed with contract call
-        await writeContractAsync(
-          {
-            address: FREEBASE_ADDRESS,
-            abi: FREEBASE_ABI,
-            functionName: "deposit",
-            args: [poolId, parsedPendingDeposit]
-          },
-          {
-            onSuccess() {
-              setPendingDeposit(null);
-              resetApprove();
+        try {
+          await writeContractAsync(
+            {
+              address: FREEBASE_ADDRESS,
+              abi: FREEBASE_ABI,
+              functionName: "deposit",
+              args: [poolId, parsedPendingDeposit]
             },
-            onError(error) {
-              console.error("Error depositing:", error);
+            {
+              onSuccess() {
+                setPendingDeposit(null);
+                resetApprove();
+              },
+              onError(error) {
+                console.error("Error depositing:", error);
+              }
             }
-          }
-        );
+          );
+        } catch (error) {
+          console.error("Error depositing:", error);
+        }
       } else if (!isApproveSuccess) {
         // Need approval
         await approve(parsedPendingDeposit);
@@ -161,21 +165,29 @@ export function usePoolInteraction(poolId: bigint) {
 
   const withdraw = async ({ amount }: Omit<PoolInteractionParams, "pid">) => {
     const parsedAmount = parseEther(amount.toString());
-    await writeContractAsync({
-      address: FREEBASE_ADDRESS,
-      abi: FREEBASE_ABI,
-      functionName: "withdraw",
-      args: [poolId, parsedAmount]
-    });
+    try {
+      await writeContractAsync({
+        address: FREEBASE_ADDRESS,
+        abi: FREEBASE_ABI,
+        functionName: "withdraw",
+        args: [poolId, parsedAmount]
+      });
+    } catch (error) {
+      console.error("Error withdrawing:", error);
+    }
   };
 
   const emergencyWithdraw = async () => {
-    await writeContractAsync({
-      address: FREEBASE_ADDRESS,
-      abi: FREEBASE_ABI,
-      functionName: "emergencyWithdraw",
-      args: [poolId]
-    });
+    try {
+      await writeContractAsync({
+        address: FREEBASE_ADDRESS,
+        abi: FREEBASE_ABI,
+        functionName: "emergencyWithdraw",
+        args: [poolId]
+      });
+    } catch (error) {
+      console.error("Error withdrawing:", error);
+    }
   };
 
   return {
@@ -248,7 +260,11 @@ export function useRewards(address: Address) {
 
 // Additional hook for pending rewards
 export function usePendingRewards(poolId: bigint, userAddress: Address) {
-  const { data: pendingRewards, error, isError } = useReadContract({
+  const {
+    data: pendingRewards,
+    error,
+    isError
+  } = useReadContract({
     address: FREEBASE_ADDRESS,
     abi: FREEBASE_ABI,
     functionName: "pendingRewards",
