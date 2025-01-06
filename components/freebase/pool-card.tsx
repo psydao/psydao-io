@@ -1,9 +1,10 @@
 import { Box, Button, Card, CardBody, CardHeader, CardFooter, Flex, Text, Input } from "@chakra-ui/react";
-import { usePoolInteraction } from "@/hooks/useFreebaseUser";
+import { usePoolInteraction, usePendingRewards } from "@/hooks/useFreebaseUser";
 import { useState } from "react";
 import { formatUnits, type Address } from "viem";
 import { useTokenInfo } from "@/hooks/useTokenInfo";
 import { FreebaseToken, FreebaseUserPoolPosition } from "@/lib/services/freebase";
+
 
 interface PoolCardProps {
   pool: {
@@ -34,7 +35,7 @@ export function PoolCard({ pool, userAddress, rewardTokens, userPoolPosition }: 
     poolInteractionPending
   } = usePoolInteraction(BigInt(pool.id));
   const { symbol, decimals } = useTokenInfo(pool.tokenAddress);
-
+  const { pendingRewards } = usePendingRewards(BigInt(pool.id), userAddress as Address);
   const handleDeposit = () => {
     if (!amount) return;
     deposit({ amount: BigInt(amount) });
@@ -88,6 +89,15 @@ export function PoolCard({ pool, userAddress, rewardTokens, userPoolPosition }: 
         {userPoolPosition?.amount && (
           <Text fontSize="sm" color="gray.600" mb={4}>
             Deposited Tokens: {formatUnits(userPoolPosition?.amount, 18)}
+          </Text>
+        )}
+        {pendingRewards && (
+          <Text fontSize="sm" color="gray.600" mb={4}>
+            Pending Rewards: {
+              pendingRewards && BigInt(pendingRewards) > BigInt(0)
+                ? Number(formatUnits(pendingRewards, 18)).toFixed(2)
+                : formatUnits(pendingRewards, 18)
+            }
           </Text>
         )}
 
