@@ -10,6 +10,7 @@ import UserDashboard from "@/components/freebase";
 import AdminFreebaseComponent from "@/components/freebase/admin-freebase-component";
 import WrongNetworkWindow from "../common/wrong-network";
 import { whitelistedAddresses } from "../admin-dashboard/whitelisted-addresses";
+import { Wizard } from "react-use-wizard";
 
 // Window style configurations
 const windowStyles = {
@@ -48,13 +49,6 @@ export function Freebase() {
   const isWrongNetwork = chainId !== env.NEXT_PUBLIC_CHAIN_ID;
   const isAdmin = whitelistedAddresses.includes(address ?? "0x");
 
-  // Render content based on conditions
-  const renderContent = () => {
-    if (isWrongNetwork) return <WrongNetworkWindow />;
-    if (isAdmin) return <AdminFreebaseComponent />;
-    return <UserDashboard />;
-  };
-
   return (
     <Window
       id="freebase"
@@ -72,7 +66,11 @@ export function Freebase() {
     >
       <Window.TitleBar />
       <Window.Content p={0} overflowX="hidden">
-        {renderContent()}
+        <Wizard startIndex={0}>
+          <UserDashboard />
+          <AdminFreebaseComponent />
+        </Wizard>
+
         <Box
           as="img"
           src="/windows/alchemist/clouds.png"
