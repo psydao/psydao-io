@@ -129,24 +129,28 @@ export function useRewardTokenManagement() {
 
       if (parsedAllowance >= parsedPendingReward) {
         // Allowance is sufficient, proceed with contract call
-        writeContractAsync(
-          {
-            address: FREEBASE_ADDRESS,
-            abi: FREEBASE_ABI,
-            functionName: "addRewardToken",
-            args: [pendingReward.token, parsedPendingReward]
-          },
-          {
-            onSuccess() {
-              refetchRewardTokens();
-              setPendingReward(null);
-              showSuccessToast("Reward token added", width);
+        try {
+          await writeContractAsync(
+            {
+              address: FREEBASE_ADDRESS,
+              abi: FREEBASE_ABI,
+              functionName: "addRewardToken",
+              args: [pendingReward.token, parsedPendingReward]
             },
-            onError(error) {
-              console.error("Error adding reward token:", error);
+            {
+              onSuccess() {
+                refetchRewardTokens();
+                setPendingReward(null);
+                showSuccessToast("Reward token added", width);
+              },
+              onError(error) {
+                console.error("Error adding reward token:", error);
+              }
             }
-          }
-        );
+          );
+        } catch (error) {
+          console.error("Error adding reward token:", error);
+        }
       } else if (!isApproveSuccess) {
         // Need approval
         await approve(parsedPendingReward, pendingReward.token);
@@ -182,21 +186,29 @@ export function useRewardTokenManagement() {
   }: TopUpRewardParams) => {
     const parsedTransferAmount = parseEther(transferAmount);
 
-    await writeContractAsync({
-      address: FREEBASE_ADDRESS,
-      abi: FREEBASE_ABI,
-      functionName: "topUpRewardToken",
-      args: [parsedTransferAmount, rewardToken]
-    });
+    try {
+      await writeContractAsync({
+        address: FREEBASE_ADDRESS,
+        abi: FREEBASE_ABI,
+        functionName: "topUpRewardToken",
+        args: [parsedTransferAmount, rewardToken]
+      });
+    } catch (error) {
+      console.error("Error top up reward token:", error);
+    }
   };
 
-  const setRewardToken = ({ rewardToken }: SetRewardTokenParams) => {
-    writeContractAsync({
-      address: FREEBASE_ADDRESS,
-      abi: FREEBASE_ABI,
-      functionName: "setRewardToken",
-      args: [rewardToken]
-    });
+  const setRewardToken = async ({ rewardToken }: SetRewardTokenParams) => {
+    try {
+      await writeContractAsync({
+        address: FREEBASE_ADDRESS,
+        abi: FREEBASE_ABI,
+        functionName: "setRewardToken",
+        args: [rewardToken]
+      });
+    } catch (error) {
+      console.error("Error setting reward token:", error);
+    }
   };
 
   return {
