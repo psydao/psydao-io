@@ -22,7 +22,7 @@ interface AddDepositTokenParams {
 
 interface AddRewardTokenParams {
   rewardToken: Address;
-  transferAmount: bigint;
+  transferAmount: string;
 }
 
 interface SetRewardTokenParams {
@@ -79,7 +79,7 @@ export function useRewardTokenManagement() {
   const { writeContract, isPending: isWritePending } = useWriteContract();
   const [pendingReward, setPendingReward] = useState<{
     token: Address;
-    amount: bigint;
+    amount: string;
   } | null>(null);
   const { showSuccessToast } = useCustomToasts();
   const { width } = useResize();
@@ -113,7 +113,7 @@ export function useRewardTokenManagement() {
 
       // NOTE currently all tokens in this contract use 18 decimals
       const parsedAllowance = parseEther(allowance?.toString() ?? "0");
-      const parsedPendingReward = parseEther(pendingReward.amount.toString());
+      const parsedPendingReward = parseEther(pendingReward.amount);
 
       if (parsedAllowance >= parsedPendingReward) {
         // Allowance is sufficient, proceed with contract call
