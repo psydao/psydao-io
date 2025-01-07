@@ -1,22 +1,5 @@
 [
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_rewardPerBlock",
-        "type": "uint256"
-      },
-      { "internalType": "uint256", "name": "_startBlock", "type": "uint256" },
-      {
-        "internalType": "uint256",
-        "name": "_bonusEndBlock",
-        "type": "uint256"
-      },
-      { "internalType": "address", "name": "_freebaseNft", "type": "address" }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
+  { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
   {
     "inputs": [
       { "internalType": "address", "name": "target", "type": "address" }
@@ -39,6 +22,14 @@
     "name": "AlreadyApproved",
     "type": "error"
   },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "implementation", "type": "address" }
+    ],
+    "name": "ERC1967InvalidImplementation",
+    "type": "error"
+  },
+  { "inputs": [], "name": "ERC1967NonPayable", "type": "error" },
   { "inputs": [], "name": "FailedInnerCall", "type": "error" },
   {
     "inputs": [
@@ -49,14 +40,54 @@
     "name": "InsufficientBalance",
     "type": "error"
   },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "token", "type": "address" },
+      { "internalType": "uint256", "name": "available", "type": "uint256" },
+      { "internalType": "uint256", "name": "requested", "type": "uint256" }
+    ],
+    "name": "InsufficientRewardBalance",
+    "type": "error"
+  },
   { "inputs": [], "name": "InvalidAmount", "type": "error" },
   { "inputs": [], "name": "InvalidBonusMultiplier", "type": "error" },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "requestedAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "availableAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "InvalidClaimAmount",
+    "type": "error"
+  },
+  { "inputs": [], "name": "InvalidInitialization", "type": "error" },
   {
     "inputs": [{ "internalType": "uint256", "name": "pid", "type": "uint256" }],
     "name": "InvalidPoolId",
     "type": "error"
   },
   { "inputs": [], "name": "InvalidStartAndBonusEndBlocks", "type": "error" },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "token", "type": "address" }
+    ],
+    "name": "InvalidTokenDecimals",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "token", "type": "address" }
+    ],
+    "name": "NoRewardTokensToWithdraw",
+    "type": "error"
+  },
   { "inputs": [], "name": "NoUnclaimedRewards", "type": "error" },
   {
     "inputs": [
@@ -65,13 +96,7 @@
     "name": "NotApproved",
     "type": "error"
   },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "token", "type": "address" }
-    ],
-    "name": "NotEnoughRewardTokensToWithdraw",
-    "type": "error"
-  },
+  { "inputs": [], "name": "NotInitializing", "type": "error" },
   {
     "inputs": [
       { "internalType": "address", "name": "owner", "type": "address" }
@@ -93,6 +118,14 @@
     "name": "SafeERC20FailedOperation",
     "type": "error"
   },
+  { "inputs": [], "name": "UUPSUnauthorizedCallContext", "type": "error" },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "slot", "type": "bytes32" }
+    ],
+    "name": "UUPSUnsupportedProxiableUUID",
+    "type": "error"
+  },
   {
     "anonymous": false,
     "inputs": [
@@ -110,31 +143,6 @@
       }
     ],
     "name": "BonusMultiplierSet",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "ClaimUnclaimedRewards",
     "type": "event"
   },
   {
@@ -185,6 +193,19 @@
       }
     ],
     "name": "EmergencyWithdraw",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "version",
+        "type": "uint64"
+      }
+    ],
+    "name": "Initialized",
     "type": "event"
   },
   {
@@ -286,7 +307,7 @@
         "type": "uint256"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "token",
         "type": "address"
@@ -324,13 +345,19 @@
         "type": "address"
       },
       {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "pid",
+        "type": "uint256"
+      },
+      {
         "indexed": false,
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
       }
     ],
-    "name": "RewardTransferred",
+    "name": "RewardsClaimed",
     "type": "event"
   },
   {
@@ -370,23 +397,11 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "token",
+        "name": "implementation",
         "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
       }
     ],
-    "name": "UnclaimedRewardsUpdated",
+    "name": "Upgraded",
     "type": "event"
   },
   {
@@ -413,6 +428,13 @@
     ],
     "name": "Withdraw",
     "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "UPGRADE_INTERFACE_VERSION",
+    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "stateMutability": "view",
+    "type": "function"
   },
   {
     "inputs": [
@@ -469,9 +491,10 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_token", "type": "address" }
+      { "internalType": "uint256", "name": "_pid", "type": "uint256" },
+      { "internalType": "uint256", "name": "_amount", "type": "uint256" }
     ],
-    "name": "claimUnclaimedRewards",
+    "name": "claimRewards",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -522,6 +545,26 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_rewardPerBlock",
+        "type": "uint256"
+      },
+      { "internalType": "uint256", "name": "_startBlock", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "_bonusEndBlock",
+        "type": "uint256"
+      },
+      { "internalType": "address", "name": "_freebaseNft", "type": "address" }
+    ],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "massUpdatePools",
     "outputs": [],
@@ -569,6 +612,13 @@
         "type": "uint256"
       }
     ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "proxiableUUID",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -628,7 +678,8 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_amount", "type": "uint256" }
+      { "internalType": "uint256", "name": "_amount", "type": "uint256" },
+      { "internalType": "address", "name": "_rewardToken", "type": "address" }
     ],
     "name": "topUpRewardToken",
     "outputs": [],
@@ -643,29 +694,12 @@
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "name": "totalUnclaimedRewards",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       { "internalType": "address", "name": "newOwner", "type": "address" }
     ],
     "name": "transferOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "", "type": "address" },
-      { "internalType": "address", "name": "", "type": "address" }
-    ],
-    "name": "unclaimedRewards",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -688,6 +722,20 @@
     "name": "updateRewardPerBlock",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newImplementation",
+        "type": "address"
+      },
+      { "internalType": "bytes", "name": "data", "type": "bytes" }
+    ],
+    "name": "upgradeToAndCall",
+    "outputs": [],
+    "stateMutability": "payable",
     "type": "function"
   },
   {
