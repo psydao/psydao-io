@@ -180,7 +180,6 @@ export function useRewardTokenManagement() {
     rewardToken,
     transferAmount
   }: TopUpRewardParams) => {
-    console.log("rewardToken", rewardToken, transferAmount, error);
     const parsedTransferAmount = parseEther(transferAmount);
 
     await writeContractAsync({
