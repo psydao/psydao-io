@@ -24,25 +24,24 @@ interface TokenManagementProps {
     setRewardToken: (args: { rewardToken: Address }) => void;
     isPending: boolean;
   };
+  onTopUpReward: {
+    topUpRewardToken: (args: {
+      rewardToken: Address;
+      transferAmount: string;
+    }) => void;
+    isPending: boolean;
+  };
 }
 
 export function TokenManagement({
   onAddToken,
   onAddReward,
-  onSetReward
+  onSetReward,
+  onTopUpReward
 }: TokenManagementProps) {
   return (
-    <Box
-      borderRadius="xl"
-      borderColor="#F2BEBE"
-      borderWidth="1px"
-      p={6}
-    >
-      <Text
-        fontSize={{ base: "20px", sm: "24px" }}
-        fontFamily="Inter"
-        mb={6}
-      >
+    <Box borderRadius="xl" borderColor="#F2BEBE" borderWidth="1px" p={6}>
+      <Text fontSize={{ base: "20px", sm: "24px" }} fontFamily="Inter" mb={6}>
         Token Management
       </Text>
 
@@ -54,8 +53,10 @@ export function TokenManagement({
         <ManageRewardToken
           onAddReward={onAddReward.addRewardToken}
           onSetReward={onSetReward.setRewardToken}
+          onTopUpReward={onTopUpReward.topUpRewardToken}
           isPendingAddReward={onAddReward.isPending}
           isPendingSetReward={onSetReward.isPending}
+          isPendingTopUpReward={onTopUpReward.isPending}
         />
       </Flex>
     </Box>

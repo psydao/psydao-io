@@ -3,13 +3,11 @@ import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { Address, Abi } from "viem";
 
 interface UseApproveTokenParams {
-  tokenAddress: Address;
   spenderAddress: Address;
   abi: Abi;
 }
 
 export function useApproveToken({
-  tokenAddress,
   spenderAddress,
   abi
 }: UseApproveTokenParams) {
@@ -29,7 +27,7 @@ export function useApproveToken({
   });
 
   const approve = useCallback(
-    async (approvalAmount: bigint) => {
+    async (approvalAmount: bigint, tokenAddress: Address) => {
       return writeContract(
         {
           address: tokenAddress,
@@ -47,7 +45,7 @@ export function useApproveToken({
         }
       );
     },
-    [writeContract, tokenAddress, spenderAddress, abi]
+    [writeContract, spenderAddress, abi]
   );
 
   return {

@@ -20,9 +20,11 @@ export function AdminFreebaseComponent() {
     useAddDepositToken();
   const {
     addRewardToken,
+    topUpRewardToken,
     setRewardToken,
     isPendingAddReward,
-    isPendingSetReward
+    isPendingSetReward,
+    isPendingTopUpReward
   } = useRewardTokenManagement();
   const {
     updateRewardPerBlock,
@@ -75,6 +77,10 @@ export function AdminFreebaseComponent() {
             onSetReward={{
               setRewardToken,
               isPending: isPendingSetReward
+            }}
+            onTopUpReward={{
+              topUpRewardToken,
+              isPending: isPendingTopUpReward
             }}
           />
         ) : (

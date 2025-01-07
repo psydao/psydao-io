@@ -94,7 +94,6 @@ export function usePoolInteraction(poolId: bigint) {
     approvedSuccess,
     resetApprove
   } = useApproveToken({
-    tokenAddress: pool?.token.id as Address,
     spenderAddress: FREEBASE_ADDRESS,
     abi: erc20Abi
   });
@@ -140,7 +139,7 @@ export function usePoolInteraction(poolId: bigint) {
         }
       } else if (!isApproveSuccess) {
         // Need approval
-        await approve(parsedPendingDeposit);
+        await approve(parsedPendingDeposit, pool?.token.id as Address);
       } else if (isApproveSuccess) {
         // Approval successful, refetch allowance
         await refetchAllowance();
