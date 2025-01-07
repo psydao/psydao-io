@@ -44,7 +44,7 @@ export const Highlight = () => {
           </Text>
           <Text textColor="#269200" fontWeight="700" fontStyle="italic" mt="1">
             <Link
-              href="https://docs.google.com/forms/d/e/1FAIpQLSclWo6ALQ-atJtrE0CQ4ft-JmXWIkaRVpg0cTqhvfKOHLhSCQ/viewform"
+              href="https://forms.gle/7oiZW67QiQPhi3T99"
               target="_blank"
               textDecor="underline"
               onClick={() =>
