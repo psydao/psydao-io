@@ -29,7 +29,7 @@ export function UserDashboard() {
         borderBottom="1px solid #E9BDBD"
         justifyContent="space-between"
       >
-        <Text as="h2" fontSize={{ base: "20px", sm: "24px" }}>
+        <Text as="h2" fontSize={{ base: "18px", sm: "24px" }}>
           Freebase Pools
         </Text>
         {isAdmin && (
@@ -51,7 +51,7 @@ export function UserDashboard() {
       <Grid
         templateColumns={{
           base: "1fr",
-          md: "repeat(auto-fit, minmax(300px, 1fr))"
+          md: "repeat(auto-fit, minmax(340px, 1fr))"
         }}
         gap={4}
         p={6}

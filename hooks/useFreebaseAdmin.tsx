@@ -1,16 +1,20 @@
 import { freebaseSepolia } from "@/constants/contracts";
 import psydaoMasterBaseAbi from "@/abis/PsyDAOMasterBase.json";
-import { useWriteContract, useSimulateContract } from "wagmi";
+import { useWriteContract } from "wagmi";
 import { type Address, erc20Abi, parseEther } from "viem";
+import { getTransactionReceipt } from "@wagmi/core";
 import { useApproveToken } from "@/services/web3/useApproveToken";
 import useGetTokenAllowance from "@/services/web3/useGetTokenAllowance";
 import { useEffect, useState } from "react";
 import { useRewardTokens } from "@/hooks/useFreebaseUser";
 import { useCustomToasts } from "./useCustomToasts";
 import { useResize } from "./useResize";
+import { env } from "@/config/env.mjs";
+import { wagmiConfig } from "@/providers/Web3Provider";
 
-const FREEBASE_ADDRESS = freebaseSepolia;
-const FREEBASE_ABI = psydaoMasterBaseAbi;
+export const FREEBASE_ADDRESS =
+  env.NEXT_PUBLIC_FREEBASE_CONTRACT_ADDRESS as Address;
+export const FREEBASE_ABI = psydaoMasterBaseAbi;
 
 //#region interfaces
 interface AddDepositTokenParams {
@@ -21,7 +25,7 @@ interface AddDepositTokenParams {
 
 interface AddRewardTokenParams {
   rewardToken: Address;
-  transferAmount: bigint;
+  transferAmount: string;
 }
 
 interface SetRewardTokenParams {
@@ -36,6 +40,11 @@ interface SetAllocationPointParams {
   pid: bigint;
   allocPoint: bigint;
   withUpdate: boolean;
+}
+
+interface TopUpRewardParams {
+  rewardToken: Address;
+  transferAmount: string;
 }
 //#endregion
 
@@ -75,10 +84,15 @@ export const useAddDepositToken = () => {
  */
 export function useRewardTokenManagement() {
   const { refetchRewardTokens } = useRewardTokens();
-  const { writeContract, isPending: isWritePending } = useWriteContract();
+  const {
+    writeContractAsync,
+    isPending: isWritePending,
+    error
+  } = useWriteContract();
+
   const [pendingReward, setPendingReward] = useState<{
     token: Address;
-    amount: bigint;
+    amount: string;
   } | null>(null);
   const { showSuccessToast } = useCustomToasts();
   const { width } = useResize();
@@ -96,7 +110,6 @@ export function useRewardTokenManagement() {
     resetApprove,
     isPending: isApprovePending
   } = useApproveToken({
-    tokenAddress: pendingReward?.token ?? "0x0",
     spenderAddress: FREEBASE_ADDRESS,
     abi: erc20Abi
   });
@@ -112,31 +125,35 @@ export function useRewardTokenManagement() {
 
       // NOTE currently all tokens in this contract use 18 decimals
       const parsedAllowance = parseEther(allowance?.toString() ?? "0");
-      const parsedPendingReward = parseEther(pendingReward.amount.toString());
+      const parsedPendingReward = parseEther(pendingReward.amount);
 
       if (parsedAllowance >= parsedPendingReward) {
         // Allowance is sufficient, proceed with contract call
-        writeContract(
-          {
-            address: FREEBASE_ADDRESS,
-            abi: FREEBASE_ABI,
-            functionName: "addRewardToken",
-            args: [pendingReward.token, parsedPendingReward]
-          },
-          {
-            onSuccess() {
-              refetchRewardTokens();
-              setPendingReward(null);
-              showSuccessToast("Reward token added", width);
+        try {
+          await writeContractAsync(
+            {
+              address: FREEBASE_ADDRESS,
+              abi: FREEBASE_ABI,
+              functionName: "addRewardToken",
+              args: [pendingReward.token, parsedPendingReward]
             },
-            onError(error) {
-              console.error("Error adding reward token:", error);
+            {
+              onSuccess() {
+                refetchRewardTokens();
+                setPendingReward(null);
+                showSuccessToast("Reward token added", width);
+              },
+              onError(error) {
+                console.error("Error adding reward token:", error);
+              }
             }
-          }
-        );
+          );
+        } catch (error) {
+          console.error("Error adding reward token:", error);
+        }
       } else if (!isApproveSuccess) {
         // Need approval
-        await approve(parsedPendingReward);
+        await approve(parsedPendingReward, pendingReward.token);
       } else if (isApproveSuccess) {
         // Approval successful, refetch allowance
         await refetchAllowance();
@@ -151,7 +168,7 @@ export function useRewardTokenManagement() {
     allowance,
     isApproveSuccess,
     approve,
-    writeContract,
+    writeContractAsync,
     refetchAllowance,
     resetApprove
   ]);
@@ -162,22 +179,46 @@ export function useRewardTokenManagement() {
   }: AddRewardTokenParams) => {
     setPendingReward({ token: rewardToken, amount: transferAmount });
   };
+  const [receipt, setReceipt] = useState({});
+  const topUpRewardToken = async ({
+    rewardToken,
+    transferAmount
+  }: TopUpRewardParams) => {
+    const parsedTransferAmount = parseEther(transferAmount);
 
-  const setRewardToken = ({ rewardToken }: SetRewardTokenParams) => {
-    writeContract({
-      address: FREEBASE_ADDRESS,
-      abi: FREEBASE_ABI,
-      functionName: "setRewardToken",
-      args: [rewardToken]
-    });
+    try {
+      await writeContractAsync({
+        address: FREEBASE_ADDRESS,
+        abi: FREEBASE_ABI,
+        functionName: "topUpRewardToken",
+        args: [parsedTransferAmount, rewardToken]
+      });
+    } catch (error) {
+      console.error("Error top up reward token:", error);
+    }
+  };
+
+  const setRewardToken = async ({ rewardToken }: SetRewardTokenParams) => {
+    try {
+      await writeContractAsync({
+        address: FREEBASE_ADDRESS,
+        abi: FREEBASE_ABI,
+        functionName: "setRewardToken",
+        args: [rewardToken]
+      });
+    } catch (error) {
+      console.error("Error setting reward token:", error);
+    }
   };
 
   return {
     addRewardToken,
+    topUpRewardToken,
     setRewardToken,
     isApproveSuccess,
     isPendingAddReward: isApprovePending || isWritePending,
-    isPendingSetReward: isWritePending
+    isPendingSetReward: isWritePending,
+    isPendingTopUpReward: isApprovePending || isWritePending
   };
 }
 

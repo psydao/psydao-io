@@ -116,7 +116,11 @@ export function PoolCard({
         </Flex>
       </CardHeader>
 
-      <CardBody>
+      <CardBody
+        display={"flex"}
+        flexDirection={"column"}
+        justifyContent={"end"}
+      >
         {userPoolPosition?.amount && (
           <Text fontSize="sm" color="gray.600" mb={4}>
             Deposited Tokens: {formatAmount(userPoolPosition?.amount, 18)}
@@ -146,28 +150,30 @@ export function PoolCard({
         />
       </CardBody>
 
-      <CardFooter gap={3}>
+      <CardFooter gap={3} flexDirection={{ base: "column", md: "row" }}>
         <Button
           onClick={handleDeposit}
           bg="linear-gradient(90deg, #F2BEBE, #F77CC2)"
           color="black"
-          flex={1}
+          fontSize={{ base: "12px", md: "16px" }}
+          flex={{ base: "auto", md: 1 }}
           height="48px"
           isDisabled={approvalPending || poolInteractionPending}
           _hover={{ opacity: 0.9 }}
         >
           {approvalPending || poolInteractionPending
             ? "Please wait..."
-            : !approvedSuccess || allowance === BigInt("0") || !allowance
-              ? "Approve & Deposit"
-              : "Deposit"}
+            : "Approve & Deposit"}
         </Button>
         {userPoolPosition?.amount && userPoolPosition.amount > BigInt("0") && (
           <Button
             onClick={handleWithdraw}
-            bg="linear-gradient(90deg, #F2BEBE, #F77CC2)"
+            // bg="linear-gradient(90deg, #F2BEBE, #F77CC2)"
+            bg={"transparent"}
+            border="2px solid #F2BEBE"
             color="black"
-            flex={1}
+            fontSize={{ base: "12px", md: "16px" }}
+            flex={{ base: "auto", md: 1 }}
             height="48px"
             isDisabled={approvalPending || poolInteractionPending}
             _hover={{ opacity: 0.9 }}
