@@ -130,7 +130,7 @@ export const Menu = () => {
             </MenuItem>
           </Open>
           <Link
-            href="https://docs.google.com/forms/d/e/1FAIpQLSclWo6ALQ-atJtrE0CQ4ft-JmXWIkaRVpg0cTqhvfKOHLhSCQ/viewform"
+            href="https://forms.gle/7oiZW67QiQPhi3T99"
             target="_blank"
             _hover={{ textDecor: "none" }}
           >
