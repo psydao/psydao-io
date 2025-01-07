@@ -182,12 +182,16 @@ export function useRewardTokenManagement() {
   }: TopUpRewardParams) => {
     const parsedTransferAmount = parseEther(transferAmount);
 
-    await writeContractAsync({
-      address: FREEBASE_ADDRESS,
-      abi: FREEBASE_ABI,
-      functionName: "topUpRewardToken",
-      args: [parsedTransferAmount, rewardToken]
-    });
+    try {
+      await writeContractAsync({
+        address: FREEBASE_ADDRESS,
+        abi: FREEBASE_ABI,
+        functionName: "topUpRewardToken",
+        args: [parsedTransferAmount, rewardToken]
+      });
+    } catch (error) {
+      console.error("Error top up reward token:", error);
+    }
   };
 
   const setRewardToken = ({ rewardToken }: SetRewardTokenParams) => {
