@@ -46,7 +46,11 @@ export default function ManageRewardToken({
   );
   const { rewardTokens, refetchRewardTokens } = useRewardTokens();
 
-  const { approve, isSuccess: isApproveSuccess } = useApproveToken({
+  const {
+    approve,
+    isSuccess: isApproveSuccess,
+    isPending: approvalPending
+  } = useApproveToken({
     spenderAddress: FREEBASE_ADDRESS,
     abi: erc20Abi
   });
@@ -74,12 +78,12 @@ export default function ManageRewardToken({
       (token) => token.isActiveRewardToken === true
     );
 
-    console.log("activeRewardToken", activeRewardToken);
     if (!activeRewardToken || !transferAmount) return;
     onTopUpReward({
       rewardToken: activeRewardToken.id as Address,
       transferAmount: transferAmount
     });
+    setTransferAmount("");
   };
   const approveRewardToken = () => {
     const activeRewardToken = rewardTokens?.find(
@@ -199,8 +203,8 @@ export default function ManageRewardToken({
                   fontSize="16px"
                   onClick={isApproveSuccess ? handleTopUp : approveRewardToken}
                   bg="linear-gradient(90deg, #f3a6a6, #f77cc2)"
-                  isLoading={isPendingTopUpReward}
-                  isDisabled={isPendingTopUpReward}
+                  isLoading={isPendingTopUpReward || approvalPending}
+                  isDisabled={isPendingTopUpReward || approvalPending}
                   color="black"
                   borderRadius="20px"
                   px={6}

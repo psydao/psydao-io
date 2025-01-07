@@ -1,6 +1,6 @@
 import { freebaseSepolia } from "@/constants/contracts";
 import psydaoMasterBaseAbi from "@/abis/PsyDAOMasterBase.json";
-import { useWriteContract } from "wagmi";
+import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { type Address, erc20Abi, parseEther } from "viem";
 import { getTransactionReceipt } from "@wagmi/core";
 import { useApproveToken } from "@/services/web3/useApproveToken";
@@ -56,6 +56,10 @@ export const useAddDepositToken = () => {
   const { writeContract, data, isPending, isSuccess, error } =
     useWriteContract();
 
+  const { isFetching } = useWaitForTransactionReceipt({
+    hash: data
+  });
+
   const addDepositToken = ({
     allocPoint,
     token,
@@ -72,7 +76,7 @@ export const useAddDepositToken = () => {
   return {
     addDepositToken,
     txHash: data,
-    isPending,
+    isPending: isPending || isFetching,
     isSuccess,
     error
   };
@@ -87,8 +91,13 @@ export function useRewardTokenManagement() {
   const {
     writeContractAsync,
     isPending: isWritePending,
+    data,
     error
   } = useWriteContract();
+
+  const { isFetching } = useWaitForTransactionReceipt({
+    hash: data
+  });
 
   const [pendingReward, setPendingReward] = useState<{
     token: Address;
@@ -216,9 +225,9 @@ export function useRewardTokenManagement() {
     topUpRewardToken,
     setRewardToken,
     isApproveSuccess,
-    isPendingAddReward: isApprovePending || isWritePending,
-    isPendingSetReward: isWritePending,
-    isPendingTopUpReward: isApprovePending || isWritePending
+    isPendingAddReward: isApprovePending || isWritePending || isFetching,
+    isPendingSetReward: isWritePending || isFetching,
+    isPendingTopUpReward: isApprovePending || isWritePending || isFetching
   };
 }
 

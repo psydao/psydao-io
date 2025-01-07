@@ -90,7 +90,6 @@ export function usePoolInteraction(poolId: bigint) {
     approve,
     isSuccess: isApproveSuccess,
     isPending: isApprovePending,
-    isFetching: isApproveFetching,
     approvedSuccess,
     resetApprove
   } = useApproveToken({
@@ -195,7 +194,7 @@ export function usePoolInteraction(poolId: bigint) {
     withdraw,
     emergencyWithdraw,
     poolInteractionPending: poolInteractionPending || poolTransactionPending,
-    approvalPending: isApprovePending || isApproveFetching,
+    approvalPending: isApprovePending,
     approvedSuccess,
     allowance
   };
