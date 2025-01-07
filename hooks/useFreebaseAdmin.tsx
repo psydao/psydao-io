@@ -12,8 +12,8 @@ import { useResize } from "./useResize";
 import { env } from "@/config/env.mjs";
 import { wagmiConfig } from "@/providers/Web3Provider";
 
-export const FREEBASE_ADDRESS = process.env
-  .NEXT_PUBLIC_FREEBASE_CONTRACT_ADDRESS as Address;
+export const FREEBASE_ADDRESS =
+  env.NEXT_PUBLIC_FREEBASE_CONTRACT_ADDRESS as Address;
 export const FREEBASE_ABI = psydaoMasterBaseAbi;
 
 //#region interfaces
@@ -44,7 +44,7 @@ interface SetAllocationPointParams {
 
 interface TopUpRewardParams {
   rewardToken: Address;
-  transferAmount: bigint;
+  transferAmount: string;
 }
 //#endregion
 
@@ -84,7 +84,11 @@ export const useAddDepositToken = () => {
  */
 export function useRewardTokenManagement() {
   const { refetchRewardTokens } = useRewardTokens();
-  const { writeContractAsync, isPending: isWritePending } = useWriteContract();
+  const {
+    writeContractAsync,
+    isPending: isWritePending,
+    error
+  } = useWriteContract();
 
   const [pendingReward, setPendingReward] = useState<{
     token: Address;
@@ -176,11 +180,13 @@ export function useRewardTokenManagement() {
     rewardToken,
     transferAmount
   }: TopUpRewardParams) => {
-    writeContractAsync({
+    const parsedTransferAmount = parseEther(transferAmount);
+
+    await writeContractAsync({
       address: FREEBASE_ADDRESS,
       abi: FREEBASE_ABI,
       functionName: "topUpRewardToken",
-      args: [transferAmount]
+      args: [parsedTransferAmount, rewardToken]
     });
   };
 
