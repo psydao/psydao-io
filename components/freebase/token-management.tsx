@@ -27,7 +27,7 @@ interface TokenManagementProps {
   onTopUpReward: {
     topUpRewardToken: (args: {
       rewardToken: Address;
-      transferAmount: bigint;
+      transferAmount: string;
     }) => void;
     isPending: boolean;
   };

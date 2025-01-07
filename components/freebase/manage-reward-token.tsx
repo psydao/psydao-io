@@ -14,7 +14,7 @@ import {
   Flex
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { erc20Abi, type Address } from "viem";
+import { erc20Abi, parseEther, type Address } from "viem";
 import { useRewardTokens } from "@/hooks/useFreebaseUser";
 import { useApproveToken } from "@/services/web3/useApproveToken";
 import { FREEBASE_ADDRESS } from "@/hooks/useFreebaseAdmin";
@@ -24,7 +24,7 @@ interface ManageRewardTokenProps {
   onSetReward: (args: { rewardToken: Address }) => void;
   onTopUpReward: (args: {
     rewardToken: Address;
-    transferAmount: bigint;
+    transferAmount: string;
   }) => void;
   isPendingAddReward: boolean;
   isPendingSetReward: boolean;
@@ -78,7 +78,7 @@ export default function ManageRewardToken({
     if (!activeRewardToken || !transferAmount) return;
     onTopUpReward({
       rewardToken: activeRewardToken.id as Address,
-      transferAmount: BigInt(transferAmount)
+      transferAmount: transferAmount
     });
   };
   const approveRewardToken = () => {
@@ -87,7 +87,7 @@ export default function ManageRewardToken({
     );
 
     if (!activeRewardToken || !transferAmount) return;
-    approve(BigInt(transferAmount), activeRewardToken.id as Address);
+    approve(parseEther(transferAmount), activeRewardToken.id as Address);
   };
 
   return (
