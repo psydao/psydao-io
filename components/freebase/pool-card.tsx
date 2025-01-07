@@ -116,7 +116,11 @@ export function PoolCard({
         </Flex>
       </CardHeader>
 
-      <CardBody>
+      <CardBody
+        display={"flex"}
+        flexDirection={"column"}
+        justifyContent={"end"}
+      >
         {userPoolPosition?.amount && (
           <Text fontSize="sm" color="gray.600" mb={4}>
             Deposited Tokens: {formatAmount(userPoolPosition?.amount, 18)}
