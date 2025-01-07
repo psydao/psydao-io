@@ -16,7 +16,7 @@ interface TokenManagementProps {
   onAddReward: {
     addRewardToken: (args: {
       rewardToken: Address;
-      transferAmount: bigint;
+      transferAmount: string;
     }) => void;
     isPending: boolean;
   };

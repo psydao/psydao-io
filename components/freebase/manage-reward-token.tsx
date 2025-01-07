@@ -20,7 +20,7 @@ import { useApproveToken } from "@/services/web3/useApproveToken";
 import { FREEBASE_ADDRESS } from "@/hooks/useFreebaseAdmin";
 
 interface ManageRewardTokenProps {
-  onAddReward: (args: { rewardToken: Address; transferAmount: bigint }) => void;
+  onAddReward: (args: { rewardToken: Address; transferAmount: string }) => void;
   onSetReward: (args: { rewardToken: Address }) => void;
   onTopUpReward: (args: {
     rewardToken: Address;
@@ -55,7 +55,7 @@ export default function ManageRewardToken({
     if (!rewardToken || !transferAmount) return;
     onAddReward({
       rewardToken: rewardToken as Address,
-      transferAmount: BigInt(transferAmount)
+      transferAmount
     });
     setRewardToken("");
     setTransferAmount("");
