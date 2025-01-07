@@ -51,8 +51,7 @@ export function useApproveToken({
   return {
     approve,
     data,
-    isFetching,
-    isPending,
+    isPending: isPending || isFetching,
     isSuccess,
     status,
     fetchStatus,
