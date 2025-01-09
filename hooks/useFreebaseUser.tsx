@@ -271,7 +271,7 @@ export function usePendingRewards(poolId: bigint, userAddress: Address) {
     query: {
       refetchInterval: 10_000,
       refetchIntervalInBackground: false,
-      enabled: Boolean(poolId && userAddress)
+      enabled: Boolean(typeof poolId !== "undefined" && userAddress)
     }
   });
 
