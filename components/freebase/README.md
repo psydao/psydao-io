@@ -17,54 +17,58 @@ The Freebase module provides both user-facing and administrative interfaces for 
 ### Reward Token Management
 
 1. Adding a Reward Token
+
 ```typescript
-const { addRewardToken } = useRewardTokenManagement()
+const { addRewardToken } = useRewardTokenManagement();
 
 // First, add the reward token to the approved list
-addRewardToken({ 
+addRewardToken({
   rewardToken: "0x...", // token address
   transferAmount: BigInt("1000000000000000000") // amount to transfer
-})
+});
 ```
 
 2. Setting Active Reward Token
+
 ```typescript
-const { setRewardToken } = useRewardTokenManagement()
+const { setRewardToken } = useRewardTokenManagement();
 
 // After adding, set it as the active reward token
-setRewardToken({ 
+setRewardToken({
   rewardToken: "0x..." // same token address
-})
+});
 ```
 
 ### Pool Management
 
 1. Adding Deposit Tokens
+
 ```typescript
-const { addDepositToken } = useAddDepositToken()
+const { addDepositToken } = useAddDepositToken();
 
 addDepositToken({
   allocPoint: BigInt("100"),
   token: "0x...", // token address
   withUpdate: true
-})
+});
 ```
 
 2. Updating Reward Configuration
+
 ```typescript
-const { updateRewardPerBlock, setAllocationPoint } = useUpdateRewardConfig()
+const { updateRewardPerBlock, setAllocationPoint } = useUpdateRewardConfig();
 
 // Update rewards per block
 updateRewardPerBlock({
   rewardPerBlock: BigInt("1000000000000000000")
-})
+});
 
 // Set allocation points for a pool
 setAllocationPoint({
   pid: BigInt("0"),
   allocPoint: BigInt("100"),
   withUpdate: true
-})
+});
 ```
 
 ## Architecture
@@ -78,6 +82,7 @@ setAllocationPoint({
 ### Hooks
 
 #### User Hooks (`useFreebaseUser.tsx`)
+
 - `usePoolInteraction` - Handles deposits and withdrawals
 - `usePoolData` - Fetches pool information
 - `useRewards` - Manages reward claiming
@@ -85,6 +90,7 @@ setAllocationPoint({
 - `useRewardTokens` - Fetches reward token information
 
 #### Admin Hooks (`useFreebaseAdmin.tsx`)
+
 - `useAddDepositToken` - Adds new deposit tokens
 - `useRewardTokenManagement` - Manages reward tokens
 - `useUpdateRewardConfig` - Updates reward configurations
@@ -92,6 +98,7 @@ setAllocationPoint({
 ### Services
 
 #### GraphQL Services (`freebase.ts`)
+
 - Pool and token data fetching
 - Real-time updates via Apollo Client
 - Type-safe GraphQL queries
@@ -99,6 +106,7 @@ setAllocationPoint({
 ## Key Features
 
 ### User Features
+
 - View available pools
 - Deposit/withdraw tokens
 - Track rewards
@@ -106,6 +114,7 @@ setAllocationPoint({
 - View pool statistics
 
 ### Admin Features
+
 - Add deposit tokens
 - Manage reward tokens
 - Configure reward rates
@@ -119,6 +128,7 @@ setAllocationPoint({
 The module uses the following GraphQL queries to fetch data:
 
 1. Pools Query
+
 ```graphql
 query GetFreebasePools {
   pools {
@@ -146,6 +156,7 @@ query GetFreebasePools {
 ```
 
 2. Single Pool Query
+
 ```graphql
 query GetFreebasPool($id: ID!) {
   pool(id: $id) {
@@ -173,6 +184,7 @@ query GetFreebasPool($id: ID!) {
 ```
 
 3. Tokens Query
+
 ```graphql
 query GetFreebaseTokens {
   tokens {
@@ -191,6 +203,7 @@ query GetFreebaseTokens {
 ```
 
 4. Reward Tokens Query
+
 ```graphql
 query GetFreebaseRewardTokens($isRewardToken: Boolean!) {
   tokens(where: { isRewardToken: $isRewardToken }) {
@@ -212,27 +225,27 @@ query GetFreebaseRewardTokens($isRewardToken: Boolean!) {
 
 ```typescript
 interface FreebaseToken {
-  id: Address
-  name: string
-  decimals: number
-  isActiveRewardToken: boolean
-  isDepositToken: boolean
-  isRewardToken: boolean
-  lastPriceUpdate: string
-  price: string
-  symbol: string
-  totalDeposited: string
+  id: Address;
+  name: string;
+  decimals: number;
+  isActiveRewardToken: boolean;
+  isDepositToken: boolean;
+  isRewardToken: boolean;
+  lastPriceUpdate: string;
+  price: string;
+  symbol: string;
+  totalDeposited: string;
 }
 
 interface FreebasePool {
-  id: string
-  token: FreebaseToken
-  allocPoint: string
-  lastRewardBlock: string
-  accRewardPerShare: string
-  userCount: number
-  depositCount: number
-  withdrawCount: number
+  id: string;
+  token: FreebaseToken;
+  allocPoint: string;
+  lastRewardBlock: string;
+  accRewardPerShare: string;
+  userCount: number;
+  depositCount: number;
+  withdrawCount: number;
 }
 ```
 
@@ -242,35 +255,36 @@ The module provides React hooks for data fetching:
 
 ```typescript
 // Fetch all liquidity pools
-const { data: poolsData } = useLiquidityPools()
+const { data: poolsData } = useLiquidityPools();
 
 // Fetch single pool by ID
-const { data: poolData } = useLiquidityPool(id)
+const { data: poolData } = useLiquidityPool(id);
 
 // Fetch all tokens
-const { data: tokensData } = useFreebaseTokens()
+const { data: tokensData } = useFreebaseTokens();
 
 // Fetch reward tokens
-const { data: rewardTokens } = useFreebaseRewardTokens()
+const { data: rewardTokens } = useFreebaseRewardTokens();
 ```
 
 ### GraphQL Client Configuration
 
-The module uses a dedicated Apollo Client for Freebase queries:
+The module uses the same Graph client as the rest of the project for its queries:
 
 ```typescript
-import { freebaseGraphClient } from "@/config/apolloClients"
+import { graphClient } from "@/config/apolloClients";
 
 export function useLiquidityPools() {
   return useQuery<FreebasePoolsResponse>(getFreebasePools, {
-    client: freebaseGraphClient
-  })
+    client: graphClient
+  });
 }
 ```
 
 ### Real-time Updates
 
 The GraphQL integration provides real-time updates for:
+
 - Pool statistics (deposits, withdrawals, user count)
 - Token prices and total deposits
 - Reward token status
@@ -279,6 +293,7 @@ The GraphQL integration provides real-time updates for:
 ## Technical Details
 
 ### Dependencies
+
 - Next.js 14
 - TypeScript
 - Wagmi v2
@@ -287,11 +302,13 @@ The GraphQL integration provides real-time updates for:
 - Chakra UI
 
 ### State Management
+
 - React hooks for local state
 - Apollo Client for GraphQL data
 - Wagmi for blockchain interactions
 
 ### Error Handling
+
 - Comprehensive error states
 - User-friendly error messages
 - Transaction status tracking
@@ -299,18 +316,20 @@ The GraphQL integration provides real-time updates for:
 ## Usage
 
 ### User Interface
+
 ```tsx
-import { UserDashboard } from '@/components/freebase'
+import { UserDashboard } from "@/components/freebase";
 function App() {
-  return <UserDashboard />
+  return <UserDashboard />;
 }
 ```
 
 ### Admin Interface
+
 ```tsx
-import { AdminFreebaseComponent } from '@/components/freebase'
+import { AdminFreebaseComponent } from "@/components/freebase";
 function AdminPanel() {
-  return <AdminFreebaseComponent />
+  return <AdminFreebaseComponent />;
 }
 ```
 

@@ -56,20 +56,11 @@ export default function AddDepositToken({
         <TabPanels>
           <TabPanel p={0}>
             <VStack align="stretch" spacing={4}>
-              <FormLabel
-                fontSize="18"
-                mb="0"
-                fontFamily="Inter"
-              >
+              <FormLabel fontSize="18" mb="0" fontFamily="Inter">
                 Add Deposit Token
               </FormLabel>
 
-              <Box
-                bg="#FBF6F8"
-                borderRadius="xl"
-                boxShadow="inner"
-                p="16px"
-              >
+              <Box bg="#FBF6F8" borderRadius="xl" boxShadow="inner" p="16px">
                 <VStack spacing={3}>
                   <Input
                     value={tokenAddress}
@@ -114,11 +105,7 @@ export default function AddDepositToken({
 
           <TabPanel p={0}>
             <VStack align="stretch" spacing={4}>
-              <FormLabel
-                fontSize="18"
-                mb="0"
-                fontFamily="Inter"
-              >
+              <FormLabel fontSize="18" mb="0" fontFamily="Inter">
                 List of Deposit Tokens
               </FormLabel>
               {depositTokens?.map((token) => (
@@ -129,5 +116,5 @@ export default function AddDepositToken({
         </TabPanels>
       </Tabs>
     </FormControl>
-  )
+  );
 }
