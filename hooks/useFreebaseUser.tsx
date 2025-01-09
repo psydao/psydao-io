@@ -286,7 +286,7 @@ export function useRewardTokens() {
   const { data: rewardTokens, refetch: refetchRewardTokens } =
     useFreebaseRewardTokens();
   return {
-    rewardTokens: rewardTokens?.tokens,
+    rewardTokens: rewardTokens?.freebaseTokens,
     refetchRewardTokens
   };
 }
@@ -294,7 +294,7 @@ export function useRewardTokens() {
 export function useDepositTokens() {
   const { data: depositTokens } = useFreebaseDepositTokens();
   return {
-    depositTokens: depositTokens?.tokens
+    depositTokens: depositTokens?.freebaseTokens
   };
 }
 

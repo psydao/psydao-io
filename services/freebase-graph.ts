@@ -63,7 +63,7 @@ export const getFreebasePool = gql`
 
 export const getFreebaseTokens = gql`
   query GetFreebaseTokens {
-    tokens {
+    freebaseTokens {
       id
       name
       decimals
@@ -80,7 +80,7 @@ export const getFreebaseTokens = gql`
 
 export const getFreebaseDepositTokens = gql`
   query GetFreebaseDepositTokens($isDepositToken: Boolean!) {
-    tokens(where: { isDepositToken: $isDepositToken }) {
+    freebaseTokens(where: { isDepositToken: $isDepositToken }) {
       id
       name
       decimals
@@ -97,7 +97,7 @@ export const getFreebaseDepositTokens = gql`
 
 export const getFreebaseRewardTokens = gql`
   query GetFreebaseRewardTokens($isRewardToken: Boolean!) {
-    tokens(where: { isRewardToken: $isRewardToken }) {
+    freebaseTokens(where: { isRewardToken: $isRewardToken }) {
       id
       name
       decimals
@@ -141,42 +141,11 @@ export const getFreebaseGlobalStats = gql`
  */
 export const getFreebaseUserPoolPosition = gql`
   query GetUserPoolPosition($positionId: ID!) {
-  userPosition(id: $positionId) {
-    id
-    amount          # Current amount still in pool
-    rewardDebt      # Amount of rewards owed to the user
-    lastAction      # Last action taken by the user
-    pool {
+    userPosition(id: $positionId) {
       id
-      token {
-        symbol
-        decimals
-      }
-    }
-    depositHistory {
-      id
-      amount
-      block
-      timestamp
-      transaction
-    }
-    withdrawHistory {
-      id
-      amount
-      block
-      timestamp
-      transaction
-      emergency    # If you want to distinguish emergency withdrawals
-    }
-  }
-}
-`;
-
-export const getFreebaseUserPoolsPositions = gql`
-query GetUserPositions($userId: ID!) {
-  user(id: $userId) {
-    positions {
-      id
+      amount # Current amount still in pool
+      rewardDebt # Amount of rewards owed to the user
+      lastAction # Last action taken by the user
       pool {
         id
         token {
@@ -184,7 +153,6 @@ query GetUserPositions($userId: ID!) {
           decimals
         }
       }
-      amount
       depositHistory {
         id
         amount
@@ -198,9 +166,41 @@ query GetUserPositions($userId: ID!) {
         block
         timestamp
         transaction
-        emergency
+        emergency # If you want to distinguish emergency withdrawals
       }
     }
   }
-}
+`;
+
+export const getFreebaseUserPoolsPositions = gql`
+  query GetUserPositions($userId: ID!) {
+    user(id: $userId) {
+      positions {
+        id
+        pool {
+          id
+          token {
+            symbol
+            decimals
+          }
+        }
+        amount
+        depositHistory {
+          id
+          amount
+          block
+          timestamp
+          transaction
+        }
+        withdrawHistory {
+          id
+          amount
+          block
+          timestamp
+          transaction
+          emergency
+        }
+      }
+    }
+  }
 `;
