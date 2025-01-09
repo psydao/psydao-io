@@ -7,7 +7,7 @@ export const chainLinkMainnet = "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419";
 export const chainLinkSepolia = "0x694AA1769357215DE4FAC081bf1f309aDC325306";
 
 // psyNFT
-export const psyNFTSepolia = "0xbe3D1afef909FfF28A98307A2Ff4947aDAcba1d7";
+export const psyNFTSepolia = "0x64e78537782095a38E3785431bE3647856980FfA";
 export const psyNFTMainnet = "0x6c6Ab7b3215374dE4A65De63eAC9BC7A0c7f402d";
 
 //psyNFTCopies
