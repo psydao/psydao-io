@@ -1,4 +1,4 @@
-import { freebaseGraphClient } from "@/config/apolloClients";
+import { graphClient } from "@/config/apolloClients";
 import {
   getFreebasePool,
   getFreebasePools,
@@ -9,48 +9,48 @@ import {
   getFreebaseUserPoolPosition,
   getFreebaseUserPoolsPositions
 } from "@/services/freebase-graph";
-import { useQuery } from "@apollo/client"
-import { Address } from "viem"
+import { useQuery } from "@apollo/client";
+import { Address } from "viem";
 
 // #region Interfaces
 
 interface BaseHistoryEntry {
-  id: string // tx hash + "-" + log index
-  amount: string // BigInt
-  block: string // BigInt
-  timestamp: string // BigInt
-  transaction: string // Bytes
+  id: string; // tx hash + "-" + log index
+  amount: string; // BigInt
+  block: string; // BigInt
+  timestamp: string; // BigInt
+  transaction: string; // Bytes
 }
 
-interface DepositHistoryEntry extends BaseHistoryEntry { }
+interface DepositHistoryEntry extends BaseHistoryEntry {}
 
 interface WithdrawHistoryEntry extends BaseHistoryEntry {
-  emergency: boolean
+  emergency: boolean;
 }
 
 export interface FreebaseToken {
-  id: Address
-  name: string
-  symbol: string
-  decimals: number
-  isActiveRewardToken: boolean
-  isDepositToken: boolean
-  isRewardToken: boolean
-  totalDeposited: bigint
-  price: string // BigDecimal
-  lastPriceUpdate: string // BigInt
+  id: Address;
+  name: string;
+  symbol: string;
+  decimals: number;
+  isActiveRewardToken: boolean;
+  isDepositToken: boolean;
+  isRewardToken: boolean;
+  totalDeposited: bigint;
+  price: string; // BigDecimal
+  lastPriceUpdate: string; // BigInt
 }
 
 export interface FreebasePool {
-  id: string
-  token: FreebaseToken
-  allocPoint: string
-  lastRewardBlock: string
-  totalDeposited: bigint
-  accRewardPerShare: string
-  userCount: number
-  depositCount: number
-  withdrawCount: number
+  id: string;
+  token: FreebaseToken;
+  allocPoint: string;
+  lastRewardBlock: string;
+  totalDeposited: bigint;
+  accRewardPerShare: string;
+  userCount: number;
+  depositCount: number;
+  withdrawCount: number;
 }
 
 export interface LimitedFreebasePool {
@@ -58,109 +58,125 @@ export interface LimitedFreebasePool {
   token: {
     symbol: string;
     decimals: number;
-  }
-};
+  };
+}
 
 interface FreebasePoolsResponse {
-  pools: FreebasePool[]
+  pools: FreebasePool[];
 }
 
 interface FreebaseGlobalStats {
-  id: string
-  dailyVolume: string
-  activeRewardTokens: string
-  totalUsers: string
-  totalValueLocked: string
-  totalPools: string
-  totalDeposited: string
-  totalRewardsToppedUp: string
-  totalRewardsWithdrawn: string
-  totalUnclaimedRewards: string
-  totalRewardsDistributed: string
-  totalAllocPoint: string
-  startBlock: string
-  rewardPerBlock: string
-  weeklyVolume: string
+  id: string;
+  dailyVolume: string;
+  activeRewardTokens: string;
+  totalUsers: string;
+  totalValueLocked: string;
+  totalPools: string;
+  totalDeposited: string;
+  totalRewardsToppedUp: string;
+  totalRewardsWithdrawn: string;
+  totalUnclaimedRewards: string;
+  totalRewardsDistributed: string;
+  totalAllocPoint: string;
+  startBlock: string;
+  rewardPerBlock: string;
+  weeklyVolume: string;
 
-  bonusMultiplier: string
-  bonusEndBlock: string
+  bonusMultiplier: string;
+  bonusEndBlock: string;
 }
-
 
 interface FreebaseUserPoolPositionResponse {
   user: {
-    positions: FreebaseUserPoolPosition[]
-  }
+    positions: FreebaseUserPoolPosition[];
+  };
 }
 export interface FreebaseUserPoolPosition {
-  id: string
-  pool: LimitedFreebasePool
-  amount: bigint
-  depositHistory: DepositHistoryEntry[]
-  withdrawHistory: WithdrawHistoryEntry[]
+  id: string;
+  pool: LimitedFreebasePool;
+  amount: bigint;
+  depositHistory: DepositHistoryEntry[];
+  withdrawHistory: WithdrawHistoryEntry[];
 }
 
 // #endregion
 
 export function useLiquidityPools() {
   return useQuery<FreebasePoolsResponse>(getFreebasePools, {
-    client: freebaseGraphClient
-  })
+    client: graphClient
+  });
 }
 
-
-const POLL_INTERVAL = 10_000
+const POLL_INTERVAL = 10_000;
 export function useLiquidityPool(id: string) {
   return useQuery<{ pool: FreebasePool }>(getFreebasePool, {
     variables: { id },
-    client: freebaseGraphClient
-  })
+    client: graphClient
+  });
 }
 
 export function useFreebaseTokens() {
   return useQuery<{ tokens: FreebaseToken[] }>(getFreebaseTokens, {
-    client: freebaseGraphClient
-  })
+    client: graphClient
+  });
 }
 
 export function useFreebaseDepositTokens() {
-  return useQuery<{ tokens: FreebaseToken[] }>(getFreebaseDepositTokens, {
-    variables: {
-      isDepositToken: true
-    },
-    client: freebaseGraphClient,
-    pollInterval: POLL_INTERVAL
-  })
+  return useQuery<{ freebaseTokens: FreebaseToken[] }>(
+    getFreebaseDepositTokens,
+    {
+      variables: {
+        isDepositToken: true
+      },
+      client: graphClient,
+      pollInterval: POLL_INTERVAL
+    }
+  );
 }
 
 export function useFreebaseRewardTokens() {
-  return useQuery<{ tokens: FreebaseToken[] }>(getFreebaseRewardTokens, {
-    variables: {
-      isRewardToken: true
-    },
-    client: freebaseGraphClient,
-    pollInterval: POLL_INTERVAL
-  })
+  return useQuery<{ freebaseTokens: FreebaseToken[] }>(
+    getFreebaseRewardTokens,
+    {
+      variables: {
+        isRewardToken: true
+      },
+      client: graphClient,
+      pollInterval: POLL_INTERVAL
+    }
+  );
 }
 
 export function useFreebaseGlobalStats() {
-  return useQuery<{ globalStats: FreebaseGlobalStats[] }>(getFreebaseGlobalStats, {
-    client: freebaseGraphClient,
-    pollInterval: POLL_INTERVAL
-  })
+  return useQuery<{ globalStats: FreebaseGlobalStats[] }>(
+    getFreebaseGlobalStats,
+    {
+      client: graphClient,
+      pollInterval: POLL_INTERVAL
+    }
+  );
 }
 
-export function useFreebaseUserPoolPosition(poolId: string, userAddress: Address) {
-  return useQuery<{ userPoolPosition: FreebaseUserPoolPosition }>(getFreebaseUserPoolPosition, {
-    variables: { poolId, userId: userAddress },
-    client: freebaseGraphClient
-  })
+export function useFreebaseUserPoolPosition(
+  poolId: string,
+  userAddress: Address
+) {
+  return useQuery<{ userPoolPosition: FreebaseUserPoolPosition }>(
+    getFreebaseUserPoolPosition,
+    {
+      variables: { poolId, userId: userAddress },
+      client: graphClient
+    }
+  );
 }
 
 export function useFreebaseUserPoolsPositions(userAddress: Address) {
-  return useQuery<FreebaseUserPoolPositionResponse>(getFreebaseUserPoolsPositions, {
-    variables: { userId: userAddress },
-    client: freebaseGraphClient,
-    pollInterval: POLL_INTERVAL
-  })
+  return useQuery<FreebaseUserPoolPositionResponse>(
+    getFreebaseUserPoolsPositions,
+    {
+      variables: { userId: userAddress },
+      client: graphClient,
+      pollInterval: POLL_INTERVAL
+    }
+  );
 }
