@@ -33,7 +33,7 @@ interface SetRewardTokenParams {
 }
 
 interface UpdateRewardPerBlockParams {
-  rewardPerBlock: bigint;
+  rewardPerBlock: string;
 }
 
 interface SetAllocationPointParams {
@@ -236,15 +236,20 @@ export function useRewardTokenManagement() {
  * @returns {Object} - An object containing the updateRewardPerBlock and setAllocationPoint functions, the transaction hash, and the status of the transaction
  */
 export function useUpdateRewardConfig() {
-  const { writeContract } = useWriteContract();
+  const { writeContract, data } = useWriteContract();
   const [isUpdateRewardPending, setIsUpdateRewardPending] = useState(false);
   const [isSetAllocationPending, setIsSetAllocationPending] = useState(false);
+
+  const { isFetching } = useWaitForTransactionReceipt({
+    hash: data
+  });
 
   const updateRewardPerBlock = ({
     rewardPerBlock
   }: UpdateRewardPerBlockParams) => {
     setIsUpdateRewardPending(true);
-    const parsedRewardPerBlock = parseEther(rewardPerBlock.toString());
+    const parsedRewardPerBlock = parseEther(rewardPerBlock);
+
     writeContract(
       {
         address: FREEBASE_ADDRESS,
@@ -282,7 +287,7 @@ export function useUpdateRewardConfig() {
   return {
     updateRewardPerBlock,
     setAllocationPoint,
-    isUpdateRewardPending,
-    isSetAllocationPending
+    isUpdateRewardPending: isUpdateRewardPending || isFetching,
+    isSetAllocationPending: isSetAllocationPending || isFetching
   };
 }
