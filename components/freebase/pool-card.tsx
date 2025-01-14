@@ -78,6 +78,10 @@ export function PoolCard({
     setAmount("");
   };
 
+  const handleClaim = () => {
+    deposit({ amount: "0" });
+  };
+
   return (
     <Card
       borderColor="#F2BEBE"
@@ -113,6 +117,19 @@ export function PoolCard({
           >
             {symbol}
           </Text>
+          {pendingRewards && (
+            <Button
+              onClick={handleClaim}
+              bg="linear-gradient(90deg, #F2BEBE, #F77CC2)"
+              border="2px solid #F2BEBE"
+              color="black"
+              fontSize={{ base: "12px", md: "16px" }}
+              isDisabled={poolInteractionPending}
+              _hover={{ opacity: 0.9 }}
+            >
+              Claim
+            </Button>
+          )}
         </Flex>
       </CardHeader>
 
@@ -127,12 +144,14 @@ export function PoolCard({
           </Text>
         )}
         {pendingRewards && (
-          <Text fontSize="sm" color="gray.600" mb={4}>
-            Pending Rewards:{" "}
-            {pendingRewards && BigInt(pendingRewards) > BigInt(0)
-              ? Number(formatUnits(pendingRewards, 18)).toFixed(2)
-              : formatUnits(pendingRewards, 18)}
-          </Text>
+          <div className="flex justify-between items-center">
+            <Text fontSize="sm" color="gray.600" mb={4}>
+              Pending Rewards:{" "}
+              {pendingRewards && BigInt(pendingRewards) > BigInt(0)
+                ? Number(formatUnits(pendingRewards, 18)).toFixed(2)
+                : formatUnits(pendingRewards, 18)}
+            </Text>
+          </div>
         )}
 
         <Input
