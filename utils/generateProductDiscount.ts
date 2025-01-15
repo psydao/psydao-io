@@ -32,8 +32,7 @@ const shopifyClient = shopifyApi({
   scopes: ["read_products", "read_discounts", "write_discounts"],
   hostName: SHOPIFY_SHOP_NAME,
   apiVersion: LATEST_API_VERSION,
-  isEmbeddedApp: false,
-  isTesting: true
+  isEmbeddedApp: false
 });
 
 const session = shopifyClient.session.customAppSession(SHOPIFY_SHOP_NAME);
