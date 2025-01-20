@@ -1,7 +1,7 @@
-import { GraphQLClient } from "graphql-request";
 import { Codex } from "@codex-data/sdk";
+import { env } from "@/config/env.mjs";
 
-export const codexSDK = new Codex(process.env.NEXT_PUBLIC_CODEX_API_KEY!);
+export const codexSDK = new Codex(env.NEXT_PUBLIC_CODEX_API_KEY!);
 
 // Type for token price response
 export interface TokenPriceResponse {
