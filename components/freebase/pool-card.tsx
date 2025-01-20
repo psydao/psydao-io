@@ -18,6 +18,9 @@ import {
   FreebaseUserPoolPosition
 } from "@/lib/services/freebase";
 import { useTokenPrices } from "@/hooks/useGetTokenPrice";
+import useGetApyDetails from "@/hooks/useGetApyDetails";
+import useGetMultiplier from "@/hooks/useGetMultiplier";
+import { useBlockNumber } from "wagmi";
 
 interface PoolCardProps {
   pool: {
@@ -84,7 +87,9 @@ export function PoolCard({
   };
 
   const { data: tokenPrices } = useTokenPrices(pool.id.toString());
-  console.log(tokenPrices);
+
+  const { apy } = useGetApyDetails(pool.id.toString());
+
   return (
     <Card
       borderColor="#F2BEBE"
