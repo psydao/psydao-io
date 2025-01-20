@@ -1,10 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
-import { codexSDK } from "@/services/defined";
 import {
   useFreebaseActiveRewardToken,
   useLiquidityPool
 } from "@/lib/services/freebase";
-import { useMemo } from "react";
+
+export interface TokenPriceResponse {
+  getTokenPrices: {
+    address: string;
+    confidence: number;
+    networkId: number;
+    priceUsd: number;
+    poolAddress: string;
+    timestamp: number;
+  }[];
+}
 
 export interface TokenPrices {
   rewardToken: {
@@ -17,11 +26,6 @@ export interface TokenPrices {
   };
 }
 
-const defaultPrices: TokenPrices = {
-  rewardToken: { price: 0, symbol: "BIO" },
-  stakedToken: { price: 0, symbol: "PSY" }
-};
-
 export function useTokenPrices(poolId: string) {
   const { data: activeRewardToken } = useFreebaseActiveRewardToken();
   const { data: pool } = useLiquidityPool(poolId);
@@ -32,20 +36,32 @@ export function useTokenPrices(poolId: string) {
   async function fetchTokenPrices(): Promise<TokenPrices> {
     if (!currentActiveRewardToken?.id || !currentPoolToken?.id) {
       console.error("Token addresses not configured");
-      return defaultPrices;
+      return {
+        rewardToken: {
+          price: 0,
+          symbol: currentActiveRewardToken?.symbol ?? ""
+        },
+        stakedToken: { price: 0, symbol: currentPoolToken?.symbol ?? "" }
+      };
     }
 
     try {
-      const { getTokenPrices } = await codexSDK.queries.getTokenPrices({
-        inputs: [
-          { address: currentActiveRewardToken.id, networkId: 1 },
-          { address: currentPoolToken.id, networkId: 1 }
-        ]
+      const response = await fetch("/api/defined", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          addresses: [currentActiveRewardToken.id, currentPoolToken.id]
+        })
       });
+
+      const { getTokenPrices } = (await response.json()) as TokenPriceResponse;
 
       if (!getTokenPrices?.length) {
         console.error("No price data available");
-        return defaultPrices;
+        return {
+          rewardToken: { price: 0, symbol: currentActiveRewardToken.symbol },
+          stakedToken: { price: 0, symbol: currentPoolToken.symbol }
+        };
       }
 
       const priceMap = getTokenPrices.reduce(
@@ -67,16 +83,24 @@ export function useTokenPrices(poolId: string) {
       );
 
       return {
-        stakedToken:
-          priceMap[currentPoolToken.id.toLowerCase()] ??
-          defaultPrices.stakedToken,
-        rewardToken:
-          priceMap[currentActiveRewardToken.id.toLowerCase()] ??
-          defaultPrices.rewardToken
+        stakedToken: priceMap[currentPoolToken.id.toLowerCase()] ?? {
+          price: 0,
+          symbol: currentPoolToken?.symbol ?? ""
+        },
+        rewardToken: priceMap[currentActiveRewardToken.id.toLowerCase()] ?? {
+          price: 0,
+          symbol: currentActiveRewardToken?.symbol ?? ""
+        }
       };
     } catch (error) {
       console.error("Error fetching token prices:", error);
-      return defaultPrices;
+      return {
+        stakedToken: { price: 0, symbol: currentPoolToken?.symbol ?? "" },
+        rewardToken: {
+          price: 0,
+          symbol: currentActiveRewardToken?.symbol ?? ""
+        }
+      };
     }
   }
 
