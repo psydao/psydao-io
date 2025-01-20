@@ -112,6 +112,23 @@ export const getFreebaseRewardTokens = gql`
   }
 `;
 
+export const getActiveFreebaseRewardTokens = gql`
+  query GetActiveFreebaseRewardTokens {
+    freebaseTokens(where: { isActiveRewardToken: true }) {
+      id
+      name
+      decimals
+      isActiveRewardToken
+      isDepositToken
+      isRewardToken
+      lastPriceUpdate
+      price
+      symbol
+      totalDeposited
+    }
+  }
+`;
+
 export const getFreebaseGlobalStats = gql`
   query GetGlobalStats {
     globalStats {

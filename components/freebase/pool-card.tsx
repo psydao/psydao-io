@@ -17,6 +17,7 @@ import {
   FreebaseToken,
   FreebaseUserPoolPosition
 } from "@/lib/services/freebase";
+import { useTokenPrices } from "@/hooks/useGetTokenPrice";
 
 interface PoolCardProps {
   pool: {
@@ -82,6 +83,8 @@ export function PoolCard({
     deposit({ amount: "0" });
   };
 
+  const { data: tokenPrices } = useTokenPrices(pool.id.toString());
+  console.log(tokenPrices);
   return (
     <Card
       borderColor="#F2BEBE"

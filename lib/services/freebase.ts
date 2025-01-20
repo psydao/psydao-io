@@ -7,7 +7,8 @@ import {
   getFreebaseDepositTokens,
   getFreebaseGlobalStats,
   getFreebaseUserPoolPosition,
-  getFreebaseUserPoolsPositions
+  getFreebaseUserPoolsPositions,
+  getActiveFreebaseRewardTokens
 } from "@/services/freebase-graph";
 import { useQuery } from "@apollo/client";
 import { Address } from "viem";
@@ -140,6 +141,19 @@ export function useFreebaseRewardTokens() {
     {
       variables: {
         isRewardToken: true
+      },
+      client: graphClient,
+      pollInterval: POLL_INTERVAL
+    }
+  );
+}
+
+export function useFreebaseActiveRewardToken() {
+  return useQuery<{ freebaseTokens: FreebaseToken[] }>(
+    getActiveFreebaseRewardTokens,
+    {
+      variables: {
+        isActiveRewardToken: true
       },
       client: graphClient,
       pollInterval: POLL_INTERVAL
