@@ -1,73 +1,65 @@
+import { BLOCKS_PER_YEAR, DEFAULT_APY_RESULT } from "@/constants/apy";
 import { TokenPrices } from "@/hooks/useGetTokenPrice";
 import { FreebaseApyDetails } from "@/lib/services/freebase";
 import { formatEther, parseEther } from "viem";
 
-interface ApyResult {
-  apy: number;
-  tvlUsd: number;
-  yearlyRewardsUsd: number;
-  lastUpdated: number;
-}
+/**
+ * Calculates APY for a staking pool
+ * @param prices Token prices for reward and staked tokens
+ * @param apyDetails Pool details and global stats from Freebase
+ * @param multiplier Block reward multiplier (read from contract)
+ * @param totalAllocPoint Total allocated points for all pools (read from contract)
+ * @returns APY calculation result
+ */
 
 async function getPoolApy(
   prices: TokenPrices,
-  poolApyDetails: FreebaseApyDetails,
-  multiplier: bigint
+  apyDetails: FreebaseApyDetails,
+  multiplier: bigint,
+  totalAllocPoint: number
 ) {
-  //   try {
-  const { rewardToken, stakedToken } = prices;
-  const { pool, globalStats } = poolApyDetails;
+  try {
+    if (!prices || !apyDetails || !multiplier || !totalAllocPoint) {
+      console.error("Missing required data for APY calculation");
+      return DEFAULT_APY_RESULT;
+    }
+    const { rewardToken, stakedToken } = prices;
+    const { pool, globalStats } = apyDetails;
 
-  const totalDeposited = formatEther(globalStats[0]?.totalDeposited ?? 0n);
+    const totalDeposited = formatEther(globalStats[0]?.totalDeposited ?? 0n);
 
-  const BLOCKS_PER_YEAR = 2_629_800; // Approximate, adjust based on chain
+    const rewardPerBlock = parseFloat(
+      formatEther(globalStats[0]?.rewardPerBlock ?? 0n)
+    );
+    const allocatedPoints = parseFloat(pool.allocPoint.toString());
 
-  const poolRewardPerBlock =
-    (parseFloat(globalStats[0]?.rewardPerBlock ?? "0") *
-      parseFloat(pool.allocPoint)) /
-    parseFloat(globalStats[0]?.totalAllocPoint ?? "0");
-  const yearlyRewards =
-    poolRewardPerBlock * parseInt(multiplier.toString()) * BLOCKS_PER_YEAR;
+    const poolRewardPerBlock =
+      (rewardPerBlock * allocatedPoints) /
+      parseFloat(totalAllocPoint.toString());
 
-  console.log(totalDeposited, poolRewardPerBlock, multiplier, yearlyRewards);
+    const yearlyRewards =
+      poolRewardPerBlock * parseInt(multiplier.toString()) * BLOCKS_PER_YEAR;
 
-  // const yearlyRewardsUsd = yearlyRewards * rewardToken.price;
-  // const tvlUsd = parseFloat(totalDeposited.toString()) * stakedToken.price;
+    const yearlyRewardsUsd = yearlyRewards * rewardToken.price;
+    const tvlUsd = parseFloat(totalDeposited.toString()) * stakedToken.price;
 
-  // console.log({
-  //   yearlyRewardsUsd,
-  //   tvlUsd,
-  //   poolRewardPerBlock,
-  //   yearlyRewards
-  // });
+    // Avoid division by zero
+    if (tvlUsd === 0) {
+      return DEFAULT_APY_RESULT;
+    }
 
-  // // Avoid division by zero
-  // if (tvlUsd === 0) {
-  //   return {
-  //     apy: 0,
-  //     tvlUsd: 0,
-  //     yearlyRewardsUsd: yearlyRewardsUsd,
-  //     lastUpdated: Date.now()
-  //   };
-  // }
+    const apy = (yearlyRewardsUsd / tvlUsd) * 100;
 
-  // const apy = (yearlyRewardsUsd / tvlUsd) * 100;
-
-  // return {
-  //   apy,
-  //   tvlUsd,
-  //   yearlyRewardsUsd,
-  //   lastUpdated: Date.now()
-  // };
-  //   } catch (error) {
-  //     console.error("Error calculating APY:", error);
-  //     return {
-  //       apy: 0,
-  //       tvlUsd: 0,
-  //       yearlyRewardsUsd: 0,
-  //       lastUpdated: 0
-  //     };
-  //   }
+    return {
+      apy,
+      tvlUsd,
+      yearlyRewardsUsd,
+      lastUpdated: Date.now()
+    };
+  } catch (error) {
+    console.error("Error calculating APY:", error);
+    return DEFAULT_APY_RESULT;
+  }
 }
 
 export default getPoolApy;

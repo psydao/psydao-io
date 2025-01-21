@@ -222,8 +222,8 @@ export const getFreebaseUserPoolsPositions = gql`
   }
 `;
 
-export const getPoolApyDetails = gql`
-  query GetPoolApyDetails($poolId: ID!) {
+export const getApyDetails = gql`
+  query GetApyDetails($poolId: ID!) {
     pool(id: $poolId) {
       id
       allocPoint

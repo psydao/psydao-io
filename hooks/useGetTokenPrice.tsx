@@ -3,6 +3,7 @@ import {
   useFreebaseActiveRewardToken,
   useLiquidityPool
 } from "@/lib/services/freebase";
+import { REFETCH_INTERVAL } from "@/constants/apy";
 
 export interface TokenPriceResponse {
   getTokenPrices: {
@@ -108,8 +109,8 @@ export function useTokenPrices(poolId: string) {
     queryKey: ["tokenPrices"],
     queryFn: fetchTokenPrices,
     enabled: Boolean(currentActiveRewardToken?.id && currentPoolToken?.id),
-    refetchInterval: 60_000,
+    refetchInterval: REFETCH_INTERVAL,
     retry: 3,
-    staleTime: 60_000
+    staleTime: REFETCH_INTERVAL
   });
 }

@@ -1,9 +1,10 @@
 import { useBlockNumber } from "wagmi";
 import { useTokenPrices } from "@/hooks/useGetTokenPrice";
-import { useFreebasePoolApyDetails } from "@/lib/services/freebase";
+import { useFreebaseApyDetails } from "@/lib/services/freebase";
 import useGetMultiplier from "./useGetMultiplier";
 import getPoolApy from "@/utils/calculateApy";
 import { useEffect, useState } from "react";
+import useGetTotalAllocPoint from "./useGetTotalAllocPoint";
 
 type ApyDetails =
   | {
@@ -13,6 +14,16 @@ type ApyDetails =
       lastUpdated: number;
     }
   | undefined;
+/**
+ * Hook to fetch and calculate APY details for a specific pool
+ * @param poolId - The ID of the pool to get APY details for
+ * @returns {Object} An object containing:
+ *   - apy: APY details object with:
+ *     - apy: The calculated APY percentage
+ *     - tvlUsd: Total value locked in USD
+ *     - yearlyRewardsUsd: Yearly rewards in USD
+ *     - lastUpdated: Timestamp of last update
+ */
 
 const useGetApyDetails = (poolId: string) => {
   const [apy, setApy] = useState<ApyDetails>({
@@ -22,8 +33,9 @@ const useGetApyDetails = (poolId: string) => {
     lastUpdated: 0
   });
   const { data: prices } = useTokenPrices(poolId);
-  const { data: poolApyDetails, error } = useFreebasePoolApyDetails(poolId);
+  const { data: apyDetails } = useFreebaseApyDetails(poolId);
   const { data: currentBlock } = useBlockNumber();
+  const { data: totalAllocPoint } = useGetTotalAllocPoint();
 
   const multiplier = useGetMultiplier(
     currentBlock?.toString() ?? "0",
@@ -32,18 +44,28 @@ const useGetApyDetails = (poolId: string) => {
 
   useEffect(() => {
     const fetchApy = async () => {
-      if (!prices || !poolApyDetails || !multiplier) return;
+      if (
+        !prices ||
+        !apyDetails ||
+        !multiplier ||
+        !totalAllocPoint ||
+        !currentBlock
+      ) {
+        console.error("Missing required data for APY calculation");
+        return;
+      }
       const calculatedApy = await getPoolApy(
         prices,
-        poolApyDetails,
-        multiplier
+        apyDetails,
+        multiplier,
+        totalAllocPoint
       );
 
       setApy(calculatedApy);
     };
 
     fetchApy();
-  }, [prices, poolApyDetails, multiplier]);
+  }, [prices, apyDetails, multiplier, totalAllocPoint, currentBlock]);
 
   return {
     apy
