@@ -137,11 +137,15 @@ export function PoolCard({
             </Button>
           )}
         </Flex>
-        <Flex gap={2} align={"center"}>
-          <Text fontSize="md" fontWeight="medium" mb={4}>
-            APY: {apyDetails?.apy}%
-          </Text>
-        </Flex>
+        {apyDetails?.apy && apyDetails.apy > 0 ? (
+          <Flex gap={2} align={"center"}>
+            <Text fontSize="md" fontWeight="medium" mb={4}>
+              APY: {apyDetails?.apy}%
+            </Text>
+          </Flex>
+        ) : (
+          <></>
+        )}
       </CardHeader>
 
       <CardBody
@@ -198,7 +202,6 @@ export function PoolCard({
         {userPoolPosition?.amount && userPoolPosition.amount > BigInt("0") && (
           <Button
             onClick={handleWithdraw}
-            // bg="linear-gradient(90deg, #F2BEBE, #F77CC2)"
             bg={"transparent"}
             border="2px solid #F2BEBE"
             color="black"
