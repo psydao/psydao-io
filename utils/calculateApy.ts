@@ -48,7 +48,7 @@ async function getPoolApy(
       return DEFAULT_APY_RESULT;
     }
 
-    const apy = (yearlyRewardsUsd / tvlUsd) * 100;
+    const apy = parseFloat(((yearlyRewardsUsd / tvlUsd) * 100).toFixed(2));
 
     return {
       apy,

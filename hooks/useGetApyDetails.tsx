@@ -32,28 +32,41 @@ const useGetApyDetails = (poolId: string) => {
     yearlyRewardsUsd: 0,
     lastUpdated: 0
   });
-  const { data: prices } = useTokenPrices(poolId);
-  const { data: apyDetails } = useFreebaseApyDetails(poolId);
-  const { data: currentBlock } = useBlockNumber();
-  const { data: totalAllocPoint } = useGetTotalAllocPoint();
+  const { data: prices, isLoading: isPricesLoading } = useTokenPrices(poolId);
+  const { data: apyDetails, loading: isApyDetailsLoading } =
+    useFreebaseApyDetails(poolId);
+  const { data: currentBlock, isLoading: isBlockNumberLoading } =
+    useBlockNumber();
+  const { data: totalAllocPoint, isLoading: isTotalAllocPointLoading } =
+    useGetTotalAllocPoint();
 
-  const multiplier = useGetMultiplier(
+  const { data: multiplier, isLoading: isMultiplierLoading } = useGetMultiplier(
     currentBlock?.toString() ?? "0",
     ((currentBlock ?? 0n) + 1n).toString() ?? "0"
   );
 
+  // Combine all loading states
+  const isLoading =
+    isPricesLoading ||
+    isApyDetailsLoading ||
+    isBlockNumberLoading ||
+    isTotalAllocPointLoading ||
+    isMultiplierLoading;
+
+  // Combine all data requirements
+  const hasAllData = prices && apyDetails && multiplier && totalAllocPoint;
+
   useEffect(() => {
     const fetchApy = async () => {
-      if (
-        !prices ||
-        !apyDetails ||
-        !multiplier ||
-        !totalAllocPoint ||
-        !currentBlock
-      ) {
+      if (isLoading) {
+        return;
+      }
+
+      if (!hasAllData) {
         console.error("Missing required data for APY calculation");
         return;
       }
+
       const calculatedApy = await getPoolApy(
         prices,
         apyDetails,
@@ -65,7 +78,15 @@ const useGetApyDetails = (poolId: string) => {
     };
 
     fetchApy();
-  }, [prices, apyDetails, multiplier, totalAllocPoint, currentBlock]);
+  }, [
+    prices,
+    apyDetails,
+    multiplier,
+    totalAllocPoint,
+    currentBlock,
+    isLoading,
+    hasAllData
+  ]);
 
   return {
     apy

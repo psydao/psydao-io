@@ -7,14 +7,14 @@ import { Address } from "viem";
 const useGetMultiplier = (from: string, to: string) => {
   const FREEBASE_ADDRESS = env.NEXT_PUBLIC_FREEBASE_CONTRACT_ADDRESS as Address;
   const FREEBASE_ABI = psydaoMasterBaseAbi;
-  const { data } = useReadContract({
+  const { data, isLoading } = useReadContract({
     address: FREEBASE_ADDRESS,
     abi: FREEBASE_ABI,
     functionName: "getMultiplier",
     args: [from, to]
   });
 
-  return data as bigint;
+  return { data: data as bigint, isLoading };
 };
 
 export default useGetMultiplier;
