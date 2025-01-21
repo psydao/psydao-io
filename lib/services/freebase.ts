@@ -9,7 +9,7 @@ import {
   getFreebaseUserPoolPosition,
   getFreebaseUserPoolsPositions,
   getActiveFreebaseRewardTokens,
-  getPoolApyDetails
+  getApyDetails
 } from "@/services/freebase-graph";
 import { useQuery } from "@apollo/client";
 import { Address } from "viem";
@@ -104,8 +104,8 @@ export interface FreebaseUserPoolPosition {
 export interface FreebaseApyDetails {
   pool: {
     id: string;
-    allocPoint: string;
-    totalDeposited: string;
+    allocPoint: bigint;
+    totalDeposited: bigint;
     token: {
       id: string;
       symbol: string;
@@ -114,10 +114,9 @@ export interface FreebaseApyDetails {
   };
   globalStats: {
     id: string;
-    rewardPerBlock: string;
-    totalAllocPoint: string;
+    rewardPerBlock: bigint;
     totalDeposited: bigint;
-    bonusMultiplier: string;
+    bonusMultiplier: bigint;
   }[];
 }
 
@@ -216,8 +215,8 @@ export function useFreebaseUserPoolsPositions(userAddress: Address) {
   );
 }
 
-export function useFreebasePoolApyDetails(poolId: string) {
-  return useQuery<FreebaseApyDetails>(getPoolApyDetails, {
+export function useFreebaseApyDetails(poolId: string) {
+  return useQuery<FreebaseApyDetails>(getApyDetails, {
     variables: { poolId },
     client: graphClient
   });
