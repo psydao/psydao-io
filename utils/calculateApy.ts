@@ -13,10 +13,10 @@ import { formatEther, parseEther } from "viem";
  */
 
 async function getPoolApy(
-  prices: TokenPrices,
-  apyDetails: FreebaseApyDetails,
-  multiplier: bigint,
-  totalAllocPoint: number
+  prices: TokenPrices | undefined,
+  apyDetails: FreebaseApyDetails | undefined,
+  multiplier: bigint | undefined,
+  totalAllocPoint: number | undefined
 ) {
   try {
     if (!prices || !apyDetails || !multiplier || !totalAllocPoint) {
