@@ -20,6 +20,12 @@ export default async function handler(
 
     res.status(200).json(response);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch token prices" });
+    if (error instanceof Error) {
+      console.error("Error fetching token prices: ", error.message);
+      res.status(500).json({ error: error.message });
+    } else {
+      console.error("Error fetching token prices: ", error);
+      res.status(500).json({ error: "Failed to fetch token prices" });
+    }
   }
 }
