@@ -7,7 +7,9 @@ import {
   getFreebaseDepositTokens,
   getFreebaseGlobalStats,
   getFreebaseUserPoolPosition,
-  getFreebaseUserPoolsPositions
+  getFreebaseUserPoolsPositions,
+  getActiveFreebaseRewardTokens,
+  getApyDetails
 } from "@/services/freebase-graph";
 import { useQuery } from "@apollo/client";
 import { Address } from "viem";
@@ -99,6 +101,24 @@ export interface FreebaseUserPoolPosition {
   withdrawHistory: WithdrawHistoryEntry[];
 }
 
+export interface FreebaseApyDetails {
+  pool: {
+    id: string;
+    allocPoint: bigint;
+    token: {
+      id: string;
+      symbol: string;
+      decimals: number;
+    };
+  };
+  globalStats: {
+    id: string;
+    rewardPerBlock: bigint;
+    totalDeposited: bigint;
+    bonusMultiplier: bigint;
+  }[];
+}
+
 // #endregion
 
 export function useLiquidityPools() {
@@ -147,6 +167,19 @@ export function useFreebaseRewardTokens() {
   );
 }
 
+export function useFreebaseActiveRewardToken() {
+  return useQuery<{ freebaseTokens: FreebaseToken[] }>(
+    getActiveFreebaseRewardTokens,
+    {
+      variables: {
+        isActiveRewardToken: true
+      },
+      client: graphClient,
+      pollInterval: POLL_INTERVAL
+    }
+  );
+}
+
 export function useFreebaseGlobalStats() {
   return useQuery<{ globalStats: FreebaseGlobalStats[] }>(
     getFreebaseGlobalStats,
@@ -179,4 +212,11 @@ export function useFreebaseUserPoolsPositions(userAddress: Address) {
       pollInterval: POLL_INTERVAL
     }
   );
+}
+
+export function useFreebaseApyDetails(poolId: string) {
+  return useQuery<FreebaseApyDetails>(getApyDetails, {
+    variables: { poolId },
+    client: graphClient
+  });
 }
