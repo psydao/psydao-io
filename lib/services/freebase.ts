@@ -105,7 +105,6 @@ export interface FreebaseApyDetails {
   pool: {
     id: string;
     allocPoint: bigint;
-    totalDeposited: bigint;
     token: {
       id: string;
       symbol: string;
