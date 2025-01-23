@@ -221,3 +221,24 @@ export const getFreebaseUserPoolsPositions = gql`
     }
   }
 `;
+
+export const getApyDetails = gql`
+  query GetApyDetails($poolId: ID!) {
+    pool(id: $poolId) {
+      id
+      allocPoint
+      token {
+        id
+        symbol
+        decimals
+      }
+    }
+    globalStats {
+      id
+      rewardPerBlock
+      totalAllocPoint
+      totalDeposited
+      bonusMultiplier
+    }
+  }
+`;

@@ -17,7 +17,8 @@ import {
   FreebaseToken,
   FreebaseUserPoolPosition
 } from "@/lib/services/freebase";
-import { useTokenPrices } from "@/hooks/useGetTokenPrice";
+
+import useGetApyDetails from "@/hooks/useGetApyDetails";
 
 interface PoolCardProps {
   pool: {
@@ -83,8 +84,8 @@ export function PoolCard({
     deposit({ amount: "0" });
   };
 
-  const { data: tokenPrices } = useTokenPrices(pool.id.toString());
-  console.log(tokenPrices);
+  const { apy: apyDetails } = useGetApyDetails(pool.id.toString());
+
   return (
     <Card
       borderColor="#F2BEBE"
@@ -94,32 +95,34 @@ export function PoolCard({
     >
       <CardHeader pb={0}>
         <Flex justify="space-between" align="center">
-          <Text fontSize="md" fontWeight="medium">
-            Pool #{pool.id}
-          </Text>
-          <Text
-            bg="#FBF6F8"
-            px={3}
-            py={1}
-            borderRadius="full"
-            fontSize="sm"
-            position="relative"
-            overflow="hidden"
-            _after={{
-              content: '""',
-              position: "absolute",
-              top: "0",
-              left: "0",
-              width: "100%",
-              height: "100%",
-              background:
-                "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)",
-              transform: "translateX(-100%)",
-              animation: "shimmer 2s infinite"
-            }}
-          >
-            {symbol}
-          </Text>
+          <Flex gap={2} align={"center"}>
+            <Text fontSize="md" fontWeight="medium">
+              Pool #{pool.id}
+            </Text>
+            <Text
+              bg="#FBF6F8"
+              px={3}
+              py={1}
+              borderRadius="full"
+              fontSize="sm"
+              position="relative"
+              overflow="hidden"
+              _after={{
+                content: '""',
+                position: "absolute",
+                top: "0",
+                left: "0",
+                width: "100%",
+                height: "100%",
+                background:
+                  "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)",
+                transform: "translateX(-100%)",
+                animation: "shimmer 2s infinite"
+              }}
+            >
+              {symbol}
+            </Text>
+          </Flex>
           {pendingRewards && (
             <Button
               onClick={handleClaim}
@@ -134,6 +137,15 @@ export function PoolCard({
             </Button>
           )}
         </Flex>
+        {apyDetails?.apy && apyDetails.apy > 0 ? (
+          <Flex gap={2} align={"center"}>
+            <Text fontSize="md" fontWeight="medium" mb={4}>
+              APY: {apyDetails?.apy}%
+            </Text>
+          </Flex>
+        ) : (
+          <></>
+        )}
       </CardHeader>
 
       <CardBody
@@ -190,7 +202,6 @@ export function PoolCard({
         {userPoolPosition?.amount && userPoolPosition.amount > BigInt("0") && (
           <Button
             onClick={handleWithdraw}
-            // bg="linear-gradient(90deg, #F2BEBE, #F77CC2)"
             bg={"transparent"}
             border="2px solid #F2BEBE"
             color="black"
