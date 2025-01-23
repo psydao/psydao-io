@@ -112,6 +112,23 @@ export const getFreebaseRewardTokens = gql`
   }
 `;
 
+export const getActiveFreebaseRewardTokens = gql`
+  query GetActiveFreebaseRewardTokens {
+    freebaseTokens(where: { isActiveRewardToken: true }) {
+      id
+      name
+      decimals
+      isActiveRewardToken
+      isDepositToken
+      isRewardToken
+      lastPriceUpdate
+      price
+      symbol
+      totalDeposited
+    }
+  }
+`;
+
 export const getFreebaseGlobalStats = gql`
   query GetGlobalStats {
     globalStats {
@@ -201,6 +218,27 @@ export const getFreebaseUserPoolsPositions = gql`
           emergency
         }
       }
+    }
+  }
+`;
+
+export const getApyDetails = gql`
+  query GetApyDetails($poolId: ID!) {
+    pool(id: $poolId) {
+      id
+      allocPoint
+      token {
+        id
+        symbol
+        decimals
+      }
+    }
+    globalStats {
+      id
+      rewardPerBlock
+      totalAllocPoint
+      totalDeposited
+      bonusMultiplier
     }
   }
 `;

@@ -19,6 +19,7 @@
     "@apollo/client": "^3.10.4",
     "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/react": "^2.3.4",
+    "@codex-data/sdk": "^1.0.2",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@rainbow-me/rainbowkit": "^2.0.1",
