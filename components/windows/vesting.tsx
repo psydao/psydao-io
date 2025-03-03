@@ -97,8 +97,17 @@ const VestingSchedule = ({
     query: { enabled: !!vestingScheduleId }
   });
 
+  type VestingScheduleData = {
+    amountTotal?: bigint;
+    released?: bigint;
+    start?: bigint;
+    cliff?: bigint;
+    duration?: bigint;
+    status?: number;
+  };
+
   const { amountTotal, released, start, cliff, duration, status } =
-    vestingSchedule || {};
+    (vestingSchedule as VestingScheduleData) || {};
 
   const amountTotalFormatted = humanBigint(amountTotal || 0n, 18, true, 2);
   const releasedFormatted = humanBigint(released || 0n, 18, true, 2);
