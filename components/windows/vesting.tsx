@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { Box, Button, Flex, Text, Image, Tooltip } from "@chakra-ui/react";
 import { Window } from "@/components/ui/window";
 import { useWindowManager } from "@/components/ui/window-manager";
@@ -22,6 +22,8 @@ import {
 import WrongNetworkWindow from "../common/wrong-network";
 import DiagonalRectangle from "../nft-sale-widget/common/diagonal-rectangle";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { useCustomToasts } from "@/hooks/useCustomToasts";
+import { useResize } from "@/hooks/useResize";
 
 // Contract ABI
 import psyVestingAbi from "@/abis/psyVestingAbi.json";
@@ -65,6 +67,8 @@ const VestingSchedule = ({
   contractAddress
 }: VestingScheduleProps) => {
   const { address } = useAccount();
+  const { showSuccessToast, showCustomErrorToast } = useCustomToasts();
+  const { width } = useResize();
 
   const { data: vestingScheduleId } = useReadContract({
     address: contractAddress,
@@ -122,14 +126,29 @@ const VestingSchedule = ({
   const {
     writeContract,
     data: releaseHash,
-    isPending: isLoadingWriteRelease
+    isPending: isLoadingWriteRelease,
+    error
   } = useWriteContract();
 
-  const { isLoading: isLoadingTransactionRelease } =
-    useWaitForTransactionReceipt({
-      hash: releaseHash,
-      query: { enabled: !!releaseHash }
-    });
+  const {
+    isLoading: isLoadingTransactionRelease,
+    isSuccess: isReleaseSuccess
+  } = useWaitForTransactionReceipt({
+    hash: releaseHash,
+    query: { enabled: !!releaseHash }
+  });
+
+  useEffect(() => {
+    if (error) {
+      if (error.message.includes("User rejected")) {
+        showCustomErrorToast("User rejected transaction request.", width);
+      } else {
+        showCustomErrorToast(error.message, width);
+      }
+    } else if (isReleaseSuccess) {
+      showSuccessToast("PSY tokens successfully released!", width);
+    }
+  }, [error, isReleaseSuccess, showSuccessToast, showCustomErrorToast, width]);
 
   const isLoadingRelease =
     isLoadingPrepareRelease ||
