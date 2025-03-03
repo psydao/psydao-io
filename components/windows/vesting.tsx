@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect, useRef } from "react";
 import { Box, Button, Flex, Text, Image, Tooltip } from "@chakra-ui/react";
 import { Window } from "@/components/ui/window";
 import { useWindowManager } from "@/components/ui/window-manager";
@@ -67,6 +67,10 @@ const VestingSchedule = ({
   const { address } = useAccount();
   const { showSuccessToast, showCustomErrorToast } = useCustomToasts();
   const { width } = useResize();
+
+  // Add refs to track if we've shown toasts already
+  const errorToastShownRef = useRef(false);
+  const successToastShownRef = useRef(false);
 
   const { data: vestingScheduleId } = useReadContract({
     address: contractAddress,
@@ -146,16 +150,25 @@ const VestingSchedule = ({
   });
 
   useEffect(() => {
-    if (error) {
+    if (error && !errorToastShownRef.current) {
+      errorToastShownRef.current = true;
       if (error.message.includes("User rejected")) {
         showCustomErrorToast("User rejected transaction request.", width);
       } else {
         showCustomErrorToast(error.message, width);
       }
-    } else if (isReleaseSuccess) {
+    } else if (isReleaseSuccess && !successToastShownRef.current) {
+      successToastShownRef.current = true;
       showSuccessToast("PSY tokens successfully released!", width);
     }
-  }, [error, isReleaseSuccess, showSuccessToast, showCustomErrorToast, width]);
+
+    if (!error) {
+      errorToastShownRef.current = false;
+    }
+    if (!isReleaseSuccess) {
+      successToastShownRef.current = false;
+    }
+  }, [error, isReleaseSuccess, showSuccessToast, showCustomErrorToast]);
 
   const isLoadingRelease =
     isLoadingPrepareRelease ||
