@@ -38,15 +38,15 @@ const Schedule = ({ startDate, cliffDate, endDate }: ScheduleProps) => {
   return (
     <>
       <Flex alignItems="center" gap={2}>
-        <FaArrowRightFromBracket size={14} color="#9B33CB" />
+        <FaArrowRightFromBracket size={14} color="#F2BEBE" />
         <Text>{startDate}</Text>
       </Flex>
       <Flex alignItems="center" gap={2}>
-        <FaLock size={14} color="#9B33CB" />
+        <FaLock size={14} color="#F2BEBE" />
         <Text>{cliffDate}</Text>
       </Flex>
       <Flex alignItems="center" gap={2}>
-        <FaArrowRightToBracket size={14} color="#9B33CB" />
+        <FaArrowRightToBracket size={14} color="#F2BEBE" />
         <Text>{endDate}</Text>
       </Flex>
     </>
