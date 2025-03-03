@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Box, Button, Flex, Text, Image } from "@chakra-ui/react";
+import { Box, Button, Flex, Text, Image, Tooltip } from "@chakra-ui/react";
 import { Window } from "@/components/ui/window";
 import { useWindowManager } from "@/components/ui/window-manager";
 import {
@@ -97,7 +97,7 @@ const VestingSchedule = ({
     vestingSchedule || {};
 
   const amountTotalFormatted = humanBigint(amountTotal || 0n, 18, true, 2);
-  //const releasedFormatted = humanBigint(released || 0n, 18, true, 2);
+  const releasedFormatted = humanBigint(released || 0n, 18, true, 2);
   const releasableAmountFormatted = humanBigint(
     typeof releasableAmount === "bigint" ? releasableAmount : 0n,
     18,
@@ -162,7 +162,9 @@ const VestingSchedule = ({
         borderColor="gray.100"
         display={{ base: "none", md: "table-cell" }}
       >
-        <span>{amountTotalFormatted} PSY</span>
+        <Tooltip label={`${releasedFormatted} PSY already released`} hasArrow>
+          <span>{amountTotalFormatted} PSY</span>
+        </Tooltip>
       </Box>
 
       <Box
@@ -172,7 +174,9 @@ const VestingSchedule = ({
         borderColor="gray.100"
         display={{ base: "none", md: "table-cell" }}
       >
-        <span>{releasableAmountFormatted} PSY</span>
+        <Tooltip label={`${releasedFormatted} PSY already released`} hasArrow>
+          <span>{releasableAmountFormatted} PSY</span>
+        </Tooltip>
       </Box>
 
       <Box
