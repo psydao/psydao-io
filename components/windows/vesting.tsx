@@ -162,7 +162,15 @@ const VestingSchedule = ({
         borderColor="gray.100"
         display={{ base: "none", md: "table-cell" }}
       >
-        <Tooltip label={`${releasedFormatted} PSY already released`} hasArrow>
+        <Tooltip
+          label={`${releasedFormatted} PSY already released`}
+          hasArrow
+          placement="bottom"
+          borderRadius={"8px"}
+          color={"#585858"}
+          bg={"#F9F9FA"}
+          p={"8px 16px"}
+        >
           <span>{amountTotalFormatted} PSY</span>
         </Tooltip>
       </Box>
@@ -174,9 +182,7 @@ const VestingSchedule = ({
         borderColor="gray.100"
         display={{ base: "none", md: "table-cell" }}
       >
-        <Tooltip label={`${releasedFormatted} PSY already released`} hasArrow>
-          <span>{releasableAmountFormatted} PSY</span>
-        </Tooltip>
+        <span>{releasableAmountFormatted} PSY</span>
       </Box>
 
       <Box
@@ -322,94 +328,119 @@ export function Vesting() {
         ) : isWrongNetwork ? (
           <WrongNetworkWindow />
         ) : (
-          <Flex
-            direction={"column"}
-            justifyContent="center"
-            alignItems="center"
-            height="100%"
-            px={8}
-          >
-            {!address ? (
-              <Text fontSize={18} color={"black"}>
-                Connect your wallet to see your vesting schedules
-              </Text>
-            ) : isLoadingVestingScheduleCount ? (
-              <Text fontSize={18} color={"black"}>
-                Loading...
-              </Text>
-            ) : (
-              <>
-                {!vestingScheduleCount && (
-                  <div className="col-span-full py-4">
-                    No vesting schedules found. Try another wallet.
-                  </div>
-                )}
-                <Box overflowX="auto" width="100%">
-                  <Text fontSize="xl" fontWeight="bold" mb={4} as="h2">
+          <>
+            <Box>
+              <Flex
+                px={{ base: "4", md: "8" }}
+                alignItems={"center"}
+                justifyContent={"space-between"}
+                borderBottom={"1px solid #E9BDBD"}
+              >
+                <Flex
+                  width={"100%"}
+                  justifyContent={"space-between"}
+                  alignItems={"center"}
+                  direction={"row"}
+                  gap={1.5}
+                  py={6}
+                >
+                  <Text
+                    as="h2"
+                    fontSize={{ base: "20px", sm: "24px" }}
+                    lineHeight={{ base: "20px", sm: "24px" }}
+                  >
                     Your PSY Vesting Schedules
                   </Text>
-                  <Box as="table" width="100%">
-                    <Box as="thead">
-                      <Box as="tr">
-                        <Box
-                          as="th"
-                          p={2}
-                          textAlign="left"
-                          borderBottom="1px solid"
-                          borderColor="gray.200"
-                        >
-                          Schedule
-                        </Box>
+                </Flex>
+              </Flex>
+              <Flex
+                direction={"column"}
+                justifyContent="center"
+                alignItems="center"
+                height="100%"
+                px={8}
+                pt={6}
+              >
+                {!address ? (
+                  <Text fontSize={18} color={"black"}>
+                    Connect your wallet to see your vesting schedules
+                  </Text>
+                ) : isLoadingVestingScheduleCount ? (
+                  <Text fontSize={18} color={"black"}>
+                    Loading...
+                  </Text>
+                ) : (
+                  <>
+                    {!vestingScheduleCount && (
+                      <div className="col-span-full py-4">
+                        No vesting schedules found. Try another wallet.
+                      </div>
+                    )}
+                    <Box overflowX="auto" width="100%">
+                      <Box as="table" width="100%">
+                        <Box as="thead">
+                          <Box as="tr">
+                            <Box
+                              as="th"
+                              p={2}
+                              textAlign="left"
+                              borderBottom="1px solid"
+                              borderColor="gray.200"
+                            >
+                              Schedule
+                            </Box>
 
-                        <Box
-                          as="th"
-                          p={2}
-                          textAlign="left"
-                          borderBottom="1px solid"
-                          borderColor="gray.200"
-                          display={{ base: "none", md: "table-cell" }}
-                        >
-                          Total Amount
-                        </Box>
+                            <Box
+                              as="th"
+                              p={2}
+                              textAlign="left"
+                              borderBottom="1px solid"
+                              borderColor="gray.200"
+                              display={{ base: "none", md: "table-cell" }}
+                            >
+                              Total Amount
+                            </Box>
 
-                        <Box
-                          as="th"
-                          p={2}
-                          textAlign="left"
-                          borderBottom="1px solid"
-                          borderColor="gray.200"
-                          display={{ base: "none", md: "table-cell" }}
-                        >
-                          Releasable
-                        </Box>
+                            <Box
+                              as="th"
+                              p={2}
+                              textAlign="left"
+                              borderBottom="1px solid"
+                              borderColor="gray.200"
+                              display={{ base: "none", md: "table-cell" }}
+                            >
+                              Releasable
+                            </Box>
 
-                        <Box
-                          as="th"
-                          p={2}
-                          textAlign="right"
-                          borderBottom="1px solid"
-                          borderColor="gray.200"
-                        >
-                          Actions
+                            <Box
+                              as="th"
+                              p={2}
+                              textAlign="right"
+                              borderBottom="1px solid"
+                              borderColor="gray.200"
+                            >
+                              Actions
+                            </Box>
+                          </Box>
+                        </Box>
+                        <Box as="tbody">
+                          {Array.from({
+                            length: Number(vestingScheduleCount) || 0
+                          }).map((_, index) => (
+                            <VestingSchedule
+                              scheduleIndex={index}
+                              contractAddress={PSY_VESTING_ADDRESS}
+                              chainId={chainId}
+                            />
+                          ))}
                         </Box>
                       </Box>
                     </Box>
-                    <Box as="tbody">
-                      {Array.from({
-                        length: Number(vestingScheduleCount) || 0
-                      }).map((_, index) => (
-                        <VestingSchedule
-                          scheduleIndex={index}
-                          contractAddress={PSY_VESTING_ADDRESS}
-                          chainId={chainId}
-                        />
-                      ))}
-                    </Box>
-                  </Box>
-                </Box>
-              </>
-            )}
-          </Flex>
+                  </>
+                )}
+              </Flex>
+            </Box>
+          </>
         )}
       </Window.Content>
     </Window>
