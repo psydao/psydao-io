@@ -259,7 +259,7 @@ export function Vesting() {
     data: vestingScheduleCount,
     isLoading: isLoadingVestingScheduleCount
   } = useReadContract({
-    address: env.NEXT_PUBLIC_PSY_VESTING_ADDRESS,
+    address: env.NEXT_PUBLIC_PSY_VESTING_ADDRESS as Address,
     functionName: "holdersVestingScheduleCount",
     abi: psyVestingAbi,
     args: [address || "0x0"],
@@ -456,7 +456,7 @@ export function Vesting() {
                             <VestingSchedule
                               scheduleIndex={index}
                               contractAddress={
-                                env.NEXT_PUBLIC_PSY_VESTING_ADDRESS
+                                env.NEXT_PUBLIC_PSY_VESTING_ADDRESS as Address
                               }
                               chainId={chainId}
                             />
