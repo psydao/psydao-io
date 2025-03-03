@@ -2,13 +2,16 @@ import { useMemo } from "react";
 import { Box, Button, Flex, Text, Image } from "@chakra-ui/react";
 import { Window } from "@/components/ui/window";
 import { useWindowManager } from "@/components/ui/window-manager";
-import { useAccount } from "wagmi";
+import { useAccount, useContractRead } from "wagmi";
 import { env } from "@/config/env.mjs";
 
 // Components
 import WrongNetworkWindow from "../common/wrong-network";
 import DiagonalRectangle from "../nft-sale-widget/common/diagonal-rectangle";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
+
+// Contract
+import psyVestingAbi from "@/abis/psyVestingAbi.json";
 
 // Window style configurations
 const windowStyles = {
@@ -36,6 +39,14 @@ export function Vesting() {
   const { address, chainId } = useAccount();
 
   const { openConnectModal } = useConnectModal();
+
+  // Contract read for vesting schedules
+  const { data: vestingScheduleCount, isLoading } = useContractRead({
+    address: "0x2141B47A1C7De6df073d23ff94F04d9fd2aaA9b3",
+    abi: psyVestingAbi,
+    functionName: "holdersVestingScheduleCount",
+    args: [address]
+  });
 
   // Memoized values
   const fullScreenWindow = useMemo(() => {
@@ -125,7 +136,36 @@ export function Vesting() {
         ) : isWrongNetwork ? (
           <WrongNetworkWindow />
         ) : (
-          <h1>List schedules here.</h1>
+          <Flex
+            direction={"column"}
+            justifyContent="center"
+            alignItems="center"
+            height="100%"
+            px={4}
+          >
+            {!address ? (
+              <Text fontSize={18} color={"black"}>
+                Connect your wallet to see your vesting schedules
+              </Text>
+            ) : isLoading ? (
+              <Text fontSize={18} color={"black"}>
+                Loading...
+              </Text>
+            ) : (
+              <>
+                <Text
+                  fontSize={18}
+                  color={"black"}
+                  lineHeight={"26px"}
+                  textAlign={"center"}
+                >
+                  {vestingScheduleCount && Number(vestingScheduleCount) > 0
+                    ? `Yay! You have ${Number(vestingScheduleCount)} schedule${Number(vestingScheduleCount) > 1 ? "s" : ""}.`
+                    : "You don't have any vesting schedules"}
+                </Text>
+              </>
+            )}
+          </Flex>
         )}
         <Box
           as="img"
