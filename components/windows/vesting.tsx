@@ -28,8 +28,6 @@ import { useResize } from "@/hooks/useResize";
 // Contract ABI
 import psyVestingAbi from "@/abis/psyVestingAbi.json";
 
-const PSY_VESTING_ADDRESS = "0x2141B47A1C7De6df073d23ff94F04d9fd2aaA9b3";
-
 type ScheduleProps = {
   startDate: string;
   cliffDate: string;
@@ -261,7 +259,7 @@ export function Vesting() {
     data: vestingScheduleCount,
     isLoading: isLoadingVestingScheduleCount
   } = useReadContract({
-    address: PSY_VESTING_ADDRESS,
+    address: env.NEXT_PUBLIC_PSY_VESTING_ADDRESS,
     functionName: "holdersVestingScheduleCount",
     abi: psyVestingAbi,
     args: [address || "0x0"],
@@ -457,7 +455,9 @@ export function Vesting() {
                           }).map((_, index) => (
                             <VestingSchedule
                               scheduleIndex={index}
-                              contractAddress={PSY_VESTING_ADDRESS}
+                              contractAddress={
+                                env.NEXT_PUBLIC_PSY_VESTING_ADDRESS
+                              }
                               chainId={chainId}
                             />
                           ))}

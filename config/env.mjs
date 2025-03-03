@@ -29,6 +29,7 @@ export const env = createEnv({
     NEXT_PUBLIC_SUBGRAPH_URL: z.string().url(),
     NEXT_PUBLIC_MAINNET_SUBGRAPH_URL: z.string().url(),
     NEXT_PUBLIC_PINATA_BASE_URL: z.string().url(),
+    NEXT_PUBLIC_PSY_VESTING_ADDRESS: z.string().min(1),
 
     NEXT_PUBLIC_ETHERSCAN_BASE_URL: z.string().url(),
     NEXT_PUBLIC_MAINNET_ETHERSCAN_BASE_URL: z.string().url(),
@@ -45,6 +46,8 @@ export const env = createEnv({
     CODEX_API_KEY: process.env.CODEX_API_KEY,
     NEXT_PUBLIC_FREEBASE_CONTRACT_ADDRESS:
       process.env.NEXT_PUBLIC_FREEBASE_CONTRACT_ADDRESS,
+    NEXT_PUBLIC_PSY_VESTING_ADDRESS:
+      process.env.NEXT_PUBLIC_PSY_VESTING_ADDRESS,
     PINATA_API_KEY: process.env.PINATA_API_KEY,
     PINATA_SECRET_API_KEY: process.env.PINATA_SECRET_API_KEY,
     PINATA_ADMIN_JWT: process.env.PINATA_ADMIN_JWT,
