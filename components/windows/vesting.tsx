@@ -411,16 +411,6 @@ export function Vesting() {
             )}
           </Flex>
         )}
-        <Box
-          as="img"
-          src="/windows/alchemist/clouds.png"
-          alt=""
-          position="absolute"
-          right="0"
-          bottom="0"
-          zIndex="-1"
-          filter="blur(12px)"
-        />
       </Window.Content>
     </Window>
   );
