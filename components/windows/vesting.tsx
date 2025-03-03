@@ -1,12 +1,5 @@
 import { useMemo } from "react";
-import {
-  Box,
-  Button,
-  Flex,
-  useMediaQuery,
-  Text,
-  Image
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Text, Image } from "@chakra-ui/react";
 import { Window } from "@/components/ui/window";
 import { useWindowManager } from "@/components/ui/window-manager";
 import { useAccount } from "wagmi";
@@ -14,7 +7,6 @@ import { env } from "@/config/env.mjs";
 
 // Components
 import WrongNetworkWindow from "../common/wrong-network";
-import { Wizard } from "react-use-wizard";
 import DiagonalRectangle from "../nft-sale-widget/common/diagonal-rectangle";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 
