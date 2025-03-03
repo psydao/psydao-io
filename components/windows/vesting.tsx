@@ -415,68 +415,70 @@ export function Vesting() {
                         No vesting schedules found. Try another wallet.
                       </div>
                     )}
-                    <Box overflowX="auto" width="100%">
-                      <Box as="table" width="100%">
-                        <Box as="thead">
-                          <Box as="tr">
-                            <Box
-                              as="th"
-                              p={2}
-                              textAlign="left"
-                              borderBottom="1px solid"
-                              borderColor="gray.200"
-                            >
-                              Schedule
-                            </Box>
+                    {Number(vestingScheduleCount) > 0 && (
+                      <Box overflowX="auto" width="100%">
+                        <Box as="table" width="100%">
+                          <Box as="thead">
+                            <Box as="tr">
+                              <Box
+                                as="th"
+                                p={2}
+                                textAlign="left"
+                                borderBottom="1px solid"
+                                borderColor="gray.200"
+                              >
+                                Schedule
+                              </Box>
 
-                            <Box
-                              as="th"
-                              p={2}
-                              textAlign="left"
-                              borderBottom="1px solid"
-                              borderColor="gray.200"
-                              display={{ base: "none", md: "table-cell" }}
-                            >
-                              Total Amount
-                            </Box>
+                              <Box
+                                as="th"
+                                p={2}
+                                textAlign="left"
+                                borderBottom="1px solid"
+                                borderColor="gray.200"
+                                display={{ base: "none", md: "table-cell" }}
+                              >
+                                Total Amount
+                              </Box>
 
-                            <Box
-                              as="th"
-                              p={2}
-                              textAlign="left"
-                              borderBottom="1px solid"
-                              borderColor="gray.200"
-                              display={{ base: "none", md: "table-cell" }}
-                            >
-                              Releasable
-                            </Box>
+                              <Box
+                                as="th"
+                                p={2}
+                                textAlign="left"
+                                borderBottom="1px solid"
+                                borderColor="gray.200"
+                                display={{ base: "none", md: "table-cell" }}
+                              >
+                                Releasable
+                              </Box>
 
-                            <Box
-                              as="th"
-                              p={2}
-                              textAlign="right"
-                              borderBottom="1px solid"
-                              borderColor="gray.200"
-                            >
-                              Actions
+                              <Box
+                                as="th"
+                                p={2}
+                                textAlign="right"
+                                borderBottom="1px solid"
+                                borderColor="gray.200"
+                              >
+                                Actions
+                              </Box>
                             </Box>
                           </Box>
-                        </Box>
-                        <Box as="tbody">
-                          {Array.from({
-                            length: Number(vestingScheduleCount) || 0
-                          }).map((_, index) => (
-                            <VestingSchedule
-                              scheduleIndex={index}
-                              contractAddress={
-                                env.NEXT_PUBLIC_PSY_VESTING_ADDRESS as Address
-                              }
-                              chainId={chainId}
-                            />
-                          ))}
+                          <Box as="tbody">
+                            {Array.from({
+                              length: Number(vestingScheduleCount) || 0
+                            }).map((_, index) => (
+                              <VestingSchedule
+                                scheduleIndex={index}
+                                contractAddress={
+                                  env.NEXT_PUBLIC_PSY_VESTING_ADDRESS as Address
+                                }
+                                chainId={chainId}
+                              />
+                            ))}
+                          </Box>
                         </Box>
                       </Box>
-                    </Box>
+                    )}
                   </>
                 )}
               </Flex>
