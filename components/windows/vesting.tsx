@@ -99,7 +99,7 @@ const VestingSchedule = ({
   const amountTotalFormatted = humanBigint(amountTotal || 0n, 18, true, 2);
   //const releasedFormatted = humanBigint(released || 0n, 18, true, 2);
   const releasableAmountFormatted = humanBigint(
-    releasableAmount || 0n,
+    typeof releasableAmount === "bigint" ? releasableAmount : 0n,
     18,
     true,
     2
