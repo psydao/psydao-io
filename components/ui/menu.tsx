@@ -164,14 +164,14 @@ export const Menu = () => {
             target="_blank"
             _hover={{ textDecor: "none" }}
           ></Link>
-          <Open id="swap">
+          <Open id="vesting">
             <MenuItem
               fontStyle="italic"
               onClick={() =>
-                MixpanelTracking.getInstance().menuLinkClicked("swap")
+                MixpanelTracking.getInstance().menuLinkClicked("vesting")
               }
             >
-              Buy PSY
+              PSY Vesting
             </MenuItem>
           </Open>
           {/* Visible by default until we wire up the private sale + whitelist functionalities */}

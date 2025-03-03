@@ -23,6 +23,7 @@ import { SwapWidget } from "@/components/windows/swap-widget";
 import { Blog } from "@/components/windows/blog";
 import { Claim } from "@/components/windows/claim";
 import { Freebase } from "@/components/windows/freebase";
+import { Vesting } from "@/components/windows/vesting";
 
 import { useRescrictedCountries } from "@/hooks/restrictedCountries";
 
@@ -170,13 +171,13 @@ const Homepage: NextPage = () => {
                     <Marquee
                       text={
                         !totalTokensForSaleValue ||
-                          totalTokensForSaleValue === "0.00"
+                        totalTokensForSaleValue === "0.00"
                           ? ["PSY TOKEN SOLD OUT."]
                           : [
-                            "PSYDAO",
-                            "WHO CARES?",
-                            "NOW ACCEPTING ALCHEMIST GRANT APPLICATIONS"
-                          ]
+                              "PSYDAO",
+                              "WHO CARES?",
+                              "NOW ACCEPTING ALCHEMIST GRANT APPLICATIONS"
+                            ]
                       }
                     />
                   </Box>
@@ -220,6 +221,7 @@ const Homepage: NextPage = () => {
                       <ShopifyWidget />
                     </ApolloProvider>
                     <Freebase />
+                    <Vesting />
                   </Box>
                 </WindowManager>
                 <Link
