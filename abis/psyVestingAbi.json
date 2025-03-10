@@ -3,7 +3,7 @@
     "inputs": [
       {
         "internalType": "contract IERC20Metadata",
-        "name": "_token",
+        "name": "_underlyingToken",
         "type": "address"
       },
       {
@@ -17,33 +17,13 @@
         "type": "string"
       },
       {
-        "internalType": "address payable",
-        "name": "_paymentReceiver",
-        "type": "address"
-      },
-      {
         "internalType": "address",
         "name": "_vestingCreator",
         "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_vTokenCost",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_root",
-        "type": "bytes32"
       }
     ],
     "stateMutability": "nonpayable",
     "type": "constructor"
-  },
-  {
-    "inputs": [],
-    "name": "AlreadyClaimed",
-    "type": "error"
   },
   {
     "inputs": [],
@@ -82,11 +62,6 @@
   },
   {
     "inputs": [],
-    "name": "InvalidProof",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "InvalidSchedule",
     "type": "error"
   },
@@ -112,22 +87,12 @@
   },
   {
     "inputs": [],
-    "name": "PayableInsufficient",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "ScheduleWasRevoked",
     "type": "error"
   },
   {
     "inputs": [],
     "name": "TooManySchedulesForBeneficiary",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "TransferToPaymentReceiverFailed",
     "type": "error"
   },
   {
@@ -219,19 +184,6 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "merkleRoot",
-        "type": "bytes32"
-      }
-    ],
-    "name": "MerkleRootUpdated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
         "indexed": false,
         "internalType": "address",
         "name": "account",
@@ -239,19 +191,6 @@
       }
     ],
     "name": "Paused",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "paymentReceiver",
-        "type": "address"
-      }
-    ],
-    "name": "PaymentReceiverSet",
     "type": "event"
   },
   {
@@ -461,19 +400,6 @@
     "type": "event"
   },
   {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "vTokenCost",
-        "type": "uint256"
-      }
-    ],
-    "name": "VTokenCostSet",
-    "type": "event"
-  },
-  {
     "inputs": [],
     "name": "DEFAULT_ADMIN_ROLE",
     "outputs": [
@@ -604,49 +530,6 @@
     "name": "changeDefaultAdminDelay",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32[]",
-        "name": "_proof",
-        "type": "bytes32[]"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_start",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_cliff",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_duration",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_slicePeriodSeconds",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "_revokable",
-        "type": "bool"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "claimSchedule",
-    "outputs": [],
-    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -945,19 +828,6 @@
   },
   {
     "inputs": [],
-    "name": "getVestingSchedulesIds",
-    "outputs": [
-      {
-        "internalType": "bytes32[]",
-        "name": "",
-        "type": "bytes32[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "getWithdrawableAmount",
     "outputs": [
       {
@@ -1064,19 +934,6 @@
         "internalType": "bool",
         "name": "",
         "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "paymentReceiver",
-    "outputs": [
-      {
-        "internalType": "address payable",
-        "name": "",
-        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -1208,100 +1065,12 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_beneficiary",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_start",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_cliff",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_duration",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_slicePeriodSeconds",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "_revokable",
-        "type": "bool"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "scheduleClaimed",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_root",
-        "type": "bytes32"
-      }
-    ],
-    "name": "setMerkleRoot",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "bool",
         "name": "paused",
         "type": "bool"
       }
     ],
     "name": "setPaused",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address payable",
-        "name": "_receiver",
-        "type": "address"
-      }
-    ],
-    "name": "setPaymentReceiver",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_vTokenCost",
-        "type": "uint256"
-      }
-    ],
-    "name": "setVTokenCost",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1412,38 +1181,6 @@
         "internalType": "contract IERC20Metadata",
         "name": "",
         "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "vTokenCost",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "vestingSchedulesIds",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
       }
     ],
     "stateMutability": "view",
