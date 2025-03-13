@@ -2,53 +2,18 @@ import { Box, Flex, Grid, Text, useMediaQuery } from "@chakra-ui/react";
 import { Window } from "../ui/window";
 import Image from "next/image";
 import PsyButton from "../ui/psy-button";
-import getPOAPStatus from "@/utils/getPOAPStatus";
-import { useAccount } from "wagmi";
 import ShopifyImageModal from "./shopify-image-modal";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useRedirectToShopify from "@/hooks/useRedirectToShopify";
-import useGetUserOrders from "@/hooks/useGetUserOrders";
 
 const ShopifyWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [userIsEligibleToClaim, setUserIsEligibleToClaim] = useState(false);
-  const [addressSnippet, setAddressSnippet] = useState("");
   const [isLargerThanLg] = useMediaQuery("(min-width: 1024px)");
-
-  const { address } = useAccount();
-
-  const { data, error } = useGetUserOrders(addressSnippet);
-
   const { redirectToShopify } = useRedirectToShopify();
 
   const handleModal = () => {
     setIsOpen((prev) => !prev);
   };
-
-  useEffect(() => {
-    if (!address) {
-      setUserIsEligibleToClaim(false);
-      return;
-    }
-    const snippet = address.slice(2, 8);
-    setAddressSnippet(snippet);
-    const checkUserEligibilityStatus = async () => {
-      try {
-        const userPOAPStatus = await getPOAPStatus(address);
-
-        const isEligible =
-          !!userPOAPStatus &&
-          userPOAPStatus.hasValidPoap &&
-          data?.ordersCount.count === 0 &&
-          !error;
-
-        setUserIsEligibleToClaim(isEligible);
-      } catch (error) {
-        console.error("Error fetching eligibility status", error);
-      }
-    };
-    checkUserEligibilityStatus();
-  }, [address, data]);
 
   return (
     <Window
@@ -83,28 +48,14 @@ const ShopifyWidget = () => {
                 >
                   Psychedelic Science Hat
                 </Text>
-                <Text
-                  color={"#1A202C"}
-                  fontFamily={"Amiri"}
-                  fontSize={{ base: 16, md: 18 }}
-                >
-                  Exclusive for top <br /> holders of PSY
-                </Text>
               </Flex>
               <PsyButton
-                onClick={async () => {
-                  await redirectToShopify(address);
-                }}
+                onClick={redirectToShopify}
                 customStyle={{
                   width: "100%"
                 }}
-                isDisabled={!userIsEligibleToClaim}
               >
-                {address
-                  ? userIsEligibleToClaim
-                    ? "Claim Here"
-                    : "Ineligible to Claim"
-                  : "Wallet Disconnected"}
+                Buy
               </PsyButton>
             </Flex>
           </Box>
