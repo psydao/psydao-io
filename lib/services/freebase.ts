@@ -1,4 +1,4 @@
-import { graphClient } from "@/config/apolloClients";
+import { freebaseClient } from '@/config/apolloClients';
 import {
   getFreebasePool,
   getFreebasePools,
@@ -10,9 +10,9 @@ import {
   getFreebaseUserPoolsPositions,
   getActiveFreebaseRewardTokens,
   getApyDetails
-} from "@/services/freebase-graph";
-import { useQuery } from "@apollo/client";
-import { Address } from "viem";
+} from '@/services/freebase-graph';
+import { useQuery } from '@apollo/client';
+import { Address } from 'viem';
 
 // #region Interfaces
 
@@ -123,7 +123,7 @@ export interface FreebaseApyDetails {
 
 export function useLiquidityPools() {
   return useQuery<FreebasePoolsResponse>(getFreebasePools, {
-    client: graphClient
+    client: freebaseClient
   });
 }
 
@@ -131,13 +131,13 @@ const POLL_INTERVAL = 10_000;
 export function useLiquidityPool(id: string) {
   return useQuery<{ pool: FreebasePool }>(getFreebasePool, {
     variables: { id },
-    client: graphClient
+    client: freebaseClient
   });
 }
 
 export function useFreebaseTokens() {
   return useQuery<{ tokens: FreebaseToken[] }>(getFreebaseTokens, {
-    client: graphClient
+    client: freebaseClient
   });
 }
 
@@ -148,7 +148,7 @@ export function useFreebaseDepositTokens() {
       variables: {
         isDepositToken: true
       },
-      client: graphClient,
+      client: freebaseClient,
       pollInterval: POLL_INTERVAL
     }
   );
@@ -161,7 +161,7 @@ export function useFreebaseRewardTokens() {
       variables: {
         isRewardToken: true
       },
-      client: graphClient,
+      client: freebaseClient,
       pollInterval: POLL_INTERVAL
     }
   );
@@ -174,7 +174,7 @@ export function useFreebaseActiveRewardToken() {
       variables: {
         isActiveRewardToken: true
       },
-      client: graphClient,
+      client: freebaseClient,
       pollInterval: POLL_INTERVAL
     }
   );
@@ -184,7 +184,7 @@ export function useFreebaseGlobalStats() {
   return useQuery<{ globalStats: FreebaseGlobalStats[] }>(
     getFreebaseGlobalStats,
     {
-      client: graphClient,
+      client: freebaseClient,
       pollInterval: POLL_INTERVAL
     }
   );
@@ -198,7 +198,7 @@ export function useFreebaseUserPoolPosition(
     getFreebaseUserPoolPosition,
     {
       variables: { poolId, userId: userAddress },
-      client: graphClient
+      client: freebaseClient
     }
   );
 }
@@ -208,7 +208,7 @@ export function useFreebaseUserPoolsPositions(userAddress: Address) {
     getFreebaseUserPoolsPositions,
     {
       variables: { userId: userAddress },
-      client: graphClient,
+      client: freebaseClient,
       pollInterval: POLL_INTERVAL
     }
   );
@@ -217,6 +217,6 @@ export function useFreebaseUserPoolsPositions(userAddress: Address) {
 export function useFreebaseApyDetails(poolId: string) {
   return useQuery<FreebaseApyDetails>(getApyDetails, {
     variables: { poolId },
-    client: graphClient
+    client: freebaseClient
   });
 }

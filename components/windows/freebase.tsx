@@ -57,7 +57,7 @@ export function Freebase() {
 
     return false;
   }, [state]);
-  const isWrongNetwork = chainId !== env.NEXT_PUBLIC_CHAIN_ID;
+  const isWrongNetwork = chainId !== env.NEXT_PUBLIC_FREEBASE_CHAIN_ID;
 
   return (
     <Window
@@ -135,7 +135,9 @@ export function Freebase() {
             </Box>
           </Flex>
         ) : isWrongNetwork ? (
-          <WrongNetworkWindow />
+          <WrongNetworkWindow
+            expectedChainId={env.NEXT_PUBLIC_FREEBASE_CHAIN_ID}
+          />
         ) : (
           <Wizard startIndex={0}>
             <UserDashboard />

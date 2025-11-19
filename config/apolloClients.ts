@@ -15,4 +15,9 @@ const shopifyClient = new ApolloClient({
   cache: new InMemoryCache()
 });
 
-export { graphClient, shopifyClient };
+const freebaseClient = new ApolloClient({
+  uri: env.NEXT_PUBLIC_FREEBASE_SUBGRAPH_URL,
+  cache: new InMemoryCache()
+});
+
+export { graphClient, shopifyClient, freebaseClient };
